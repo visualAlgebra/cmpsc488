@@ -2,7 +2,7 @@ let canvasContainer;
 let cloudImg;
 
 function preload() {
-  cloudImg = loadImage('assets/cloud.svg');
+  cloudImg = loadImage('assets/example_image.png');
 }
 
 function setup() {
