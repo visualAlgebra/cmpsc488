@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Manipulator</title>
+    <style media="screen">
+      img {
+        width: 100px;
+      }
+
+      div {
+        border: solid 1px black;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <h1>Manipulator</h1>
+    <section>
+      <button type="button" name="button">Hint</button>
+      <button type="button" name="button">Share</button>
+      <button type="button" name="button">Restart</button>
+    </section>
+
+    <section>
+      <div id="canvas-container"></div>
+      <div>
+        <h2>Goal Expression</h2>
+        <img src="assets/cloud.svg" alt="">
+      </div>
+    </section>
+
+    <section>
+      <h2>History Bar</h2>
+      <ul>
+        <li>Start <img src="assets/cloud.svg" alt=""></li>
+        <li>State 1 <img src="assets/cloud.svg" alt=""></li>
+        <li>State 2 <img src="assets/cloud.svg" alt=""></li>
+        <li>State 3 <img src="assets/cloud.svg" alt=""></li>
+        <li>State 4 <img src="assets/cloud.svg" alt=""></li>
+        <li>State 5 <img src="assets/cloud.svg" alt=""></li>
+      </ul>
+    </section>
+  </body>
+  <script src="js/manipulator.js" charset="utf-8"></script>
+</html>
