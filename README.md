@@ -5,6 +5,7 @@
 To start up a development server:
 
 ```shell
+$ cd cmpsc488
 $ python2 -m SimpleHTTPServer 8000
 ```
 
