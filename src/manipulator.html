@@ -7,27 +7,27 @@
       img {
         width: 100px;
       }
-
-      div {
-        border: solid 1px black;
-      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js" charset="utf-8"></script>
+      <script src="js/materialize.js"></script>
+      <link rel="stylesheet" href="css/materialize.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
-		<header>
-			<nav>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li><a href="creator.html">Create</a></li>
-					<li><a href="manipulator.html">Manipulate</a></li>
-					<li><a href="Explorer.html">Explore</a></li>
-					<li><a href="About_Contact_Us.html">About</a></li>
-					<li><a href="user_profile_page.html">User Profile</a></li>
-				</ul>
-			</nav>
-		</header>
+  <nav>
+      <div class="nav-wrapper">
+          <a href="#" class="brand-logo">VisualAlgebra</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="creator.html">Create</a></li>
+              <li><a href="manipulator.html">Manipulate</a></li>
+              <li><a href="Explorer.html">Explore</a></li>
+              <li><a href="About_Contact_Us.html">About</a></li>
+              <li><a href="user_profile_page.html">User Profile</a></li>
+          </ul>
+      </div>
+  </nav>
     <h1>Manipulator</h1>
     <section>
       <button type="button" name="button">Hint</button>
@@ -54,6 +54,7 @@
         <li>State 5 <img src="assets/example_image.png" alt=""></li>
       </ul>
     </section>
+
   </body>
   <script src="js/manipulator.js" charset="utf-8"></script>
 </html>
