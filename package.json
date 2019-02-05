@@ -1,0 +1,22 @@
+{
+  "name": "visual-algebra",
+  "version": "0.1.0",
+  "description": "A graphical, interactive, educational algebra system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/visualAlgebra/cmpsc488.git"
+  },
+  "keywords": [
+    "algebra"
+  ],
+  "author": "visualAlgebra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/visualAlgebra/cmpsc488/issues"
+  },
+  "homepage": "https://github.com/visualAlgebra/cmpsc488#readme"
+}
