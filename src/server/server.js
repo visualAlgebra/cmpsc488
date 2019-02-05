@@ -30,9 +30,9 @@ class Server {
     sendPage(pageName, res) {
         let filename;
         if (pageName == "/") {
-            filename = "../index.html";
+            filename = "../site/index.html";
         } else {
-            filename = ".." + pageName;
+            filename = "../site" + pageName;
         }
         fs.readFile(filename, function (err, data) {
             if (err) {
@@ -76,7 +76,7 @@ test();
 
 function test() {
 
-    let filename = "../index.html";
+    let filename = "../site/index.html";
     let file1 = fs.readFileSync(filename, 'utf-8');
     let resFile1 = "";
     http.get({hostname: 'localhost', port: 8080, path: '/', agent: false},
