@@ -1,21 +1,22 @@
-let canvasContainer;
-let cloudImg;
+function sketch(p) {
+  let cloudImg;
 
-function preload() {
-  cloudImg = loadImage('assets/example_image.png');
+  p.preload = () => {
+    cloudImg = p.loadImage('assets/example_image.png');
+  }
+
+  p.setup = () => {
+    p.createCanvas(700, 500);
+    p.background(51);
+
+    cloudImg.resize(300, 250);
+  }
+
+  p.draw = () => {
+    p.fill(255);
+    p.imageMode(p.CENTER);
+    p.image(cloudImg, p.width/2, p.height/2);
+  }
 }
 
-function setup() {
-  canvasContainer = select('#canvas-container');
-  canvas = createCanvas(700, 500);
-  canvas.parent(canvasContainer);
-  background(51);
-
-  cloudImg.resize(300, 250);
-}
-
-function draw() {
-  fill(255);
-  imageMode(CENTER);
-  image(cloudImg, width/2, height/2);
-}
+let p5Sketch = new p5(sketch, 'canvas-container');
