@@ -1,21 +1,24 @@
+let expressionTree = new Tag(Orientation.EW,[
+    new Tag(Orientation.NS,[new Literal(2), new Variable(1)], []),
+    new Variable(2)
+  ],
+  []
+);
+
 function sketch(p) {
-  let cloudImg;
 
   p.preload = () => {
-    cloudImg = p.loadImage('assets/example_image.png');
   }
 
   p.setup = () => {
     p.createCanvas(700, 500);
     p.background(51);
-
-    cloudImg.resize(300, 250);
+    p.smooth();
   }
 
   p.draw = () => {
-    p.fill(255);
-    p.imageMode(p.CENTER);
-    p.image(cloudImg, p.width/2, p.height/2);
+    p.translate(p.width / 2, p.height / 2);
+    expressionTree.render(p);
   }
 }
 
