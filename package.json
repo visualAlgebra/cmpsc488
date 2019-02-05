@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/visualAlgebra/cmpsc488/issues"
   },
-  "homepage": "https://github.com/visualAlgebra/cmpsc488#readme"
+  "homepage": "https://github.com/visualAlgebra/cmpsc488#readme",
+  "dependencies": {
+    "p5": "^0.7.3"
+  }
 }
