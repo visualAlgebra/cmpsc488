@@ -83,7 +83,6 @@ class Tag extends ExpressionTree {
     array_delete(this.SE, ref);
     array_delete(this.NW, ref);
   }
-<<<<<<< Updated upstream:src/site/js/expression_tree.js
 
   /** 
    * Renders to a p5.js canvas.
@@ -126,7 +125,7 @@ class Tag extends ExpressionTree {
         break;
     }
     p.pop();
-=======
+  }
   toString(){
     var retval="{t"+(Object.keys(Orientation).find(key => Orientation[key] === this.orientation))+"{{";
     for (let i=0; i<this.NW.length; i++) {
@@ -143,7 +142,6 @@ class Tag extends ExpressionTree {
       }
     }
     return retval+"}}}";
->>>>>>> Stashed changes:src/js/expression_tree.js
   }
 }
 
@@ -164,7 +162,6 @@ class Variable extends ExpressionTree {
     if(that.kind!=="variable") return false;
     return this.value === that.value;
   }
-<<<<<<< Updated upstream:src/site/js/expression_tree.js
 
   /** 
    * Renders to a p5.js canvas.
@@ -177,10 +174,9 @@ class Variable extends ExpressionTree {
     p.fill(255);
     p.textSize(30);
     p.text(`x${this.value}`, -15, 15);
-=======
+  }
   toString(){
     return "{v"+this.value+"}";
->>>>>>> Stashed changes:src/js/expression_tree.js
   }
 }
 
@@ -194,7 +190,6 @@ class Literal extends ExpressionTree {
     if(that.kind!=="literal") return false;
     return this.value === that.value;
   }
-<<<<<<< Updated upstream:src/site/js/expression_tree.js
 
   /** 
    * Renders to a p5.js canvas.
@@ -208,10 +203,9 @@ class Literal extends ExpressionTree {
     p.fill(255);
     p.textSize(30);
     p.text(this.value, -15, 15);
-=======
+  }
   toString(){
     return "{l"+this.value+"}";
->>>>>>> Stashed changes:src/js/expression_tree.js
   }
 }
 //      {tEW{{tNS{{l2}{v1}}{}}{v2}}{}}
