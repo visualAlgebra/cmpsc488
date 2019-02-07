@@ -4,7 +4,7 @@
   "description": "A graphical, interactive, educational algebra system.",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
