@@ -222,7 +222,7 @@ function Deserialize(text){//eric
     let retval= new Tag(orient);
     let firstindex=text.indexOf("{{")+1;
     let lastindex=text.length-2;
-    console.log(text.substr(firstindex,lastindex-firstindex));
+    //helper(text.substr(firstindex,lastindex-firstindex));
     let midindex=0;
     let counter=0;
     for(let i=firstindex; i<text.length; i++){
@@ -237,16 +237,17 @@ function Deserialize(text){//eric
       }
     }
     let t1=text.substr(firstindex,midindex-firstindex+1);
-    helper(t1);
+    //helper(t1);
     let tempstr="";
     if(t1!=="{}"){
-      for(let i=firstindex+1; i<(midindex-firstindex+1); i++){
+      for(let i=firstindex+1; i<midindex; i++){
         tempstr=tempstr+text.charAt(i);
         if(text.charAt(i)==="{"){
           counter++;
         }else if(text.charAt(i)==="}"){
           counter--;
           if(counter===0){
+            //helper(tempstr);
             let d=Deserialize(tempstr);
             retval.addNorthWest(d);
             tempstr="";
@@ -255,16 +256,17 @@ function Deserialize(text){//eric
       }
     }
     let t2=text.substr(midindex+1,lastindex-midindex-1);
-    helper(t2);
+    //helper(t2);
     tempstr="";
     if(t2!=="{}"){
-      for(let i=midindex+1; i<(lastindex-midindex-2); i++){
+      for(let i=midindex+2; i<lastindex-1; i++){
         tempstr=tempstr+text.charAt(i);
         if(text.charAt(i)==="{"){
           counter++;
         }else if(text.charAt(i)==="}"){
           counter--;
           if(counter===0){
+            //helper(tempstr);
             let d=Deserialize(tempstr);
             retval.addSouthEast(d);
             tempstr="";
@@ -272,24 +274,30 @@ function Deserialize(text){//eric
         }
       }
     }
+    return retval;
   }
 }
 function helper(text){
   let rettext="";
   let temp=0;
-  for(let i=0; i<text.length; i++){
+  let zeroamt=0;
+  let i=0;
+  for(i=0; i<text.length; i++){
     if(text.charAt(i)==="{"){
       temp++;
       rettext=rettext+(temp).toString();
     }else if(text.charAt(i)==="}"){
       rettext=rettext+(temp).toString();
       temp--;
+      if(temp===0){
+        zeroamt++;
+      }
     }else{
       rettext=rettext+" ";
     }
   }
-  console.log(text);
-  console.log(rettext);
+  //console.log(text);
+  //console.log(rettext+"  :  "+(temp===0)+"  :  "+zeroamt);
 }
 
 //function Deserialize_Depr(text){let retval; let tempstr=""; let indexval=0; let istag=false; let isEW=true; let isleft=true let isvar=false; let islit=false; for(let i=0; i<text.length; i++){ let char=text.charAt(i); if(char==="{"){ if(text.charAt(i+1)==="{"){ if(isEW){ } } } if(char==="}"){ if(isleft){ isleft=false; return; }else if(!isleft){ isleft=true; } if(isEW){ isEW=false; return; }else if(!isEW){ isEW=true; } } tempstr=tempstr+char; if(tempstr==="{t"||istag){ if(tempstr==="{t"){ istag=true; tempstr=""; continue; } if(char==="E"){ retval=new Tag(Orientation.EW); istag=false; isEW=true; i++; tempstr=""; }else if(char==="N"){ retval=new Tag(Orientation.NS); istag=false; isNS=true; i++; tempstr=""; }else{ throw "Error in deserialization with: "+text; } }else if(tempstr==="{v"){ while(char!=="}"){ indexval++; } //retval=new Variable() }else if(tempstr==="{l"){ } indexval=0; } }
@@ -307,8 +315,13 @@ function assert(left, right, value) {
   console.log("Testing set: "+(test_id_val++));
   console.log(left.toString());
   console.log(right.toString());
-  console.log(left.equals(right));
-  if (left.equals(right) !== value) throw "Bad assertion!";
+  if(typeof left==="string"){
+    console.log(left===right);
+    if((left===right)!==value) throw "Bad assertion!";
+  }else{
+    console.log(left.equals(right));
+    if (left.equals(right) !== value) throw "Bad assertion!";
+  }
 }
 
 // x4 + 0 - 2 - x1
@@ -350,3 +363,12 @@ h3.addNorthWest(new Variable(3));
 assert(e1,h1, true);
 assert(e2,h2, true);
 assert(e3,h3, true);
+assert(e1.toString(),h1.toString(),true);
+assert(e2.toString(),h2.toString(),true);
+assert(e3.toString(),h3.toString(),true);
+assert(Deserialize(e1.toString()),h1,true);
+assert(Deserialize(h1.toString()),e1,true);
+assert(Deserialize(e2.toString()),h2,true);
+assert(Deserialize(h2.toString()),e2,true);
+assert(Deserialize(e3.toString()),h3,true);
+assert(Deserialize(h3.toString()),e3,true);
