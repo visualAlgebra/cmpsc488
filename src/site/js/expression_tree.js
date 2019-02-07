@@ -11,11 +11,6 @@ class ExpressionTree {
     this.parent = null;
   }
 
-  //equals(that) {
-  //  if (Object.is(this, that)) return true;
-  //  if (this.kind !== that.kind) return false;
-  //}
-
   toString(){
     return "error";
   }
@@ -84,7 +79,7 @@ class Tag extends ExpressionTree {
     array_delete(this.NW, ref);
   }
 
-  /** 
+  /**
    * Renders to a p5.js canvas.
    * @param {p5 sketch instance} p
    */
@@ -120,7 +115,7 @@ class Tag extends ExpressionTree {
           p.pop();
         });
         break;
-    
+
       default:
         break;
     }
@@ -130,16 +125,10 @@ class Tag extends ExpressionTree {
     var retval="{t"+(Object.keys(Orientation).find(key => Orientation[key] === this.orientation))+"{{";
     for (let i=0; i<this.NW.length; i++) {
       retval=retval+this.NW[i].toString();
-      if(i!==this.NW.length-1){
-        retval=retval+".";
-      }
     }
     retval=retval+"}{";
     for (let i=0; i<this.SE.length; i++) {
       retval=retval+this.SE[i].toString();
-      if(i!==this.SE.length-1){
-        retval=retval+".";
-      }
     }
     return retval+"}}}";
   }
@@ -163,7 +152,7 @@ class Variable extends ExpressionTree {
     return this.value === that.value;
   }
 
-  /** 
+  /**
    * Renders to a p5.js canvas.
    * @param {p5 sketch instance} p
    */
@@ -191,7 +180,7 @@ class Literal extends ExpressionTree {
     return this.value === that.value;
   }
 
-  /** 
+  /**
    * Renders to a p5.js canvas.
    * @param {p5 sketch instance} p
    */
@@ -214,13 +203,13 @@ class Literal extends ExpressionTree {
 //           {tNS{        }  }    }
 //                {l2}{v1} {}
 //                            {v2}
-//      {tEW{,{{tNS{,{{l2}.{v1}}{},}}.{v2}}{},}}
-//       tEW{,{{tNS{,{{l2}.{v1}}{},}}.{v2}}{},}
-//           ,{{tNS{,{{l2}.{v1}}{},}}.{v2}}{},
-//             {tNS{,{{l2}.{v1}}{},}} {v2}
-//                 {,{{l2}.{v1}}{},}
-//                   {{l2}.{v1}}{}
-//                    {l2}.{v1}
+//      {tEW{{{tNS{{{l2}{v1}}{{l4}}}}{v2}}{}}}
+//       tEW{{{tNS{{{l2}{v1}}{{l4}}}}{v2}}{}}
+//           {{tNS{{{l2}{v1}}{{l4}}}}{v2}}{}
+//            {tNS{{{l2}{v1}}{{l4}}}}{v2}
+//             tNS{{{l2}{v1}}{{l4}}}
+//                 {{l2}{v1}}{{l4}}
+//                  {l2}{v1}  {l4}
 function Deserialize(text){//eric
   if(text.substr(0,2)==="{l"){
     return new Literal(parseInt(text.substr(2,text.length-3)));
@@ -231,10 +220,76 @@ function Deserialize(text){//eric
   if(text.substr(0,2)==="{t"){
     let orient=Orientation[text.substr(2,2)];
     let retval= new Tag(orient);
-
-
-    let lastindex=text.lastIndexOf("}}");
+    let firstindex=text.indexOf("{{")+1;
+    let lastindex=text.length-2;
+    console.log(text.substr(firstindex,lastindex-firstindex));
+    let midindex=0;
+    let counter=0;
+    for(let i=firstindex; i<text.length; i++){
+      if(text.charAt(i)==="{"){
+        counter++;
+      }else if(text.charAt(i)==="}"){
+        counter--;
+        if(counter===0){
+          midindex=i;
+          break;
+        }
+      }
+    }
+    let t1=text.substr(firstindex,midindex-firstindex+1);
+    helper(t1);
+    let tempstr="";
+    if(t1!=="{}"){
+      for(let i=firstindex+1; i<(midindex-firstindex+1); i++){
+        tempstr=tempstr+text.charAt(i);
+        if(text.charAt(i)==="{"){
+          counter++;
+        }else if(text.charAt(i)==="}"){
+          counter--;
+          if(counter===0){
+            let d=Deserialize(tempstr);
+            retval.addNorthWest(d);
+            tempstr="";
+          }
+        }
+      }
+    }
+    let t2=text.substr(midindex+1,lastindex-midindex-1);
+    helper(t2);
+    tempstr="";
+    if(t2!=="{}"){
+      for(let i=midindex+1; i<(lastindex-midindex-2); i++){
+        tempstr=tempstr+text.charAt(i);
+        if(text.charAt(i)==="{"){
+          counter++;
+        }else if(text.charAt(i)==="}"){
+          counter--;
+          if(counter===0){
+            let d=Deserialize(tempstr);
+            retval.addSouthEast(d);
+            tempstr="";
+          }
+        }
+      }
+    }
   }
+}
+function helper(text){
+  let rettext="";
+  let temp=0;
+  for(let i=0; i<text.length; i++){
+    if(text.charAt(i)==="{"){
+      temp++;
+      rettext=rettext+(temp).toString();
+    }else if(text.charAt(i)==="}"){
+      rettext=rettext+(temp).toString();
+      temp--;
+    }else{
+      rettext=rettext+" ";
+    }
+  }
+  console.log(text);
+  console.log(rettext);
 }
 
 //function Deserialize_Depr(text){let retval; let tempstr=""; let indexval=0; let istag=false; let isEW=true; let isleft=true let isvar=false; let islit=false; for(let i=0; i<text.length; i++){ let char=text.charAt(i); if(char==="{"){ if(text.charAt(i+1)==="{"){ if(isEW){ } } } if(char==="}"){ if(isleft){ isleft=false; return; }else if(!isleft){ isleft=true; } if(isEW){ isEW=false; return; }else if(!isEW){ isEW=true; } } tempstr=tempstr+char; if(tempstr==="{t"||istag){ if(tempstr==="{t"){ istag=true; tempstr=""; continue; } if(char==="E"){ retval=new Tag(Orientation.EW); istag=false; isEW=true; i++; tempstr=""; }else if(char==="N"){ retval=new Tag(Orientation.NS); istag=false; isNS=true; i++; tempstr=""; }else{ throw "Error in deserialization with: "+text; } }else if(tempstr==="{v"){ while(char!=="}"){ indexval++; } //retval=new Variable() }else if(tempstr==="{l"){ } indexval=0; } }
@@ -264,7 +319,7 @@ let e1 = new Tag(Orientation.EW,
 
 // (2 * x1) + x2
 let e2 = new Tag(Orientation.EW,[
-    new Tag(Orientation.NS,[new Literal(2), new Variable(1)], []),
+    new Tag(Orientation.NS,[new Literal(2),new Literal(8), new Variable(1), new Variable(3)], [new Literal(4)]),
     new Variable(2)
   ],
   []
@@ -282,7 +337,10 @@ let h2 = new Tag(Orientation.EW);
 let v = new Tag(Orientation.NS);
 h2.addNorthWest(v)
 v.addNorthWest(new Literal(2));
+v.addNorthWest(new Literal(8));
 v.addNorthWest(new Variable(1));
+v.addNorthWest(new Variable(3));
+v.addSouthEast(new Literal(4));
 h2.addNorthWest(new Variable(2));
 
 let h3=new Tag(Orientation.EW);
