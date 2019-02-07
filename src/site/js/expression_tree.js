@@ -3,7 +3,6 @@ const Orientation = {
   EW: "eastwest",
   NS: "northsouth"
 }
-
 // Abstract Class
 class ExpressionTree {
   constructor(kind) {
@@ -12,9 +11,13 @@ class ExpressionTree {
     this.parent = null;
   }
 
-  equals(that) {
-    if (Object.is(this, that)) return true;
-    if (this.kind !== that.kind) return false;
+  //equals(that) {
+  //  if (Object.is(this, that)) return true;
+  //  if (this.kind !== that.kind) return false;
+  //}
+
+  toString(){
+    return "error";
   }
 }
 
@@ -55,8 +58,6 @@ class Tag extends ExpressionTree {
   }
 
   equals(that) {
-    //if (super.equals(that)) return true;
-
     if (that.kind === "tag") {
       if (this.orientation !== that.orientation
        || this.NW.length !== that.NW.length
@@ -194,6 +195,24 @@ class Tag extends ExpressionTree {
         break;
     }
   }
+
+  toString(){
+    var retval="{t"+(Object.keys(Orientation).find(key => Orientation[key] === this.orientation))+"{{";
+    for (let i=0; i<this.NW.length; i++) {
+      retval=retval+this.NW[i].toString();
+      if(i!==this.NW.length-1){
+        retval=retval+".";
+      }
+    }
+    retval=retval+"}{";
+    for (let i=0; i<this.SE.length; i++) {
+      retval=retval+this.SE[i].toString();
+      if(i!==this.SE.length-1){
+        retval=retval+".";
+      }
+    }
+    return retval+"}}}";
+  }
 }
 
 function array_delete(arr, ref) {
@@ -210,7 +229,6 @@ class Variable extends ExpressionTree {
   }
 
   equals(that) {
-    //if (super.equals(that)) return true;
     if(that.kind!=="variable") return false;
     return this.value === that.value;
   }
@@ -234,6 +252,10 @@ class Variable extends ExpressionTree {
       height: 100
     };
   }
+
+  toString(){
+    return "{v"+this.value+"}";
+  }
 }
 
 class Literal extends ExpressionTree {
@@ -243,7 +265,6 @@ class Literal extends ExpressionTree {
   }
 
   equals(that) {
-    //if (super.equals(that)) return true;
     if(that.kind!=="literal") return false;
     return this.value === that.value;
   }
@@ -268,12 +289,57 @@ class Literal extends ExpressionTree {
       height: 100
     };
   }
+
+  toString(){
+    return "{l"+this.value+"}";
+  }
+}
+//      {tEW{{tNS{{l2}{v1}}{}}{v2}}{}}
+//      {tEW{{tNS{{l2}{v1}}{}}{v2}}{}}
+//      {tEW{                         }}
+//           {tNS{        }  }    }
+//                {l2}{v1} {}
+//                            {v2}
+//      {tEW{,{{tNS{,{{l2}.{v1}}{},}}.{v2}}{},}}
+//       tEW{,{{tNS{,{{l2}.{v1}}{},}}.{v2}}{},}
+//           ,{{tNS{,{{l2}.{v1}}{},}}.{v2}}{},
+//             {tNS{,{{l2}.{v1}}{},}} {v2}
+//                 {,{{l2}.{v1}}{},}
+//                   {{l2}.{v1}}{}
+//                    {l2}.{v1}
+function Deserialize(text){//eric
+  if(text.substr(0,2)==="{l"){
+    return new Literal(parseInt(text.substr(2,text.length-3)));
+  }
+  if(text.substr(0,2)==="{v"){
+    return new Variable(parseInt(text.substr(2,text.length-3)));
+  }
+  if(text.substr(0,2)==="{t"){
+    let orient=Orientation[text.substr(2,2)];
+    let retval= new Tag(orient);
+
+
+    let lastindex=text.lastIndexOf("}}");
+  }
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//function Deserialize_Depr(text){let retval; let tempstr=""; let indexval=0; let istag=false; let isEW=true; let isleft=true let isvar=false; let islit=false; for(let i=0; i<text.length; i++){ let char=text.charAt(i); if(char==="{"){ if(text.charAt(i+1)==="{"){ if(isEW){ } } } if(char==="}"){ if(isleft){ isleft=false; return; }else if(!isleft){ isleft=true; } if(isEW){ isEW=false; return; }else if(!isEW){ isEW=true; } } tempstr=tempstr+char; if(tempstr==="{t"||istag){ if(tempstr==="{t"){ istag=true; tempstr=""; continue; } if(char==="E"){ retval=new Tag(Orientation.EW); istag=false; isEW=true; i++; tempstr=""; }else if(char==="N"){ retval=new Tag(Orientation.NS); istag=false; isNS=true; i++; tempstr=""; }else{ throw "Error in deserialization with: "+text; } }else if(tempstr==="{v"){ while(char!=="}"){ indexval++; } //retval=new Variable() }else if(tempstr==="{l"){ } indexval=0; } }
 
-function assert(left, right) {
-  if (left !== right) throw "Bad assertion!";
+function formatSerializationForConsole(serial_text){//eric
+  let tempstr="";
+  for(let i=0; i<serial_text.length; i++){
+    char=serial_text.charAt(i);
+    tempstr=tempstr+char;
+  }
+}
+////////////////////////////////////////////////////////////////////////////////
+var test_id_val=0;
+function assert(left, right, value) {
+  console.log("Testing set: "+(test_id_val++));
+  console.log(left.toString());
+  console.log(right.toString());
+  console.log(left.equals(right));
+  if (left.equals(right) !== value) throw "Bad assertion!";
 }
 
 // x4 + 0 - 2 - x1
@@ -290,12 +356,7 @@ let e2 = new Tag(Orientation.EW,[
   []
 );
 
-
 let e3=new Tag(Orientation.EW,[new Literal(2),new Variable(3)]);
-
-let h3=new Tag(Orientation.EW);
-h3.addNorthWest(new Literal(2));
-h3.addNorthWest(new Variable(3));
 
 let h1 = new Tag(Orientation.EW);
 h1.addNorthWest(new Variable(4));
@@ -310,8 +371,10 @@ v.addNorthWest(new Literal(2));
 v.addNorthWest(new Variable(1));
 h2.addNorthWest(new Variable(2));
 
+let h3=new Tag(Orientation.EW);
+h3.addNorthWest(new Literal(2));
+h3.addNorthWest(new Variable(3));
 
-
-assert(e1.equals(h1), true);
-assert(e2.equals(h2), true);
-assert(e3.equals(h3), true);
+assert(e1,h1, true);
+assert(e2,h2, true);
+assert(e3,h3, true);
