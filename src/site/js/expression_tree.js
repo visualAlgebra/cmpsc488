@@ -90,40 +90,109 @@ class Tag extends ExpressionTree {
   render(p) {
     p.push();
     switch (this.orientation) {
-      case Orientation.EW:
-        this.NW.forEach((child, i) => {
-          p.push();
-          p.translate(-i * (100 + 10) - 50, 0);
-          child.render(p);
-          p.pop();
-        });
-        this.SE.forEach((child, i) => {
-          p.push();
-          p.translate(i * (100 + 10) + 50, 0);
-          child.render(p);
-          p.pop();
-        });
-        break;
+      case Orientation.EW: {
 
-      case Orientation.NS:
-        this.NW.forEach((child, i) => {
-          p.push();
-          p.translate(0, -i * (100 + 10) - 50);
+        let leftWidth = 0;
+        p.push();
+        for (let i = this.NW.length - 1; i >= 0; i--) {
+          let child = this.NW[i];
+          const childWidth = child.dimensions().width;
+          p.translate(-childWidth/2, 0);
           child.render(p);
-          p.pop();
-        });
-        this.SE.forEach((child, i) => {
-          p.push();
-          p.translate(0, i * (100 + 10) + 50);
+          p.translate(-childWidth/2, 0);
+          leftWidth += childWidth;
+        }
+        p.pop();
+
+        let rightWidth = 0;
+        p.push();
+        for (let i = 0; i < this.SE.length; i++) {
+          let child = this.SE[i];
+          const childWidth = child.dimensions().width;
+          p.translate(childWidth/2, 0);
           child.render(p);
-          p.pop();
-        });
+          p.translate(childWidth/2, 0);
+          rightWidth += childWidth;
+        }
+        p.pop();
+
+        const height = this.dimensions().height;
+        p.noFill();
+        p.strokeWeight(5);
+        p.stroke(0, 0, 255);
+        p.rect(-leftWidth, -height/2, leftWidth, height);
+        p.stroke(255, 0, 0);
+        p.rect(0, -height/2, rightWidth, height);
         break;
+      }
+
+      case Orientation.NS: {
+
+        let topHeight = 0;
+        p.push();
+        for (let i = this.NW.length - 1; i >= 0; i--) {
+          let child = this.NW[i];
+          const childHeight = child.dimensions().height;
+          p.translate(0, -childHeight/2);
+          child.render(p);
+          p.translate(0, -childHeight/2);
+          topHeight += childHeight;
+        }
+        p.pop();
+
+        let bottomHeight = 0;
+        p.push();
+        for (let i = this.SE.length - 1; i >= 0; i--) {
+          let child = this.SE[i];
+          const childHeight = child.dimensions().height;
+          p.translate(0, childHeight/2);
+          child.render(p);
+          p.translate(0, childHeight/2);
+          bottomHeight += childHeight;
+        }
+        p.pop();
+
+        const width = this.dimensions().width;
+        p.noFill();
+        p.strokeWeight(5);
+        p.stroke(0, 0, 255);
+        p.rect(-width/2, -topHeight, width, topHeight);
+        p.stroke(255, 0, 0);
+        p.rect(-width/2, 0, width, bottomHeight);
+        break;
+      }
     
       default:
         break;
     }
     p.pop();
+  }
+
+  dimensions() {
+    switch (this.orientation) {
+      case Orientation.EW: {
+        const width = this.NW.reduce((acc, child) => acc + child.dimensions().width, 0)
+                    + this.SE.reduce((acc, child) => acc + child.dimensions().width, 0) + 10;
+        const height = Math.max(
+          this.NW.reduce((acc, child) => Math.max(acc, child.dimensions().height), 0),
+          this.SE.reduce((acc, child) => Math.max(acc, child.dimensions().height), 0)
+        ) + 10;
+        return {width, height};
+      }
+
+      case Orientation.NS: {
+        const width = Math.max(
+          this.NW.reduce((acc, child) => Math.max(acc, child.dimensions().width), 0),
+          this.SE.reduce((acc, child) => Math.max(acc, child.dimensions().width), 0)
+        ) + 10;
+        const height = this.NW.reduce((acc, child) => acc + child.dimensions().height, 0)
+                     + this.SE.reduce((acc, child) => acc + child.dimensions().height, 0) + 10;
+        return {width, height};
+      }
+    
+      default:
+        break;
+    }
   }
 }
 
@@ -158,6 +227,13 @@ class Variable extends ExpressionTree {
     p.textSize(30);
     p.text(`x${this.value}`, -15, 15);
   }
+
+  dimensions() {
+    return {
+      width: 100,
+      height: 100
+    };
+  }
 }
 
 class Literal extends ExpressionTree {
@@ -184,6 +260,13 @@ class Literal extends ExpressionTree {
     p.fill(255);
     p.textSize(30);
     p.text(this.value, -15, 15);
+  }
+
+  dimensions() {
+    return {
+      width: 100,
+      height: 100
+    };
   }
 }
 
