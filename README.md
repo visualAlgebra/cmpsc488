@@ -1,17 +1,38 @@
 # cmpsc488
 
 ## Build Instructions
-### Development Server
+
+### Cloning the Project
+```shell
+$ git clone https://github.com/visualAlgebra/cmpsc488.git
+$ cd cmpsc488
+```
+
+### Installing Dependencies
+This project requires `npm`.
+
+```shell
+$ pwd
+/path/to/cmpsc488
+
+$ npm install # this will install all the dependencies to your local machine
+```
+
+### Starting a Development Server
 To start up a development server:
 
 #### If you have Python 2 installed:
 ```shell
-$ cd cmpsc488 # Go to the directory of your local repo
+$ pwd
+/path/to/cmpsc488
+
 $ python -m SimpleHTTPServer 8000
 ```
 #### If you have Python 3 installed:
 ```shell
-$ cd cmpsc488 # Go to the directory of your local repo
+$ pwd
+/path/to/cmpsc488
+
 $ python -m http.server 8000
 ```
 
