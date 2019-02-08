@@ -121,6 +121,34 @@ class Tag extends ExpressionTree {
       }
       p.pop();
     }
+
+  dimensions() {
+    switch (this.orientation) {
+      case Orientation.EW: {
+        const width = this.NW.reduce((acc, child) => acc + child.dimensions().width, 0)
+                    + this.SE.reduce((acc, child) => acc + child.dimensions().width, 0) + 10;
+        const height = Math.max(
+          this.NW.reduce((acc, child) => Math.max(acc, child.dimensions().height), 0),
+          this.SE.reduce((acc, child) => Math.max(acc, child.dimensions().height), 0)
+        ) + 10;
+        return {width, height};
+      }
+
+      case Orientation.NS: {
+        const width = Math.max(
+          this.NW.reduce((acc, child) => Math.max(acc, child.dimensions().width), 0),
+          this.SE.reduce((acc, child) => Math.max(acc, child.dimensions().width), 0)
+        ) + 10;
+        const height = this.NW.reduce((acc, child) => acc + child.dimensions().height, 0)
+                     + this.SE.reduce((acc, child) => acc + child.dimensions().height, 0) + 10;
+        return {width, height};
+      }
+
+      default:
+        break;
+    }
+  }
+
     toString(){
       var retval="{t"+(Object.keys(Orientation).find(key => Orientation[key] === this.orientation))+"{{";
       for (let i=0; i<this.NW.length; i++) {
@@ -164,6 +192,14 @@ class Tag extends ExpressionTree {
       p.textSize(30);
       p.text(`x${this.value}`, -15, 15);
     }
+
+    dimensions() {
+      return {
+        width: 100,
+        height: 100
+      };
+    }
+
     toString(){
       return "{v"+this.value+"}";
     }
