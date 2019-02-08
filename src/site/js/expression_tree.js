@@ -193,6 +193,14 @@ class Tag extends ExpressionTree {
       p.textSize(30);
       p.text(this.value, -15, 15);
     }
+
+  dimensions() {
+    return {
+      width: 100,
+      height: 100
+    };
+  }
+  
     toString(){
       return "{l"+this.value+"}";
     }
@@ -266,29 +274,21 @@ class Tag extends ExpressionTree {
     }
   }
   var my_lzma = LZMA("src/site/js/lzma_worker.js");
-  function prepare_data(str)
-  {
+  function compress_string_js(text,callback){
     var arr;
     /// If the string is a JSON array, use that. This allows us to compress a byte array.
-    if (str[0] === "[" && str.slice(-1) === "]") {
+    if (text[0] === "[" && text.slice(-1) === "]") {
       try {
-        arr = JSON.parse(str);
+        arr = JSON.parse(text);
       } catch (e) {}
     }
     if (arr) {
-      return arr;
+      text=arr;
     }
-    return str;
+    my_lzma.compress(text,9, callback);
   }
-  function compress_string_js(text){
-    my_lzma.compress(prepare_data(text),9, function (result) {
-      console.log(result);
-    });
-  }
-  function decompress_string_js(byte_arr){
-    my_lzma.decompress(byte_arr, function (result) {
-      console.log(result);
-    });
+  function decompress_string_js(byte_arr, callback){
+    my_lzma.decompress(byte_arr, callback);
   }
   function helper(text){
     let rettext="";
@@ -313,6 +313,31 @@ class Tag extends ExpressionTree {
     console.log(rettext+"  :  "+(temp===0)+"  :  "+zeroamt);
   }
   ////////////////////////////////////////////////////////////////////////////////
+  Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
+
+    // compare lengths - can save a lot of time 
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0, l=this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;       
+        }           
+        else if (this[i] != array[i]) { 
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;   
+        }           
+    }       
+    return true;
+}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", {enumerable: false});
   var test_id_val=0;
   function assert(left, right, value) {
     console.log("Testing set: "+(++test_id_val));
@@ -433,27 +458,35 @@ let e4=new Tag(Orientation.EW,[
 
     assert(Deserialize(e4.toString()),h4,true);
     assert(Deserialize(h4.toString()),e4,true);
-
-    //compress_string_js(e1.toString());
+    
     let ans1=[93, 0, 0, 0, 2, 27, 0, 0, 0, 0, 0, 0, 0, 0, 61, -99, 4, -88, 114, 97, 90, 17, 100, 103, 78, -124, 111, -53, 100, -108, 69, -59, 33, 20, -58, 87, -74, 74, -11, 114, -10, 50, -1, -8, -76, 84, 0];
-    decompress_string_js(ans1);
-    console.log(e1.toString());
-    console.log("1");
+    compress_string_js(e1.toString(), res=> { 
+        assert(ans1, res, true);
+    });
+    decompress_string_js(ans1,res=> { 
+        assert(res, e1.toString(), true);
+    });
 
-    //compress_string_js(e2.toString());
     let ans2=[93, 0, 0, 0, 2, 46, 0, 0, 0, 0, 0, 0, 0, 0, 61, -99, 4, -88, 114, 97, 90, 8, -85, 11, -84, -112, -35, -58, 5, -74, 23, 10, 13, 90, 62, -106, 17, -93, -35, -41, -67, 117, -22, -93, 22, -79, -103, 52, 71, 120, -52, 68, 127, -3, -91, 16, 0];
-    decompress_string_js(ans2);
-    console.log(e2.toString());
-    console.log("2");
+    compress_string_js(e2.toString(), res=> { 
+        assert(ans2, res, true);
+    });
+    decompress_string_js(ans2,res=> { 
+        assert(res, e2.toString(), true);
+    });
 
-    //compress_string_js(e3.toString());
     let ans3=[93, 0, 0, 0, 2, 19, 0, 0, 0, 0, 0, 0, 0, 0, 61, -99, 4, -88, 114, 97, 89, -26, -14, 42, 9, -39, -93, 23, 9, -14, -54, -19, -91, 82, -125, -1, -1, -70, -104, 0, 0];
-    decompress_string_js(ans3);
-    console.log(e3.toString());
-    console.log("3");
+    compress_string_js(e3.toString(), res=> { 
+        assert(ans3, res, true);
+    });
+    decompress_string_js(ans3,res=> { 
+        assert(res, e3.toString(), true);
+    });
 
-    //compress_string_js(e4.toString());
     let ans4=[93, 0, 0, 0, 2, 94, 0, 0, 0, 0, 0, 0, 0, 0, 61, -99, 4, -88, 114, 97, 46, 31, 72, -94, 17, 120, 107, 6, -127, -100, -75, 55, 75, 55, -104, 121, -17, 38, -110, -66, 89, -31, -71, -33, 88, 95, -1, -10, 120, -128, 0];
-    decompress_string_js(ans4);
-    console.log(e4.toString());
-    console.log("4");
+    compress_string_js(e4.toString(), res=> { 
+        assert(ans4, res, true);
+    });
+    decompress_string_js(ans4,res=> { 
+        assert(res, e4.toString(), true);
+    });
