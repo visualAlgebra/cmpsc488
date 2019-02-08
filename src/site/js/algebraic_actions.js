@@ -4,7 +4,7 @@
 // UI
 // AI
 // History Bar?
-//   - Might just save instances of previous 
+//   - Might just save instances of previous
 
 
 // USE CASE FOR UI
@@ -40,3 +40,130 @@ class CommutativeSwap {
     }
 }
 
+class AssociativeMerge {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class AssociativeIntro {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class Distribute {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class Factor {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class SplitFrac {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class CombineFrac {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class Cancel {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
+
+class IdentityBalance {
+    constructor(sibling1, sibling2) {
+        this.sibling1 = sibling1;
+        this.sibling2 = sibling2;
+    }
+
+    verify() {
+        // return this.sibling1 and this.sibling2 are actually siblings;
+    }
+
+    apply(exprTree) {
+        exprTree.find();
+        return new tree;
+    }
+}
