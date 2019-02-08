@@ -194,13 +194,13 @@ class Tag extends ExpressionTree {
       p.text(this.value, -15, 15);
     }
 
-  dimensions() {
-    return {
-      width: 100,
-      height: 100
-    };
-  }
-  
+    dimensions() {
+      return {
+        width: 100,
+        height: 100
+      };
+    }
+
     toString(){
       return "{l"+this.value+"}";
     }
