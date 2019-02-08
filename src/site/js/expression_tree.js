@@ -289,6 +289,16 @@ class Tag extends ExpressionTree {
     return str;
   }
   function compress_string_js(text){
+    var arr;
+    /// If the string is a JSON array, use that. This allows us to compress a byte array.
+    if (text[0] === "[" && text.slice(-1) === "]") {
+      try {
+        arr = JSON.parse(text);
+      } catch (e) {}
+    }
+    if (arr) {
+      text=arr;
+    }
     my_lzma.compress(prepare_data(text),9, function (result) {
       console.log(result);
     });
