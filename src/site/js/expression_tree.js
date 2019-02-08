@@ -273,7 +273,6 @@ class Tag extends ExpressionTree {
       return retval;
     }
   }
-  var my_lzma = LZMA("src/site/js/lzma_worker.js");
   function compress_string_js(text,callback){
     var arr;
     /// If the string is a JSON array, use that. This allows us to compress a byte array.
@@ -285,10 +284,10 @@ class Tag extends ExpressionTree {
     if (arr) {
       text=arr;
     }
-    my_lzma.compress(text,9, callback);
+    LZMA("src/site/js/lzma_worker.js").compress(text,9, callback);
   }
   function decompress_string_js(byte_arr, callback){
-    my_lzma.decompress(byte_arr, callback);
+    LZMA("src/site/js/lzma_worker.js").decompress(byte_arr, callback);
   }
   //////////////////////////////////////////////////////////////////////
   /////////////////////        Unused Functions   //////////////////////
