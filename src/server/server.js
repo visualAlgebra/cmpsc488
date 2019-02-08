@@ -62,7 +62,6 @@ class Server {
             filename = "./src/site/index.html";
 	} else if (this.isAccessibleFolder(pageName)) {
             filename = pageName.substr(1);
-            console.log(filename);
 	} else if (this.isAccessibleHTMLFile(pageName)) {
 	    filename = "src/site" + pageName; 
         } else {

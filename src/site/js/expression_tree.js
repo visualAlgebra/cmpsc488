@@ -290,6 +290,8 @@ class Tag extends ExpressionTree {
   function decompress_string_js(byte_arr, callback){
     my_lzma.decompress(byte_arr, callback);
   }
+  //////////////////////////////////////////////////////////////////////
+  /////////////////////        Unused Functions   //////////////////////
   function helper(text){
     let rettext="";
     let temp=0;
