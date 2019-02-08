@@ -57,7 +57,6 @@ class Server {
     //function that sends page back as response
     sendPage(pageName, res) {
         let filename;
-	console.log(pageName);	
         if (pageName == "/") {
             filename = "./src/site/index.html";
 	} else if (this.isAccessibleFolder(pageName)) {
@@ -69,7 +68,21 @@ class Server {
                 res.write("Error 404: File not found");
                 return res.end();
 	}
+	
 
+	//determine Content-type
+	var contentType = "text/html";
+	if (filename.substr(-3) === "css") {
+	    contentType = 'text/css';
+	} else if (filename.substr(-2) === "js") {
+            contentType = "application/javascript";
+	} else if (filename.substr(-3) === "png") {
+            contentType = "image/png";
+	}
+	
+	console.log(contentType);
+
+	    
         fs.readFile(filename, function (err, data) {
             if (err) {
                 res.writeHead(404, {'Content-Type': 'text/html'})
@@ -77,7 +90,7 @@ class Server {
                 return res.end();
             }
             else {
-                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.writeHead(200, {'Content-Type': contentType});
                 res.write(data);
                 return res.end();
             }
