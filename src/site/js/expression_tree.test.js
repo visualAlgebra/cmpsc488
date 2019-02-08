@@ -21,6 +21,7 @@ Array.prototype.equals = function (array) {
   return true
 }
 Object.defineProperty(Array.prototype, 'equals', { enumerable: false })
+
 var test_id_val = 0
 function assert (left, right, value) {
   test_id_val++
@@ -37,6 +38,7 @@ function assert (left, right, value) {
     // if (left.equals(right) !== value) throw "Bad assertion!";
   }
 }
+
 function testall () {
   // x4 + 0 - 2 - x1
   let e1 = new Tag(

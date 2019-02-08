@@ -13,7 +13,7 @@ class ExpressionTree {
   toString () {
     return 'error'
   }
-}
+}//end ExpressionTree class
 
 class Tag extends ExpressionTree {
   constructor (orientation, nw, se) {
@@ -184,15 +184,8 @@ class Tag extends ExpressionTree {
     }
     return retval + '}}}'
   }
-}
+}//end Tag class
 
-function array_delete (arr, ref) {
-  for (let i = 0; i < arr.length; i++) {
-    if (Object.is(ref, arr[i])) {
-      arr.splice(i, 1)
-    }
-  }
-}
 class Variable extends ExpressionTree {
   constructor (value) {
     super('variable')
@@ -227,7 +220,7 @@ class Variable extends ExpressionTree {
   toString () {
     return '{v' + this.value + '}'
   }
-}
+}//end Variable class
 
 class Literal extends ExpressionTree {
   constructor (value) {
@@ -263,6 +256,16 @@ class Literal extends ExpressionTree {
 
   toString () {
     return '{l' + this.value + '}'
+  }
+}//end Literal class
+
+//end of classes, start of functions
+
+function array_delete (arr, ref) {
+  for (let i = 0; i < arr.length; i++) {
+    if (Object.is(ref, arr[i])) {
+      arr.splice(i, 1)
+    }
   }
 }
 
@@ -355,6 +358,7 @@ function decompress_string_js (byte_arr, callback) {
 
 /// ///////////////////////////////////////////////////////////////////
 /// //////////////////        Unused Functions   //////////////////////
+
 function helper (text) {
   let rettext = ''
   let temp = 0
@@ -377,4 +381,5 @@ function helper (text) {
   console.log(text)
   console.log(rettext + '  :  ' + (temp === 0) + '  :  ' + zeroamt)
 }
-/// /////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
