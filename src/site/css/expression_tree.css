@@ -1,0 +1,46 @@
+.tag {
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.south-east, .north-west {
+    padding: 1rem;
+}
+
+.east-west > * {
+    /* display: inline; */
+}
+
+.east-west > * > * {
+    /* display: inline; */
+}
+
+.north-south {
+
+}
+
+.tag > .north-west {
+    border: solid 3px blue;
+}
+
+.tag > .south-east {
+    border: solid 3px red;
+}
+
+.variable, .literal {
+    padding: 1rem;
+    margin: 1rem;
+    text-align: center;
+    color: white;
+    font-size: 20pt;
+}
+
+.literal {
+    background-color: blue;
+    width: 50px;
+}
+
+.variable {
+    background-color: purple;
+    width: 50px;
+}
