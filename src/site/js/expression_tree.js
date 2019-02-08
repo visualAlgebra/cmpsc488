@@ -285,7 +285,7 @@ class Tag extends ExpressionTree {
     if (arr) {
       text=arr;
     }
-    my_lzma.compress(prepare_data(text),9, function (result) {
+    my_lzma.compress(text,9, function (result) {
       console.log(result);
     });
   }
