@@ -1,5 +1,7 @@
 // Hide method from for-in loops
 
+
+
 Object.defineProperty(Array.prototype, "equals", {enumerable: false});
   var test_id_val=0;
   function assert(left, right, value) {
@@ -54,25 +56,6 @@ let e4=new Tag(Orientation.EW,[
       new Variable(1)
     ]);
 
-    let h4 = new Tag(Orientation.EW);
-    let h41 = new Tag(Orientation.EW);
-    h4.addNorthWest(h41);
-    let h411 = new Tag(Orientation.EW);
-    h41.addNorthWest(h411);
-    let h4111 = new Tag(Orientation.EW);
-    h411.addNorthWest(h4111);
-    let h41111 = new Tag(Orientation.EW);
-    h4111.addNorthWest(h41111);
-    let h411111 = new Tag(Orientation.EW);
-    h41111.addNorthWest(h411111);
-    h411111.addNorthWest(new Variable(7));
-    h411111.addSouthEast(new Variable(6));
-    h41111.addSouthEast(new Variable(5));
-    h4111.addSouthEast(new Variable(4));
-    h411.addSouthEast(new Variable(3));
-    h41.addSouthEast(new Variable(2));
-    h4.addSouthEast(new Variable(1));
-
     let h1 = new Tag(Orientation.EW);
     h1.addNorthWest(new Variable(4));
     h1.addNorthWest(new Literal(0));
@@ -92,6 +75,25 @@ let e4=new Tag(Orientation.EW,[
     let h3=new Tag(Orientation.EW);
     h3.addNorthWest(new Literal(2));
     h3.addNorthWest(new Variable(3));
+
+    let h4 = new Tag(Orientation.EW);
+    let h41 = new Tag(Orientation.EW);
+    h4.addNorthWest(h41);
+    let h411 = new Tag(Orientation.EW);
+    h41.addNorthWest(h411);
+    let h4111 = new Tag(Orientation.EW);
+    h411.addNorthWest(h4111);
+    let h41111 = new Tag(Orientation.EW);
+    h4111.addNorthWest(h41111);
+    let h411111 = new Tag(Orientation.EW);
+    h41111.addNorthWest(h411111);
+    h411111.addNorthWest(new Variable(7));
+    h411111.addSouthEast(new Variable(6));
+    h41111.addSouthEast(new Variable(5));
+    h4111.addSouthEast(new Variable(4));
+    h411.addSouthEast(new Variable(3));
+    h41.addSouthEast(new Variable(2));
+    h4.addSouthEast(new Variable(1));
 
 
     assert(e1,h1, true);
