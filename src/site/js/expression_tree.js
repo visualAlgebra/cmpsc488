@@ -13,7 +13,7 @@ class ExpressionTree {
   toString () {
     return 'error'
   }
-}//end ExpressionTree class
+} // end ExpressionTree class
 
 class Tag extends ExpressionTree {
   constructor (orientation, nw, se) {
@@ -87,35 +87,75 @@ class Tag extends ExpressionTree {
   render (p) {
     p.push()
     switch (this.orientation) {
-      case Orientation.EW:
-        this.NW.forEach((child, i) => {
-          p.push()
-          p.translate(-i * (100 + 10) - 50, 0)
+      case Orientation.EW: {
+        let leftWidth = 0
+        p.push()
+        for (let i = this.NW.length - 1; i >= 0; i--) {
+          let child = this.NW[i]
+          const childWidth = child.dimensions().width
+          p.translate(-childWidth / 2, 0)
           child.render(p)
-          p.pop()
-        })
-        this.SE.forEach((child, i) => {
-          p.push()
-          p.translate(i * (100 + 10) + 50, 0)
-          child.render(p)
-          p.pop()
-        })
-        break
+          p.translate(-childWidth / 2, 0)
+          leftWidth += childWidth
+        }
+        p.pop()
 
-      case Orientation.NS:
-        this.NW.forEach((child, i) => {
-          p.push()
-          p.translate(0, -i * (100 + 10) - 50)
+        let rightWidth = 0
+        p.push()
+        for (let i = 0; i < this.SE.length; i++) {
+          let child = this.SE[i]
+          const childWidth = child.dimensions().width
+          p.translate(childWidth / 2, 0)
           child.render(p)
-          p.pop()
-        })
-        this.SE.forEach((child, i) => {
-          p.push()
-          p.translate(0, i * (100 + 10) + 50)
-          child.render(p)
-          p.pop()
-        })
+          p.translate(childWidth / 2, 0)
+          rightWidth += childWidth
+        }
+        p.pop()
+
+        const height = this.dimensions().height
+        p.noFill()
+        p.strokeWeight(5)
+        p.stroke(0, 0, 255)
+        p.rect(-leftWidth, -height / 2, leftWidth, height)
+        p.stroke(255, 0, 0)
+        p.rect(0, -height / 2, rightWidth, height)
         break
+      }
+
+      case Orientation.NS: {
+        let topHeight = 0
+        p.push()
+        for (let i = this.NW.length - 1; i >= 0; i--) {
+          let child = this.NW[i]
+          const childHeight = child.dimensions().height
+          p.translate(0, -childHeight / 2)
+          child.render(p)
+          p.translate(0, -childHeight / 2)
+          topHeight += childHeight
+        }
+        p.pop()
+
+        let bottomHeight = 0
+        p.push()
+        for (let i = this.SE.length - 1; i >= 0; i--) {
+          let child = this.SE[i]
+          const childHeight = child.dimensions().height
+          p.translate(0, childHeight / 2)
+          child.render(p)
+          p.translate(0, childHeight / 2)
+          bottomHeight += childHeight
+        }
+        p.pop()
+
+        const width = this.dimensions().width
+        p.noFill()
+        p.strokeWeight(5)
+        p.stroke(0, 0, 255)
+        p.rect(-width / 2, -topHeight, width, topHeight)
+        p.stroke(255, 0, 0)
+        p.rect(-width / 2, 0, width, bottomHeight)
+        break
+      }
 
       default:
         break
@@ -184,7 +224,7 @@ class Tag extends ExpressionTree {
     }
     return retval + '}}}'
   }
-}//end Tag class
+} // end Tag class
 
 class Variable extends ExpressionTree {
   constructor (value) {
@@ -220,7 +260,7 @@ class Variable extends ExpressionTree {
   toString () {
     return '{v' + this.value + '}'
   }
-}//end Variable class
+} // end Variable class
 
 class Literal extends ExpressionTree {
   constructor (value) {
@@ -257,9 +297,9 @@ class Literal extends ExpressionTree {
   toString () {
     return '{l' + this.value + '}'
   }
-}//end Literal class
+} // end Literal class
 
-//end of classes, start of functions
+// end of classes, start of functions
 
 function array_delete (arr, ref) {
   for (let i = 0; i < arr.length; i++) {
@@ -382,4 +422,4 @@ function helper (text) {
   console.log(rettext + '  :  ' + (temp === 0) + '  :  ' + zeroamt)
 }
 
-////////////////////////////////////////////////////////////////////////////////
+/// /////////////////////////////////////////////////////////////////////////////
