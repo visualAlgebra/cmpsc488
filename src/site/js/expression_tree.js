@@ -265,7 +265,7 @@ class Tag extends ExpressionTree {
       return retval;
     }
   }
-  var my_lzma = LZMA("js/lzma_worker.js");
+  var my_lzma = LZMA("src/site/js/lzma_worker.js");
   function prepare_data(str)
   {
     var arr;
