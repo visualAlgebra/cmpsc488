@@ -24,166 +24,183 @@
 
 // 1 + 2 => 2 + 1
 // 1 * 2 => 2 * 1
+//Takes in two siblings and a quadrant(the list where the siblings are located).
+//If the siblings and quadrant are valid, then the siblings will be swapped.
 class CommutativeSwap {
-    constructor(sibling1, sibling2, quadrant) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-        this.quadrant = quadrant;
+
+  constructor(sibling1, sibling2, quadrant) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+    this.quadrant = quadrant;
+  }
+
+  //verifys if the arguments are valid by checking
+  //if the Siblings are in the same quadrant, then return true
+  verify() {
+    return quadrant.includes(sibling2)
+        && quadrant.includes(sibling1);
+  }
+
+  //
+  apply(exprTree) {
+
+    //Finds the index of the two siblings
+    idx1 = quadrant.findIndex(x => x === sibling1);
+    idx2 = quadrant.findIndex(x => x === sibling2);
+
+    //create a new array for the return tree
+    newQuadrant = [];
+
+    //constructs the the array,
+    //if i matches one of the indices of the siblings,
+    //then the other sibling will be added
+    for (var i = 0; i < quadrant.length; i++) {
+      if (i === idx1) {
+        newQuadrant[i] = sibling2;
+      }
+      if (i === idx2) {
+        newQuadrant[i] = sibling1;
+      }
+      newQuadrant[i] = quadrant[i];
     }
 
-    verify() {
-        // return sibling1.parent.SE === sibling2.parent.SE
-        //     || sibling1.parent.NW === sibling2.parent.NW;
-        return quadrant.includes(sibling2)
-            && quadrant.includes(sibling1);
+    //if quadrant was NW, then 
+    if (quadrant.equals(sibling1.parent.NW)) {
+      return new tree(sibling1.parent.orientation, newQuadrant, sibling1.parent.SE);
+    } else {
+      return new tree(sibling1.parent.orientation, sibling1.parent.NW, newQuadrant);
     }
-
-    apply(exprTree) {
-        idx1 = quadrant.findIndex(x => x === sibling1);
-        idx2 = quadrant.findIndex(x => x === sibling2);
-        newQuadrant = [];
-        for (var i = 0; i < quadrant.length; i++) {
-          if (i === idx1) {
-            newQuadrant[i] = sibling2;
-          }
-          if (i === idx2) {
-            newQuadrant[i] = sibling1;
-          }
-          newQuadrant[i] = quadrant[i];
-        }
-
-        if (quadrant.equals(sibling1.parent.NW)) {
-          return new tree(sibling1.parent.orientation, newQuadrant);
-        } else {
-          return new tree(sibling1.parent.orientation, sibling1.parent.NW, newQuadrant);
-        }
-    }
+  }
 }
 
 // (1 + 2) + 1 => 1 + 2 + 1
 class AssociativeMerge {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2, quadrant) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+    this.quadrant = quadrant;
+  }
 
-    verify() {
-        return sibling1.parent === sibling2.parent;
-    }
+  //verifys if the arguments are valid by checking
+  //if the Siblings are in the same quadrant, then return true
+  verify() {
+    return quadrant.includes(sibling2)
+        && quadrant.includes(sibling1);
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+
+    return new tree;
+  }
 }
 
 class AssociativeIntro {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
 
 class Distribute {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
 
 class Factor {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
 
 class SplitFrac {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
 
 class CombineFrac {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
 
 class Cancel {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
-    }
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
 
 class IdentityBalance {
-    constructor(sibling) {
-        this.sibling = sibling;
-    }
+  constructor(sibling) {
+    this.sibling = sibling;
+  }
 
-    verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
-    }
+  verify() {
+    // return this.sibling1 and this.sibling2 are actually siblings;
+  }
 
-    apply(exprTree) {
-        exprTree.find();
-        return new tree;
-    }
+  apply(exprTree) {
+    exprTree.find();
+    return new tree;
+  }
 }
