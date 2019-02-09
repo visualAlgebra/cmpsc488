@@ -25,21 +25,42 @@
 // 1 + 2 => 2 + 1
 // 1 * 2 => 2 * 1
 class CommutativeSwap {
-    constructor(sibling1, sibling2) {
+    constructor(sibling1, sibling2, quadrant) {
         this.sibling1 = sibling1;
         this.sibling2 = sibling2;
+        this.quadrant = quadrant;
     }
 
     verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
+        // return sibling1.parent.SE === sibling2.parent.SE
+        //     || sibling1.parent.NW === sibling2.parent.NW;
+        return quadrant.includes(sibling2)
+            && quadrant.includes(sibling1);
     }
 
     apply(exprTree) {
-        exprTree.find();
-        return new tree;
+        idx1 = quadrant.findIndex(x => x === sibling1);
+        idx2 = quadrant.findIndex(x => x === sibling2);
+        newQuadrant = [];
+        for (var i = 0; i < quadrant.length; i++) {
+          if (i === idx1) {
+            newQuadrant[i] = sibling2;
+          }
+          if (i === idx2) {
+            newQuadrant[i] = sibling1;
+          }
+          newQuadrant[i] = quadrant[i];
+        }
+
+        if (quadrant.equals(sibling1.parent.NW)) {
+          return new tree(sibling1.parent.orientation, newQuadrant);
+        } else {
+          return new tree(sibling1.parent.orientation, sibling1.parent.NW, newQuadrant);
+        }
     }
 }
 
+// (1 + 2) + 1 => 1 + 2 + 1
 class AssociativeMerge {
     constructor(sibling1, sibling2) {
         this.sibling1 = sibling1;
@@ -47,7 +68,7 @@ class AssociativeMerge {
     }
 
     verify() {
-        // return this.sibling1 and this.sibling2 are actually siblings;
+        return sibling1.parent === sibling2.parent;
     }
 
     apply(exprTree) {
@@ -153,9 +174,8 @@ class Cancel {
 }
 
 class IdentityBalance {
-    constructor(sibling1, sibling2) {
-        this.sibling1 = sibling1;
-        this.sibling2 = sibling2;
+    constructor(sibling) {
+        this.sibling = sibling;
     }
 
     verify() {
