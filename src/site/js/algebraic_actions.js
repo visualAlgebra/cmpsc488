@@ -64,33 +64,54 @@ class CommutativeSwap {
       newQuadrant[i] = quadrant[i];
     }
 
-    //if quadrant was NW, then 
+    //if quadrant was NW, then replace NW, else replace SE
     if (quadrant.equals(sibling1.parent.NW)) {
-      return new tree(sibling1.parent.orientation, newQuadrant, sibling1.parent.SE);
+      return new Tag(sibling1.parent.orientation, newQuadrant, sibling1.parent.SE);
     } else {
-      return new tree(sibling1.parent.orientation, sibling1.parent.NW, newQuadrant);
+      return new Tag(sibling1.parent.orientation, sibling1.parent.NW, newQuadrant);
     }
   }
 }
 
 // (1 + 2) + 1 => 1 + 2 + 1
 class AssociativeMerge {
-  constructor(sibling1, sibling2, quadrant) {
-    this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+  constructor(sibling, parent, quadrant) {
+    this.sibling = sibling;
+    this.parent = parent;
     this.quadrant = quadrant;
   }
 
   //verifys if the arguments are valid by checking
-  //if the Siblings are in the same quadrant, then return true
+  //if the sibling is included in the parent
+  //then return true
   verify() {
-    return quadrant.includes(sibling2)
-        && quadrant.includes(sibling1);
+    return parent.NW.includes(sibling)
+        || (parent.SE.includes(sibling) && parent.orientation === "eastwest");
   }
 
-  apply(exprTree) {
 
-    return new tree;
+  apply(exprTree) {
+    //Find the index of sibling
+    idx = quadrant.findIndex(x => x === sibling);
+
+    //make a new array for new tree
+    newQuadrant = [];
+
+    //add expressions into new quadrant
+    for(let child of quadrant) {
+      if(child.equals(sibling)) {
+        for(let siblingChild of sibling) {
+          newQuadrant.push(siblingChild);
+        }
+      }
+      newQuadrant.push(child);
+    }
+
+    if(quadrant.equals(parent.NW)) {
+      return new Tag(parent.orientation, newQuadrant, sibling.parent.SE);
+    } else {
+      return new Tag(sibling1.parent.orientation, sibling.parent.NW, newQuadrant);
+    }
   }
 }
 
