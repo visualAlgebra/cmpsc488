@@ -12,7 +12,7 @@ $ cd cmpsc488
 This project requires `npm`.
 
 ```shell
-$ pwd
+$ pwd # make sure you're in the project root
 /path/to/cmpsc488
 
 $ npm install # this will install all the dependencies to your local machine
@@ -21,8 +21,11 @@ $ npm install # this will install all the dependencies to your local machine
 ### Starting a Development Server
 To start up a development server:
 
-node src/server/server.js
+```shell
+$ pwd # make sure you're in the project root
+/path/to/cmpsc488
 
-Then in your browser, go to [http://localhost:8080](http://localhost:8000).
+$ node src/server/server.js
+```
 
-If you don't use a development server, some javascript stuff may not work!
+Then in your browser, go to [http://localhost:8080](http://localhost:8080).
