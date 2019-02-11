@@ -1,3 +1,8 @@
+:root {
+    --tag-border-thickness: 0.3rem;
+    --tag-button-size: 2rem;
+}
+
 .tag {
     padding: 1rem;
     margin: 1rem;
@@ -5,26 +10,60 @@
 
 .south-east, .north-west {
     padding: 1rem;
+    border-radius: 1rem;
 }
 
-.east-west > * {
-    /* display: inline; */
+.north-south, .north-south > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
 }
 
-.east-west > * > * {
-    /* display: inline; */
+.east-west, .east-west > .north-west, .east-west > .south-east {
+    display: flex;
+    align-items: center;
 }
 
-.north-south {
-
+.north-west {
+    border: solid var(--tag-border-thickness) blue;
 }
 
-.tag > .north-west {
-    border: solid 3px blue;
+.south-east {
+    border: solid var(--tag-border-thickness) red;
 }
 
-.tag > .south-east {
-    border: solid 3px red;
+.east-west > .north-west {
+    border-bottom-right-radius: 100%;
+    border-top-right-radius: 100%;
+}
+
+.east-west > .south-east {
+    border-bottom-left-radius: 100%;
+    border-top-left-radius: 100%;
+}
+
+.north-south > .north-west {
+    border-bottom-left-radius: 100%;
+    border-bottom-right-radius: 100%;
+}
+
+.north-south > .south-east {
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+}
+
+.tag-button {
+    width: var(--tag-button-size);
+    height: var(--tag-button-size);
+    background: green; /* STYLING TENTATIVE! */
+    border: solid 3px #494;
+    border-radius: 100%;
+    transition: 0.1s;
+}
+
+.tag-button:hover {
+    background: #afa;
+    border: solid 3px lightgreen;
 }
 
 .variable, .literal {
@@ -33,6 +72,8 @@
     text-align: center;
     color: white;
     font-size: 20pt;
+    font-weight: bold;
+    border-radius: 1rem;
 }
 
 .literal {

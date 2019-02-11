@@ -97,11 +97,12 @@ class Tag extends ExpressionTree {
     div.setAttribute("data-id", this);
 
     const nw = document.createElement("div");
-
     nw.className = "north-west";
 
-    const se = document.createElement("div");
+    const button = document.createElement("div");
+    button.className = "tag-button";
 
+    const se = document.createElement("div");
     se.className = "south-east";
 
     this.NW.forEach(child => {
@@ -113,6 +114,7 @@ class Tag extends ExpressionTree {
     });
 
     div.appendChild(nw);
+    div.appendChild(button);
     div.appendChild(se);
     return div;
   }
