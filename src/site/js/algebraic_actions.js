@@ -38,7 +38,7 @@ class CommutativeSwap {
   }
 
   //
-  apply (exprTree) {
+  apply () {
 
     //Finds the index of the two siblings
     idx1 = quadrant.findIndex(x => x === sibling1);
@@ -88,7 +88,7 @@ class AssociativeMerge {
   }
 
 
-  apply(exprTree) {
+  apply() {
     //Find the index of sibling
     idx = quadrant.findIndex(x => x === sibling);
 
@@ -128,7 +128,7 @@ class AssociativeIntro {
 
   }
 
-  apply(exprTree) {
+  apply() {
 
     //make the inner tag
     if (quadrant.equals(parent.NW)){
@@ -166,7 +166,7 @@ class Distribute {
     // return this.sibling1 and this.sibling2 are actually siblings;
   }
 
-  apply(exprTree) {
+  apply() {
 
   }
 }
@@ -181,7 +181,7 @@ class Factor {
     // return this.sibling1 and this.sibling2 are actually siblings;
   }
 
-  apply(exprTree) {
+  apply() {
   }
 }
 
@@ -195,7 +195,7 @@ class SplitFrac {
     // return this.sibling1 and this.sibling2 are actually siblings;
   }
 
-  apply(exprTree) {
+  apply() {
   }
 }
 
@@ -209,7 +209,7 @@ class CombineFrac {
     // return this.sibling1 and this.sibling2 are actually siblings;
   }
 
-  apply(exprTree) {
+  apply() {
   }
 }
 
@@ -223,7 +223,7 @@ class Cancel {
     // return this.sibling1 and this.sibling2 are actually siblings;
   }
 
-  apply(exprTree) {
+  apply() {
   }
 }
 
@@ -236,7 +236,7 @@ class IdentityBalance {
     // return this.sibling1 and this.sibling2 are actually siblings;
   }
 
-  apply(exprTree) {
+  apply() {
 
   }
 }
