@@ -41,27 +41,27 @@ class CommutativeSwap {
   apply () {
 
     //Finds the index of the two siblings
-    idx1 = this.quadrant.findIndex(x => x === this.sibling1);
-    idx2 = this.quadrant.findIndex(x => x === this.sibling2);
+    var idx1 = this.quadrant.findIndex(x => x === this.sibling1);
+    var idx2 = this.quadrant.findIndex(x => x === this.sibling2);
 
     //create a new array for the return tree
-    newQuadrant = [];
+    var newQuadrant = [];
 
     //constructs the the array,
     //if i matches one of the indices of the siblings,
     //then the other sibling will be added
     for (var i = 0; i < this.quadrant.length; i++) {
       if (i === idx1) {
-        newQuadrant[i] = sibling2;
+        newQuadrant[i] = this.sibling2;
+      } else if (i === idx2) {
+        newQuadrant[i] = this.sibling1;
+      } else {
+        newQuadrant[i] = this.quadrant[i];
       }
-      if (i === idx2) {
-        newQuadrant[i] = sibling1;
-      }
-      newQuadrant[i] = quadrant[i];
     }
 
     //if quadrant was NW, then replace NW, else replace SE
-    if (quadrant.equals(sibling1.parent.NW)) {
+    if (this.quadrant.equals(this.sibling1.parent.NW)) {
       return new Tag(this.sibling1.parent.orientation, newQuadrant, this.sibling1.parent.SE);
     } else {
       return new Tag(this.sibling1.parent.orientation, this.sibling1.parent.NW, newQuadrant);
