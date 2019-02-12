@@ -33,16 +33,16 @@ class CommutativeSwap {
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
   verify () {
-    return quadrant.includes(sibling2)
-        && quadrant.includes(sibling1);
+    return this.quadrant.includes(sibling2)
+        && this.quadrant.includes(sibling1);
   }
 
   //
   apply () {
 
     //Finds the index of the two siblings
-    idx1 = quadrant.findIndex(x => x === sibling1);
-    idx2 = quadrant.findIndex(x => x === sibling2);
+    idx1 = this.quadrant.findIndex(x => x === this.sibling1);
+    idx2 = this.quadrant.findIndex(x => x === this.sibling2);
 
     //create a new array for the return tree
     newQuadrant = [];
@@ -50,7 +50,7 @@ class CommutativeSwap {
     //constructs the the array,
     //if i matches one of the indices of the siblings,
     //then the other sibling will be added
-    for (var i = 0; i < quadrant.length; i++) {
+    for (var i = 0; i < this.quadrant.length; i++) {
       if (i === idx1) {
         newQuadrant[i] = sibling2;
       }
@@ -62,9 +62,9 @@ class CommutativeSwap {
 
     //if quadrant was NW, then replace NW, else replace SE
     if (quadrant.equals(sibling1.parent.NW)) {
-      return new Tag(sibling1.parent.orientation, newQuadrant, sibling1.parent.SE);
+      return new Tag(this.sibling1.parent.orientation, newQuadrant, this.sibling1.parent.SE);
     } else {
-      return new Tag(sibling1.parent.orientation, sibling1.parent.NW, newQuadrant);
+      return new Tag(this.sibling1.parent.orientation, this.sibling1.parent.NW, newQuadrant);
     }
   }
 }
@@ -83,32 +83,32 @@ class AssociativeMerge {
   //if the sibling is included in the parent
   //then return true
   verify() {
-    return parent.NW.includes(sibling)
-        || (parent.SE.includes(sibling) && parent.orientation === "eastwest");
+    return this.parent.NW.includes(this.sibling)
+        || (this.parent.SE.includes(this.sibling) && this.parent.orientation === "eastwest");
   }
 
 
   apply() {
     //Find the index of sibling
-    idx = quadrant.findIndex(x => x === sibling);
+    idx = this.quadrant.findIndex(x => x === this.sibling);
 
     //make a new array for new tree
     newQuadrant = [];
 
     //add expressions into new quadrant
-    for(let child of quadrant) {
-      if(child.equals(sibling)) {
-        for(let siblingChild of sibling) {
+    for(let child of this.quadrant) {
+      if(child.equals(this.sibling)) {
+        for(let siblingChild of this.sibling) {
           newQuadrant.push(siblingChild);
         }
       }
       newQuadrant.push(child);
     }
 
-    if(quadrant.equals(parent.NW)) {
-      return new Tag(parent.orientation, newQuadrant, sibling.parent.SE);
+    if(quadrant.equals(this.parent.NW)) {
+      return new Tag(this.parent.orientation, newQuadrant, this.sibling.parent.SE);
     } else {
-      return new Tag(parent.orientation, sibling.parent.NW, newQuadrant);
+      return new Tag(this.parent.orientation, this.sibling.parent.NW, newQuadrant);
     }
   }
 }
@@ -131,10 +131,10 @@ class AssociativeIntro {
   apply() {
 
     //make the inner tag
-    if (quadrant.equals(parent.NW)){
-      var newTag = new Tag(parent.orientation, siblings);
+    if (quadrant.equals(this.parent.NW)){
+      var newTag = new Tag(this.parent.orientation, this.siblings);
     } else {
-      var newTag = new Tag(parent.orientation, [], siblings);
+      var newTag = new Tag(this.parent.orientation, [], this.siblings);
     }
 
     //find the index of the first sibling
@@ -148,10 +148,10 @@ class AssociativeIntro {
       newQuadrant[i] = quadrant[i];
     }
 
-    if(quadrant.equals(parent.NW)) {
-      return new Tag(parent.orientation, newQuadrant, sibling.parent.SE);
+    if(quadrant.equals(this.parent.NW)) {
+      return new Tag(this.parent.orientation, newQuadrant, this.sibling.parent.SE);
     } else {
-      return new Tag(parent.orientation, sibling.parent.NW, newQuadrant);
+      return new Tag(this.parent.orientation, this.sibling.parent.NW, newQuadrant);
     }
   }
 }
