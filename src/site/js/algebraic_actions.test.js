@@ -72,6 +72,9 @@ function CSTest3() {
 }
 
 function AMTest1() {
+  // [ [1><] ><]
+  // =>
+  // [1><]
   var s = new Tag(Orientation.NS);
   s0 = new Literal(1);
   s1 = new Literal(2);
@@ -80,10 +83,10 @@ function AMTest1() {
   var p = new Tag(Orientation.NS);
   p.addNorthWest(s);
 
-  var merge = new AssociativeMerge(s, p, p.NW);
-  var m = merge.apply();
+  var merge = new AssociativeMerge(s, p, Quadrant.NW);
+  merge.apply();
 
-  var retval = m.equals(s);
+  var retval = p.equals(s);
   if(!retval){
     console.log("AssociativeMerge Test 1 failed");
   }
@@ -91,6 +94,9 @@ function AMTest1() {
 }
 
 function AMTest2() {
+  // [s0 [ s0 s1 ><] >< s1]
+  // =>
+  // [s0 s0 s1 >< s1]
   var s = new Tag(Orientation.EW);
   s0 = new Literal(1);
   s1 = new Variable(2);
@@ -101,8 +107,8 @@ function AMTest2() {
   p.addNorthWest(s);
   p.addSouthEast(s1);
 
-  var merge = new AssociativeMerge(s, p, p.NW);
-  var m = merge.apply();
+  var merge = new AssociativeMerge(s, p, Quadrant.NW);
+  merge.apply();
 
   var equiv = new Tag(Orientation.EW);
   equiv.addNorthWest(s0);
@@ -110,7 +116,7 @@ function AMTest2() {
   equiv.addNorthWest(s1);
   equiv.addSouthEast(s1);
 
-  var retval = m.equals(equiv);
+  var retval = p.equals(equiv);
   if(!retval){
     console.log("AssociativeMerge Test 2 failed");
   }
@@ -136,8 +142,8 @@ function AMTest3() {
   p.addSouthEast(s1);
 
 
-  var merge = new AssociativeMerge(s, p, p.NW);
-  var m = merge.apply();
+  var merge = new AssociativeMerge(s, p, Quadrant.NW);
+  merge.apply();
 
   var equiv = new Tag(Orientation.EW);
   equiv.addNorthWest(s0);
@@ -149,7 +155,7 @@ function AMTest3() {
   equiv.addSouthEast(s3);
   equiv.addSouthEast(s1);
 
-  var retval = m.equals(equiv);
+  var retval = p.equals(equiv);
   if(!retval){
     console.log("AssociativeMerge Test 3 failed");
   }
@@ -164,7 +170,7 @@ function AITest1() {
   p.addNorthWest(p1);
   var s = [p0, p1];
 
-  var merge = new AssociativeMerge(s, p, p.NW);
+  var merge = new AssociativeIntro(s, p, p.NW);
   var m = merge.apply();
 
   var equiv = new Tag(Orientation.NS, [p]);
@@ -188,7 +194,7 @@ function AITest2() {
   p.addNorthWest(p3);
   var s = [p1, p2, p3];
 
-  var merge = new AssociativeMerge(s, p, p.NW);
+  var merge = new AssociativeIntro(s, p, p.NW);
   var m = merge.apply();
 
   var inner = new Tag(Orientation.NS, [p1, p2, p3]);
@@ -201,6 +207,46 @@ function AITest2() {
   return retval;
 }
 
+function AETest1() {
+  const x = new Variable(1);
+
+  const p = new Tag(Orientation.NS,
+    [
+      new Tag(Orientation.NS,
+        [x, new Variable(2)],
+        [new Variable(3)]
+      )
+    ],
+    []
+  );
+
+  console.log("P Before action:", p);
+
+  const expected = new Tag(Orientation.NS,
+    [
+      new Tag(Orientation.NS,
+        [new Variable(2)],
+        [new Variable(3)]
+      ),
+      new Variable(1)
+    ],
+    []
+  );
+
+  console.log("Expected:", expected);
+
+  const action = new AssociativeExtract(x, Quadrant.NW);
+  action.apply()
+
+  console.log("After action:", p);
+
+  var retval = p.equals(expected);
+  if(!retval){
+    console.log("AssociativeExtract Test 1 failed");
+  }
+  return retval;
+}
+
 function testAll() {
   if(CSTest1()&&CSTest2()&&CSTest3()){
     console.log("All CommutativeSwap tests have passed");
@@ -208,8 +254,11 @@ function testAll() {
   if(AMTest1()&&AMTest2()&&AMTest3()) {
     console.log("All AssociativeMerge tests have passed");
   }
+  if(AETest1()) {
+    console.log("All AssociativeExtract tests have passed");
+  }
   if(AITest1()&&AITest2()) {
-    console.log("All AssociativeIntro tests have passed")
+    console.log("All AssociativeIntro tests have passed");
   }
 }
 
