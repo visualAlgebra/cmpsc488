@@ -224,11 +224,11 @@ function AETest1() {
 
   const expected = new Tag(Orientation.NS,
     [
+      new Variable(1),
       new Tag(Orientation.NS,
         [new Variable(2)],
         [new Variable(3)]
-      ),
-      new Variable(1)
+      )
     ],
     []
   );

@@ -271,13 +271,35 @@ class AssociativeExtract {
 
     if (this.quadrantLabel === Quadrant.NW) {
       parent.removeNorthWest(this.grandchild);
-      grandparent.addNorthWest(this.grandchild);
+      grandparent.prependNorthWest(this.grandchild);
     } else {
       parent.removeSouthEast(this.grandchild);
-      grandparent.addSouthEast(this.grandchild);
+      grandparent.prependSouthEast(this.grandchild);
     }
+  }
+}
 
-    // parent[q] = parent[q].filter(x => !Object.is(x, this.grandchild));
+// [ x [ y >< z ] ><]
+// =>
+// [ [ x y >< z ] ><]
+class AssociativeInsert {
+
+  // QuadrantLabel is the quadrant label of the parent that contains the child.
+  constructor(sibling, insertionTag) {
+    this.sibling = sibling;
+    this.insertionTag = insertionTag;
+  }
+
+  verify() {
+    return this.grandchild.parent !== null
+        && this.grandchild.parent.parent !== null;
+  }
+
+  apply() {
+    const parent = this.sibling.parent;
+
+    parent.removeNorthWest(this.sibling);
+    this.insertionTag.prependNorthWest(this.sibling);
   }
 }
 

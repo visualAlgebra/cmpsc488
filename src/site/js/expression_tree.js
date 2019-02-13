@@ -58,6 +58,20 @@ class Tag extends ExpressionTree {
     this.updateParentTreeCount(delta);
   }
 
+  prependSouthEast(child) {
+    this.SE.splice(0, 0, child);
+    child.parent = this;
+    const delta = child.treeCount;
+    this.updateParentTreeCount(delta);
+  }
+
+  prependNorthWest(child) {
+    this.NW.splice(0, 0, child);
+    child.parent = this;
+    const delta = child.treeCount;
+    this.updateParentTreeCount(delta);
+  }
+
   addNorthWest(child) {
     this.NW.push(child);
     child.parent = this;
