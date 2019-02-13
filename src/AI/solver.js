@@ -11,7 +11,17 @@ class Node{
 }
 
 function heuristicEval(a, b){
-
+  if (a == b)
+    return 0;
+  var numDiff = 0;
+  //if we recieve the string version of the function in standard math then the code is the following
+  var maxDiff = max(a.length - b.length, 0);
+  for(var i = 0; i<a.length-maxDiff; i++){
+    if (a[i]!=b[i]){
+      numDiff+=1;
+    }
+  }
+  return numDiff + Math.abs(a.length-b.length);
 }
 function solve(a, b){
   var head = Node(hesuristicEval(a, b), null, null, a, 0);
@@ -33,7 +43,9 @@ function solve(a, b){
   // Since A* looks for the best answer, we can not stop once we find an answer, but we can stop when all unexpanded
   // nodes are valid answers
   while (nodeArray.length != solutions.length){
-
+    if(currentNode.currentExpression == b){
+      solutions.push(currentNode);
+    }
   }
 
   var optimalIndex = 0;
