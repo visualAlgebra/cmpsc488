@@ -85,7 +85,7 @@ function AMTest1() {
 
   var retval = m.equals(s);
   if(!retval){
-    console.log("CommutativeSwap Test 1 failed");
+    console.log("AssociativeMerge Test 1 failed");
   }
   return retval;
 }
@@ -112,7 +112,7 @@ function AMTest2() {
 
   var retval = m.equals(equiv);
   if(!retval){
-    console.log("CommutativeSwap Test 2 failed");
+    console.log("AssociativeMerge Test 2 failed");
   }
   return retval;
 }
@@ -151,7 +151,7 @@ function AMTest3() {
 
   var retval = m.equals(equiv);
   if(!retval){
-    console.log("CommutativeSwap Test 3 failed");
+    console.log("AssociativeMerge Test 3 failed");
   }
   return retval;
 }
@@ -171,7 +171,7 @@ function AITest1() {
 
   var retval = m.equals(equiv);
   if(!retval){
-    console.log("CommutativeSwap Test 1 failed");
+    console.log("AssociativeIntro Test 1 failed");
   }
   return retval;
 }
@@ -196,7 +196,7 @@ function AITest2() {
 
   var retval = m.equals(equiv);
   if(!retval){
-    console.log("CommutativeSwap Test 2 failed");
+    console.log("AssociativeIntro Test 2 failed");
   }
   return retval;
 }

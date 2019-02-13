@@ -90,26 +90,30 @@ class AssociativeMerge {
 
   apply() {
     //Find the index of sibling
-    idx = this.quadrant.findIndex(x => x === this.sibling);
+    var idx = this.quadrant.findIndex(x => x === this.sibling);
 
     //make a new array for new tree
-    newQuadrant = [];
+    var newQuadrantNW = [];
+    var newQuadrantSE = [];
 
     //add expressions into new quadrant
     for(let child of this.quadrant) {
       if(child.equals(this.sibling)) {
-        for(let siblingChild of this.sibling) {
-          newQuadrant.push(siblingChild);
+        for(let siblingChildNW of child.NW) {
+          newQuadrantNW.push(siblingChildNW);
         }
+        for(let siblingChildSE of child.SE) {
+          newQuadrantSE.push(siblingChildSE);
+        }
+      } else {
+        newQuadrantNW.push(child);
       }
-      newQuadrant.push(child);
+    }
+    for(let child of this.parent.SE) {
+      newQuadrantSE.push(child);
     }
 
-    if(quadrant.equals(this.parent.NW)) {
-      return new Tag(this.parent.orientation, newQuadrant, this.sibling.parent.SE);
-    } else {
-      return new Tag(this.parent.orientation, this.sibling.parent.NW, newQuadrant);
-    }
+    return new Tag(this.parent.orientation, newQuadrantNW, newQuadrantSE);
   }
 }
 
@@ -125,7 +129,14 @@ class AssociativeIntro {
 
   //Valid if siblings is in parent in the correct order
   verify() {
-
+    var idx = quadrant.findIndex(x => x === siblings[0]);
+    for (let child of siblings) {
+      if (!child.equals(quadrant[idx])) {
+        return false;
+      }
+      idx++;
+    }
+    return true;
   }
 
   apply() {
@@ -138,9 +149,9 @@ class AssociativeIntro {
     }
 
     //find the index of the first sibling
-    idx = quadrant.findIndex(x => x.equals(sibling[0]));
+    var idx = quadrant.findIndex(x => x.equals(sibling[0]));
 
-    newQuadrant = [];
+    var newQuadrant = [];
     for (var i = 0; i < quadrant.length - siblings.length; i++) {
       if(i === idx) {
         newQuadrant[i] = newTag;
@@ -149,9 +160,9 @@ class AssociativeIntro {
     }
 
     if(quadrant.equals(this.parent.NW)) {
-      return new Tag(this.parent.orientation, newQuadrant, this.sibling.parent.SE);
+      return new Tag(this.parent.orientation, newQuadrant, this.parent.SE);
     } else {
-      return new Tag(this.parent.orientation, this.sibling.parent.NW, newQuadrant);
+      return new Tag(this.parent.orientation, this.parent.NW, newQuadrant);
     }
   }
 }
