@@ -15,8 +15,9 @@ class Server {
 
 	    this.accessibleFolders = ["/src/site/assets/", "/src/site/css/","/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
         this.accessibleHTMLFiles = ["/index.html", "/Explorer.html", "/About_Contact_Us.html", "/creator.html","/LessonPage.html", "/manipulator.html", "/user_profile_page.html"];
-        this.databaseActions = ["/src/db/problems&lessons/"];
+        this.databaseActions = ["/problems/", "/lessons/", "/user/"];
     }
+    
 
     //returns true is filePath is an html file we allow to be found
     isAccessibleHTMLFile(filePath) {
@@ -28,14 +29,9 @@ class Server {
 	return false;
     }
 
-    // sendDatabaseFile() {
-    //     console.log("========== SENT =========");
-    // }
-
 
     //returns true if filePath is accessible (ie its in a folder that is set up in accessibleFolders array)
     isAccessibleFolder(filePath) {
-	
         for (var i = 0; i < this.accessibleFolders.length; i++) {
 	        if (filePath.startsWith(this.accessibleFolders[i])) {
 		    //check for .. so file cannot back up (security)
@@ -54,31 +50,81 @@ class Server {
     //creates a server session that listens on port 8080 of localhost
     listen() {
         //so can call methods inside other function
-        var self = this;
+        var self = this; //so can call inside callback function
         http.createServer(function (request, response) {
             let sentUrl = url.parse(request.url, true);
+            let method = request.method;
 
             //determine action required
-            if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //get request for problem
-                self.sendProblem(sentUrl.pathname, response);
-            } else {
-                self.sendPage(sentUrl.pathname, response);
-            }
+            if (method == "GET") {
+                if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //GET request for problem
+                    self.getProblem(sentUrl.pathname, response);
+                } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //GET request for Lesson
+                    self.getLesson(sentUrl.pathname, response);
+                } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //GET request for an account
+                    self.getAccount(sentUrl.pathname, response);
+                } else { //GET request for a webpage
+                    self.getPage(sentUrl.pathname, response);
+                }
 
+            } else if (method == "POST") {
+                if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
+                    self.saveProblem(sentUrl.pathname, response);
+                } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
+                    self.saveLesson(sentUrl.pathname, response);
+                } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
+                    self.saveAccount(sentUrl.pathname, response);
+                } else {
+                    return self.respondWithError(response, 400, "Error 400: Bad Request");
+                }
+
+            } else if (method == "DELETE") {
+                if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
+                    self.deleteProblem(sentUrl.pathname, response);
+                } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
+                    self.deleteLesson(sentUrl.pathname, response);
+                } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
+                    self.deleteAccount(sentUrl.pathname, response);
+                } else {
+                    return self.respondWithError(response, 400, "Error 400: Bad Request");
+                }
+            } else { // we do not handle other methods 
+                return self.respondWithError(response, 400, "Error 400: Bad Request");
+            }
         }).listen(8080);
     }
 
 
+    respondWithData(response, statusCode, mediaType, data) {
+        // console.log(statusCode + " === " + mediaType + " === " + data);
+        response.writeHead(statusCode, {'Content-Type': mediaType})
+        response.write(data);
+        return response.end();
+    }
+
+    respondWithError(response, errorCode, errorMessage) {
+        // console.log(errorMessage);
+        response.writeHead(errorCode, {'Content-Type': 'text/html'})
+        response.write(errorMessage);
+        return response.end();
+    }
+
+
+    //==========================================================================
+    //========================= GET methods ====================================
+    //==========================================================================
+
     //function that will send requested problem back as a response
-    sendProblem(pathName, serverResponse) {
+    getProblem(pathName, serverResponse) {
         //remove starting part of pathname to get problem id
         let problemID = pathName.substr(this.databaseActions[0].length)
-        this.database.getProblemOrLesson(problemID, serverResponse);
+        this.database.getProblem(this, problemID, serverResponse);
     }
     
     
     //function that sends page back as response
-    sendPage(pageName, res) {
+    //pageName: string with file
+    getPage(pageName, response) {
         let filename;
         if (pageName == "/") {
             filename = "./src/site/index.html";
@@ -87,12 +133,9 @@ class Server {
 	    } else if (this.isAccessibleHTMLFile(pageName)) {
 	        filename = "src/site" + pageName; 
         } else {
-            res.writeHead(404, {'Content-Type': 'text/html'})
-            res.write("Error 404: File not found");
-            return res.end();
+            this.respondWithError(response, 404, "Error 404: Page Not Found");
 	    }
 	
-
         //determine Content-type
         var contentType = "text/html";
         if (filename.substr(-3) === "css") {
@@ -102,39 +145,65 @@ class Server {
         } else if (filename.substr(-3) === "png") {
                 contentType = "image/png";
         }
-	
-	    console.log(contentType);
-
+        
+        var self = this; //required for callback in readFile scope
         fs.readFile(filename, function (err, data) {
             if (err) {
-                res.writeHead(404, {'Content-Type': 'text/html'})
-                res.write("Error 404: File not found");
-                return res.end();
+                return self.respondWithError(response, 404, "Error 404: Page Not Found");
             }
             else {
-                res.writeHead(200, {'Content-Type': contentType});
-                res.write(data);
-                return res.end();
+               return self.respondWithData(response, 200, contentType, data);
             }
         });
         return 0;
     }
     
 
-    sendLesson(lessonID) {
-        return 0;
+    getAccount(pathname, response) {
+        return response.end();
     }
 
-    sendMessage(message) {
-        return 0;
+
+    getLesson(lessonID, response) {
+        return response.end();
     }
 
-    sendAccount(accountID) {
-        return 0;
+
+    //==========================================================================
+    //========================= POST methods ===================================
+    //==========================================================================
+
+    saveProblem(problemID, response) {
+        return response.end();
     }
 
-    sendURL(urlString) {
-        return 0;
+
+    saveLesson(lessonID, response) {
+        return response.end();
+    }
+
+
+    saveAccount(accountID, response) {
+        return response.end();
+    }
+
+
+    //==========================================================================
+    //========================= DELETE methods =================================
+    //==========================================================================
+
+    deleteProblem(problemID, response) {
+        return response.end();
+    }
+
+
+    deleteLesson(lessonID, response) {
+        return response.end();
+    }
+
+
+    deleteAccount(accountID, response) {
+        return response.end();
     }
 
 
@@ -149,6 +218,7 @@ class Server {
 var server = new Server();
 server.listen();
 test();
+//testDatabase(server);
 
 function test() {
 
@@ -169,4 +239,15 @@ function test() {
         });
     });
 
+}
+
+function testDatabase(server) {
+    server.database.getProblem(server, null, "TEST_PROBLEM_1");
+    server.database.getLesson(server, null, "TEST_LESSON_1");
+    server.database.getAccount(server,null,"TEST_ACCOUNT_1");
+    server.database.saveProblem(server, null, "TEST_ACCOUNT_1", '{"text": "TEST_PROBLEM_3"}', "TEST_PROBLEM_3");
+    server.database.saveLesson(server, null, "TEST_ACCOUNT_1", '{"text": "TEST_LESSON_2"}', "TEST_LESSON_2");
+    server.database.addAccount(server, null, '{"text": "TEST_LESSON_1"}', "TEST_ACCOUNT_2");
+    server.database.deleteProblem(server, null, "TEST_ACCOUNT_1", "TEST_PROBLEM_1");
+    server.database.deleteLesson(server, null, "TEST_ACCOUNT_1", "TEST_LESSON_1");
 }
