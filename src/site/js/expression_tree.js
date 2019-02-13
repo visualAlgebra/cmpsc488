@@ -3,6 +3,11 @@ const Orientation = {
   NS: "northsouth"
 };
 
+const Quadrant = {
+  NW: "NW",
+  SE: "SE"
+};
+
 String.prototype.splice = function(index, str) {
   return this.slice(0, index) + str + this.slice(index);
 };
@@ -37,23 +42,53 @@ class Tag extends ExpressionTree {
     }
   }
 
+  // TreeCount keeps track of the number of Tags, Variables, and Literals
+  // (including itself).
   updateParentTreeCount(count) {
     this.treeCount += count;
     if (this.parent != null) {
-      this.parent.updateParentTreeCount(1);
+      this.parent.updateParentTreeCount(count);
     }
   }
   //
   addSouthEast(child) {
     this.SE.push(child);
     child.parent = this;
-    this.updateParentTreeCount(1);
+    const delta = child.treeCount;
+    this.updateParentTreeCount(delta);
+  }
+
+  prependSouthEast(child) {
+    this.SE.splice(0, 0, child);
+    child.parent = this;
+    const delta = child.treeCount;
+    this.updateParentTreeCount(delta);
+  }
+
+  prependNorthWest(child) {
+    this.NW.splice(0, 0, child);
+    child.parent = this;
+    const delta = child.treeCount;
+    this.updateParentTreeCount(delta);
   }
 
   addNorthWest(child) {
     this.NW.push(child);
     child.parent = this;
-    this.updateParentTreeCount(1);
+    const delta = child.treeCount;
+    this.updateParentTreeCount(delta);
+  }
+
+  removeSouthEast(child) {
+    this.SE = this.SE.filter(x => !Object.is(x, child));
+    const delta = child.treeCount;
+    this.updateParentTreeCount(-delta);
+  }
+
+  removeNorthWest(child) {
+    this.NW = this.NW.filter(x => !Object.is(x, child));
+    const delta = child.treeCount;
+    this.updateParentTreeCount(-delta);
   }
 
   equals(that) {

@@ -24,25 +24,29 @@
 // If the siblings and quadrant are valid, then the siblings will be swapped.
 class CommutativeSwap {
 
-  constructor (sibling1, sibling2, quadrant) {
+  constructor (sibling1, sibling2, quadrantLabel) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
-    this.quadrant = quadrant;
+    this.quadrantLabel = quadrantLabel;
   }
 
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
   verify () {
-    return this.quadrant.includes(sibling2)
-        && this.quadrant.includes(sibling1);
+    const quadrant = this.sibling1.parent[this.quadrantLabel];
+    return this.sibling1.parent === this.sibling2.parent
+        && quadrant.some(x => Object.is(x, sibling2))
+        && quadrant.some(x => Object.is(x, sibling1));
   }
 
   //
   apply () {
 
+    const quadrant = this.sibling1.parent[this.quadrantLabel];
+
     //Finds the index of the two siblings
-    var idx1 = this.quadrant.findIndex(x => x === this.sibling1);
-    var idx2 = this.quadrant.findIndex(x => x === this.sibling2);
+    var idx1 = quadrant.findIndex(x => Object.is(x, this.sibling1));
+    var idx2 = quadrant.findIndex(x => Object.is(x, this.sibling2));
 
     //create a new array for the return tree
     var newQuadrant = [];
@@ -50,33 +54,77 @@ class CommutativeSwap {
     //constructs the the array,
     //if i matches one of the indices of the siblings,
     //then the other sibling will be added
-    for (var i = 0; i < this.quadrant.length; i++) {
+    for (var i = 0; i < quadrant.length; i++) {
       if (i === idx1) {
         newQuadrant[i] = this.sibling2;
       } else if (i === idx2) {
         newQuadrant[i] = this.sibling1;
       } else {
-        newQuadrant[i] = this.quadrant[i];
+        newQuadrant[i] = quadrant[i];
       }
     }
 
     //if quadrant was NW, then replace NW, else replace SE
-    if (this.quadrant.equals(this.sibling1.parent.NW)) {
-      return new Tag(this.sibling1.parent.orientation, newQuadrant, this.sibling1.parent.SE);
+    if (this.quadrantLabel === Quadrant.NW) {
+      this.sibling1.parent.NW = newQuadrant;
     } else {
-      return new Tag(this.sibling1.parent.orientation, this.sibling1.parent.NW, newQuadrant);
+      this.sibling1.parent.SE = newQuadrant;
     }
   }
 }
 
 // (1 + 2) + 1 => 1 + 2 + 1
+
+// (1 - 2) + 1 => (1 + 1 - 2)
+
+// APPLY ASSOCIATIVE MERGE
+// [ [1><2] 1 ><]
+//                        Apply AssociativeMerge.
+// [ 1 1 >< 2 ]
+
+// APPLY ASSOCIATIVE INTRO
+// [1 2 >< 1]
+//                       Apply AssociativeIntro.
+// [ [1 2 >< 1] ><]
+
+// APPLY ASSOCIATIVE INTRO
+// 1
+//                       Apply AssociativeIntro.
+// [ 1 ><]
+
+// APPLY ASSOCIATIVE INTRO
+// [1 2 >< 1]
+//                       Apply AssociativeIntro.
+// [ [1><] 2 >< 1]
+
+// UNDO ASSOCIATIVE MERGE
+// [ 1 1 >< 2 ]
+//                        Enclose entire tag in tag of same orientation.
+// [ [1 1><2] ><]
+//                        Apply new kind of AssociativeIntro.
+// [ [ 1 [1><2] ><] ><]
+//                        Merge outer two tags.
+// [ 1 [1><2] ><]
+//                        Apply a commutative swap.
+// [ [1><2] 1 ><]
+
+// CRAZY ASSOCIATIVE INTRO
+// [1 2 >< 3]  <=Merge=  [1 [2><3] ><]
+//
+// [1 [2><] >< 3]
+// 
+// [1 [2><] >< [3><]]
+// 
+// [1 [2><3] ><]
+
+
 //Takes two tags of the same orientation and one is in the other.
 //The inner tag is collapsed into the outer tag
 class AssociativeMerge {
-  constructor(sibling, parent, quadrant) {
+  constructor(sibling, parent, quadrantLabel) {
     this.sibling = sibling;
     this.parent = parent;
-    this.quadrant = quadrant;
+    this.quadrantLabel = quadrantLabel;
   }
 
   //verifys if the arguments are valid by checking
@@ -84,36 +132,73 @@ class AssociativeMerge {
   //then return true
   verify() {
     return this.parent.NW.includes(this.sibling)
-        || (this.parent.SE.includes(this.sibling) && this.parent.orientation === "eastwest");
+        || (this.parent.SE.includes(this.sibling) && this.parent.orientation === Orientation.EW);
   }
 
 
   apply() {
-    //Find the index of sibling
-    var idx = this.quadrant.findIndex(x => x === this.sibling);
+
+    const quadrant = this.parent[this.quadrantLabel];
 
     //make a new array for new tree
     var newQuadrantNW = [];
     var newQuadrantSE = [];
 
-    //add expressions into new quadrant
-    for(let child of this.quadrant) {
-      if(child.equals(this.sibling)) {
-        for(let siblingChildNW of child.NW) {
-          newQuadrantNW.push(siblingChildNW);
+    // If the sibling is in the NW quadrant...
+    if (this.quadrantLabel === Quadrant.NW) {
+
+      //add expressions into new quadrant
+      for(let child of quadrant) {
+
+        if(Object.is(child, this.sibling)) {
+
+          for(let siblingChildNW of child.NW) {
+            newQuadrantNW.push(siblingChildNW);
+          }
+          
+          for(let siblingChildSE of child.SE) {
+            newQuadrantSE.push(siblingChildSE);
+          }
+
+        } else {
+          newQuadrantNW.push(child);
         }
-        for(let siblingChildSE of child.SE) {
-          newQuadrantSE.push(siblingChildSE);
-        }
-      } else {
+      }
+
+      // Add everything from the parent's SE quadrant into the new SE quadrant.
+      for(let child of this.parent.SE) {
+        newQuadrantSE.push(child);
+      }
+
+    } else { // SE quadrant
+
+      // Add everything from the parent's NW quadrant into the new NW quadrant.
+      for(let child of this.parent.NW) {
         newQuadrantNW.push(child);
       }
-    }
-    for(let child of this.parent.SE) {
-      newQuadrantSE.push(child);
+
+
+      //add expressions into new quadrant
+      for(let child of quadrant) {
+
+        if(Object.is(child, this.sibling)) {
+
+          for(let siblingChildNW of child.NW) {
+            newQuadrantSE.push(siblingChildNW);
+          }
+          
+          for(let siblingChildSE of child.SE) {
+            newQuadrantNW.push(siblingChildSE);
+          }
+
+        } else {
+          newQuadrantSE.push(child);
+        }
+      }
     }
 
-    return new Tag(this.parent.orientation, newQuadrantNW, newQuadrantSE);
+    this.parent.NW = newQuadrantNW;
+    this.parent.SE = newQuadrantSE;
   }
 }
 
@@ -142,28 +227,79 @@ class AssociativeIntro {
   apply() {
 
     //make the inner tag
-    if (quadrant.equals(this.parent.NW)){
+    if (this.quadrant.equals(this.parent.NW)){
       var newTag = new Tag(this.parent.orientation, this.siblings);
     } else {
       var newTag = new Tag(this.parent.orientation, [], this.siblings);
     }
 
     //find the index of the first sibling
-    var idx = quadrant.findIndex(x => x.equals(sibling[0]));
+    var idx = this.quadrant.findIndex(x => x.equals(sibling[0]));
 
     var newQuadrant = [];
-    for (var i = 0; i < quadrant.length - siblings.length; i++) {
+    for (var i = 0; i < this.quadrant.length - siblings.length; i++) {
       if(i === idx) {
         newQuadrant[i] = newTag;
       }
       newQuadrant[i] = quadrant[i];
     }
 
-    if(quadrant.equals(this.parent.NW)) {
+    if(this.quadrant.equals(this.parent.NW)) {
       return new Tag(this.parent.orientation, newQuadrant, this.parent.SE);
     } else {
       return new Tag(this.parent.orientation, this.parent.NW, newQuadrant);
     }
+  }
+}
+
+class AssociativeExtract {
+
+  // QuadrantLabel is the quadrant label of the parent that contains the child.
+  constructor(grandchild, quadrantLabel) {
+    this.grandchild = grandchild;
+    this.quadrantLabel = quadrantLabel;
+  }
+
+  verify() {
+    return this.grandchild.parent !== null
+        && this.grandchild.parent.parent !== null;
+  }
+
+  apply() {
+    const parent = this.grandchild.parent;
+    const grandparent = parent.parent;
+
+    if (this.quadrantLabel === Quadrant.NW) {
+      parent.removeNorthWest(this.grandchild);
+      grandparent.prependNorthWest(this.grandchild);
+    } else {
+      parent.removeSouthEast(this.grandchild);
+      grandparent.prependSouthEast(this.grandchild);
+    }
+  }
+}
+
+// [ x [ y >< z ] ><]
+// =>
+// [ [ x y >< z ] ><]
+class AssociativeInsert {
+
+  // QuadrantLabel is the quadrant label of the parent that contains the child.
+  constructor(sibling, insertionTag) {
+    this.sibling = sibling;
+    this.insertionTag = insertionTag;
+  }
+
+  verify() {
+    return this.grandchild.parent !== null
+        && this.grandchild.parent.parent !== null;
+  }
+
+  apply() {
+    const parent = this.sibling.parent;
+
+    parent.removeNorthWest(this.sibling);
+    this.insertionTag.prependNorthWest(this.sibling);
   }
 }
 
