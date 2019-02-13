@@ -3,6 +3,11 @@ const Orientation = {
   NS: "northsouth"
 };
 
+const Quadrant = {
+  NW: "NW",
+  SE: "SE"
+};
+
 String.prototype.splice = function(index, str) {
   return this.slice(0, index) + str + this.slice(index);
 };

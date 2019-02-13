@@ -5,14 +5,14 @@ function CSTest1() {
   a.addNorthWest(a0);
   a.addNorthWest(a1);
 
-  var swapped = new CommutativeSwap(a0, a1, a.NW);
-  var b = swapped.apply();
+  var swapped = new CommutativeSwap(a0, a1, Quadrant.NW);
+  swapped.apply();
 
   var equiv = new Tag(Orientation.NS);
   equiv.addNorthWest(a1);
   equiv.addNorthWest(a0);
 
-  var retval = b.equals(equiv);
+  var retval = a.equals(equiv);
   if(!retval){
     console.log("CommutativeSwap Test 1 failed");
   }
@@ -28,15 +28,15 @@ function CSTest2() {
   a.addNorthWest(a1);
   a.addNorthWest(a2);
 
-  var swapped = new CommutativeSwap(a1, a2, a.NW);
-  var b = swapped.apply();
+  var swapped = new CommutativeSwap(a1, a2, Quadrant.NW);
+  swapped.apply();
 
   var equiv = new Tag(Orientation.NS);
   equiv.addNorthWest(a0);
   equiv.addNorthWest(a2);
   equiv.addNorthWest(a1);
 
-  var retval = b.equals(equiv);
+  var retval = a.equals(equiv);
   if(!retval){
     console.log("CommutativeSwap Test 2 failed");
   }
@@ -55,8 +55,8 @@ function CSTest3() {
   a.addSouthEast(a2);
   a.addSouthEast(a3);
 
-  var swapped = new CommutativeSwap(a2, a3, a.SE);
-  var b = swapped.apply();
+  var swapped = new CommutativeSwap(a2, a3, Quadrant.SE);
+  swapped.apply();
 
   var equiv = new Tag(Orientation.EW);
   equiv.addNorthWest(a0);
@@ -64,7 +64,7 @@ function CSTest3() {
   equiv.addSouthEast(a3);
   equiv.addSouthEast(a2);
 
-  var retval = b.equals(equiv);
+  var retval = a.equals(equiv);
   if(!retval){
     console.log("CommutativeSwap Test 3 failed");
   }

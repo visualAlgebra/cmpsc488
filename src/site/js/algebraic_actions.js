@@ -24,25 +24,29 @@
 // If the siblings and quadrant are valid, then the siblings will be swapped.
 class CommutativeSwap {
 
-  constructor (sibling1, sibling2, quadrant) {
+  constructor (sibling1, sibling2, quadrantLabel) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
-    this.quadrant = quadrant;
+    this.quadrantLabel = quadrantLabel;
   }
 
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
   verify () {
-    return this.quadrant.includes(sibling2)
-        && this.quadrant.includes(sibling1);
+    const quadrant = this.sibling1.parent[this.quadrantLabel];
+    return this.sibling1.parent === this.sibling2.parent
+        && quadrant.some(x => Object.is(x, sibling2))
+        && quadrant.some(x => Object.is(x, sibling1));
   }
 
   //
   apply () {
 
+    const quadrant = this.sibling1.parent[this.quadrantLabel];
+
     //Finds the index of the two siblings
-    var idx1 = this.quadrant.findIndex(x => x === this.sibling1);
-    var idx2 = this.quadrant.findIndex(x => x === this.sibling2);
+    var idx1 = quadrant.findIndex(x => x === this.sibling1);
+    var idx2 = quadrant.findIndex(x => x === this.sibling2);
 
     //create a new array for the return tree
     var newQuadrant = [];
@@ -50,26 +54,60 @@ class CommutativeSwap {
     //constructs the the array,
     //if i matches one of the indices of the siblings,
     //then the other sibling will be added
-    for (var i = 0; i < this.quadrant.length; i++) {
+    for (var i = 0; i < quadrant.length; i++) {
       if (i === idx1) {
         newQuadrant[i] = this.sibling2;
       } else if (i === idx2) {
         newQuadrant[i] = this.sibling1;
       } else {
-        newQuadrant[i] = this.quadrant[i];
+        newQuadrant[i] = quadrant[i];
       }
     }
 
     //if quadrant was NW, then replace NW, else replace SE
-    if (this.quadrant.equals(this.sibling1.parent.NW)) {
-      return new Tag(this.sibling1.parent.orientation, newQuadrant, this.sibling1.parent.SE);
+    if (this.quadrantLabel === Quadrant.NW) {
+      this.sibling1.parent.NW = newQuadrant;
     } else {
-      return new Tag(this.sibling1.parent.orientation, this.sibling1.parent.NW, newQuadrant);
+      this.sibling1.parent.SE = newQuadrant;
     }
   }
 }
 
 // (1 + 2) + 1 => 1 + 2 + 1
+
+// (1 - 2) + 1 => (1 + 1 - 2)
+
+// APPLY ASSOCIATIVE MERGE
+// [ [1><2] 1 ><]
+//                        Apply AssociativeMerge.
+// [ 1 1 >< 2 ]
+
+// APPLY ASSOCIATIVE INTRO
+// [1 2 >< 1]
+//                       Apply AssociativeIntro.
+// [ [1 2 >< 1] ><]
+
+// APPLY ASSOCIATIVE INTRO
+// 1
+//                       Apply AssociativeIntro.
+// [ 1 ><]
+
+// APPLY ASSOCIATIVE INTRO
+// [1 2 >< 1]
+//                       Apply AssociativeIntro.
+// [ [1><] 2 >< 1]
+
+// UNDO ASSOCIATIVE MERGE
+// [ 1 1 >< 2 ]
+//                        Enclose entire tag in tag of same orientation.
+// [ [1 1><2] ><]
+//                        Apply new kind of AssociativeIntro.
+// [ [ 1 [1><2] ><] ><]
+//                        Merge outer two tags.
+// [ 1 [1><2] ><]
+//                        Apply a commutative swap.
+// [ [1><2] 1 ><]
+
 //Takes two tags of the same orientation and one is in the other.
 //The inner tag is collapsed into the outer tag
 class AssociativeMerge {
