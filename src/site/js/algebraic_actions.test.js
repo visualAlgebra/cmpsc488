@@ -12,11 +12,11 @@ function CSTest1() {
   equiv.addNorthWest(a1);
   equiv.addNorthWest(a0);
 
-  if(b.equals(equiv)){
-    console.log("CommutativeSwap Test 1 passed");
-  } else {
+  var retval = b.equals(equiv);
+  if(!retval){
     console.log("CommutativeSwap Test 1 failed");
   }
+  return retval;
 }
 
 function CSTest2() {
@@ -36,11 +36,11 @@ function CSTest2() {
   equiv.addNorthWest(a2);
   equiv.addNorthWest(a1);
 
-  if(b.equals(equiv)){
-    console.log("CommutativeSwap Test 2 passed");
-  } else {
+  var retval = b.equals(equiv);
+  if(!retval){
     console.log("CommutativeSwap Test 2 failed");
   }
+  return retval;
 }
 
 
@@ -64,17 +64,105 @@ function CSTest3() {
   equiv.addSouthEast(a3);
   equiv.addSouthEast(a2);
 
-  if(b.equals(equiv)){
-    console.log("CommutativeSwap Test 3 passed");
-  } else {
+  var retval = b.equals(equiv);
+  if(!retval){
     console.log("CommutativeSwap Test 3 failed");
   }
+  return retval;
+}
+
+function AMTest1() {
+  var s = new Tag(Orientation.NS);
+  s0 = new Literal(1);
+  s1 = new Literal(2);
+  s.addNorthWest(s0);
+  s.addNorthWest(s1);
+  var p = new Tag(Orientation.NS);
+  p.addNorthWest(s);
+
+  var merge = new AssociativeMerge(s, p, p.NW);
+  var m = merge.apply();
+
+  var retval = m.equals(s);
+  if(!retval){
+    console.log("CommutativeSwap Test 1 failed");
+  }
+  return retval;
+}
+
+function AMTest2() {
+  var s = new Tag(Orientation.EW);
+  s0 = new Literal(1);
+  s1 = new Variable(2);
+  s.addNorthWest(s0);
+  s.addNorthWest(s1);
+  var p = new Tag(Orientation.EW);
+  p.addNorthWest(s0);
+  p.addNorthWest(s);
+  p.addSouthEast(s1);
+
+  var merge = new AssociativeMerge(s, p, p.NW);
+  var m = merge.apply();
+
+  var equiv = new Tag(Orientation.EW);
+  equiv.addNorthWest(s0);
+  equiv.addNorthWest(s0);
+  equiv.addNorthWest(s1);
+  equiv.addSouthEast(s1);
+
+  var retval = m.equals(equiv);
+  if(!retval){
+    console.log("CommutativeSwap Test 2 failed");
+  }
+  return retval;
+}
+
+function AMTest3() {
+  var s = new Tag(Orientation.EW);
+  s0 = new Literal(1);
+  s1 = new Variable(2);
+  s2 = new Variable(3);
+  s3 = new Tag(Orientation.NS, [s0, s1], [s2]);
+  s.addNorthWest(s0);
+  s.addNorthWest(s1);
+  s.addSouthEast(s2);
+  s.addSouthEast(s3);
+
+  var p = new Tag(Orientation.EW);
+  p.addNorthWest(s0);
+  p.addNorthWest(s);
+  p.addNorthWest(s2);
+  p.addNorthWest(s3);
+  p.addSouthEast(s1);
+
+
+  var merge = new AssociativeMerge(s, p, p.NW);
+  var m = merge.apply();
+
+  var equiv = new Tag(Orientation.EW);
+  equiv.addNorthWest(s0);
+  equiv.addNorthWest(s0);
+  equiv.addNorthWest(s1);
+  equiv.addNorthWest(s2);
+  equiv.addNorthWest(s3);
+  equiv.addSouthEast(s2);
+  equiv.addSouthEast(s3);
+  equiv.addSouthEast(s1);
+
+  var retval = m.equals(equiv);
+  if(!retval){
+    console.log("CommutativeSwap Test 3 failed");
+  }
+  return retval;
 }
 
 function testAll() {
-  CSTest1();
-  CSTest2();
-  CSTest3();
+  if(CSTest1()&&CSTest2()&&CSTest3()){
+    console.log("All CommutativeSwap tests have passed");
+  }
+  if(AMTest1()&&AMTest2()&&AMTest3()) {
+    console.log("All AssociativeMerge tests have passed");
+  }
 }
 
 testAll();
