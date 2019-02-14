@@ -195,6 +195,7 @@ function testall () {
     ? null
     : console.log('case: ' + test_id_val + ' failed')
 
+  console.log('Finished serialization/deserlization tests')
   let ans1 = [
     93,
     0,
@@ -450,6 +451,6 @@ function testall () {
       ? null
       : console.log('case: ' + test_id_val + ' failed')
   })
-  console.log('Finished tests')
+  console.log('Finished LZMA Compress/LZMA Decompress tests')
 }
 testall()
