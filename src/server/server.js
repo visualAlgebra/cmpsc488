@@ -132,7 +132,7 @@ class Server {
 	    } else if (this.isAccessibleHTMLFile(pageName)) {
 	        filename = "src/site" + pageName; 
         } else {
-            this.respondWithError(response, 404, "Error 404: Page Not Found");
+            return this.respondWithError(response, 404, "Error 404: Page Not Found");
 	    }
 	
         //determine Content-type
