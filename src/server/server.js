@@ -54,7 +54,6 @@ class Server {
         http.createServer(function (request, response) {
             let sentUrl = url.parse(request.url, true);
             let method = request.method;
-
             //determine action required
             if (method == "GET") {
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //GET request for problem
@@ -125,7 +124,7 @@ class Server {
     //function that sends page back as response
     //pageName: string with file
     getPage(pageName, response) {
-        let filename;
+        let filename = "";
         if (pageName == "/") {
             filename = "./src/site/index.html";
 	    } else if (this.isAccessibleFolder(pageName)) {
