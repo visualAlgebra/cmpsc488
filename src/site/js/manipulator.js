@@ -2,11 +2,11 @@
 var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
-    get_problem_from_db("TEST_PROBLEM_2", res => {
-        decompress_string_js(res.expression_start,decomp => {
-            document.getElementById("canvas-container").appendChild(Deserialize(decomp).render());
-        });
     });
+        });
+            document.getElementById("canvas-container").appendChild(Deserialize(decomp).render());
+        decompress_string_js(res.expression_start,decomp => {
+    get_problem_from_db("TEST_PROBLEM_2", res => {
 };
 
 function getProblemFromURL(){
