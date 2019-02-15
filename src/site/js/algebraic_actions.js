@@ -319,9 +319,10 @@ class Distribute {
 }
 
 class Factor {
-  constructor(sibling1, sibling2) {
+  constructor(sibling1, sibling2, valueToFactor) {
     this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+    this.siblinh2 = sibling2;
+    this.valueToFactor = valueToFactor;
   }
 
   verify() {
@@ -330,11 +331,12 @@ class Factor {
            && this.sibling1.parent.parent.orientation == "eastwest"
            && this.sibling1.parent.orientation == "northsouth"
            && this.sibling2.parent.orientation == "northsouth"
-           && (this.sibling1.parent.NW.filter(value => -1 !== this.sibling2.parent.NW.indexof(value)).length != 0 // this line checks if the intersection of the 2 sets is not empty
-           || this.sibling1.parent.SE.filter(value => -1 !== this.sibling2.parent.SE.indexof(value)).length != 0);
+           && ((this.sibling1.parent.NW.indexOf(this.valueToFactor)!=-1 &&  this.sibling2.parent.NW.indexOf(this.valueToFactor)!=-1)
+           || (this.sibling1.parent.SE.indexOf(this.valueToFactor)!=-1 &&  this.sibling2.parent.SE.indexOf(this.valueToFactor)!=-1));
   }
 
   apply() {
+
   }
 }
 
