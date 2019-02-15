@@ -314,11 +314,11 @@ function compress_string_js(text, callback) {
   if (arr) {
     text = arr;
   }
-  LZMA("src/site/js/lzma_worker.js").compress(text, 9, callback);
+  LZMA("http://localhost:8080/src/site/js/lzma_worker.js").compress(text, 9, callback);
 }
 
 function decompress_string_js(byte_arr, callback) {
-  LZMA("src/site/js/lzma_worker.js").decompress(byte_arr, callback);
+  LZMA("http://localhost:8080/src/site/js/lzma_worker.js").decompress(byte_arr, callback);
 }
 
 /// ///////////////////////////////////////////////////////////////////

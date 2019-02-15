@@ -22,11 +22,22 @@ class Server {
     //returns true is filePath is an html file we allow to be found
     isAccessibleHTMLFile(filePath) {
         for (var i = 0; i < this.accessibleHTMLFiles.length; i++) {
-		    if (filePath === this.accessibleHTMLFiles[i] ) {
+		    if (filePath === this.accessibleHTMLFiles[i]) {
 			    return true;
 		    }
 	    }
 	return false;
+    }
+
+    mapToHTMLFile(filePath) {
+	    console.log("IN MAPPING FUNCTION: " + filePath);
+	    for (var i = 0; i < this.accessibleHTMLFiles.length; i++) {
+		    let file = this.accessibleHTMLFiles[i];
+		    if (filePath.startsWith(file.substr(0, file.length - 5) + '/')) {
+			    return file;
+		    }
+	    }
+	    return null; 
     }
 
 
@@ -53,6 +64,19 @@ class Server {
     getUserAccount(request) {
         return request.headers.account;
     }
+
+    removeExtraPaths(pathname) {
+	    let newName = pathname;
+		let srcIndex = pathname.indexOf('/src/');
+		if (srcIndex != -1) {
+			newName = pathname.substring(srcIndex);
+		}
+		let nodeModIndex = pathname.indexOf('/node_modules/');
+		if (nodeModIndex != -1) {
+			newName = pathname.substr(nodeModIndex);
+		}
+	    return newName
+    }
     
 
     //creates a server session that listens on port 8080 of localhost
@@ -67,6 +91,7 @@ class Server {
             let method = request.method;
             //determine action required
             if (method == "GET") {
+		//sentUrl.pathname = removeExtraPaths(sentUrl.pathname);
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //GET request for problem
                     self.getProblem(sentUrl.pathname, response);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //GET request for Lesson
@@ -145,8 +170,13 @@ class Server {
             filename = pageName.substr(1);
 	    } else if (this.isAccessibleHTMLFile(pageName)) {
 	        filename = "src/site" + pageName; 
-        } else {
-            return this.respondWithError(response, 404, "Error 404: Page Not Found");
+	    } else {
+		    let htmlFile = this.mapToHTMLFile(pageName);
+		    if (htmlFile === null) {
+            		return this.respondWithError(response, 404, "Error 404: Page Not Found");
+		    } else {
+			filename = "src/site" + htmlFile;
+		    }
 	    }
 	
         //determine Content-type
