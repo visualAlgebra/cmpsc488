@@ -262,7 +262,7 @@ function testall () {
   //assert(Deserialize(h4.toString()), e4, true)
 
   test_id_val=0;
-  console.log('Finished serialization/deserlization tests')
+  console.log('E. Finished serialization/deserlization tests')
   let ans1 = [
     93,
     0,
@@ -503,24 +503,21 @@ function testall () {
     assert(res, e4.toString(), true)
   })
   test_id_val=0;
-  console.log('Finished LZMA Compress/LZMA Decompress tests')
+  console.log('E. Finished LZMA Compress/LZMA Decompress tests')
 
   //1
-  let data="";
-  let http=new XMLHttpRequest();
-  http.onreadystatechange = function () {
-        if (http.readyState == 4 && http.status == 200) {
-             console.log(JSON.parse(http.response))
-             data = JSON.parse(http.response)
-        }
-
-    }
-  http.open("GET", "http://localhost:8080/problems/TEST_PROBLEM_1");
-  http.send();
-
-
-  console.log('Finished Database access tests');
-  console.log('Finished Eric\'s tests');
+  get_problem_from_db("TEST_PROBLEM_1", res => {
+      decompress_string_js(res.expression_start,decomp => {
+          Deserialize(decomp);
+      });
+  });
+  //2
+  get_problem_from_db("TEST_PROBLEM_2", res => {
+      decompress_string_js(res.expression_start,decomp => {
+          Deserialize(decomp);
+      });
+  });
+  console.log('E. Finished Database access tests');
 }
 testall()
 //Deserialize(e1.toString())
