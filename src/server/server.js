@@ -36,7 +36,6 @@ class Server {
 	        if (filePath.startsWith(this.accessibleFolders[i])) {
 		    //check for .. so file cannot back up (security)
 	        	if (!filePath.includes("..")) {
-		            console.log(filePath + " allowed");
 		            return true;
 	    	    }
                 
@@ -45,6 +44,15 @@ class Server {
 	    console.log(filePath + " FAILED");
         return false;
     }
+
+    //PROTOTYPE METHODS!!
+    //returns accountID right now, but will need more added once Google Sign-in implemented
+    authenticatedUser(account) {
+	    return account;
+    }
+    getUserAccount(request) {
+        return request.headers.account;
+    }
     
 
     //creates a server session that listens on port 8080 of localhost
@@ -52,7 +60,10 @@ class Server {
         //so can call methods inside other function
         var self = this; //so can call inside callback function
         http.createServer(function (request, response) {
+            let accountID = self.authenticatedUser(self.getUserAccount(request));//could be null
+		console.log("USER: " + accountID);
             let sentUrl = url.parse(request.url, true);
+		console.log("Request Recieved: " + sentUrl.pathname);
             let method = request.method;
             //determine action required
             if (method == "GET") {
@@ -96,8 +107,10 @@ class Server {
 
     respondWithData(response, statusCode, mediaType, data) {
         // console.log(statusCode + " === " + mediaType + " === " + data);
-	console.log(data.toString());
         response.writeHead(statusCode, {'Content-Type': mediaType})
+	   // if (mediaType === "application/json") {
+		//    console.log(data);
+	   // }
         response.write(data);
         return response.end();
     }
@@ -175,8 +188,10 @@ class Server {
     //========================= POST methods ===================================
     //==========================================================================
 
-    saveProblem(problemID, response) {
-        return response.end();
+    saveProblem(pathname, response) {
+	    return response.end();
+//	let problemID = pathname.substr(this.databaseActions[0].length);
+  //      let account = 
     }
 
 
