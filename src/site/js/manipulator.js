@@ -20,6 +20,6 @@ let expressionTree = new Tag(
 // let expressionTree = new Literal(1);
 
 window.onload = () => {
-  const container = document.getElementById("canvas-container");
-  container.appendChild(expressionTree.render());
+  const container = $("#canvas-container");
+  container.append(expressionTree.render());
 };
