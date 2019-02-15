@@ -117,7 +117,7 @@ class Server {
     getProblem(pathName, serverResponse) {
         //remove starting part of pathname to get problem id
         let problemID = pathName.substr(this.databaseActions[0].length)
-        this.database.getProblem(this, problemID, serverResponse);
+        this.database.getProblem(this, serverResponse, problemID);
     }
     
     
