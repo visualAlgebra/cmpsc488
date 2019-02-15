@@ -319,17 +319,19 @@ class Distribute {
 }
 
 class Factor {
-  constructor(parent, valueToFactor, indxStart, indxEnd) {
+  constructor(parent, valueToFactor, indxStart, indxEnd, quadrantLabel) {
     this.parent = parent;
     this.valueToFactor = valueToFactor;
     this.indxEnd = indxEnd;
     this.indxStart = indxStart;
+    this.quadrantLabel = quadrantLabel;
   }
 
   verify() {
     if(parent.orientation != "eastwest")
       return false;
     var isGood = true;
+    if(this.quadrantLabel == "NW")
     for(var i = indxStart; i<indxEnd+1; i++){
       for(var j = 0; j<parent.NW[i].NW.length; j++){
         isGood = (parent.NW[i].NW[j].value == valueToFactor)
@@ -340,6 +342,18 @@ class Factor {
       if(!isGood)
         return false;
     }
+    else
+      for(var i = indxStart; i<indxEnd+1; i++){
+        for(var j = 0; j<parent.SE[i].SE.length; j++){
+          isGood = (parent.SE[i].NW[j].value == valueToFactor)
+          if (isGood)
+            break;
+          
+        }
+        if(!isGood)
+          return false;
+      }
+    
   }
     
   
