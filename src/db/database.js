@@ -66,7 +66,7 @@ class DummyDatabase extends Database {
     }
 
     getAccount(server, serverResponse, accountID) {
-        let filename = "src/db/dbfiles/account/" + accountID + ".json";
+        let filename = "src/db/dbfiles/accounts/" + accountID + ".json";
         this.session.readFile(filename, function (err, data) {
             if (err) {
                 return server.respondWithError(serverResponse, 404, "Error 404: File Not Found");

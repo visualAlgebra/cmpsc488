@@ -30,16 +30,15 @@ function assert (left, right, value) {
   // console.log(right.toString());
   if (typeof left === 'string') {
     // console.log(left===right?"OK":"ERROR");
-    return (left === right) === value
+    ((left === right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
     // if((left===right)!==value) throw "Bad assertion!";
   } else {
     // console.log(left.equals(right)?"OK":"ERROR");
-    return left.equals(right) === value
+    (left.equals(right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
     // if (left.equals(right) !== value) throw "Bad assertion!";
   }
 }
 
-function testall () {
   // x4 + 0 - 2 - x1
   let e1 = new Tag(
     Orientation.EW,
@@ -99,6 +98,100 @@ function testall () {
     [new Variable(1)]
   )
 
+  let e5=new Tag(Orientation.NS,[new Variable(5)],[]);
+
+  let e6=new Tag(Orientation.NS,[],[new Variable(24)]);
+
+  let e7=new Tag(Orientation.NS,[new Tag(Orientation.NS,[],[new Variable(22)])],[new Tag(Orientation.NS,[new Variable(22)],[])]);
+
+  let e8 = new Tag(
+  Orientation.EW,
+  [
+    new Literal(2),
+    new Tag(
+      Orientation.NS,
+      [new Literal(1), new Variable(1)],
+      [new Literal(0)]
+    ),
+    new Variable(2),
+    new Tag(
+      Orientation.EW,
+      [new Literal(2)],
+      []
+    )
+  ],
+  [new Variable(3), new Literal(0)]
+);
+
+  let e9 = new Tag(
+    Orientation.EW,
+    [
+      new Tag(
+        Orientation.EW,
+        [
+          new Tag(
+            Orientation.EW,
+            [
+              new Tag(
+                Orientation.EW,
+                [
+                  new Tag(
+                    Orientation.EW,
+                    [
+                      new Tag(
+                        Orientation.EW,
+                        [],
+                        [new Variable(6)]
+                      )
+                    ],
+                    []
+                  )
+                ],
+                []
+              )
+            ],
+            []
+          )
+        ],
+        [new Variable(2439)]
+      )
+    ],
+    []
+  )
+
+  let e10 = new Tag(
+    Orientation.EW,
+    [],
+    [
+      new Tag(
+        Orientation.EW,
+        [],
+        [new Variable(2439),
+          new Tag(
+            Orientation.EW,
+            [
+              new Tag(
+                Orientation.EW,
+                [],
+                [
+                  new Tag(
+                    Orientation.EW,
+                    [
+                      new Tag(
+                        Orientation.EW,
+                        [],
+                        [new Variable(6)]
+                      )
+                    ],
+                    []
+                  )]
+              )
+            ],
+            []
+          )]
+      )]
+  )
+  
   let h1 = new Tag(Orientation.EW)
   h1.addNorthWest(new Variable(4))
   h1.addNorthWest(new Literal(0))
@@ -138,63 +231,41 @@ function testall () {
   h41.addSouthEast(new Variable(2))
   h4.addSouthEast(new Variable(1))
 
+function testall () {
   // 1
-  assert(e1, h1, true) ? null : console.log('case: ' + test_id_val + ' failed')
+  assert(e1, h1, true) 
   // 2
-  assert(e2, h2, true) ? null : console.log('case: ' + test_id_val + ' failed')
+  assert(e2, h2, true) 
   // 3
-  assert(e3, h3, true) ? null : console.log('case: ' + test_id_val + ' failed')
+  assert(e3, h3, true) 
   // 4
-  assert(e4, h4, true) ? null : console.log('case: ' + test_id_val + ' failed')
+  assert(e4, h4, true)
   // 5
-  assert(e1.toString(), h1.toString(), true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
+  assert(e1.toString(), h1.toString(), true)  
   // 6
   assert(e2.toString(), h2.toString(), true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
   // 7
   assert(e3.toString(), h3.toString(), true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
   // 8
   assert(e4.toString(), h4.toString(), true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 9
-  assert(Deserialize(e1.toString()), h1, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 10
-  assert(Deserialize(h1.toString()), e1, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 11
-  assert(Deserialize(e2.toString()), h2, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 12
-  assert(Deserialize(h2.toString()), e2, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 13
-  assert(Deserialize(e3.toString()), h3, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 14
-  assert(Deserialize(h3.toString()), e3, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 15
-  assert(Deserialize(e4.toString()), h4, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
-  // 16
-  assert(Deserialize(h4.toString()), e4, true)
-    ? null
-    : console.log('case: ' + test_id_val + ' failed')
+  //// 9
+  //assert(Deserialize(e1.toString()), h1, true)
+  //// 10
+  //assert(Deserialize(h1.toString()), e1, true)
+  //// 11
+  //assert(Deserialize(e2.toString()), h2, true)
+  //// 12
+  //assert(Deserialize(h2.toString()), e2, true)
+  //// 13
+  //assert(Deserialize(e3.toString()), h3, true)
+  //// 14
+  //assert(Deserialize(h3.toString()), e3, true)
+  //// 15
+  //assert(Deserialize(e4.toString()), h4, true)
+  //// 16
+  //assert(Deserialize(h4.toString()), e4, true)
 
+  test_id_val=0;
   console.log('Finished serialization/deserlization tests')
   let ans1 = [
     93,
@@ -246,16 +317,12 @@ function testall () {
     0
   ]
   compress_string_js(e1.toString(), res => {
-    // 17
+    // 1
     assert(ans1, res, true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
   decompress_string_js(ans1, res => {
-    // 18
+    // 2
     assert(res, e1.toString(), true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
 
   let ans2 = [
@@ -318,16 +385,12 @@ function testall () {
     0
   ]
   compress_string_js(e2.toString(), res => {
-    // 19
+    // 3
     assert(ans2, res, true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
   decompress_string_js(ans2, res => {
-    // 20
+    // 4
     assert(res, e2.toString(), true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
 
   let ans3 = [
@@ -374,16 +437,12 @@ function testall () {
     0
   ]
   compress_string_js(e3.toString(), res => {
-    // 21
+    // 5
     assert(ans3, res, true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
   decompress_string_js(ans3, res => {
-    // 22
+    // 6
     assert(res, e3.toString(), true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
 
   let ans4 = [
@@ -440,17 +499,41 @@ function testall () {
     0
   ]
   compress_string_js(e4.toString(), res => {
-    // 23
+    // 7
     assert(ans4, res, true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
   decompress_string_js(ans4, res => {
-    // 24
+    // 8
     assert(res, e4.toString(), true)
-      ? null
-      : console.log('case: ' + test_id_val + ' failed')
   })
+  test_id_val=0;
   console.log('Finished LZMA Compress/LZMA Decompress tests')
+
+  ////1
+  //let data="";
+  //let http=new XMLHttpRequest();
+  //http.onreadystatechange = function () {
+  //      if (http.readyState == 4 && http.status == 200) {
+  //           console.log(JSON.parse(http.response))
+  //           data = JSON.parse(http.response)
+  //      }
+//
+  //  }
+  //http.open("GET", "localhost:8080/problems/TEST_PROBLEM_1");
+  //http.send();
+//
+//
+  //console.log('Finished Database access tests');
+  console.log('Finished Eric\'s tests');
 }
 testall()
+//Deserialize(e1.toString())
+//Deserialize(e2.toString())
+//Deserialize(e3.toString())
+//Deserialize(e4.toString())
+//Deserialize(e5.toString())
+//Deserialize(e6.toString())
+//Deserialize(e7.toString())
+//Deserialize(e8.toString())
+//Deserialize(e9.toString())
+//Deserialize(e10.toString())

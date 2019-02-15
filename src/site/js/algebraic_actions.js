@@ -319,16 +319,34 @@ class Distribute {
 }
 
 class Factor {
-  constructor(sibling1, sibling2) {
-    this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+  constructor(parent, valueToFactor, indxStart, indxEnd) {
+    this.parent = parent;
+    this.valueToFactor = valueToFactor;
+    this.indxEnd = indxEnd;
+    this.indxStart = indxStart;
   }
 
   verify() {
-    // return this.sibling1 and this.sibling2 are actually siblings;
+    if(parent.orientation != "eastwest")
+      return false;
+    var isGood = true;
+    for(var i = indxStart; i<indxEnd+1; i++){
+      for(var j = 0; j<parent.NW[i].NW.length; j++){
+        isGood = (parent.NW[i].NW[j].value == valueToFactor)
+        if (isGood)
+          break;
+        
+      }
+      if(!isGood)
+        return false;
+    }
   }
+    
+  
 
   apply() {
+    
+
   }
 }
 
