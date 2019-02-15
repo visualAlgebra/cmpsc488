@@ -29,13 +29,9 @@ function assert (left, right, value) {
   // console.log(left.toString());
   // console.log(right.toString());
   if (typeof left === 'string') {
-    // console.log(left===right?"OK":"ERROR");
     ((left === right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
-    // if((left===right)!==value) throw "Bad assertion!";
   } else {
-    // console.log(left.equals(right)?"OK":"ERROR");
     (left.equals(right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
-    // if (left.equals(right) !== value) throw "Bad assertion!";
   }
 }
 
@@ -509,21 +505,21 @@ function testall () {
   test_id_val=0;
   console.log('Finished LZMA Compress/LZMA Decompress tests')
 
-  ////1
-  //let data="";
-  //let http=new XMLHttpRequest();
-  //http.onreadystatechange = function () {
-  //      if (http.readyState == 4 && http.status == 200) {
-  //           console.log(JSON.parse(http.response))
-  //           data = JSON.parse(http.response)
-  //      }
-//
-  //  }
-  //http.open("GET", "localhost:8080/problems/TEST_PROBLEM_1");
-  //http.send();
-//
-//
-  //console.log('Finished Database access tests');
+  //1
+  let data="";
+  let http=new XMLHttpRequest();
+  http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+             console.log(JSON.parse(http.response))
+             data = JSON.parse(http.response)
+        }
+
+    }
+  http.open("GET", "http://localhost:8080/problems/TEST_PROBLEM_1");
+  http.send();
+
+
+  console.log('Finished Database access tests');
   console.log('Finished Eric\'s tests');
 }
 testall()

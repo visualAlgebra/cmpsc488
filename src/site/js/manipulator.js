@@ -1,25 +1,18 @@
-let expressionTree = new Tag(
-  Orientation.EW,
-  [
-    new Literal(2),
-    new Tag(
-      Orientation.NS,
-      [new Literal(1), new Variable(1)],
-      [new Literal(0)]
-    ),
-    new Variable(2),
-    new Tag(
-      Orientation.EW,
-      [new Literal(2)],
-      []
-    )
-  ],
-  [new Variable(3), new Literal(0)]
-);
 
-// let expressionTree = new Literal(1);
+var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
-  const container = $("#canvas-container");
-  container.append(expressionTree.render());
+    get_problem_from_db("TEST_PROBLEM_2", res => {
+        decompress_string_js(res.expression_start,decomp => {
+            document.getElementById("canvas-container").appendChild(Deserialize(decomp).render());
+        });
+    });
 };
+
+function getProblemFromURL(){
+    let prob=(window.location.href).substr((window.location.href).lastIndexOf("/")+1).replace('.html','').replace('.json','');
+    if(prob==='manipulator'){
+        return null;
+    }
+    return prob;
+}
