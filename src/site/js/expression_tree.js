@@ -12,20 +12,6 @@ String.prototype.splice = function(index, str) {
   return this.slice(0, index) + str + this.slice(index);
 };
 
-class ProblemInfo {
-  constructor(id,treestart,treegoal){
-    this.problem_id=id;
-    this.expression_start=treestart;
-    this.expression_goal=treegoal
-  }
-
-  toString(){
-    return "{_PROBLEM{"+this.problem_id+"}{"
-      +this.expression_start.toString()+"}{"
-      +this.expression_goal.toString()+"}}";
-  }
-}
-
 // Abstract Class
 class ExpressionTree {
   constructor(kind) {
@@ -242,7 +228,7 @@ function Deserialize(text) {
     let e=[firstindex,midindex,lastindex];
     let t1 = text.substr(e[0], e[1] - e[0] + 1);
     let t2 = text.substr(e[1] + 1, e[2] - e[1] - 1);
-    //query_add(text,e[0],e[1]+1,e[1]+1,e[2]);
+    //TEMP_TO_DELETE(text,e[0],e[1]+1,e[1]+1,e[2]);
     //console.log("split: "+t1+" , "+t2);
     let tempstr = "";
     if (t1 !== "{}") {
@@ -314,7 +300,6 @@ function Deserialize(text) {
     return retval;
   }
 }
-//compress_string_js(expressionTree.toString(),res => {console.log(res)});
 function compress_string_js(text, callback) {
   var arr;
   /// If the string is a JSON array, use that. This allows us to compress a byte array.
@@ -333,11 +318,11 @@ function decompress_string_js(byte_arr, callback) {
   LZMA("http://localhost:8080/src/site/js/lzma_worker.js").decompress(byte_arr, callback);
 }
 
-/// /////////////////////////////////////////////////////////////////////////////
-/// //////////////////        Unused Functions   ////////////////////////////////
+/// ///////////////////////////////////////////////////////////////////
+/// //////////////////        Unused Functions   //////////////////////
 
 var jsonquery="{\"examples\":[";
-function query_add(text,start1,end1,start2,end2){
+function TEMP_TO_DELETE(text,start1,end1,start2,end2){
   if(start1===undefined||end1===undefined||start2===undefined||end2===undefined){
     console.log('here');
   }
@@ -349,7 +334,7 @@ function query_add(text,start1,end1,start2,end2){
     +start2+",\"end\":"
     +end2+"}]},";
 }
-function query_end(){
+function TEMP_TO_DELETE_2(){
   jsonquery=jsonquery.substr(0,jsonquery.length-1)+"]}";
 }
 
@@ -377,10 +362,3 @@ function helper(text) {
 }
 
 /// /////////////////////////////////////////////////////////////////////////////
-
-/// /////////////////////////////////////////////////////////////////////////////
-/// ////////        Dangerous (only in console) Functions   /////////////////////
-
-function addProblemToDatabase(tree){
-
-}
