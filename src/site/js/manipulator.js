@@ -2,9 +2,9 @@
 var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
-    get_problem_from_db("TEST_PROBLEM_2", res => {
+    get_problem_from_db(problem_to_load, res => {
         decompress_string_js(res.expression_start,decomp => {
-            document.getElementById("canvas-container").appendChild(Deserialize(decomp).render());
+            $("#canvas-container").append(Deserialize(decomp).render());
         });
     });
 };
