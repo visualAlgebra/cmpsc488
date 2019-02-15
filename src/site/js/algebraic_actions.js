@@ -326,6 +326,12 @@ class Factor {
 
   verify() {
     // return this.sibling1 and this.sibling2 are actually siblings;
+    return this.sibling1.parent.parent == this.sibling2.parent.parent
+           && this.sibling1.parent.parent.orientation == "eastwest"
+           && this.sibling1.parent.orientation == "northsouth"
+           && this.sibling2.parent.orientation == "northsouth"
+           && (this.sibling1.parent.NW.filter(value => -1 !== this.sibling2.parent.NW.indexof(value)).length != 0 // this line checks if the intersection of the 2 sets is not empty
+           || this.sibling1.parent.SE.filter(value => -1 !== this.sibling2.parent.SE.indexof(value)).length != 0);
   }
 
   apply() {
