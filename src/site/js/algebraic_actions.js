@@ -340,9 +340,9 @@ class Factor {
       if(!isGood)
         return false;
     }
-    }
-    
   }
+    
+  
 
   apply() {
     
