@@ -243,11 +243,11 @@ function Deserialize(text) {
     return new Variable(parseInt(text.substr(2, text.length - 3)));
   }
   if (text.substr(0, 2) === "{t") {
+    //console.log("text: "+text);
     let orient = Orientation[text.substr(2, 2)];
     let retval = new Tag(orient);
     let firstindex = text.indexOf("{{") + 1;
     let lastindex = text.length - 2;
-    // helper(text.substr(firstindex,lastindex-firstindex));
     let midindex = 0;
     let counter = 0;
     for (let i = firstindex; i < text.length; i++) {
@@ -261,18 +261,20 @@ function Deserialize(text) {
         }
       }
     }
-    let t1 = text.substr(firstindex, midindex - firstindex + 1);
-    // helper(t1);
+    let e=[firstindex,midindex,lastindex];
+    let t1 = text.substr(e[0], e[1] - e[0] + 1);
+    let t2 = text.substr(e[1] + 1, e[2] - e[1] - 1);
+    //TEMP_TO_DELETE(text,e[0],e[1]+1,e[1]+1,e[2]);
+    //console.log("split: "+t1+" , "+t2);
     let tempstr = "";
     if (t1 !== "{}") {
-      for (let i = firstindex + 1; i < midindex; i++) {
+      for (let i = e[0] + 1; i < e[1]; i++) {
         tempstr = tempstr + text.charAt(i);
         if (text.charAt(i) === "{") {
           counter++;
         } else if (text.charAt(i) === "}") {
           counter--;
           if (counter === 0) {
-            // helper(tempstr);
             let d = Deserialize(tempstr);
             retval.addNorthWest(d);
             tempstr = "";
@@ -280,18 +282,15 @@ function Deserialize(text) {
         }
       }
     }
-    let t2 = text.substr(midindex + 1, lastindex - midindex - 1);
-    // helper(t2);
     tempstr = "";
     if (t2 !== "{}") {
-      for (let i = midindex + 2; i < lastindex - 1; i++) {
+      for (let i = e[1] + 2; i < e[2] - 1; i++) {
         tempstr = tempstr + text.charAt(i);
         if (text.charAt(i) === "{") {
           counter++;
         } else if (text.charAt(i) === "}") {
           counter--;
           if (counter === 0) {
-            // helper(tempstr);
             let d = Deserialize(tempstr);
             retval.addSouthEast(d);
             tempstr = "";
@@ -299,10 +298,44 @@ function Deserialize(text) {
         }
       }
     }
+    //let e=[firstindex,midindex,lastindex];
+    //let t1 = text.substr(e[0], e[1] - e[0] + 1);
+    //let tempstr = "";
+    //if (t1 !== "{}") {
+    //  for (let i = e[0] + 1; i < e[1]; i++) {
+    //    tempstr = tempstr + text.charAt(i);
+    //    if (text.charAt(i) === "{") {
+    //      counter++;
+    //    } else if (text.charAt(i) === "}") {
+    //      counter--;
+    //      if (counter === 0) {
+    //        let d = Deserialize(tempstr);
+    //        retval.addNorthWest(d);
+    //        tempstr = "";
+    //      }
+    //    }
+    //  }
+    //}
+    //let t2 = text.substr(e[1] + 1, e[2] - e[1] - 1);
+    //tempstr = "";
+    //if (t2 !== "{}") {
+    //  for (let i = e[1] + 2; i < e[2] - 1; i++) {
+    //    tempstr = tempstr + text.charAt(i);
+    //    if (text.charAt(i) === "{") {
+    //      counter++;
+    //    } else if (text.charAt(i) === "}") {
+    //      counter--;
+    //      if (counter === 0) {
+    //        let d = Deserialize(tempstr);
+    //        retval.addSouthEast(d);
+    //        tempstr = "";
+    //      }
+    //    }
+    //  }
+    //}
     return retval;
   }
 }
-
 function compress_string_js(text, callback) {
   var arr;
   /// If the string is a JSON array, use that. This allows us to compress a byte array.
@@ -323,6 +356,23 @@ function decompress_string_js(byte_arr, callback) {
 
 /// ///////////////////////////////////////////////////////////////////
 /// //////////////////        Unused Functions   //////////////////////
+
+var jsonquery="{\"examples\":[";
+function TEMP_TO_DELETE(text,start1,end1,start2,end2){
+  if(start1===undefined||end1===undefined||start2===undefined||end2===undefined){
+    console.log('here');
+  }
+  //http://regex.inginf.units.it/
+  jsonquery=jsonquery+"{\"string\":\""
+    +text+"\",\"match\":[{\"start\":"
+    +start1+",\"end\":"
+    +end1+"},{\"start\":"
+    +start2+",\"end\":"
+    +end2+"}]},";
+}
+function TEMP_TO_DELETE_2(){
+  jsonquery=jsonquery.substr(0,jsonquery.length-1)+"]}";
+}
 
 function helper(text) {
   let rettext = "";
