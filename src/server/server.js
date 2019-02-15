@@ -15,7 +15,7 @@ class Server {
 
 	    this.accessibleFolders = ["/src/site/assets/", "/src/site/css/","/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
         this.accessibleHTMLFiles = ["/index.html", "/Explorer.html", "/About_Contact_Us.html", "/creator.html","/LessonPage.html", "/manipulator.html", "/user_profile_page.html"];
-        this.databaseActions = ["/problems/", "/lessons/", "/user/"];
+        this.databaseActions = ["/problems/", "/lessons/", "/accounts/"];
     }
     
 
@@ -96,6 +96,7 @@ class Server {
 
     respondWithData(response, statusCode, mediaType, data) {
         // console.log(statusCode + " === " + mediaType + " === " + data);
+	console.log(data.toString());
         response.writeHead(statusCode, {'Content-Type': mediaType})
         response.write(data);
         return response.end();
@@ -117,7 +118,7 @@ class Server {
     getProblem(pathName, serverResponse) {
         //remove starting part of pathname to get problem id
         let problemID = pathName.substr(this.databaseActions[0].length)
-        this.database.getProblem(this, problemID, serverResponse);
+        this.database.getProblem(this, serverResponse, problemID);
     }
     
     
@@ -159,12 +160,14 @@ class Server {
     
 
     getAccount(pathname, response) {
-        return response.end();
+        let accountID = pathname.substr(this.databaseActions[2].length);
+	return this.database.getAccount(this, response, accountID);
     }
 
 
-    getLesson(lessonID, response) {
-        return response.end();
+    getLesson(pathname, response) {
+        let lessonID = pathname.substr(this.databaseActions[1].length);
+	return this.database.getLesson(this, response, lessonID);
     }
 
 
