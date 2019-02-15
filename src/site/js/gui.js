@@ -1,51 +1,101 @@
-function renderTag(tag) {
-    const div = document.createElement("div");
+const TagGuiModule = {
 
-    
-    const cssClass = (tag.orientation == Orientation.NS)
-        ? "north-south"
-        : "east-west";
+    onclick: function(div) {
+        console.log("CLICK!", div);
+    },
 
-    div.classList.add(cssClass);
+    render: function(tag) {
+        const div = $("<div>")
 
-    div.classList.add("tag");
-    div["expressionTree"] = tag;
+        div.on("click", e => {
+            e.stopPropagation();
+            this.onclick(div)
+        });
 
-    const nw = document.createElement("div");
-    nw.className = "north-west";
+        div.addClass(
+            (tag.orientation == Orientation.NS)
+            ? "north-south"
+            : "east-west"
+        );
 
-    const button = document.createElement("div");
-    button.className = "tag-button";
+        div.addClass("tag");
+        div.data("expressionTree", tag);
 
-    const se = document.createElement("div");
-    se.className = "south-east";
+        const nw = $("<div>")
+        nw.addClass("north-west");
 
-    tag.NW.forEach(child => {
-      nw.appendChild(child.render());
-    });
+        const button = $("<div>");
+        button.addClass("tag-button");
 
-    tag.SE.forEach(child => {
-      se.appendChild(child.render());
-    });
+        const buttonColumn = $("<div>");
+        buttonColumn.addClass("tag-button-column");
+        buttonColumn.append(button);
 
-    div.appendChild(nw);
-    div.appendChild(button);
-    div.appendChild(se);
-    return div;
-}
+        const se = $("<div>");
+        se.addClass("south-east");
 
-function renderVariable(variable) {
-    const div = document.createElement("div");
-    div.textContent = `x${variable.value}`;
-    div.className = "variable";
-    div["expressionTree"] = variable;
-    return div;
-}
+        function appendTo(element, child) {
+            if (child.kind === "tag") {
+                element.append(child.render());
+            } else {
+                const container = $("<div>");
+                container.addClass("tag-element-container");
+                container.append(child.render());
+                element.append(container);
+            }
+        }
 
-function renderLiteral(literal) {
-    const div = document.createElement("div");
-    div.textContent = literal.value;
-    div.classList.add("literal");
-    div["expressionTree"] = literal;
-    return div;
-}
+        tag.NW.forEach(child => {
+            appendTo(nw, child);
+        });
+
+        tag.SE.forEach(child => {
+            appendTo(se, child);
+        });
+
+        div.append(nw);
+        div.append(buttonColumn);
+        div.append(se);
+        return div;
+    }
+};
+
+const VariableGuiModule = {
+
+    onclick: function(div) {
+        console.log("CLICK!", div);
+    },
+
+    render: function(variable) {
+        const div = $(`<div>x${variable.value}</div>`);
+
+        div.on("click", e => {
+            e.stopPropagation();
+            this.onclick(div);
+        });
+
+        div.addClass("variable");
+        div.data("expressionTree", variable);
+        return div;
+    }
+};
+
+const LiteralGuiModule = {
+
+    onclick: function(div) {
+        console.log("CLICK!", div);
+    },
+
+    render: function(literal) {
+        const div = $(`<div>${literal.value}</div>`);
+
+        div.on("click", e => {
+            e.stopPropagation();
+            this.onclick(div);
+        });
+        
+        div.addClass("literal");
+        div.data("expressionTree", literal);
+        return div;
+    }
+};

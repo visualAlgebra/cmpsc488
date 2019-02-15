@@ -123,7 +123,7 @@ class Tag extends ExpressionTree {
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
-    return renderTag(this);
+    return TagGuiModule.render(this);
   }
 
   toString() {
@@ -158,7 +158,7 @@ class Variable extends ExpressionTree {
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
-    return renderVariable(this);
+    return VariableGuiModule.render(this);
   }
 
   toString() {
@@ -180,7 +180,7 @@ class Literal extends ExpressionTree {
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
-    return renderLiteral(this);
+    return LiteralGuiModule.render(this);
   }
 
   toString() {
