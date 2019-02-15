@@ -20,9 +20,7 @@ class ProblemInfo {
   }
 
   toString(){
-    return "{_PROBLEM{"+this.problem_id+"}{"
-      +this.expression_start.toString()+"}{"
-      +this.expression_goal.toString()+"}}";
+    return "{_PROBLEM{"+this.problem_id+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
   }
 }
 
@@ -156,6 +154,11 @@ class Tag extends ExpressionTree {
     }
     return retval + "}}}";
   }
+  compress() {
+    compress_string_js(this.toString(),res => {
+      console.log(JSON.stringify(res));
+    });
+  }
 } // end Tag class
 
 class Variable extends ExpressionTree {
@@ -177,6 +180,12 @@ class Variable extends ExpressionTree {
 
   toString() {
     return "{v" + this.value + "}";
+  }
+
+  compress() {
+    compress_string_js(this.toString(),res => {
+      console.log(JSON.stringify(res));
+    });
   }
 } // end Variable class
 
@@ -200,6 +209,12 @@ class Literal extends ExpressionTree {
   toString() {
     return "{l" + this.value + "}";
   }
+  
+  compress() {
+    compress_string_js(this.toString(),res => {
+      console.log(JSON.stringify(res));
+    });
+  }
 } // end Literal class
 
 // end of classes, start of functions
@@ -211,8 +226,35 @@ function array_delete(arr, ref) {
     }
   }
 }
-
+var avgslowtime=0.0;
+var avgslowtimenum=0;
+var avgfasttime=0.0;
+var avgfasttimenum=0;
 function Deserialize(text) {
+  let now=0;
+  try{
+    avgfasttimenum++;
+    now=Date.now();
+    let retval=DeserializeFast(text);
+    now=Date.now()-now;
+    avgfasttime=((avgfasttime*avgfasttimenum)+now)/(avgfasttimenum+1);
+    return retval;
+  }
+  catch(err){
+    //console.log(err.toString());
+    avgfasttimenum--;
+    avgslowtimenum++;
+    now=Date.now();
+    let retval=DeserializeSlow(text);
+    now=Date.now()-now;
+    avgslowtime=((avgslowtime*avgslowtimenum)+now)/(avgslowtimenum+1);
+    return retval;
+  }
+}
+function DeserializeFast(text){
+  throw 'Fast deserialize failed, Using old deserialize.';
+}
+function DeserializeSlow(text) {
   // eric
   if (text.substr(0, 2) === "{l") {
     return new Literal(parseInt(text.substr(2, text.length - 3)));
@@ -276,41 +318,6 @@ function Deserialize(text) {
         }
       }
     }
-    //let e=[firstindex,midindex,lastindex];
-    //let t1 = text.substr(e[0], e[1] - e[0] + 1);
-    //let tempstr = "";
-    //if (t1 !== "{}") {
-    //  for (let i = e[0] + 1; i < e[1]; i++) {
-    //    tempstr = tempstr + text.charAt(i);
-    //    if (text.charAt(i) === "{") {
-    //      counter++;
-    //    } else if (text.charAt(i) === "}") {
-    //      counter--;
-    //      if (counter === 0) {
-    //        let d = Deserialize(tempstr);
-    //        retval.addNorthWest(d);
-    //        tempstr = "";
-    //      }
-    //    }
-    //  }
-    //}
-    //let t2 = text.substr(e[1] + 1, e[2] - e[1] - 1);
-    //tempstr = "";
-    //if (t2 !== "{}") {
-    //  for (let i = e[1] + 2; i < e[2] - 1; i++) {
-    //    tempstr = tempstr + text.charAt(i);
-    //    if (text.charAt(i) === "{") {
-    //      counter++;
-    //    } else if (text.charAt(i) === "}") {
-    //      counter--;
-    //      if (counter === 0) {
-    //        let d = Deserialize(tempstr);
-    //        retval.addSouthEast(d);
-    //        tempstr = "";
-    //      }
-    //    }
-    //  }
-    //}
     return retval;
   }
 }
@@ -335,6 +342,13 @@ function decompress_string_js(byte_arr, callback) {
 
 /// /////////////////////////////////////////////////////////////////////////////
 /// //////////////////        Unused Functions   ////////////////////////////////
+
+function get_times(){
+  console.log('fast num: '+avgfasttimenum);
+  console.log('fast time: '+avgfasttime);
+  console.log('slow num: '+avgslowtimenum);
+  console.log('slow time: '+avgslowtime);
+}
 
 var jsonquery="{\"examples\":[";
 function query_add(text,start1,end1,start2,end2){

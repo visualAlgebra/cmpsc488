@@ -2,19 +2,12 @@
 // const expressiontree=require('js/expression_tree.js');
 
 Array.prototype.equals = function (array) {
-  // if the other array is a falsy value, return
   if (!array) return false
-
-  // compare lengths - can save a lot of time
   if (this.length != array.length) return false
-
   for (var i = 0, l = this.length; i < l; i++) {
-    // Check if we have nested arrays
     if (this[i] instanceof Array && array[i] instanceof Array) {
-      // recurse into the nested arrays
       if (!this[i].equals(array[i])) return false
     } else if (this[i] != array[i]) {
-      // Warning - two different object instances will never be equal: {x:20} != {x:20}
       return false
     }
   }
@@ -23,15 +16,17 @@ Array.prototype.equals = function (array) {
 Object.defineProperty(Array.prototype, 'equals', { enumerable: false })
 
 var test_id_val = 0
+var test_id_fail=0
 function assert (left, right, value) {
-  test_id_val++
+  test_id_val++;
   // console.log("Testing set: "+(test_id_val));
   // console.log(left.toString());
   // console.log(right.toString());
   if (typeof left === 'string') {
     ((left === right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
-  } else {
-    (left.equals(right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
+  } else if (left.equals(right) !== value){
+    test_id_fail++; 
+    console.log('case: ' + test_id_val + ' failed')
   }
 }
 
@@ -261,8 +256,9 @@ function testall () {
   //// 16
   //assert(Deserialize(h4.toString()), e4, true)
 
+  console.log('E. Finished serialization/deserlization tests: '+(test_id_val-test_id_fail)+"/"+(test_id_val))
   test_id_val=0;
-  console.log('E. Finished serialization/deserlization tests')
+  test_id_fail=0;
   let ans1 = [
     93,
     0,
@@ -502,9 +498,9 @@ function testall () {
     // 8
     assert(res, e4.toString(), true)
   })
+  console.log('E. Finished LZMA Compress/LZMA Decompress tests: '+(test_id_val-test_id_fail)+"/"+(test_id_val))
   test_id_val=0;
-  console.log('E. Finished LZMA Compress/LZMA Decompress tests')
-
+  test_id_fail=0;
   //1
   get_problem_from_db("TEST_PROBLEM_1", res => {
       decompress_string_js(res.expression_start,decomp => {
@@ -517,7 +513,9 @@ function testall () {
           Deserialize(decomp);
       });
   });
-  console.log('E. Finished Database access tests');
+  console.log('E. Finished Database access tests: '+(test_id_val-test_id_fail)+"/"+(test_id_val))
+  test_id_val=0;
+  test_id_fail=0;
 }
 testall()
 //Deserialize(e1.toString())
