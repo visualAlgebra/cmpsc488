@@ -1,7 +1,32 @@
+const mouse = {
+    state: "idle",
+    eventSource: null,
+    eventDest: null,
+};
+
 const TagGuiModule = {
 
     onclick: function(div) {
         console.log("CLICK!", div);
+    },
+
+    mousedown: function(div) {
+        if (mouse.state === "idle") {
+            mouse.state = "dragging";
+            mouse.eventSource = div;
+        }
+    },
+
+    mouseup: function(div) {
+        if (mouse.state === "dragging") {
+            mouse.state = "idle";
+            mouse.eventDest = div;
+            this.mouseDragDetected(div); // Copy all the targets
+        }
+    },
+
+    mouseDragDetected: function(div) {
+        console.log("Mouse dragged from", mouse.eventSource, "to", mouse.eventDest);
     },
 
     render: function(tag) {
@@ -11,6 +36,16 @@ const TagGuiModule = {
             e.stopPropagation();
             this.onclick(div)
         });
+
+        div.on("mousedown", e => {
+            e.stopPropagation();
+            this.mousedown(div);
+        })
+
+        div.on("mouseup", e => {
+            e.stopPropagation();
+            this.mouseup(div);
+        })
 
         div.addClass(
             (tag.orientation == Orientation.NS)
