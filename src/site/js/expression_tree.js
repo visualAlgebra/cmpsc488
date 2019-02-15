@@ -123,35 +123,7 @@ class Tag extends ExpressionTree {
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
-    const div = document.createElement("div");
-    div.classList.add(
-      this.orientation.splice(this.orientation.length / 2, "-")
-    );
-
-    div.classList.add("tag");
-    div.setAttribute("data-id", this);
-
-    const nw = document.createElement("div");
-    nw.className = "north-west";
-
-    const button = document.createElement("div");
-    button.className = "tag-button";
-
-    const se = document.createElement("div");
-    se.className = "south-east";
-
-    this.NW.forEach(child => {
-      nw.appendChild(child.render());
-    });
-
-    this.SE.forEach(child => {
-      se.appendChild(child.render());
-    });
-
-    div.appendChild(nw);
-    div.appendChild(button);
-    div.appendChild(se);
-    return div;
+    return renderTag(this);
   }
 
   toString() {
@@ -186,11 +158,7 @@ class Variable extends ExpressionTree {
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
-    const div = document.createElement("div");
-    div.textContent = `x${this.value}`;
-    div.className = "variable";
-    div.setAttribute("data-id", this);
-    return div;
+    return renderVariable(this);
   }
 
   toString() {
@@ -212,11 +180,7 @@ class Literal extends ExpressionTree {
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
-    const div = document.createElement("div");
-    div.textContent = this.value;
-    div.className = "literal";
-    div.setAttribute("data-id", this);
-    return div;
+    return renderLiteral(this);
   }
 
   toString() {
