@@ -329,13 +329,14 @@ class Factor {
     // return this.sibling1 and this.sibling2 are actually siblings;
     return this.sibling1.parent.parent == this.sibling2.parent.parent
            && this.sibling1.parent.parent.orientation == "eastwest"
+           && this.sibling1.parent.orientation == this.sibling2.parent.orientation
            && this.sibling1.parent.orientation == "northsouth"
-           && this.sibling2.parent.orientation == "northsouth"
            && ((this.sibling1.parent.NW.indexOf(this.valueToFactor)!=-1 &&  this.sibling2.parent.NW.indexOf(this.valueToFactor)!=-1)
            || (this.sibling1.parent.SE.indexOf(this.valueToFactor)!=-1 &&  this.sibling2.parent.SE.indexOf(this.valueToFactor)!=-1));
   }
 
   apply() {
+    
 
   }
 }
