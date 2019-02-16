@@ -251,7 +251,12 @@ function Deserialize(text) {
     return retval;
   }
 }
+//
 function DeserializeFast(text){
+  let regex_captureEmtpyTags="((?:tNS|tEW){(?:{})+})";
+  //or "((?:tNS|tEW){(?:{}){2}})"
+  //ex:Matches: "tEW{{}{}}"
+  let regex_captureLiteralsAndVariables="({[v|l]\d+})";
   throw 'Fast deserialize failed, Using old deserialize.';
 }
 function DeserializeSlow(text) {
@@ -263,7 +268,6 @@ function DeserializeSlow(text) {
     return new Variable(parseInt(text.substr(2, text.length - 3)));
   }
   if (text.substr(0, 2) === "{t") {
-    //console.log("text: "+text);
     let orient = Orientation[text.substr(2, 2)];
     let retval = new Tag(orient);
     let firstindex = text.indexOf("{{") + 1;
@@ -284,8 +288,6 @@ function DeserializeSlow(text) {
     let e=[firstindex,midindex,lastindex];
     let t1 = text.substr(e[0], e[1] - e[0] + 1);
     let t2 = text.substr(e[1] + 1, e[2] - e[1] - 1);
-    //query_add(text,e[0],e[1]+1,e[1]+1,e[2]);
-    //console.log("split: "+t1+" , "+t2);
     let tempstr = "";
     if (t1 !== "{}") {
       for (let i = e[0] + 1; i < e[1]; i++) {
@@ -324,7 +326,6 @@ function DeserializeSlow(text) {
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
 function compress_string_js(text, callback) {
   var arr;
-  /// If the string is a JSON array, use that. This allows us to compress a byte array.
   if (text[0] === "[" && text.slice(-1) === "]") {
     try {
       arr = JSON.parse(text);
@@ -349,24 +350,6 @@ function get_times(){
   console.log('slow num: '+avgslowtimenum);
   console.log('slow time: '+avgslowtime);
 }
-
-var jsonquery="{\"examples\":[";
-function query_add(text,start1,end1,start2,end2){
-  if(start1===undefined||end1===undefined||start2===undefined||end2===undefined){
-    console.log('here');
-  }
-  //http://regex.inginf.units.it/
-  jsonquery=jsonquery+"{\"string\":\""
-    +text+"\",\"match\":[{\"start\":"
-    +start1+",\"end\":"
-    +end1+"},{\"start\":"
-    +start2+",\"end\":"
-    +end2+"}]},";
-}
-function query_end(){
-  jsonquery=jsonquery.substr(0,jsonquery.length-1)+"]}";
-}
-
 function helper(text) {
   let rettext = "";
   let temp = 0;
