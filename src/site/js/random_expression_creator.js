@@ -96,7 +96,11 @@ function _genRandomNode(tag){
     let rand=Math.floor(Math.random()*3);//0-2
     if(rand===2||tag===true){
         rand=Math.floor(Math.random()*2);//0-1
-        return new Tag(Orientation[rand]);
+        if(rand===0){
+            return new Tag(Orientation.EW);
+        }else{
+            return new Tag(Orientation.NS);
+        }
     } else if(rand===0){
         rand=Math.floor(Math.random()*3);//0-2
         return new Literal(rand);
