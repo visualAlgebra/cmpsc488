@@ -40,6 +40,10 @@ class DummyDatabase extends Database {
         this.session = require('fs');
     }
 
+    getCurrentTimeStamp() {
+        return "120000T101010";
+    }
+
     getProblem(server, serverResponse, link) {
         let filename = "src/db/dbfiles/problems/" + link + ".json";
         this.session.readFile(filename, function (err, data) {
@@ -79,23 +83,27 @@ class DummyDatabase extends Database {
 
     saveProblem(server, response, accountID, problem, enteredName) {
         let fileName = "";
-        if (enteredName === null) {
+        let usedName;
+        problem.timeCreated = this.getCurrentTimeStamp();
+        if (enteredName === "") {
             fileName = "src/db/dbfiles/problems/TEST_PROBLEM_0.json";
+            usedName = "TEST_PROBLEM_0";
         } else {
             fileName = "src/db/dbfiles/problems/" + enteredName + ".json";
+            usedName = enteredName;
         }
-        this.session.writeFile(fileName, problem, function(err) {
+        this.session.writeFile(fileName, JSON.stringify(problem), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
-                return server.respondWithData(response, 201, 'text/plain', 'localhost:8080/problems/' + enteredName);
+                return server.respondWithData(response, 201, 'text/plain', 'localhost:8080/problems/' + usedName);
             }
         }); 
     }
 
     saveLesson(server, response, accountID, lesson, enteredName) {
         let fileName = "";
-        if (enteredName === null) {
+        if (enteredName === "") {
             fileName = "src/db/dbfiles/lessons/TEST_LESSON_0.json";
         } else {
             fileName = "src/db/dbfiles/lessons/" + enteredName + ".json";

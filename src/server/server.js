@@ -1,7 +1,10 @@
-var fs = require("fs");
-var http = require("http");
-var url = require("url");
-var events = require("events");
+const fs = require("fs");
+const http = require("http");
+const url = require("url");
+const maxPostSize = 1e6 //1MB
+const qs = require("querystring");
+const path = require("path");
+
 
 
 class Server {
@@ -30,7 +33,6 @@ class Server {
     }
 
     mapToHTMLFile(filePath) {
-	    console.log("IN MAPPING FUNCTION: " + filePath);
 	    for (var i = 0; i < this.accessibleHTMLFiles.length; i++) {
 		    let file = this.accessibleHTMLFiles[i];
 		    if (filePath.startsWith(file.substr(0, file.length - 5) + '/')) {
@@ -61,11 +63,11 @@ class Server {
     authenticatedUser(account) {
 	    return account;
     }
-    getUserAccount(request) {
+    getSentAccountID(request) {
         return request.headers.account;
     }
 
-    removeExtraPaths(pathname) {
+    removeExtraPaths(pathname) { //deprecated
 	    let newName = pathname;
 		let srcIndex = pathname.indexOf('/src/');
 		if (srcIndex != -1) {
@@ -77,6 +79,19 @@ class Server {
 		}
 	    return newName
     }
+
+    static problemIsValid(problem) {
+        if (problem.startExpression === undefined || problem.goalExpression === undefined) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    static getSentProblemName(pathname) {
+        return path.basename(pathname);
+    }
+    
     
 
     //creates a server session that listens on port 8080 of localhost
@@ -84,14 +99,14 @@ class Server {
         //so can call methods inside other function
         var self = this; //so can call inside callback function
         http.createServer(function (request, response) {
-            let accountID = self.authenticatedUser(self.getUserAccount(request));//could be null
-		console.log("USER: " + accountID);
             let sentUrl = url.parse(request.url, true);
-		console.log("Request Recieved: " + sentUrl.pathname);
             let method = request.method;
+		    console.log("Request Recieved: " + method + ": " + sentUrl.pathname);
+
+
             //determine action required
             if (method == "GET") {
-		//sentUrl.pathname = removeExtraPaths(sentUrl.pathname);
+		        //sentUrl.pathname = removeExtraPaths(sentUrl.pathname);
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //GET request for problem
                     self.getProblem(sentUrl.pathname, response);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //GET request for Lesson
@@ -104,11 +119,11 @@ class Server {
 
             } else if (method == "POST") {
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
-                    self.saveProblem(sentUrl.pathname, response);
+                    self.saveProblem(sentUrl.pathname, response, request);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
-                    self.saveLesson(sentUrl.pathname, response);
+                    self.saveLesson(sentUrl.pathname, response, request);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
-                    self.saveAccount(sentUrl.pathname, response);
+                    self.saveAccount(sentUrl.pathname, response, request);
                 } else {
                     return self.respondWithError(response, 400, "Error 400: Bad Request");
                 }
@@ -126,10 +141,14 @@ class Server {
             } else { // we do not handle other methods 
                 return self.respondWithError(response, 400, "Error 400: Bad Request");
             }
+
+
         }).listen(8080);
     }
 
-
+    //==========================================================================
+    //======================== Response Methods ================================
+    //==========================================================================
     respondWithData(response, statusCode, mediaType, data) {
         // console.log(statusCode + " === " + mediaType + " === " + data);
         response.writeHead(statusCode, {'Content-Type': mediaType})
@@ -152,14 +171,6 @@ class Server {
     //========================= GET methods ====================================
     //==========================================================================
 
-    //function that will send requested problem back as a response
-    getProblem(pathName, serverResponse) {
-        //remove starting part of pathname to get problem id
-        let problemID = pathName.substr(this.databaseActions[0].length)
-        this.database.getProblem(this, serverResponse, problemID);
-    }
-    
-    
     //function that sends page back as response
     //pageName: string with file
     getPage(pageName, response) {
@@ -169,24 +180,24 @@ class Server {
 	    } else if (this.isAccessibleFolder(pageName)) {
             filename = pageName.substr(1);
 	    } else if (this.isAccessibleHTMLFile(pageName)) {
-	        filename = "src/site" + pageName; 
+            filename = "src/site" + pageName; 
 	    } else {
-		    let htmlFile = this.mapToHTMLFile(pageName);
+            let htmlFile = this.mapToHTMLFile(pageName);
 		    if (htmlFile === null) {
-            		return this.respondWithError(response, 404, "Error 404: Page Not Found");
+                return this.respondWithError(response, 404, "Error 404: Page Not Found");
 		    } else {
-			filename = "src/site" + htmlFile;
+                filename = "src/site" + htmlFile;
 		    }
 	    }
-	
+        
         //determine Content-type
         var contentType = "text/html";
         if (filename.substr(-3) === "css") {
             contentType = 'text/css';
         } else if (filename.substr(-2) === "js") {
-                contentType = "application/javascript";
+            contentType = "application/javascript";
         } else if (filename.substr(-3) === "png") {
-                contentType = "image/png";
+            contentType = "image/png";
         }
         
         var self = this; //required for callback in readFile scope
@@ -195,31 +206,69 @@ class Server {
                 return self.respondWithError(response, 404, "Error 404: Page Not Found");
             }
             else {
-               return self.respondWithData(response, 200, contentType, data);
+                return self.respondWithData(response, 200, contentType, data);
             }
         });
         return 0;
     }
     
 
-    getAccount(pathname, response) {
-        let accountID = pathname.substr(this.databaseActions[2].length);
-	return this.database.getAccount(this, response, accountID);
+    //function that will send requested problem back as a response
+    getProblem(pathName, serverResponse) {
+        //remove starting part of pathname to get problem id
+        let problemID = pathName.substr(this.databaseActions[0].length)
+        this.database.getProblem(this, serverResponse, problemID);
     }
-
-
+    
     getLesson(pathname, response) {
         let lessonID = pathname.substr(this.databaseActions[1].length);
-	return this.database.getLesson(this, response, lessonID);
+	    return this.database.getLesson(this, response, lessonID);
     }
-
+    
+    getAccount(pathname, response) {
+        let accountID = pathname.substr(this.databaseActions[2].length);
+        return this.database.getAccount(this, response, accountID);
+    }
 
     //==========================================================================
     //========================= POST methods ===================================
     //==========================================================================
 
-    saveProblem(pathname, response) {
-	    return response.end();
+    saveProblem(pathname, response, request) {
+        let self = this;
+        let body = "";
+        let problemName = Server.getSentProblemName(pathname.substr(this.databaseActions[0].length));
+        
+        request.on('data', function (data) { //event listener for data received from POST request
+            body += data;
+            
+            if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
+                request.connection.destroy();
+            }
+        });
+
+        request.on('end', function () { //event listener for when data finished coming from POST request
+            let accountID = self.authenticatedUser(self.getSentAccountID(request));
+            let problem;
+            try {
+                problem = JSON.parse(body);
+            } catch(error) {
+                return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
+            }
+            if(Server.problemIsValid(problem)) {
+                return self.database.saveProblem(self, response, accountID, problem, problemName);
+            } else {
+                return self.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
+            }
+
+        });
+            
+        
+        // let accountID = this.authenticatedUser(this.getUserAccount(request));//could be null
+        // console.log("USER: " + accountID);
+        // if (accountID === null) {
+        //     this.database.saveProblem(this,response,null,)
+        // }
 //	let problemID = pathname.substr(this.databaseActions[0].length);
   //      let account = 
     }
