@@ -118,8 +118,21 @@ class Server {
                 }
 
             } else if (method == "POST") {
+
+                let body = "";
+                request.on('data', function (data) { //event listener for data received from POST request
+                    body += data;
+                    if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
+                        request.connection.destroy();
+                    }
+                });
+
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
-                    self.saveProblem(sentUrl.pathname, response, request);
+                    request.on('end', function () { //event listener for when data finished coming from POST request
+                        let accountID = self.authenticatedUser(self.getSentAccountID(request));
+                        self.saveProblem(sentUrl.pathname, response, body, accountID);
+                    });
+                   
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
                     self.saveLesson(sentUrl.pathname, response, request);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
@@ -234,43 +247,21 @@ class Server {
     //========================= POST methods ===================================
     //==========================================================================
 
-    saveProblem(pathname, response, request) {
-        let self = this;
-        let body = "";
-        let problemName = Server.getSentProblemName(pathname.substr(this.databaseActions[0].length));
+    saveProblem(pathname, response, body, accountID) {
+        let problem;
+        try {
+            problem = JSON.parse(body);
+        } catch(error) {
+            return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
+        }
         
-        request.on('data', function (data) { //event listener for data received from POST request
-            body += data;
-            
-            if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
-                request.connection.destroy();
-            }
-        });
-
-        request.on('end', function () { //event listener for when data finished coming from POST request
-            let accountID = self.authenticatedUser(self.getSentAccountID(request));
-            let problem;
-            try {
-                problem = JSON.parse(body);
-            } catch(error) {
-                return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
-            }
-            if(Server.problemIsValid(problem)) {
-                return self.database.saveProblem(self, response, accountID, problem, problemName);
-            } else {
-                return self.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
-            }
-
-        });
-            
-        
-        // let accountID = this.authenticatedUser(this.getUserAccount(request));//could be null
-        // console.log("USER: " + accountID);
-        // if (accountID === null) {
-        //     this.database.saveProblem(this,response,null,)
-        // }
-//	let problemID = pathname.substr(this.databaseActions[0].length);
-  //      let account = 
+        if (Server.problemIsValid(problem)) {
+            let self = this;
+            let problemName = Server.getSentProblemName(pathname.substr(this.databaseActions[0].length));
+            return self.database.saveProblem(self, response, accountID, problem, problemName);
+        } else {
+            return self.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
+        }
     }
 
 
