@@ -196,19 +196,21 @@ function AMTest3() {
 }
 
 function AITest1() {
-  let p = new Tag(Orientation.NS);
+  var p = new Tag(Orientation.NS);
   let p0 = new Literal(1);
   let p1 = new Literal(2);
   p.addNorthWest(p0);
   p.addNorthWest(p1);
-  let s = [p0, p1];
 
-  let merge = new AssociativeIntro(s, p, p.NW);
-  let m = merge.apply();
+  let intro = new AssociativeIntro(p);
+  intro.apply();
 
-  let expected = new Tag(Orientation.NS, [p]);
+  let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS, [p0, p1])]);
 
-  return assertAA(m, expected, "AssociativeIntro Test 1 failed");
+  // console.log(p);
+  // console.log(expected);
+
+  return assertAA(p, expected, "AssociativeIntro Test 1 failed");
 }
 
 function AITest2() {
@@ -225,8 +227,8 @@ function AITest2() {
   p.addNorthWest(p3);
   let s = [p1, p2, p3];
 
-  let merge = new AssociativeIntro(s, p, p.NW);
-  let m = merge.apply();
+  let intro = new AssociativeIntro(s, p, p.NW);
+  let m = intro.apply();
 
   let inner = new Tag(Orientation.NS, [p1, p2, p3]);
   let expected = new Tag(Orientation.NS, [p0, inner]);
@@ -239,12 +241,11 @@ function AITest2() {
   let p1 = new Literal(2);
   p.addSouthEast(p0);
   p.addSouthEast(p1);
-  let s = [p0, p1];
 
-  let merge = new AssociativeIntro(s, p, p.SE);
-  let m = merge.apply();
+  let intro = new AssociativeIntro(p);
+  intro.apply();
 
-  let expected = new Tag(Orientation.EW, [], [p]);
+  let expected = new Tag(Orientation.EW, [p]);
 
   return assertAA(m, expected, "AssociativeIntro Test 2 failed");
 }
@@ -264,7 +265,7 @@ function AETest1() {
 
   const expected = new Tag(Orientation.NS,
     [
-      x,
+      new Variable(1),
       new Tag(Orientation.NS,
         [new Variable(2)],
         [new Variable(3)]
@@ -310,7 +311,7 @@ function AETest2() {
       new Literal(3)
     ]);
 
-  const expectedParent = new Tag(Orientation.EW, [new Variable(3)], [x, s]);
+  const expectedParent = new Tag(Orientation.EW, [new Variable(3)], [new Variable(1), s]);
 
   return assertAA(p, expectedParent, "AssociativeExtract test 2 failed");
 }
