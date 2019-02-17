@@ -304,9 +304,9 @@ class AssociativeInsert {
 }
 
 class Distribute {
-  constructor(sibling1, sibling2) {
-    this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+  constructor(parent, value) {
+    this.parent = parent;
+    this.value = value;
   }
 
   verify() {
@@ -314,7 +314,7 @@ class Distribute {
   }
 
   apply() {
-
+    
   }
 }
 
@@ -353,13 +353,18 @@ class Factor {
         if(!isGood)
           return false;
       }
+
+    return false;
     
   }
     
   
 
   apply() {
-    
+    var tagAdd;
+    if (quadrantLabel == "NW"){
+      
+    }
 
   }
 }
