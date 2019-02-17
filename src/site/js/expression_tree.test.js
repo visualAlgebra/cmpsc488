@@ -1,6 +1,3 @@
-// Hide method from for-in loops
-// const expressiontree=require('js/expression_tree.js');
-
 Array.prototype.equals = function (array) {
   if (!array) return false
   if (this.length != array.length) return false
@@ -15,516 +12,105 @@ Array.prototype.equals = function (array) {
 }
 Object.defineProperty(Array.prototype, 'equals', { enumerable: false })
 
-var test_id_val = 0
-var test_id_fail=0
-function assert (left, right, value) {
-  test_id_val++;
-  // console.log("Testing set: "+(test_id_val));
-  // console.log(left.toString());
-  // console.log(right.toString());
+var test_ids=[0,0,0];
+
+function _assert (left, right, value, test_id) {
+  //console.log("Testing set: "+(test_id));
   if (typeof left === 'string') {
-    ((left === right) === value) ? null : console.log('case: ' + test_id_val + ' failed')
-  } else if (left.equals(right) !== value){
-    test_id_fail++; 
-    console.log('case: ' + test_id_val + ' failed')
+    ((left === right) === value) ? null : console.log('expression_tree.test.js: case: ' + test_id + ' failed')
+  } else{
+    (left.equals(right) === value)? null :console.log('expression_tree.test.js: case: ' + test_id + ' failed')
+  }
+  
+  if(test_id<=8){
+    test_ids[0]++;
+  }else if(test_id<=16){
+    test_ids[1]++;
+  }else if(test_id<=18){
+    test_ids[2]++;
+  }
+  if(test_ids[0]===8){
+    console.log('Finished problem equality tests');
+    test_ids[0]++;
+  }else if(test_ids[1]===8){
+    console.log('Finished compression/decompression tests');
+    test_ids[1]++;
+  }else if(test_ids[2]===2){
+    console.log('Finished database access tests');
+    test_ids[2]++;
   }
 }
-
-  // x4 + 0 - 2 - x1
-  let e1 = new Tag(
-    Orientation.EW,
-    [new Variable(4), new Literal(0)],
-    [new Literal(2), new Variable(1)]
-  )
-
-  // (2 * x1) + x2
-  let e2 = new Tag(
-    Orientation.EW,
-    [
-      new Tag(
-        Orientation.NS,
-        [new Literal(2), new Literal(8), new Variable(1), new Variable(3)],
-        [new Literal(4)]
-      ),
-      new Variable(2)
-    ],
-    []
-  )
-
-  let e3 = new Tag(Orientation.EW, [new Literal(2), new Variable(3)])
-
-  let e4 = new Tag(
-    Orientation.EW,
-    [
-      new Tag(
-        Orientation.EW,
-        [
-          new Tag(
-            Orientation.EW,
-            [
-              new Tag(
-                Orientation.EW,
-                [
-                  new Tag(
-                    Orientation.EW,
-                    [
-                      new Tag(
-                        Orientation.EW,
-                        [new Variable(7)],
-                        [new Variable(6)]
-                      )
-                    ],
-                    [new Variable(5)]
-                  )
-                ],
-                [new Variable(4)]
-              )
-            ],
-            [new Variable(3)]
-          )
-        ],
-        [new Variable(2)]
-      )
-    ],
-    [new Variable(1)]
-  )
-
-  let e5=new Tag(Orientation.NS,[new Variable(5)],[]);
-
-  let e6=new Tag(Orientation.NS,[],[new Variable(24)]);
-
-  let e7=new Tag(Orientation.NS,[new Tag(Orientation.NS,[],[new Variable(22)])],[new Tag(Orientation.NS,[new Variable(22)],[])]);
-
-  let e8 = new Tag(
-  Orientation.EW,
-  [
-    new Literal(2),
-    new Tag(
-      Orientation.NS,
-      [new Literal(1), new Variable(1)],
-      [new Literal(0)]
-    ),
-    new Variable(2),
-    new Tag(
-      Orientation.EW,
-      [new Literal(2)],
-      []
-    )
-  ],
-  [new Variable(3), new Literal(0)]
-);
-
-  let e9 = new Tag(
-    Orientation.EW,
-    [
-      new Tag(
-        Orientation.EW,
-        [
-          new Tag(
-            Orientation.EW,
-            [
-              new Tag(
-                Orientation.EW,
-                [
-                  new Tag(
-                    Orientation.EW,
-                    [
-                      new Tag(
-                        Orientation.EW,
-                        [],
-                        [new Variable(6)]
-                      )
-                    ],
-                    []
-                  )
-                ],
-                []
-              )
-            ],
-            []
-          )
-        ],
-        [new Variable(2439)]
-      )
-    ],
-    []
-  )
-
-  let e10 = new Tag(
-    Orientation.EW,
-    [],
-    [
-      new Tag(
-        Orientation.EW,
-        [],
-        [new Variable(2439),
-          new Tag(
-            Orientation.EW,
-            [
-              new Tag(
-                Orientation.EW,
-                [],
-                [
-                  new Tag(
-                    Orientation.EW,
-                    [
-                      new Tag(
-                        Orientation.EW,
-                        [],
-                        [new Variable(6)]
-                      )
-                    ],
-                    []
-                  )]
-              )
-            ],
-            []
-          )]
-      )]
-  )
-  
-  let h1 = new Tag(Orientation.EW)
-  h1.addNorthWest(new Variable(4))
-  h1.addNorthWest(new Literal(0))
-  h1.addSouthEast(new Literal(2))
-  h1.addSouthEast(new Variable(1))
-
-  let h2 = new Tag(Orientation.EW)
-  let v = new Tag(Orientation.NS)
-  h2.addNorthWest(v)
-  v.addNorthWest(new Literal(2))
-  v.addNorthWest(new Literal(8))
-  v.addNorthWest(new Variable(1))
-  v.addNorthWest(new Variable(3))
-  v.addSouthEast(new Literal(4))
-  h2.addNorthWest(new Variable(2))
-
-  let h3 = new Tag(Orientation.EW)
-  h3.addNorthWest(new Literal(2))
-  h3.addNorthWest(new Variable(3))
-
-  let h4 = new Tag(Orientation.EW)
-  let h41 = new Tag(Orientation.EW)
-  h4.addNorthWest(h41)
-  let h411 = new Tag(Orientation.EW)
-  h41.addNorthWest(h411)
-  let h4111 = new Tag(Orientation.EW)
-  h411.addNorthWest(h4111)
-  let h41111 = new Tag(Orientation.EW)
-  h4111.addNorthWest(h41111)
-  let h411111 = new Tag(Orientation.EW)
-  h41111.addNorthWest(h411111)
-  h411111.addNorthWest(new Variable(7))
-  h411111.addSouthEast(new Variable(6))
-  h41111.addSouthEast(new Variable(5))
-  h4111.addSouthEast(new Variable(4))
-  h411.addSouthEast(new Variable(3))
-  h41.addSouthEast(new Variable(2))
-  h4.addSouthEast(new Variable(1))
-
-function testall () {
+function _testall () {
   // 1
-  assert(e1, h1, true) 
+  _assert(problem_e1(), problem_h1(), true,1) 
   // 2
-  assert(e2, h2, true) 
+  _assert(problem_e2(), problem_h2(), true,2) 
   // 3
-  assert(e3, h3, true) 
+  _assert(problem_e3(), problem_h3(), true,3) 
   // 4
-  assert(e4, h4, true)
+  _assert(problem_e4(), problem_h4(), true,4)
   // 5
-  assert(e1.toString(), h1.toString(), true)  
+  _assert(problem_e1().toString(), problem_h1().toString(), true,5)  
   // 6
-  assert(e2.toString(), h2.toString(), true)
+  _assert(problem_e2().toString(), problem_h2().toString(), true,6)
   // 7
-  assert(e3.toString(), h3.toString(), true)
+  _assert(problem_e3().toString(), problem_h3().toString(), true,7)
   // 8
-  assert(e4.toString(), h4.toString(), true)
-  //// 9
-  //assert(Deserialize(e1.toString()), h1, true)
-  //// 10
-  //assert(Deserialize(h1.toString()), e1, true)
-  //// 11
-  //assert(Deserialize(e2.toString()), h2, true)
-  //// 12
-  //assert(Deserialize(h2.toString()), e2, true)
-  //// 13
-  //assert(Deserialize(e3.toString()), h3, true)
-  //// 14
-  //assert(Deserialize(h3.toString()), e3, true)
-  //// 15
-  //assert(Deserialize(e4.toString()), h4, true)
-  //// 16
-  //assert(Deserialize(h4.toString()), e4, true)
+  _assert(problem_e4().toString(), problem_h4().toString(), true,8)
 
-  console.log('E. Finished serialization/deserlization tests: '+(test_id_val-test_id_fail)+"/"+(test_id_val))
-  test_id_val=0;
-  test_id_fail=0;
-  let ans1 = [
-    93,
-    0,
-    0,
-    0,
-    2,
-    27,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    61,
-    -99,
-    4,
-    -88,
-    114,
-    97,
-    90,
-    17,
-    100,
-    103,
-    78,
-    -124,
-    111,
-    -53,
-    100,
-    -108,
-    69,
-    -59,
-    33,
-    20,
-    -58,
-    87,
-    -74,
-    74,
-    -11,
-    114,
-    -10,
-    50,
-    -1,
-    -8,
-    -76,
-    84,
-    0
-  ]
-  compress_string_js(e1.toString(), res => {
-    // 1
-    assert(ans1, res, true)
+  // 9
+  compress_string_js(problem_e1().toString(), res => {
+    _assert(problem_ans1(), res, true,9)
   })
-  decompress_string_js(ans1, res => {
-    // 2
-    assert(res, e1.toString(), true)
+  // 10
+  decompress_string_js(problem_ans1(), res => {
+    _assert(res, problem_e1().toString(), true,10)
   })
-
-  let ans2 = [
-    93,
-    0,
-    0,
-    0,
-    2,
-    46,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    61,
-    -99,
-    4,
-    -88,
-    114,
-    97,
-    90,
-    8,
-    -85,
-    11,
-    -84,
-    -112,
-    -35,
-    -58,
-    5,
-    -74,
-    23,
-    10,
-    13,
-    90,
-    62,
-    -106,
-    17,
-    -93,
-    -35,
-    -41,
-    -67,
-    117,
-    -22,
-    -93,
-    22,
-    -79,
-    -103,
-    52,
-    71,
-    120,
-    -52,
-    68,
-    127,
-    -3,
-    -91,
-    16,
-    0
-  ]
-  compress_string_js(e2.toString(), res => {
-    // 3
-    assert(ans2, res, true)
+  // 11
+  compress_string_js(problem_e2().toString(), res => {
+    _assert(problem_ans2(), res, true,11)
   })
-  decompress_string_js(ans2, res => {
-    // 4
-    assert(res, e2.toString(), true)
+  // 12
+  decompress_string_js(problem_ans2(), res => {
+    _assert(res, problem_e2().toString(), true,12)
   })
-
-  let ans3 = [
-    93,
-    0,
-    0,
-    0,
-    2,
-    19,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    61,
-    -99,
-    4,
-    -88,
-    114,
-    97,
-    89,
-    -26,
-    -14,
-    42,
-    9,
-    -39,
-    -93,
-    23,
-    9,
-    -14,
-    -54,
-    -19,
-    -91,
-    82,
-    -125,
-    -1,
-    -1,
-    -70,
-    -104,
-    0,
-    0
-  ]
-  compress_string_js(e3.toString(), res => {
-    // 5
-    assert(ans3, res, true)
+  // 13
+  compress_string_js(problem_e3().toString(), res => {
+    _assert(problem_ans3(), res, true,13)
   })
-  decompress_string_js(ans3, res => {
-    // 6
-    assert(res, e3.toString(), true)
+  // 14
+  decompress_string_js(problem_ans3(), res => {
+    _assert(res, problem_e3().toString(), true,14)
   })
-
-  let ans4 = [
-    93,
-    0,
-    0,
-    0,
-    2,
-    94,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    61,
-    -99,
-    4,
-    -88,
-    114,
-    97,
-    46,
-    31,
-    72,
-    -94,
-    17,
-    120,
-    107,
-    6,
-    -127,
-    -100,
-    -75,
-    55,
-    75,
-    55,
-    -104,
-    121,
-    -17,
-    38,
-    -110,
-    -66,
-    89,
-    -31,
-    -71,
-    -33,
-    88,
-    95,
-    -1,
-    -10,
-    120,
-    -128,
-    0
-  ]
-  compress_string_js(e4.toString(), res => {
-    // 7
-    assert(ans4, res, true)
+  // 15
+  compress_string_js(problem_e4().toString(), res => {
+    _assert(problem_ans4(), res, true,15)
   })
-  decompress_string_js(ans4, res => {
-    // 8
-    assert(res, e4.toString(), true)
+  // 16
+  decompress_string_js(problem_ans4(), res => {
+    _assert(res, problem_e4().toString(), true,16)
   })
-  console.log('E. Finished LZMA Compress/LZMA Decompress tests: '+(test_id_val-test_id_fail)+"/"+(test_id_val))
-  test_id_val=0;
-  test_id_fail=0;
-  //1
-  get_problem_from_db("TEST_PROBLEM_1", res => {
+  // 17
+  get_problem_from_db("test_expression_tree_1", res => {
       decompress_string_js(res.expression_start,decomp => {
-          Deserialize(decomp);
+          _assert(Deserialize(decomp).toString(),problem_db1(),true,17);
       });
   });
-  //2
-  get_problem_from_db("TEST_PROBLEM_2", res => {
+  // 18
+  get_problem_from_db("test_expression_tree_2", res => {
       decompress_string_js(res.expression_start,decomp => {
-          Deserialize(decomp);
+          _assert(Deserialize(decomp).toString(),problem_db2(),true,18);
       });
   });
-  console.log('E. Finished Database access tests: '+(test_id_val-test_id_fail)+"/"+(test_id_val))
-  test_id_val=0;
-  test_id_fail=0;
 }
-testall()
-//Deserialize(e1.toString())
-//Deserialize(e2.toString())
-//Deserialize(e3.toString())
-//Deserialize(e4.toString())
-//Deserialize(e5.toString())
-//Deserialize(e6.toString())
-//Deserialize(e7.toString())
-//Deserialize(e8.toString())
-//Deserialize(e9.toString())
-//Deserialize(e10.toString())
+_testall()
+//Deserialize(problem_e1().toString())
+//Deserialize(problem_e2().toString())
+//Deserialize(problem_e3().toString())
+//Deserialize(problem_e4().toString())
+//Deserialize(problem_e5().toString())
+//Deserialize(problem_e6().toString())
+//Deserialize(problem_e7().toString())
+//Deserialize(problem_e8().toString())
+//Deserialize(problem_e9().toString())
+//Deserialize(problem_e10().toString())

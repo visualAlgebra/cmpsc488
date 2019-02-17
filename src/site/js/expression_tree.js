@@ -226,41 +226,19 @@ function array_delete(arr, ref) {
     }
   }
 }
-var avgslowtime=0.0;
-var avgslowtimenum=0;
-var avgfasttime=0.0;
-var avgfasttimenum=0;
+var nodecount=0;
 function Deserialize(text) {
-  let now=0;
-  try{
-    avgfasttimenum++;
-    now=Date.now();
-    let retval=DeserializeFast(text);
-    now=Date.now()-now;
-    avgfasttime=((avgfasttime*avgfasttimenum)+now)/(avgfasttimenum+1);
-    return retval;
+  now=Date.now();
+  let retval=_Deserialize(text);
+  let time=(Date.now()-now)/1000;
+  if(time>0.5){
+    console.log('time: '+time+' secs from: '+nodecount+' nodes.');
   }
-  catch(err){
-    //console.log(err.toString());
-    avgfasttimenum--;
-    avgslowtimenum++;
-    now=Date.now();
-    let retval=DeserializeSlow(text);
-    now=Date.now()-now;
-    avgslowtime=((avgslowtime*avgslowtimenum)+now)/(avgslowtimenum+1);
-    return retval;
-  }
+  nodecount=0;
+  return retval;
 }
-//
-function DeserializeFast(text){
-  let regex_captureEmtpyTags="((?:tNS|tEW){(?:{})+})";
-  //or "((?:tNS|tEW){(?:{}){2}})"
-  //ex:Matches: "tEW{{}{}}"
-  let regex_captureLiteralsAndVariables="({[v|l]\d+})";
-  throw 'Fast deserialize failed, Using old deserialize.';
-}
-function DeserializeSlow(text) {
-  // eric
+function _Deserialize(text) {
+  nodecount++;
   if (text.substr(0, 2) === "{l") {
     return new Literal(parseInt(text.substr(2, text.length - 3)));
   }
@@ -268,55 +246,38 @@ function DeserializeSlow(text) {
     return new Variable(parseInt(text.substr(2, text.length - 3)));
   }
   if (text.substr(0, 2) === "{t") {
-    let orient = Orientation[text.substr(2, 2)];
-    let retval = new Tag(orient);
-    let firstindex = text.indexOf("{{") + 1;
-    let lastindex = text.length - 2;
+    let retval = new Tag(Orientation[text.substr(2, 2)]);
     let midindex = 0;
     let counter = 0;
-    for (let i = firstindex; i < text.length; i++) {
+    for (let i = 0; i < text.length; i++) {
       if (text.charAt(i) === "{") {
         counter++;
       } else if (text.charAt(i) === "}") {
         counter--;
-        if (counter === 0) {
+        if (counter === 2) {
           midindex = i;
           break;
         }
       }
     }
-    let e=[firstindex,midindex,lastindex];
-    let t1 = text.substr(e[0], e[1] - e[0] + 1);
-    let t2 = text.substr(e[1] + 1, e[2] - e[1] - 1);
+    let text2=text.substring(6,midindex)+text.substring(midindex+2,text.length-3);
+    midindex-=6;
     let tempstr = "";
-    if (t1 !== "{}") {
-      for (let i = e[0] + 1; i < e[1]; i++) {
-        tempstr = tempstr + text.charAt(i);
-        if (text.charAt(i) === "{") {
-          counter++;
-        } else if (text.charAt(i) === "}") {
-          counter--;
-          if (counter === 0) {
-            let d = Deserialize(tempstr);
-            retval.addNorthWest(d);
-            tempstr = "";
+    for (let i=0; i<text2.length; i++){
+      tempstr+=text2.charAt(i);
+      if (text2.charAt(i) === "{") {
+        counter++;
+      } else if (text2.charAt(i) === "}") {
+        counter--;
+        if (counter === 2) {
+          if(tempstr!=="{}"){
+            if(i<=midindex){
+              retval.addNorthWest(_Deserialize(tempstr));
+            }else{
+              retval.addSouthEast(_Deserialize(tempstr));
+            }
           }
-        }
-      }
-    }
-    tempstr = "";
-    if (t2 !== "{}") {
-      for (let i = e[1] + 2; i < e[2] - 1; i++) {
-        tempstr = tempstr + text.charAt(i);
-        if (text.charAt(i) === "{") {
-          counter++;
-        } else if (text.charAt(i) === "}") {
-          counter--;
-          if (counter === 0) {
-            let d = Deserialize(tempstr);
-            retval.addSouthEast(d);
-            tempstr = "";
-          }
+          tempstr = "";
         }
       }
     }
@@ -344,12 +305,6 @@ function decompress_string_js(byte_arr, callback) {
 /// /////////////////////////////////////////////////////////////////////////////
 /// //////////////////        Unused Functions   ////////////////////////////////
 
-function get_times(){
-  console.log('fast num: '+avgfasttimenum);
-  console.log('fast time: '+avgfasttime);
-  console.log('slow num: '+avgslowtimenum);
-  console.log('slow time: '+avgslowtime);
-}
 function helper(text) {
   let rettext = "";
   let temp = 0;
@@ -372,7 +327,37 @@ function helper(text) {
   console.log(text);
   console.log(rettext + "  :  " + (temp === 0) + "  :  " + zeroamt);
 }
-
+//x=createRandomExpression(6).toString(); helper(x.substr(5,x.length-7));
+ function helper(text){
+    let rettext="";
+    let temp=0;
+    let zeroamt=0;
+    let i=0;
+    for(i=0; i<text.length; i++){
+      if(text.charAt(i)==="{"){
+        if(temp===0){
+          rettext+="*";
+        }else{
+          rettext+=temp;
+        }
+        temp++;
+      }else if(text.charAt(i)==="}"){
+        temp--;
+        if(temp===0){
+          rettext+="*";
+        }else{
+          rettext+=temp;
+        }
+        if(temp===0){
+          zeroamt++;
+        }
+      }else{
+        rettext=rettext+" ";
+      }
+    }
+    console.log(text);
+    console.log(rettext+"  :  Valid? "+(temp===0)+"  :  "+zeroamt);
+  }
 /// /////////////////////////////////////////////////////////////////////////////
 
 /// /////////////////////////////////////////////////////////////////////////////

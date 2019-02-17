@@ -10,7 +10,7 @@ function createRandomExpression(num_nodes){
     return retval;
 }
 
-function _createDummyProblem(num_nodes,num_nodes2){
+function createDummyProblem(num_nodes,num_nodes2){
     let retval=new ProblemInfo('test');
     compress_string_js(createRandomExpression(num_nodes).toString(),res => {
       retval.expression_start=res;
