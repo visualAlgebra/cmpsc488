@@ -377,9 +377,8 @@ class Factor {
     var addTag = new Tag("eastwest", operatorsArr);
     multTag.prependNorthWest(addTag);
     multTag.prependNorthWest(factored);
-    if (quadrantLabel == "NW"){
-      
-    }
+    parent.prependNorthWest(multTag);
+    // Todo: Find how a valueToFactor in SE would work
 
   }
 }
