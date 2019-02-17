@@ -166,12 +166,16 @@ class Server {
                 });
 
             } else if (method == "DELETE") {
+                let accountID = self.authenticatedUser(self.getSentAccountID(request));
+                if (accountID === undefined) {
+                    return self.respondWithError(response, 401, "Error 401: No Authorization Provided");
+                }
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
-                    self.deleteProblem(sentUrl.pathname, response);
+                    self.deleteProblem(response, sentUrl.pathname, accountID);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
-                    self.deleteLesson(sentUrl.pathname, response);
+                    self.deleteLesson(response, sentUrl.pathname, accountID);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
-                    self.deleteAccount(sentUrl.pathname, response);
+                    self.deleteAccount(response, accountID);
                 } else {
                     return self.respondWithError(response, 400, "Error 400: Bad Request");
                 }
@@ -304,18 +308,20 @@ class Server {
     //========================= DELETE methods =================================
     //==========================================================================
 
-    deleteProblem(problemID, response) {
-        return response.end();
+    deleteProblem(response, pathname, accountID) {
+        let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length));
+        return this.database.deleteProblem(this, response, accountID, problemName);
     }
 
 
-    deleteLesson(lessonID, response) {
-        return response.end();
+    deleteLesson(response, pathname, accountID) {
+        let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length));
+        return this.database.deleteLesson(this, response, accountID, lessonName);
     }
 
 
-    deleteAccount(accountID, response) {
-        return response.end();
+    deleteAccount(response, accountID) {
+        return this.database.deleteAccount(server,response, accountID);
     }
 
 
