@@ -247,31 +247,25 @@ function _Deserialize(text) {
   }
   if (text.substr(0, 2) === "{t") {
     let retval = new Tag(Orientation[text.substr(2, 2)]);
-    let midindex = 0;
+    let inNW=true;
     let counter = 0;
-    for (let i = 0; i < text.length; i++) {
+    let tempstr = "";
+    for (let i = 6; i < text.length-3; i++) {
+      tempstr+=text.charAt(i);
       if (text.charAt(i) === "{") {
         counter++;
       } else if (text.charAt(i) === "}") {
         counter--;
-        if (counter === 2) {
-          midindex = i;
-          break;
+        if (counter===-1){
+          inNW=false;
+          i++;
+          tempstr="";
+          counter=0;
+          continue;
         }
-      }
-    }
-    let text2=text.substring(6,midindex)+text.substring(midindex+2,text.length-3);
-    midindex-=6;
-    let tempstr = "";
-    for (let i=0; i<text2.length; i++){
-      tempstr+=text2.charAt(i);
-      if (text2.charAt(i) === "{") {
-        counter++;
-      } else if (text2.charAt(i) === "}") {
-        counter--;
-        if (counter === 2) {
-          if(tempstr!=="{}"){
-            if(i<=midindex){
+        if (counter === 0) {
+          if(tempstr.substr(tempstr.length-2)!=="{}"){
+            if(inNW){
               retval.addNorthWest(_Deserialize(tempstr));
             }else{
               retval.addSouthEast(_Deserialize(tempstr));

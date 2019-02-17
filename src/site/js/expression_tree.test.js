@@ -12,6 +12,12 @@ Array.prototype.equals = function (array) {
 }
 Object.defineProperty(Array.prototype, 'equals', { enumerable: false })
 
+function _run_massive_test_DANGEROUS(){
+  for(let x=0; x<10; x++){
+    Deserialize(createRandomExpression(1000000).toString());
+  }
+}
+
 var test_ids=[0,0,0];
 
 function _assert (left, right, value, test_id) {
