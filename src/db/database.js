@@ -103,12 +103,18 @@ class DummyDatabase extends Database {
 
     saveLesson(server, response, accountID, lesson, enteredName) {
         let fileName = "";
+        if (accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
+        lesson.accountID = accountID;
+        lesson.timeCreated = this.getCurrentTimeStamp();
+
         if (enteredName === "") {
             fileName = "src/db/dbfiles/lessons/TEST_LESSON_0.json";
         } else {
             fileName = "src/db/dbfiles/lessons/" + enteredName + ".json";
         }
-        this.session.writeFile(fileName, lesson, function(err) {
+        this.session.writeFile(fileName, JSON.stringify(lesson), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
@@ -118,8 +124,12 @@ class DummyDatabase extends Database {
     }
 
     addAccount(server, response, account, accountID) {
+        if (accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
+        account.accountID = accountID;
         let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
-        this.session.writeFile(fileName, account, function(err) {
+        this.session.writeFile(fileName, JSON.stringify(account), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {

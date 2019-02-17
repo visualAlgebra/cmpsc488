@@ -83,7 +83,7 @@ class Server {
     static problemIsValid(problem) {
         if (problem.startExpression === undefined || problem.goalExpression === undefined) {
             return false;
-        } else if (typeof(problem.startExpression) != typeof("") || typeof(problem.goalExpression) != typeof("")) {
+        } else if (typeof(problem.startExpression) != typeof([]) || typeof(problem.goalExpression) != typeof([])) {
             return false;
         } else {
             return true;
@@ -91,7 +91,22 @@ class Server {
         }
     }
 
-    static getSentProblemName(pathname) {
+    static lessonIsValid(lesson) {
+        if (lesson.problems === undefined) {
+            return false;
+        } else if (typeof(lesson.problems) != typeof([])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //as of now, we don't know what
+    static accountIsValid(account) {
+        return true;
+    }
+
+    static getSentID(pathname) {
         return path.basename(pathname);
     }
     
@@ -144,7 +159,7 @@ class Server {
                     } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
                         self.saveLesson(sentUrl.pathname, response, jsonData, accountID);
                     } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
-                        self.saveAccount(sentUrl.pathname, response, request);
+                        self.saveAccount(response, jsonData, accountID);
                     } else {
                         return self.respondWithError(response, 400, "Error 400: Bad Request");
                     }
@@ -161,7 +176,7 @@ class Server {
                     return self.respondWithError(response, 400, "Error 400: Bad Request");
                 }
             } else { // we do not handle other methods 
-                return self.respondWithError(response, 400, "Error 400: Bad Request");
+                return self.respondWithError(response, 400, "Error 400: Method not supported");
             }
 
 
@@ -258,7 +273,7 @@ class Server {
 
     saveProblem(pathname, response, problem, accountID) {
         if (Server.problemIsValid(problem)) {
-            let problemName = Server.getSentProblemName(pathname.substr(this.databaseActions[0].length));
+            let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length));
             return this.database.saveProblem(this, response, accountID, problem, problemName);
         } else {
             return this.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
@@ -267,12 +282,21 @@ class Server {
 
 
     saveLesson(pathname, response, lesson, accountID) {
-        
+        if (Server.lessonIsValid(lesson)) {
+            let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length));
+            return this.database.saveLesson(this, response, accountID, lesson, lessonName);
+        } else {
+            return this.respondWithError(response, 400, "Error 400: Sent Lesson is not Valid");
+        }
     }
 
 
-    saveAccount(accountID, response) {
-        return response.end();
+    saveAccount(response, account, accountID) {
+        if (Server.accountIsValid(account)) {
+            return this.database.addAccount(this, response, account, accountID);
+        } else {
+            return this.respondWithError(response, 400, "Error 400: Sent Account is not valid");
+        }
     }
 
 
