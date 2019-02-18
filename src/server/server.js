@@ -83,12 +83,30 @@ class Server {
     static problemIsValid(problem) {
         if (problem.startExpression === undefined || problem.goalExpression === undefined) {
             return false;
+        } else if (typeof(problem.startExpression) != typeof([]) || typeof(problem.goalExpression) != typeof([])) {
+            return false;
+        } else {
+            return true;
+            
+        }
+    }
+
+    static lessonIsValid(lesson) {
+        if (lesson.problems === undefined) {
+            return false;
+        } else if (typeof(lesson.problems) != typeof([])) {
+            return false;
         } else {
             return true;
         }
     }
 
-    static getSentProblemName(pathname) {
+    //as of now, we don't know what
+    static accountIsValid(account) {
+        return true;
+    }
+
+    static getSentID(pathname) {
         return path.basename(pathname);
     }
     
@@ -118,28 +136,51 @@ class Server {
                 }
 
             } else if (method == "POST") {
-                if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
-                    self.saveProblem(sentUrl.pathname, response, request);
-                } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
-                    self.saveLesson(sentUrl.pathname, response, request);
-                } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
-                    self.saveAccount(sentUrl.pathname, response, request);
-                } else {
-                    return self.respondWithError(response, 400, "Error 400: Bad Request");
-                }
+                let body = "";
+
+                request.on('data', function (data) { //event listener for data received from POST request
+                    body += data;
+                    if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
+                        request.connection.destroy();
+                    }
+                });
+                
+                request.on('end', function () { //event listener for when data finished coming from POST request
+                    let jsonData;
+                    try {
+                        jsonData = JSON.parse(body);
+                    } catch(error) {
+                        return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
+                    }
+                    let accountID = self.authenticatedUser(self.getSentAccountID(request));
+
+                    if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
+                        self.saveProblem(sentUrl.pathname, response, jsonData, accountID);
+                    } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
+                        self.saveLesson(sentUrl.pathname, response, jsonData, accountID);
+                    } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
+                        self.saveAccount(response, jsonData, accountID);
+                    } else {
+                        return self.respondWithError(response, 400, "Error 400: Bad Request");
+                    }
+                });
 
             } else if (method == "DELETE") {
+                let accountID = self.authenticatedUser(self.getSentAccountID(request));
+                if (accountID === undefined) {
+                    return self.respondWithError(response, 401, "Error 401: No Authorization Provided");
+                }
                 if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
-                    self.deleteProblem(sentUrl.pathname, response);
+                    self.deleteProblem(response, sentUrl.pathname, accountID);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
-                    self.deleteLesson(sentUrl.pathname, response);
+                    self.deleteLesson(response, sentUrl.pathname, accountID);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
-                    self.deleteAccount(sentUrl.pathname, response);
+                    self.deleteAccount(response, accountID);
                 } else {
                     return self.respondWithError(response, 400, "Error 400: Bad Request");
                 }
             } else { // we do not handle other methods 
-                return self.respondWithError(response, 400, "Error 400: Bad Request");
+                return self.respondWithError(response, 400, "Error 400: Method not supported");
             }
 
 
@@ -234,53 +275,32 @@ class Server {
     //========================= POST methods ===================================
     //==========================================================================
 
-    saveProblem(pathname, response, request) {
-        let self = this;
-        let body = "";
-        let problemName = Server.getSentProblemName(pathname.substr(this.databaseActions[0].length));
-        
-        request.on('data', function (data) { //event listener for data received from POST request
-            body += data;
-            
-            if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
-                request.connection.destroy();
-            }
-        });
-
-        request.on('end', function () { //event listener for when data finished coming from POST request
-            let accountID = self.authenticatedUser(self.getSentAccountID(request));
-            let problem;
-            try {
-                problem = JSON.parse(body);
-            } catch(error) {
-                return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
-            }
-            if(Server.problemIsValid(problem)) {
-                return self.database.saveProblem(self, response, accountID, problem, problemName);
-            } else {
-                return self.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
-            }
-
-        });
-            
-        
-        // let accountID = this.authenticatedUser(this.getUserAccount(request));//could be null
-        // console.log("USER: " + accountID);
-        // if (accountID === null) {
-        //     this.database.saveProblem(this,response,null,)
-        // }
-//	let problemID = pathname.substr(this.databaseActions[0].length);
-  //      let account = 
+    saveProblem(pathname, response, problem, accountID) {
+        if (Server.problemIsValid(problem)) {
+            let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length));
+            return this.database.saveProblem(this, response, accountID, problem, problemName);
+        } else {
+            return this.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
+        }
     }
 
 
-    saveLesson(lessonID, response) {
-        return response.end();
+    saveLesson(pathname, response, lesson, accountID) {
+        if (Server.lessonIsValid(lesson)) {
+            let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length));
+            return this.database.saveLesson(this, response, accountID, lesson, lessonName);
+        } else {
+            return this.respondWithError(response, 400, "Error 400: Sent Lesson is not Valid");
+        }
     }
 
 
-    saveAccount(accountID, response) {
-        return response.end();
+    saveAccount(response, account, accountID) {
+        if (Server.accountIsValid(account)) {
+            return this.database.addAccount(this, response, account, accountID);
+        } else {
+            return this.respondWithError(response, 400, "Error 400: Sent Account is not valid");
+        }
     }
 
 
@@ -288,18 +308,20 @@ class Server {
     //========================= DELETE methods =================================
     //==========================================================================
 
-    deleteProblem(problemID, response) {
-        return response.end();
+    deleteProblem(response, pathname, accountID) {
+        let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length));
+        return this.database.deleteProblem(this, response, accountID, problemName);
     }
 
 
-    deleteLesson(lessonID, response) {
-        return response.end();
+    deleteLesson(response, pathname, accountID) {
+        let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length));
+        return this.database.deleteLesson(this, response, accountID, lessonName);
     }
 
 
-    deleteAccount(accountID, response) {
-        return response.end();
+    deleteAccount(response, accountID) {
+        return this.database.deleteAccount(server,response, accountID);
     }
 
 
