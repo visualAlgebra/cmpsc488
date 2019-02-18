@@ -103,6 +103,24 @@ class Tag extends ExpressionTree {
     this.updateParentTreeCount(-delta);
   }
 
+  emptyNorthWest() {
+    let delta = 0;
+    for (let child of this.NW) {
+      delta += child.treeCount;
+    }
+    this.NW = [];
+    this.updateParentTreeCount(-delta);
+  }
+
+  emptySouthWest() {
+    let delta = 0;
+    for (let child of this.SE) {
+      delta += child.treeCount;
+    }
+    this.SE = [];
+    this.updateParentTreeCount(-delta);
+  }
+  
   equals(that) {
     if (that.kind === "tag") {
       if (
@@ -209,7 +227,7 @@ class Literal extends ExpressionTree {
   toString() {
     return "{l" + this.value + "}";
   }
-  
+
   compress() {
     compress_string_js(this.toString(),res => {
       console.log(JSON.stringify(res));
