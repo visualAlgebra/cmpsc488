@@ -361,7 +361,6 @@ class SplitFrac {
         && this.tag.SE.length <= 1;
   }
 
-  //Does update treecount corretly
   apply() {
 
     //create empty array to put split fractions
@@ -379,8 +378,14 @@ class SplitFrac {
 
     //update the tag with new orientation and quadrants
     this.tag.orientation = Orientation.EW;
-    this.tag.NW = newNW;
-    this.tag.SE = newSE;
+    this.tag.emptyNorthWest();
+    for (let child of newNW) {
+      this.tag.addNorthWest(child);
+    }
+    this.tag.emptySouthWest();
+    for (let child of newSE) {
+      this.tag.addSouthEast(child);
+    }
   }
 }
 

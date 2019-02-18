@@ -531,8 +531,7 @@ function SFTest3() {
   const action = new SplitFrac(before);
   action.apply();
 
-  // console.log(before);
-  // console.log(expected);
+
 
   return assertAA(before, expected, "SplitFrac test 3 failed");
 }
