@@ -435,6 +435,44 @@ class CombineFrac {
   }
 }
 
+// [x><]
+// =>
+// [><[><x]]
+//x = 1/(1/x)
+//x = -(-x)
+//TODO: get a better name for this.
+class DoubleFlip {
+  constructor(tag) {
+    this.tag = tag;
+  }
+
+  verify() {
+    return this.tag instanceof Tag;
+  }
+
+  apply() {
+
+    //Swapping quadrants
+    const temp = this.tag.NW;
+    const NW = this.tag.SE;
+    const SE = this.tag.NW;
+
+    //creating flipped tag
+    const newTag = new Tag(tag.orientation, NW, SE);
+
+    //adding flipped tag into the SE quadrant
+    this.tag.addSouthEast(newTag);
+
+    //removing the original children from the tag
+    for(let child of NW) {
+      this.tag.removeNorthWest(child);
+    }
+    for(let child of SE) {
+      this.tag.removeSouthEast(child);
+    }
+  }
+}
+
 class Cancel {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;

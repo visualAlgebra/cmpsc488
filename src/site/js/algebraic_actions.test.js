@@ -591,6 +591,36 @@ function CFTest3() {
   return assertAA(before, expected, "CombineFrac test 3 failed");
 }
 
+function DFTest1() {
+
+  const before = new Tag(Orientation.NS, [v1, v2], [v3]);
+
+  const expected = new Tag(Orientation.NS,
+    [],
+    [new Tag(Orientation.NS, [v3], [v1, v2])]
+  );
+
+  const action = new DoubleFlip(before);
+  action.apply();
+
+  return assertAA(before, expected, "DoubleFlip test 1 failed");
+}
+
+function DFTest2() {
+
+  const before = new Tag(Orientation.EW, [v1, v2, l1], [l2, v3]);
+
+  const expected = new Tag(Orientation.EW,
+    [],
+    [new Tag(Orientation.EW, [l2, v3], [v1, v2, l1])]
+  );
+
+  const action = new DoubleFlip(before);
+  action.apply();
+
+  return assertAA(before, expected, "DoubleFlip test 2 failed");
+}
+
 function testAll() {
 
   try {
