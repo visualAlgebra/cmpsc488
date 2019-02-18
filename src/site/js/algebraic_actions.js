@@ -356,8 +356,10 @@ class SplitFrac {
   }
 
   verify() {
+    let dividend = this.tag.NW[0];
     return this.tag.orientation === Orientation.NS
-        && this.tag.NW.length < 1
+        && divident.orientation === Orientation.EW
+        && (dividend.NW.length+dividend.SE.length > 1)
         && this.tag.SE.length <= 1;
   }
 
