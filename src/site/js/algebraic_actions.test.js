@@ -2,6 +2,8 @@
 const v1 = new Variable(1);
 const v2 = new Variable(2);
 const v3 = new Variable(3);
+const v4 = new Variable(4);
+const v5 = new Variable(5);
 const l1 = new Literal(1);
 const l2 = new Literal(2);
 const l3 = new Literal(3);
@@ -486,6 +488,9 @@ function SFTest1() {
   const e2 = new Tag(Orientation.NS, [l1], [v2]);
   const expected = new Tag(Orientation.EW, [e1, e2]);
 
+  const action = new SplitFrac(before);
+  action.apply();
+
   return assertAA(before, expected, "SplitFrac test 1 failed");
 }
 
@@ -496,10 +501,38 @@ function SFTest2() {
 
   const e1 = new Tag(Orientation.NS, [t1], [l1]);
   const e2 = new Tag(Orientation.NS, [v3], [l1]);
-  const expected = new Tag(Orientation.EW, [e1, e2]);
+  const expected = new Tag(Orientation.EW, [e1], [e2]);
+
+  const action = new SplitFrac(before);
+  action.apply();
 
   return assertAA(before, expected, "SplitFrac test 2 failed");
 }
+
+function SFTest3() {
+
+  let t1 = new Tag(Orientation.NS, [v1, v2]);
+  const before = new Tag(Orientation.NS,
+    [new Tag(Orientation.EW, [t1,l1,l2], [v3,l3])],
+    [v4, v5]
+  );
+
+  const e1 = new Tag(Orientation.NS, [t1], [v4, v5]);
+  const e2 = new Tag(Orientation.NS, [l1], [v4, v5]);
+  const e3 = new Tag(Orientation.NS, [l2], [v4, v5]);
+  const e4 = new Tag(Orientation.NS, [v3], [v4, v5]);
+  const e5 = new Tag(Orientation.NS, [l3], [v4, v5]);
+  const expected = new Tag(Orientation.EW, [e1, e2, e3], [e4, e5]);
+
+  const action = new SplitFrac(before);
+  action.apply();
+
+  // console.log(before);
+  // console.log(expected);
+
+  return assertAA(before, expected, "SplitFrac test 3 failed");
+}
+
 
 function testAll() {
 
@@ -524,6 +557,9 @@ function testAll() {
     }
     if(FTest1()&&FTest2()) {
       console.log("All Factor tests have passed");
+    }
+    if(SFTest1()&&SFTest2()&&SFTest3()) {
+      console.log("All SplitFrac tests have passed")
     }
   } catch(error) {
     // console.log("Algebraic Action Reference errors has occurred");

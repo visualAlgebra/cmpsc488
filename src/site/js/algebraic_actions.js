@@ -112,9 +112,9 @@ class CommutativeSwap {
 // [1 2 >< 3]  <=Merge=  [1 [2><3] ><]
 //
 // [1 [2><] >< 3]
-// 
+//
 // [1 [2><] >< [3><]]
-// 
+//
 // [1 [2><3] ><]
 
 
@@ -155,7 +155,7 @@ class AssociativeMerge {
           for(let siblingChildNW of child.NW) {
             newQuadrantNW.push(siblingChildNW);
           }
-          
+
           for(let siblingChildSE of child.SE) {
             newQuadrantSE.push(siblingChildSE);
           }
@@ -177,7 +177,6 @@ class AssociativeMerge {
         newQuadrantNW.push(child);
       }
 
-
       //add expressions into new quadrant
       for(let child of quadrant) {
 
@@ -186,7 +185,7 @@ class AssociativeMerge {
           for(let siblingChildNW of child.NW) {
             newQuadrantSE.push(siblingChildNW);
           }
-          
+
           for(let siblingChildSE of child.SE) {
             newQuadrantNW.push(siblingChildSE);
           }
@@ -202,53 +201,21 @@ class AssociativeMerge {
   }
 }
 
-//Takes an array of siblings in the same tag and surrounds those
-//siblings with a tag of the same orientation
+//Encloses a tag with another tag of the same orientation
 class AssociativeIntro {
 
-  constructor(siblings, parent, quadrant) {
-    this.siblings = siblings;
-    this.parent = parent;
-    this.quadrant = quadrant;
+  constructor(tag) {
+    this.tag = tag;
   }
 
   //Valid if siblings is in parent in the correct order
   verify() {
-    var idx = quadrant.findIndex(x => x === siblings[0]);
-    for (let child of siblings) {
-      if (!child.equals(quadrant[idx])) {
-        return false;
-      }
-      idx++;
-    }
-    return true;
+    return this.tag instanceof Tag;
   }
 
   apply() {
-
-    //make the inner tag
-    if (this.quadrant.equals(this.parent.NW)){
-      var newTag = new Tag(this.parent.orientation, this.siblings);
-    } else {
-      var newTag = new Tag(this.parent.orientation, [], this.siblings);
-    }
-
-    //find the index of the first sibling
-    var idx = this.quadrant.findIndex(x => x.equals(sibling[0]));
-
-    var newQuadrant = [];
-    for (var i = 0; i < this.quadrant.length - siblings.length; i++) {
-      if(i === idx) {
-        newQuadrant[i] = newTag;
-      }
-      newQuadrant[i] = quadrant[i];
-    }
-
-    if(this.quadrant.equals(this.parent.NW)) {
-      return new Tag(this.parent.orientation, newQuadrant, this.parent.SE);
-    } else {
-      return new Tag(this.parent.orientation, this.parent.NW, newQuadrant);
-    }
+    let copy = Object.assign(this.tag);
+    this.tag = new Tag(copy.orientation, [copy]);
   }
 }
 
@@ -314,7 +281,7 @@ class Distribute {
   }
 
   apply() {
-    
+
   }
 }
 
@@ -337,7 +304,7 @@ class Factor {
         isGood = (parent.NW[i].NW[j].value == valueToFactor)
         if (isGood)
           break;
-        
+
       }
       if(!isGood)
         return false;
@@ -348,17 +315,17 @@ class Factor {
           isGood = (parent.SE[i].NW[j].value == valueToFactor)
           if (isGood)
             break;
-          
+
         }
         if(!isGood)
           return false;
       }
 
     return false;
-    
+
   }
-    
-  
+
+
 
   apply() {
     var operatorsArr = parent.NW.slice(this.indxStart, this.indxEnd+1);
@@ -372,7 +339,7 @@ class Factor {
       }
     }
     parent.NW.splice(indxStart, indxEnd-indxStart);
-    
+
     var multTag = new Tag("northsouth");
     var addTag = new Tag("eastwest", operatorsArr);
     multTag.prependNorthWest(addTag);
@@ -384,16 +351,32 @@ class Factor {
 }
 
 class SplitFrac {
-  constructor(sibling1, sibling2) {
-    this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+  constructor(tag) {
+    this.tag = tag;
   }
 
   verify() {
-    // return this.sibling1 and this.sibling2 are actually siblings;
+    return this.tag.orientation === Orientation.NS
+        && this.tag.NW.length < 1
+        && this.tag.SE.length <= 1;
   }
 
+  //Does update treecount corretly
   apply() {
+
+    //create empty array to put split fractions
+    let newNW = [];
+    let newSE = [];
+    let quotient = this.tag.SE;
+    for (let child of this.tag.NW[0].NW) {
+      newNW.push(new Tag(Orientation.NS, [child], quotient));
+    }
+    for(let child of this.tag.NW[0].SE) {
+      newSE.push(new Tag(Orientation.NS, [child], quotient));
+    }
+    this.tag.orientation = Orientation.EW;
+    this.tag.NW = newNW;
+    this.tag.SE = newSE;
   }
 }
 
