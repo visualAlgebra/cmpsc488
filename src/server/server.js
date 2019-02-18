@@ -105,6 +105,7 @@ class Server {
         return true;
     }
 
+    //TO-DO: Fix bug that delimits the '_'
     static getSentID(pathname) {
         return path.basename(pathname);
     }
@@ -176,7 +177,7 @@ class Server {
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
                     self.deleteLesson(response, sentUrl.pathname, accountID);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
-                    self.deleteAccount(response, accountID);
+                    self.deleteAccount(response, sentUrl.pathname, accountID);
                 } else {
                     return self.respondWithError(response, 400, "Error 400: Bad Request");
                 }
@@ -321,8 +322,9 @@ class Server {
     }
 
 
-    deleteAccount(response, accountID) {
-        return this.database.deleteAccount(server,response, accountID);
+    deleteAccount(response, pathname, accountID) {
+        let accountName = Server.getSentID(pathname.substr(this.databaseActions[2].length));
+        return this.database.deleteAccount(server, response, accountName, accountID);
     }
 
 
@@ -343,7 +345,7 @@ var server = new Server();
 server.listen();
 const requestTest = require('./requestTest');
 
-setTimeout(test, 1000);
+setTimeout(test, 500);
 //testDatabase(server);
 
 

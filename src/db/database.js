@@ -211,12 +211,16 @@ class DummyDatabase extends Database {
         });
     }
 
-    deleteAccount(server, response, accountID) {
+    deleteAccount(server, response, accountToDelete, accountID) {
         if(accountID === undefined) {
             return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
         }
-        let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
-        return this.unlinkFile(server, response, fileName, accountID);
+        if(accountID === accountToDelete) {
+            let fileName = "src/db/dbfiles/accounts/" + accountToDelete + ".json";
+            return this.unlinkFile(server, response, fileName, accountID);
+        } else {
+            return server.respondWithError(response, 401, "Error 401: Can only be deleted by creator");
+        }
     }
 
 }
