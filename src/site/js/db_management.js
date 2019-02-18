@@ -8,13 +8,8 @@ function get_problem_from_db(problem_id, callback){
   http.open("GET", "http://localhost:8080/problems/"+problem_id);
   http.send();
 }
-function post_problem_from_site(problem, callback){
+function post_problem_from_site(problem){
   let http=new XMLHttpRequest();
-  http.onreadystatechange = function () {
-        if (http.readyState == 4 && http.status == 200) {
-          callback(true);
-        }
-    }
   http.open("POST", "http://localhost:8080/problems/"+problem.problem_id);
   http.setRequestHeader("Content-type", "application/json");
   user="Fractalyst, ofcourse, why would any other user be here?";
