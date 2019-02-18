@@ -2,6 +2,8 @@
 const v1 = new Variable(1);
 const v2 = new Variable(2);
 const v3 = new Variable(3);
+const v4 = new Variable(4);
+const v5 = new Variable(5);
 const l1 = new Literal(1);
 const l2 = new Literal(2);
 const l3 = new Literal(3);
@@ -12,6 +14,10 @@ function assertAA (applied, expected, err) {
     console.log(err);
   }
   return retval;
+}
+
+function allPassed (action) {
+  console.log("All " + action + " tests have passed");
 }
 
 function negative(x) {
@@ -486,6 +492,9 @@ function SFTest1() {
   const e2 = new Tag(Orientation.NS, [l1], [v2]);
   const expected = new Tag(Orientation.EW, [e1, e2]);
 
+  const action = new SplitFrac(before);
+  action.apply();
+
   return assertAA(before, expected, "SplitFrac test 1 failed");
 }
 
@@ -496,34 +505,121 @@ function SFTest2() {
 
   const e1 = new Tag(Orientation.NS, [t1], [l1]);
   const e2 = new Tag(Orientation.NS, [v3], [l1]);
-  const expected = new Tag(Orientation.EW, [e1, e2]);
+  const expected = new Tag(Orientation.EW, [e1], [e2]);
+
+  const action = new SplitFrac(before);
+  action.apply();
 
   return assertAA(before, expected, "SplitFrac test 2 failed");
+}
+
+function SFTest3() {
+
+  const t1 = new Tag(Orientation.NS, [v1, v2]);
+  const before = new Tag(Orientation.NS,
+    [new Tag(Orientation.EW, [t1,l1,l2], [v3,l3])],
+    [v4, v5]
+  );
+
+  const e1 = new Tag(Orientation.NS, [t1], [v4, v5]);
+  const e2 = new Tag(Orientation.NS, [l1], [v4, v5]);
+  const e3 = new Tag(Orientation.NS, [l2], [v4, v5]);
+  const e4 = new Tag(Orientation.NS, [v3], [v4, v5]);
+  const e5 = new Tag(Orientation.NS, [l3], [v4, v5]);
+  const expected = new Tag(Orientation.EW, [e1, e2, e3], [e4, e5]);
+
+  const action = new SplitFrac(before);
+  action.apply();
+
+
+
+  return assertAA(before, expected, "SplitFrac test 3 failed");
+}
+
+function CFTest1() {
+
+  let q = [v1, v2];
+  const t1 = new Tag(Orientation.NS, [l1], q);
+  const t2 = new Tag(Orientation.NS, [v3], q);
+  const t3 = new Tag(Orientation.NS, [l2], q);
+  const before = new Tag(Orientation.EW, [t1, t2, t3]);
+
+  const dividend = new Tag(Orientation.EW, [l1, v3, l2]);
+  const expected = new Tag(Orientation.NS, [dividend], q);
+
+  const action = new CombineFrac(before);
+  action.apply();
+
+
+  return assertAA(before, expected, "CombineFrac test 1 failed");
+}
+
+function CFTest2() {
+
+  let q = [v1, v2];
+  const t1 = new Tag(Orientation.NS, [l1], q);
+  const t2 = new Tag(Orientation.NS, [v3], q);
+  const t3 = new Tag(Orientation.NS, [l2], q);
+  const before = new Tag(Orientation.EW, [], [t1, t2, t3]);
+
+  const dividend = new Tag(Orientation.EW, [],[l1, v3, l2]);
+  const expected = new Tag(Orientation.NS, [dividend], q);
+
+  const action = new CombineFrac(before);
+  action.apply();
+
+  return assertAA(before, expected, "CombineFrac test 2 failed");
+}
+
+function CFTest3() {
+
+  let q = new Tag(Orientation.EW, [l1, v2])
+  const ti = new Tag(Orientation.EW, [v4, v5]);
+
+  const t1 = new Tag(Orientation.NS, [v1], [q]);
+  const t2 = new Tag(Orientation.NS, [ti], [q]);
+  const t3 = new Tag(Orientation.NS, [l2], [q]);
+  const t4 = new Tag(Orientation.NS, [v3], [q]);
+  const before = new Tag(Orientation.EW, [t1, t2], [t3, t4]);
+
+  const dividend = new Tag(Orientation.EW, [v1, ti], [l2, v3]);
+  const expected = new Tag(Orientation.NS, [dividend], [q]);
+
+  const action = new CombineFrac(before);
+  action.apply();
+
+  return assertAA(before, expected, "CombineFrac test 3 failed");
 }
 
 function testAll() {
 
   try {
     if(CSTest1()&&CSTest2()&&CSTest3()){
-      console.log("All CommutativeSwap tests have passed");
+      allPassed("CommutativeSwap");
     }
     if(AMTest1()&&AMTest2()&&AMTest3()) {
-      console.log("All AssociativeMerge tests have passed");
+      allPassed("AssociativeMerge");
     }
     if(AITest1()&&AITest2()) {
-      console.log("All AssociativeIntro tests have passed");
+      allPassed("AssociativeIntro");
     }
     if(AInsTest1()&&AInsTest2()) {
-      console.log("All AssociativeInsert tests have passed");
+      allPassed("AssociativeInsert");
     }
     if(AETest1()&&AETest2()) {
-      console.log("All AssociativeExtract tests have passed");
+      allPassed("AssociativeExtract");
     }
     if(DTest1()&&DTest2()) {
-      console.log("All Distribute tests have passed");
+      allPassed("Distribute");
     }
     if(FTest1()&&FTest2()) {
-      console.log("All Factor tests have passed");
+      allPassed("Factor");
+    }
+    if(SFTest1()&&SFTest2()&&SFTest3()) {
+      allPassed("SplitFrac");
+    }
+    if(CFTest1()&&CFTest2()&&CFTest3()) {
+      allPassed("CombineFrac");
     }
   } catch(error) {
     // console.log("Algebraic Action Reference errors has occurred");

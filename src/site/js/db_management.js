@@ -20,3 +20,12 @@ function post_problem_from_site(problem){
   console.log(str);
   http.send(str);
 }
+//delete_problem_from_db("RAND_978265029","Fractalyst");
+//goes through without errors but doesn't delete the file
+function delete_problem_from_db(problem_id, acc_id){
+  let http=new XMLHttpRequest();
+  http.open("DELETE", "http://localhost:8080/problems/"+problem_id, true);
+  http.setRequestHeader("Content-type", "application/json");
+  http.setRequestHeader('account', acc_id);
+  http.send();
+}

@@ -103,6 +103,24 @@ class Tag extends ExpressionTree {
     this.updateParentTreeCount(-delta);
   }
 
+  emptyNorthWest() {
+    let delta = 0;
+    for (let child of this.NW) {
+      delta += child.treeCount;
+    }
+    this.NW = [];
+    this.updateParentTreeCount(-delta);
+  }
+
+  emptySouthWest() {
+    let delta = 0;
+    for (let child of this.SE) {
+      delta += child.treeCount;
+    }
+    this.SE = [];
+    this.updateParentTreeCount(-delta);
+  }
+  
   equals(that) {
     if (that.kind === "tag") {
       if (
@@ -209,7 +227,7 @@ class Literal extends ExpressionTree {
   toString() {
     return "{l" + this.value + "}";
   }
-  
+
   compress() {
     compress_string_js(this.toString(),res => {
       console.log(JSON.stringify(res));
@@ -299,28 +317,6 @@ function decompress_string_js(byte_arr, callback) {
 /// /////////////////////////////////////////////////////////////////////////////
 /// //////////////////        Unused Functions   ////////////////////////////////
 
-function helper(text) {
-  let rettext = "";
-  let temp = 0;
-  let zeroamt = 0;
-  let i = 0;
-  for (i = 0; i < text.length; i++) {
-    if (text.charAt(i) === "{") {
-      temp++;
-      rettext = rettext + temp.toString();
-    } else if (text.charAt(i) === "}") {
-      rettext = rettext + temp.toString();
-      temp--;
-      if (temp === 0) {
-        zeroamt++;
-      }
-    } else {
-      rettext = rettext + " ";
-    }
-  }
-  console.log(text);
-  console.log(rettext + "  :  " + (temp === 0) + "  :  " + zeroamt);
-}
 //x=createRandomExpression(6).toString(); helper(x.substr(5,x.length-7));
  function helper(text){
     let rettext="";
