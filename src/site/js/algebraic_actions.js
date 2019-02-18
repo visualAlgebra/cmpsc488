@@ -367,13 +367,17 @@ class SplitFrac {
     //create empty array to put split fractions
     let newNW = [];
     let newSE = [];
-    let quotient = this.tag.SE;
+    let divisor = this.tag.SE;
+
+    //Push the split fractions into their respective quadrants
     for (let child of this.tag.NW[0].NW) {
-      newNW.push(new Tag(Orientation.NS, [child], quotient));
+      newNW.push(new Tag(Orientation.NS, [child], divisor));
     }
     for(let child of this.tag.NW[0].SE) {
-      newSE.push(new Tag(Orientation.NS, [child], quotient));
+      newSE.push(new Tag(Orientation.NS, [child], divisor));
     }
+
+    //update the tag with new orientation and quadrants
     this.tag.orientation = Orientation.EW;
     this.tag.NW = newNW;
     this.tag.SE = newSE;
@@ -381,16 +385,46 @@ class SplitFrac {
 }
 
 class CombineFrac {
-  constructor(sibling1, sibling2) {
-    this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+  //Where sibligns is the list of
+  constructor(tag) {
+    this.tag = tag;
   }
 
   verify() {
-    // return this.sibling1 and this.sibling2 are actually siblings;
+    if (tag.orientation !== Orientation.EW) {
+      return false;
+    }
+    let divisor = tag.SE;
+    for (let child of siblings) {
+      if (child.SE !== divisor) {
+        return false;
+      }
+    }
+    return true;
   }
 
   apply() {
+
+    let newNW = [];
+    let newSE = [];
+    let divisor = [];
+    for (let child of this.tag.NW) {
+      newNW = newNW.concat(child.NW);
+      divisor = child.SE;
+    }
+    for (let child of this.tag.SE) {
+      newSE = newSE.concat(child.NW);
+      divisor = child.SE;
+    }
+
+    let dividend = new Tag(Orientation.EW, newNW, newSE);
+    this.tag.orientation = Orientation.NS;
+    this.tag.emptyNorthWest();
+    this.tag.addNorthWest(dividend);
+    this.tag.emptySouthWest();
+    for (let child of divisor) {
+      this.tag.addSouthEast(child);
+    }
   }
 }
 

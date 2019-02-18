@@ -551,8 +551,6 @@ function CFTest1() {
   const action = new CombineFrac(before);
   action.apply();
 
-  console.log(before);
-  console.log(expected);
 
   return assertAA(before, expected, "CombineFrac test 1 failed");
 }
