@@ -304,9 +304,9 @@ class AssociativeInsert {
 }
 
 class Distribute {
-  constructor(sibling1, sibling2) {
-    this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+  constructor(parent, value) {
+    this.parent = parent;
+    this.value = value;
   }
 
   verify() {
@@ -314,7 +314,7 @@ class Distribute {
   }
 
   apply() {
-
+    
   }
 }
 
@@ -353,13 +353,32 @@ class Factor {
         if(!isGood)
           return false;
       }
+
+    return false;
     
   }
     
   
 
   apply() {
+    var operatorsArr = parent.NW.slice(this.indxStart, this.indxEnd+1);
+    var factored;
+    for(var i = 0; i<operatorsArr.length; i++){
+      for(var j = 0; j<operatorsArr[i].NW.length; j++){
+        if(operatorsArr[i].NW[j].value == valueToFactor){
+          factored = operatorsArr[i].NW[j];
+          operatorsArr[i].NW.splice(j, 1);
+        }
+      }
+    }
+    parent.NW.splice(indxStart, indxEnd-indxStart);
     
+    var multTag = new Tag("northsouth");
+    var addTag = new Tag("eastwest", operatorsArr);
+    multTag.prependNorthWest(addTag);
+    multTag.prependNorthWest(factored);
+    parent.prependNorthWest(multTag);
+    // Todo: Find how a valueToFactor in SE would work
 
   }
 }

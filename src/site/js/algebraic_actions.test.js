@@ -1,3 +1,11 @@
+//Setting Literals and Variables for unit testing
+const v1 = new Variable(1);
+const v2 = new Variable(2);
+const v3 = new Variable(3);
+const l1 = new Literal(1);
+const l2 = new Literal(2);
+const l3 = new Literal(3);
+
 function assertAA (applied, expected, err) {
   let retval = applied.equals(expected);
   if(!retval) {
@@ -13,8 +21,8 @@ function negative(x) {
 
 function CSTest1 () {
   let a = new Tag(Orientation.NS);
-  a0 = new Literal(1);
-  a1 = new Literal(2);
+  let a0 = new Literal(1);
+  let a1 = new Literal(2);
   a.addNorthWest(a0);
   a.addNorthWest(a1);
 
@@ -30,9 +38,9 @@ function CSTest1 () {
 
 function CSTest2() {
   let a = new Tag(Orientation.NS);
-  a0 = new Literal(1);
-  a1 = new Variable(1);
-  a2 = new Tag(Orientation.EW, [new Literal(2), new Variable(2)]);
+  let a0 = new Literal(1);
+  let a1 = new Variable(1);
+  let a2 = new Tag(Orientation.EW, [new Literal(2), new Variable(2)]);
   a.addNorthWest(a0);
   a.addNorthWest(a1);
   a.addNorthWest(a2);
@@ -51,10 +59,10 @@ function CSTest2() {
 
 function CSTest3() {
   let a = new Tag(Orientation.EW);
-  a0 = new Literal(1);
-  a1 = new Variable(1);
-  a2 = new Tag(Orientation.EW, [new Variable(2), new Variable(3)]);
-  a3 = new Tag(Orientation.NS, [new Literal(2), new Literal(3)]);
+  let a0 = new Literal(1);
+  let a1 = new Variable(1);
+  let a2 = new Tag(Orientation.EW, [new Variable(2), new Variable(3)]);
+  let a3 = new Tag(Orientation.NS, [new Literal(2), new Literal(3)]);
   a.addNorthWest(a0);
   a.addSouthEast(a1);
   a.addSouthEast(a2);
@@ -77,8 +85,8 @@ function AMTest1() {
   // =>
   // [1><]
   let s = new Tag(Orientation.NS);
-  s0 = new Literal(1);
-  s1 = new Literal(2);
+  let s0 = new Literal(1);
+  let s1 = new Literal(2);
   s.addNorthWest(s0);
   s.addNorthWest(s1);
   let p = new Tag(Orientation.NS);
@@ -117,9 +125,9 @@ function AMTest2() {
   */
 
   let s = new Tag(Orientation.EW);
-  s0 = new Literal(1);
-  s1 = new Literal(2);
-  s2 = new Variable(1);
+  let s0 = new Literal(1);
+  let s1 = new Literal(2);
+  let s2 = new Variable(1);
   s.addSouthEast(s0);
   s.addSouthEast(s1);
   s.addSouthEast(s2);
@@ -168,39 +176,41 @@ function AMTest3() {
   */
 
   let s = new Tag(Orientation.NS);
-  s0 = new Literal(1);
-  s1 = new Literal(2);
-  s2 = new Variable(1);
-  s3 = new Tag(Orientation.EW, [new Variable(6), new Literal(2), new Literal(1)]);
+  let s0 = new Literal(1);
+  let s1 = new Literal(2);
+  let s2 = new Variable(1);
+  let s3 = new Tag(Orientation.EW, [new Variable(6), new Literal(2), new Literal(1)]);
   s.addSouthEast(s0);
   s.addSouthEast(s1);
   s.addSouthEast(s2);
   s.addSouthEast(s3);
   let p = new Tag(Orientation.NS);
-  p.addSouthEast(s);
+  p.addNorthWest(s);
 
   let merge = new AssociativeMerge(s, p, Quadrant.NW);
   merge.apply();
 
-  let expected = new Tag(Orientation.NS, [s0, s1, s2, s3]);
+  let expected = new Tag(Orientation.NS, [], [s0, s1, s2, s3]);
 
   return assertAA(p, expected, "AssociativeMerge Test 3 failed");
 }
 
 function AITest1() {
-  let p = new Tag(Orientation.NS);
-  p0 = new Literal(1);
-  p1 = new Literal(2);
+  var p = new Tag(Orientation.NS);
+  let p0 = new Literal(1);
+  let p1 = new Literal(2);
   p.addNorthWest(p0);
   p.addNorthWest(p1);
-  let s = [p0, p1];
 
-  let merge = new AssociativeIntro(s, p, p.NW);
-  let m = merge.apply();
+  let intro = new AssociativeIntro(p);
+  intro.apply();
 
-  let expected = new Tag(Orientation.NS, [p]);
+  let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS, [p0, p1])]);
 
-  return assertAA(m, expected, "AssociativeIntro Test 1 failed");
+  // console.log(p);
+  // console.log(expected);
+
+  return assertAA(p, expected, "AssociativeIntro Test 1 failed");
 }
 
 function AITest2() {
@@ -217,8 +227,8 @@ function AITest2() {
   p.addNorthWest(p3);
   let s = [p1, p2, p3];
 
-  let merge = new AssociativeIntro(s, p, p.NW);
-  let m = merge.apply();
+  let intro = new AssociativeIntro(s, p, p.NW);
+  let m = intro.apply();
 
   let inner = new Tag(Orientation.NS, [p1, p2, p3]);
   let expected = new Tag(Orientation.NS, [p0, inner]);
@@ -227,16 +237,15 @@ function AITest2() {
   */
 
   let p = new Tag(Orientation.EW);
-  p0 = new Literal(1);
-  p1 = new Literal(2);
+  let p0 = new Literal(1);
+  let p1 = new Literal(2);
   p.addSouthEast(p0);
   p.addSouthEast(p1);
-  let s = [p0, p1];
 
-  let merge = new AssociativeIntro(s, p, p.SE);
-  let m = merge.apply();
+  let intro = new AssociativeIntro(p);
+  intro.apply();
 
-  let expected = new Tag(Orientation.EW, [], [p]);
+  let expected = new Tag(Orientation.EW, [p]);
 
   return assertAA(m, expected, "AssociativeIntro Test 2 failed");
 }
@@ -256,7 +265,7 @@ function AETest1() {
 
   const expected = new Tag(Orientation.NS,
     [
-      x,
+      new Variable(1),
       new Tag(Orientation.NS,
         [new Variable(2)],
         [new Variable(3)]
@@ -302,7 +311,7 @@ function AETest2() {
       new Literal(3)
     ]);
 
-  const expectedParent = new Tag(Orientation.EW, [new Variable(3)], [x, s]);
+  const expectedParent = new Tag(Orientation.EW, [new Variable(3)], [new Variable(1), s]);
 
   return assertAA(p, expectedParent, "AssociativeExtract test 2 failed");
 }
@@ -376,8 +385,8 @@ function AInsTest2() {
 function DTest1() {
 
   const inner = new Tag(Orientation.EW);
-  i1 = new Variable(1);
-  i2 = new Variable(2);
+  let i1 = new Variable(1);
+  let i2 = new Variable(2);
   inner.addNorthWest(i1);
   inner.addNorthWest(i2);
 
@@ -397,12 +406,6 @@ function DTest1() {
 
 function DTest2() {
 
-  v1 = new Variable(1);
-  v2 = new Variable(2);
-  v3 = new Variable(3);
-  l1 = new Literal(1);
-  l2 = new Literal(2);
-  l3 = new Literal(3);
   //[v3, l1 >< l2]
   const x = new Tag(Orientation.NS, [v3, l1], [l2])
   //[v1, v2, x, l3 >< ]
@@ -427,9 +430,9 @@ function DTest2() {
 function FTest1() {
 
   const factor = new Literal(1);
-  i1 = new Variable(1);
-  i2 = new Variable(2);
-  i3 = new Literal(5);
+  let i1 = new Variable(1);
+  let i2 = new Variable(2);
+  let i3 = new Literal(5);
 
   const before = new Tag(Orientation.EW,
     [
@@ -452,13 +455,7 @@ function FTest1() {
 
 function FTest2() {
 
-  v1 = new Variable(1);
-  v2 = new Variable(2);
-  v3 = new Variable(3);
-  l1 = new Literal(1);
-  l2 = new Literal(2);
-  l3 = new Literal(3);
-  factor = new Variable(4);
+  const factor = new Variable(4);
   factor = negative(factor);
 
   const before = new Tag(Orientation.EW, [
@@ -481,9 +478,27 @@ function FTest2() {
   return assertAA(before, expected, "Factor test 2 failed");
 }
 
-function SFTest() {
+function SFTest1() {
 
+  const before = new Tag(Orientation.NS, [new Tag(Orientation.EW, [v1, l1])], [v2]);
 
+  const e1 = new Tag(Orientation.NS, [v1], [v2]);
+  const e2 = new Tag(Orientation.NS, [l1], [v2]);
+  const expected = new Tag(Orientation.EW, [e1, e2]);
+
+  return assertAA(before, expected, "SplitFrac test 1 failed");
+}
+
+function SFTest2() {
+
+  let t1 = new Tag(Orientation.NS, [v1, v2]);
+  const before = new Tag(Orientation.NS, [new Tag(Orientation.EW, [t1], [v3])], [l1]);
+
+  const e1 = new Tag(Orientation.NS, [t1], [l1]);
+  const e2 = new Tag(Orientation.NS, [v3], [l1]);
+  const expected = new Tag(Orientation.EW, [e1, e2]);
+
+  return assertAA(before, expected, "SplitFrac test 2 failed");
 }
 
 function testAll() {
@@ -511,7 +526,8 @@ function testAll() {
       console.log("All Factor tests have passed");
     }
   } catch(error) {
-    console.log("Algebraic Action Reference errors has occurred");
+    // console.log("Algebraic Action Reference errors has occurred");
+    console.log(error);
   }
 }
 
