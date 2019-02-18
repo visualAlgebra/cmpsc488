@@ -30,6 +30,9 @@ class Database {
     deleteLesson(server, response, accountID, lessonID) {
         return server.respondWithError(response, 500, "Error 500: Internal Server Error");
     }
+    deleteAccount(server, response, accountID) {
+        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+    }
 }
 
 
@@ -89,8 +92,13 @@ class DummyDatabase extends Database {
             fileName = "src/db/dbfiles/problems/TEST_PROBLEM_0.json";
             usedName = "TEST_PROBLEM_0";
         } else {
+            if (accountID === undefined) {
+                return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+            }
             fileName = "src/db/dbfiles/problems/" + enteredName + ".json";
             usedName = enteredName;
+            problem.creatorAccountID = accountID;
+
         }
         this.session.writeFile(fileName, JSON.stringify(problem), function(err) {
             if(err) {
@@ -103,12 +111,18 @@ class DummyDatabase extends Database {
 
     saveLesson(server, response, accountID, lesson, enteredName) {
         let fileName = "";
+        if (accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
+        lesson.creatorAccountID = accountID;
+        lesson.timeCreated = this.getCurrentTimeStamp();
+
         if (enteredName === "") {
             fileName = "src/db/dbfiles/lessons/TEST_LESSON_0.json";
         } else {
             fileName = "src/db/dbfiles/lessons/" + enteredName + ".json";
         }
-        this.session.writeFile(fileName, lesson, function(err) {
+        this.session.writeFile(fileName, JSON.stringify(lesson), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
@@ -118,8 +132,12 @@ class DummyDatabase extends Database {
     }
 
     addAccount(server, response, account, accountID) {
+        if (accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
+        account.accountID = accountID;
         let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
-        this.session.writeFile(fileName, account, function(err) {
+        this.session.writeFile(fileName, JSON.stringify(account), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
@@ -128,26 +146,77 @@ class DummyDatabase extends Database {
         }); 
     }
 
-    deleteProblem(server, response, accountID, problemID) {
-        let fileName = "src/db/dbfiles/problems/" + problemID + ".json";
+    unlinkFile(server, response, fileName, id) {
         this.session.unlink(fileName, function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 400: Bad Request");
             } else {
-                return server.respondWithData(response, 200, 'text/plain', problemID + " Deleted.");
+                return server.respondWithData(response, 200, 'text/plain', id + " Deleted.");
             }
-        }); 
+        });
+    }
+
+    deleteProblem(server, response, accountID, problemID) {
+        let self = this;
+        if (accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
+        let fileName = "src/db/dbfiles/problems/" + problemID + ".json";
+        this.session.readFile(fileName, function (err, data) {
+            if (err) {
+                return server.respondWithError(response, 404, "Error 404: File Not Found");
+            }
+            else {
+                let problem;
+                try{
+                problem = JSON.parse(data);
+                } catch (error) {
+                   return self.unlinkFile(server, response, fileName, problemID);
+                }
+                if (problem.creatorAccountID === accountID) {
+                    return self.unlinkFile(server, response, fileName, problemID);
+                } else {
+                    return server.respondWithError(response, 401, "Error 401: Can only be deleted by creator");
+                }
+
+            }
+        });
     }
 
     deleteLesson(server, response, accountID, lessonID) {
+        let self = this;
+        if (accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
         let fileName = "src/db/dbfiles/lessons/" + lessonID + ".json";
-        this.session.unlink(fileName, function(err) {
-            if(err) {
-                return server.respondWithError(response, 500, "Error 400: Bad Request");
-            } else {
-                return server.respondWithData(response, 200, 'text/plain', lessonID + " Deleted.");
+        this.session.readFile(fileName, function (err, data) {
+            if (err) {
+                console.log("failed to find lesson @:" + fileName);
+                return server.respondWithError(response, 404, "Error 404: File Not Found");
+            }
+            else {
+                let lesson;
+                try{
+                lesson = JSON.parse(data);
+                } catch (error) {
+                   return self.unlinkFile(server, response, fileName, lessonID);
+                }
+                if (lesson.creatorAccountID === accountID) {
+                    return self.unlinkFile(server, response, fileName, lessonID);
+                } else {
+                    return server.respondWithError(response, 401, "Error 401: Can only be deleted by creator");
+                }
+
             }
         });
+    }
+
+    deleteAccount(server, response, accountID) {
+        if(accountID === undefined) {
+            return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
+        }
+        let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
+        return this.unlinkFile(server, response, fileName, accountID);
     }
 
 }
