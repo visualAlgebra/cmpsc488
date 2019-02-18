@@ -54,7 +54,6 @@ class Server {
                 
 	        }
 	    }
-	    console.log(filePath + " FAILED");
         return false;
     }
 
@@ -114,6 +113,8 @@ class Server {
 
     //creates a server session that listens on port 8080 of localhost
     listen() {
+
+        console.log("Booting up");
         //so can call methods inside other function
         var self = this; //so can call inside callback function
         http.createServer(function (request, response) {
@@ -195,7 +196,7 @@ class Server {
         response.writeHead(statusCode, {'Content-Type': mediaType})
 	   // if (mediaType === "application/json") {
 		//    console.log(data);
-	   // }
+       // }
         response.write(data);
         return response.end();
     }
@@ -332,32 +333,20 @@ class Server {
 // ============================
 //      Testing
 // ============================
+function test() {
+
+    requestTest.executeTesting();
+
+}
 
 var server = new Server();
 server.listen();
-test();
+const requestTest = require('./requestTest');
+
+setTimeout(test, 1000);
 //testDatabase(server);
 
-function test() {
 
-    let filename = "src/site/index.html";
-    let file1 = fs.readFileSync(filename, 'utf-8');
-    let resFile1 = "";
-    http.get({hostname: 'localhost', port: 8080, path: '/', agent: false},
-        function (res) {
-        res.on("data", function(chunk) {
-            resFile1 += chunk.toString();
-        res.on("end", function() {
-            if(file1 === resFile1) {
-                console.log("--- Test 1 Passed. ---");
-            } else {
-                console.log("--- Test 1 Failed. ---");
-            }
-        })
-        });
-    });
-
-}
 
 function testDatabase(server) {
     server.database.getProblem(server, null, "TEST_PROBLEM_1");

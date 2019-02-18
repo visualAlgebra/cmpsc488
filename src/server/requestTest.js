@@ -1,15 +1,21 @@
 //create files needed
 const fs = require("fs");
+const http = require("http");
 var filesProcessed = 0;
 const totalFilesToProcess = 1;
 
 const fileRTPath = "src/db/dbfiles/";
-const fileRT0Path = "problems/rT0.json";
+const fileRT0Path = "problems/rT0";
 const fileRT0 = '{"startExpression": [93, 0, 0, 0, 2, 46, 0, 0, 0, 0, 0, 0, 0, 0, 61, -99, 4, -88, 114, 97, 90, 8, -85, 11, -84, -112, -35, -58, 5, -74, 23, 10, 13, 90, 62, -106, 17, -93, -35, -41, -67, 117, -22, -93, 22, -79, -103, 52, 71, 120, -52, 68, 127, -3, -91, 16, 0], "goalExpression": [93, 0, 0, 0, 2, 27, 0, 0, 0, 0, 0, 0, 0, 0, 61, -99, 4, -88, 114, 97, 90, 17, 100, 103, 78, -124, 111, -53, 100, -108, 69, -59, 33, 20, -58, 87, -74, 74, -11, 114, -10, 50, -1, -8, -76, 84, 0]}';
-const fileRT1Path = "lessons/rT1.json";
+const fileRT1Path = "lessons/rT1";
 const fileRT1 = '{"problems": ["TEST_PROBLEM_1", "TEST_PROBLEM_2", "TEST_PROBLEM_3"]}';
-const fileRT2Path = "accounts/rT2.json";
+const fileRT2Path = "accounts/rT2";
 const fileRT2 = '{"accountID": "TEST_ACCOUNT"}'
+const fileRT3Path = "problems/rT3";
+const testUser0 = "TEST_USER_0";
+const fileRT4Path = "problems/";
+const fileRT5Path = "lessons/rT5";
+const fileRT6Path = "accounts/rT6";
 
 // function incrementFilesProcessed() {
 // 	filesProcessed++;
@@ -18,68 +24,117 @@ const fileRT2 = '{"accountID": "TEST_ACCOUNT"}'
 // 		executeTesting();
 // 	}
 // }
+// let file1 = fs.readFileSync(filename, 'utf-8');
+
+function getFileTest(fileName, testNumber, compareData) {
+    let resFile = "";
+	http.get("http://localhost:8080/" + fileName,
+        function (res) {
+        res.on("data", function(chunk) {
+			resFile += chunk.toString();
+		});
+        res.on("end", function() {
+            if(compareData === resFile) {
+                console.log("TEST " + testNumber + ": -- Success --");
+            } else {
+                console.log("TEST " + testNumber + ": -- Failed --");
+				console.log("Response: ");
+				console.log(resFile);
+            }
+        });
+    });
+}
+
+function postFileTest(fileName, testNumber, compareData, accountID, successStatusCode) {
+	let options;	  
+	if(accountID === -1) {
+		options = {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			  'Content-Length': Buffer.byteLength(compareData),
+			}
+		};	
+	} else {
+		options = {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			  'Content-Length': Buffer.byteLength(compareData),
+			  'account': accountID
+			}
+		};
+	} 
+	let req = http.request("http://localhost:8080/" + fileName, options, (res) => {
+		let body = "";
+		res.setEncoding('utf8');
+		res.on('data', (chunk) => {
+			body += chunk;
+		});
+		res.on('end', () => {
+			if (res.statusCode === successStatusCode) {
+				console.log("TEST " + testNumber + ": -- Success --");
+			} else {
+				console.log("TEST " + testNumber + ": -- Failed --");
+				console.log("Returned Status Code is: " + res.statusCode);
+				console.log("Message is: " + res.statusMessage);
+				
+			}
+		});
+	});
+	  
+	req.on('error', (e) => {
+		console.log("TEST " + testNumber + ": -- Failed -- ");
+		console.log("Error Message:  " + e);
+	});
+	  
+	// write data to request body
+	req.write(compareData);
+	req.end();
+}
 
 
 
 
 function executeTesting() {
-	fs.writeFileSync(fileRTPath + fileRT0Path,fileRT0);
-	fs.writeFileSync(fileRTPath + fileRT1Path,fileRT1);
-	fs.writeFileSync(fileRTPath + fileRT2Path,fileRT2);
+	fs.writeFileSync(fileRTPath + fileRT0Path + ".json",fileRT0);
+	fs.writeFileSync(fileRTPath + fileRT1Path + ".json",fileRT1);
+	fs.writeFileSync(fileRTPath + fileRT2Path + ".json",fileRT2);
 	// =====================================================================================================
 	// ================================== GET tests ========================================================
 	// =====================================================================================================
-	var http3 = new XMLHttpRequest();
-	http3.onreadystatechange = function () {
-		if ( http3.readyState == 4 && http3.status == 200) {
-			if (http3.response === fileRT0) {
-				console.log("Test 1: -- Success --");
-			} else {
-				console.log("Test 1: -- Failed --");
-				console.log("Response: ");
-				console.log(http3.response);
-			}
-		}
-	}
-	http3.open("GET", "http://localhost:8080/" + fileRT0Path, true);
-	http3.setRequestHeader("Content-type", "application/json");
-	http3.send();
+	getFileTest(fileRT0Path, 0, fileRT0); //get problem
+	getFileTest(fileRT1Path, 1, fileRT1); //get lesson
+	getFileTest(fileRT2Path, 2, fileRT2); //get account
+
+	// =====================================================================================================
+	// ================================== POST tests =======================================================
+	// =====================================================================================================
+
+	//post problem test cases
+	postFileTest(fileRT3Path, 3, fileRT0, -1, 401); // denied posting problem with name w/out account
+	postFileTest(fileRT3Path, 4, fileRT0, testUser0, 201); //post problem w/ name w/ account
+	postFileTest(fileRT4Path, 5, fileRT0, -1, 201); //post problem w/out name w/out account
+	postFileTest(fileRT4Path, 6, fileRT0, testUser0, 201); //post problem w/out name w/account
+
+	//post lesson test cases
+	postFileTest(fileRT5Path, 7, fileRT1, -1, 401); // denied posting lesson w/out account
+	postFileTest(fileRT5Path, 8, fileRT1, testUser0, 201); //post lesson w/ account
+
+	//post account test cases
+	postFileTest(fileRT6Path, 9, fileRT2, -1, 401);
+	postFileTest(fileRT6Path, 10, fileRT2, testUser0, 201);
+
+	// =====================================================================================================
+	// ================================== DELETE tests =====================================================
+	// =====================================================================================================
 
 
-	var http4 = new XMLHttpRequest();
-	http4.onreadystatechange = function () {
-		if ( http4.readyState == 4 && http4.status == 200) {
-			if (http4.response === fileRT1) {
-				console.log("Test 2: -- Success --");
-			} else {
-				console.log("Test 2: -- Failed --");
-				console.log("Response: ");
-				console.log(http4.response);
-			}
-		}
-	}
-	http4.open("GET", "http://localhost:8080/" + fileRT1Path, true);
-	http4.setRequestHeader("Content-type", "application/json");
-	http4.send();
 
 
-	var http5 = new XMLHttpRequest();
-	http5.onreadystatechange = function () {
-		if (http5.response === fileRT2) {
-			console.log("Test 3: -- Success --");
-		} else {
-			console.log("Test 3: -- Failed --");
-			console.log("Response: ");
-			console.log(http5.response);
-		}
-	}
-	http5.open("GET", "http://localhost:8080/" + fileRT2Path, true);
-	http5.setRequestHeader("Content-type", "application/json");
-	http5.setRequestHeader('account', 'TEST_ACCOUNT');
-	http5.send();
+	
 }
-
-module.exports = executeTesting();
+module.exports = {executeTesting};
 
 
 //==========================================================================================================
