@@ -326,9 +326,8 @@ class Distribute {
 }
 
 class Factor {
-  constructor(valueToFactor, indx, tagToFactor) {
+  constructor(valueToFactor, tagToFactor) {
     this.valueToFactor = valueToFactor;
-    this.indx = indx;
     this.tagToFactor = tagToFactor;
   }
 
