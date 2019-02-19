@@ -105,7 +105,7 @@ class Server {
         return true;
     }
 
-    //TO-DO: Fix bug that delimits the '_'
+    
     static getSentID(pathname) {
         return path.basename(pathname);
     }
@@ -335,7 +335,7 @@ class Server {
 // ============================
 //      Testing
 // ============================
-function test() {
+let test = function test() {
 
     requestTest.executeTesting();
 
@@ -346,17 +346,19 @@ server.listen();
 const requestTest = require('./requestTest');
 
 setTimeout(test, 500);
+
+console.log("Ready...");
 //testDatabase(server);
 
 
 
-function testDatabase(server) {
-    server.database.getProblem(server, null, "TEST_PROBLEM_1");
-    server.database.getLesson(server, null, "TEST_LESSON_1");
-    server.database.getAccount(server,null,"TEST_ACCOUNT_1");
-    server.database.saveProblem(server, null, "TEST_ACCOUNT_1", '{"text": "TEST_PROBLEM_3"}', "TEST_PROBLEM_3");
-    server.database.saveLesson(server, null, "TEST_ACCOUNT_1", '{"text": "TEST_LESSON_2"}', "TEST_LESSON_2");
-    server.database.addAccount(server, null, '{"text": "TEST_LESSON_1"}', "TEST_ACCOUNT_2");
-    server.database.deleteProblem(server, null, "TEST_ACCOUNT_1", "TEST_PROBLEM_1");
-    server.database.deleteLesson(server, null, "TEST_ACCOUNT_1", "TEST_LESSON_1");
-}
+// function testDatabase(server) {
+//     server.database.getProblem(server, null, "TEST_PROBLEM_1");
+//     server.database.getLesson(server, null, "TEST_LESSON_1");
+//     server.database.getAccount(server,null,"TEST_ACCOUNT_1");
+//     server.database.saveProblem(server, null, "TEST_ACCOUNT_1", '{"text": "TEST_PROBLEM_3"}', "TEST_PROBLEM_3");
+//     server.database.saveLesson(server, null, "TEST_ACCOUNT_1", '{"text": "TEST_LESSON_2"}', "TEST_LESSON_2");
+//     server.database.addAccount(server, null, '{"text": "TEST_LESSON_1"}', "TEST_ACCOUNT_2");
+//     server.database.deleteProblem(server, null, "TEST_ACCOUNT_1", "TEST_PROBLEM_1");
+//     server.database.deleteLesson(server, null, "TEST_ACCOUNT_1", "TEST_LESSON_1");
+// }

@@ -122,13 +122,13 @@ function postFileTest(fileName, testNumber, compareData, accountID, successStatu
 			}
 		};
 	} 
-	let req = http.request("http://localhost:8080/" + fileName, options, (res) => {
+	let req = http.request("http://localhost:8080/" + fileName, options, function (res) {
 		let body = "";
 		res.setEncoding('utf8');
-		res.on('data', (chunk) => {
+		res.on('data', function (chunk) {
 			body += chunk;
 		});
-		res.on('end', () => {
+		res.on('end', function () {
 			if (res.statusCode === successStatusCode) {
 				console.log("TEST " + testNumber + ":" + spaces  + "-- Success --");
 				incrementSuccesses();
@@ -140,7 +140,7 @@ function postFileTest(fileName, testNumber, compareData, accountID, successStatu
 			}
 		});
 	});
-	req.on('error', (e) => {
+	req.on('error', function (e) {
 		console.log("TEST " + testNumber + ": -- Failed -- ");
 		console.log("Error Message:  " + e);
 	});
@@ -170,13 +170,13 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 			}
 		};
 	} 
-	let req = http.request("http://localhost:8080/" + fileName, options, (res) => {
+	let req = http.request("http://localhost:8080/" + fileName, options, function (res) {
 		let body = "";
 		res.setEncoding('utf8');
-		res.on('data', (chunk) => {
+		res.on('data', function (chunk) {
 			body += chunk;
 		});
-		res.on('end', () => {
+		res.on('end', function () {
 			if (res.statusCode === successStatusCode) {
 				console.log("TEST " + testNumber + ":" + spaces  + "-- Success --");
 				incrementSuccesses();
@@ -188,7 +188,7 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 			}
 		});
 	});
-	req.on('error', (e) => {
+	req.on('error', function (e) {
 		console.log("TEST " + testNumber + ": -- Failed -- ");
 		console.log("Error Message:  " + e);
 	});
