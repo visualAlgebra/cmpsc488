@@ -365,7 +365,7 @@ class Factor {
   apply() {
     this.tagToFactor.orientation = Orientation.NS;
     this.tagToFactor.prependNorthWest(this.valueToFactor);
-    var addTag;
+    var addTag = new Tag(Orientation.EW);
     for(var i = 0; i<this.tagToFactor.NW.length; i++){
       if (!this.tagToFactor.NW[i] instanceof Tag){
         this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
