@@ -402,7 +402,8 @@ function DTest1() {
      new Tag( Orientation.NS, [factor, i2])
    ]);
 
-   //Apply
+   const action = new Distribute();
+   action.apply();
 
    return assertAA(before, expected, "Distribute test 1 failed");
 }
@@ -425,33 +426,27 @@ function DTest2() {
     new Tag(Orientation.NS, [factor, l3])
   ]);
 
-  //apply Distribute
+  const action = new Distribute();
+  action.apply();
 
   return assertAA(before, expected, "Distribute test 2 failed");
 }
 
 function FTest1() {
 
-  const factor = new Literal(1);
-  let i1 = new Variable(1);
-  let i2 = new Variable(2);
-  let i3 = new Literal(5);
+  const factor = new Literal(4);
 
   const before = new Tag(Orientation.EW,
     [
-      new Tag(Orientation.NS, [factor, i1]),
-      new Tag(Orientation.NS, [factor, i2]),
-      i3
+      new Tag(Orientation.NS, [factor, v1]),
+      new Tag(Orientation.NS, [factor, v2])
     ]);
 
-  const inner = new Tag(Orientation.EW);
-  inner.addNorthWest(i1);
-  inner.addNorthWest(i2);
+  const t1 = new Tag(Orientation.EW, [v1, v2]);
+  const expected = new Tag(Orientation.NS, [factor, t1]);
 
-  const factored = new Tag(Orientation.NS, [factor, inner]);
-  const expected = new Tag(Orientation.EW, [factored, i3]);
-
-   //Apply Factor
+  const action = new Factor();
+  action.apply();
 
    return assertAA(before, expected, "Factor test 1 failed");
 }
@@ -461,6 +456,9 @@ function FTest2() {
   const factor = new Variable(4);
   factor = negative(factor);
 
+  //[v3, l1 >< l2]
+  const x = new Tag(Orientation.NS, [v3, l1], [l2])
+
   const before = new Tag(Orientation.EW, [
     new Tag(Orientation.NS, [factor, v1]),
     new Tag(Orientation.NS, [factor, v2]),
@@ -468,15 +466,13 @@ function FTest2() {
     new Tag(Orientation.NS, [factor, l3])
   ]);
 
-  //[v3, l1 >< l2]
-  const x = new Tag(Orientation.NS, [v3, l1], [l2])
-
   //[v1, v2, x, l3 >< ]
   const inner = new Tag(Orientation.EW, [v1, v2, x, l3]);
 
   const expected = new Tag(Orientation.NS, [factor, inner]);
 
-  //apply Factor
+  const action = new Factor();
+  action.apply();
 
   return assertAA(before, expected, "Factor test 2 failed");
 }
