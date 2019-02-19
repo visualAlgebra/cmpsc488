@@ -305,12 +305,11 @@ class Distribute {
 }
 
 class Factor {
-  constructor(parent, valueToFactor, indxStart, indxEnd, quadrantLabel) {
+  constructor(parent, valueToFactor, indx, tagToFactor) {
     this.parent = parent;
     this.valueToFactor = valueToFactor;
-    this.indxEnd = indxEnd;
-    this.indxStart = indxStart;
-    this.quadrantLabel = quadrantLabel;
+    this.indx = indx;
+    this.tagToFactor = tagToFactor;
   }
 
   verify() {
@@ -347,7 +346,7 @@ class Factor {
 
 
   apply() {
-    var operatorsArr = parent.NW.slice(this.indxStart, this.indxEnd+1);
+    var operatorsArr = this.tagToFactor.parent.NW.slice(this.indx);
     var factored;
     for(var i = 0; i<operatorsArr.length; i++){
       for(var j = 0; j<operatorsArr[i].NW.length; j++){
@@ -357,15 +356,19 @@ class Factor {
         }
       }
     }
-    parent.NW.splice(indxStart, indxEnd-indxStart);
-
+    
+    var addTag = Tag("eastwest", operatorsArr);
     var multTag = new Tag("northsouth");
-    var addTag = new Tag("eastwest", operatorsArr);
+    for (var i = 0; i<operatorsArr.length; i++){
+      operatorsArr[i].parent = addTag;
+    }
     multTag.prependNorthWest(addTag);
+    addTag.parent = multTag;
     multTag.prependNorthWest(factored);
-    parent.prependNorthWest(multTag);
-    // Todo: Find how a valueToFactor in SE would work
-
+    multTag.parent = tagToFactor.parent;
+    this.tagToFactor.parent.NW.splice(indx, 1, multTag);
+    
+    
   }
 }
 
