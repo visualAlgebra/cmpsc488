@@ -10,7 +10,7 @@ function displayProblemFromStruct(problem, container_id_working, container_id_go
         });
     }
     if(container_id_goal!==null){
-        decompress_string_js(problem.expression_start,decomp => {
+        decompress_string_js(problem.expression_goal,decomp => {
             let goal_canvas = document.getElementById(container_id_goal);
             while (goal_canvas.lastChild) {
                 goal_canvas.removeChild(goal_canvas.lastChild);

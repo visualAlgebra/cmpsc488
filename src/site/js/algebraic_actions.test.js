@@ -477,6 +477,25 @@ function FTest2() {
   return assertAA(before, expected, "Factor test 2 failed");
 }
 
+function FTest3() {
+
+  const factor = new Literal(4);
+
+  const before = new Tag(Orientation.EW,
+    [
+      new Tag(Orientation.NS, [factor, v1]),
+      new Tag(Orientation.NS, [factor])
+    ]);
+
+  const t1 = new Tag(Orientation.EW, [v1, l1]);
+  const expected = new Tag(Orientation.NS, [factor, t1]);
+
+  const action = new Factor(factor, before);
+  action.apply();
+
+  return assertAA(before, expected, "Factor test 3 failed");
+}
+
 function SFTest1() {
 
   const before = new Tag(Orientation.NS, [new Tag(Orientation.EW, [v1, l1])], [v2]);
@@ -695,7 +714,7 @@ function testAll() {
     if(DTest1()&&DTest2()) {
       allPassed("Distribute");
     }
-    if(FTest1()&&FTest2()) {
+    if(FTest1()&&FTest2()&&FTest3()) {
       allPassed("Factor");
     }
     if(SFTest1()&&SFTest2()&&SFTest3()) {

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
-const maxPostSize = 1e6 //1MB
+const maxPostSize = 1e4 //10KB
 const qs = require("querystring");
 const path = require("path");
 
@@ -18,7 +18,7 @@ class Server {
 
 	    this.accessibleFolders = ["/src/site/assets/", "/src/site/css/","/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
         this.accessibleHTMLFiles = ["/index.html", "/Explorer.html", "/About_Contact_Us.html", "/creator.html","/LessonPage.html", "/manipulator.html", "/user_profile_page.html"];
-        this.databaseActions = ["/problems/", "/lessons/", "/accounts/"];
+        this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
     }
     
 
@@ -133,6 +133,10 @@ class Server {
                     self.getLesson(sentUrl.pathname, response);
                 } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //GET request for an account
                     self.getAccount(sentUrl.pathname, response);
+		} else if (sentUrl.pathname === self.databaseActions[3]) {
+		    self.queryProblems(sentUrl.query, response);
+		} else if (sentUrl.pathname === self.databaseActions[4]) {
+		    self.queryLessons(sentUrl.query, response);
                 } else { //GET request for a webpage
                     self.getPage(sentUrl.pathname, response);
                 }
@@ -271,6 +275,14 @@ class Server {
     getAccount(pathname, response) {
         let accountID = pathname.substr(this.databaseActions[2].length);
         return this.database.getAccount(this, response, accountID);
+    }
+
+    queryProblems(query, response) {
+	return this.database.queryProblems(server, response, query);
+    }
+
+    queryLessons(query, response) {
+	return this.database.queryLessons(server, response, query);
     }
 
     //==========================================================================
