@@ -1,5 +1,5 @@
 //put undefined in place of argument you want to skip and it will be default
-function displayProblemFromStruct(problem, container_id_working="canvas-container", container_id_goal="goal-container"){
+function displayProblemFromStruct(problem, container_id_working, container_id_goal){
     if(container_id_working!==null){
         decompress_string_js(problem.expression_start,decomp => {
             let working_canvas = document.getElementById(container_id_working);
@@ -20,7 +20,7 @@ function displayProblemFromStruct(problem, container_id_working="canvas-containe
     }
 }
 //put undefined in place of argument you want to skip and it will be default
-function displayProblemFromDB(problem_id, container_id_working="canvas-container", container_id_goal="goal-container"){
+function displayProblemFromDB(problem_id, container_id_working, container_id_goal){
    get_problem_from_db(problem_id, res => {
         decompress_string_js(res.expression_start,decomp => {
             if(container_id_working!==null){

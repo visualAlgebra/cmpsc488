@@ -1,7 +1,7 @@
 var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
-    displayProblemFromDB(problem_to_load);
+    displayProblemFromDB(problem_to_load,'canvas-container','goal-container');
 };
 window.onpopstate = (e) =>{
     if(e.state){
