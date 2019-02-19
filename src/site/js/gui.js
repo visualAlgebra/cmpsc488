@@ -2,39 +2,61 @@ const mouse = {
     state: "idle",
     eventSource: null,
     eventDest: null,
+
+    reset: function() {
+        this.state = "idle";
+        this.eventSource = null;
+        this.eventDest = null;
+    },
+
+    dragDetected: function() {
+        console.log("Mouse dragged from", this.eventSource, "to", this.eventDest);
+        // [HANDLE MOUSE DRAG HERE]
+        this.reset();
+    },
+
+    clickDetected: function() {
+        console.log("Mouse clicked on", this.eventSource);
+        // [HANDLE MOUSE CLICK HERE]
+        this.reset();
+    }
 };
 
-const TagGuiModule = {
+class GuiBase {
+    onclick() {
+        mouse.eventSource = this;
+        mouse.clickDetected();
+    }
 
-    onclick: function(div) {
-        console.log("CLICK!", div);
-    },
-
-    mousedown: function(div) {
+    mousedown() {
         if (mouse.state === "idle") {
             mouse.state = "dragging";
-            mouse.eventSource = div;
+            mouse.eventSource = this;
         }
-    },
+    }
 
-    mouseup: function(div) {
+    mouseup() {
         if (mouse.state === "dragging") {
             mouse.state = "idle";
-            mouse.eventDest = div;
-            this.mouseDragDetected(div); // Copy all the targets
+            mouse.eventDest = this;
+            mouse.dragDetected();
         }
-    },
+    }
+}
 
-    mouseDragDetected: function(div) {
-        console.log("Mouse dragged from", mouse.eventSource, "to", mouse.eventDest);
-    },
+class TagGui extends GuiBase {
+    constructor(tag) {
+        super();
+        this.tree = tag; // Save the expression tree.
+        this.dom = this.buildDom();
+    }
 
-    render: function(tag) {
+    buildDom() {
         const div = $("<div>")
 
         div.on("click", e => {
             e.stopPropagation();
-            this.onclick(div)
+            this.onclick()
         });
 
         div.on("mousedown", e => {
@@ -48,13 +70,13 @@ const TagGuiModule = {
         })
 
         div.addClass(
-            (tag.orientation == Orientation.NS)
+            (this.tree.orientation == Orientation.NS)
             ? "north-south"
             : "east-west"
         );
 
         div.addClass("tag");
-        div.data("expressionTree", tag);
+        div.data("expressionTree", this.tree);
 
         const nw = $("<div>")
         nw.addClass("north-west");
@@ -80,11 +102,11 @@ const TagGuiModule = {
             }
         }
 
-        tag.NW.forEach(child => {
+        this.tree.NW.forEach(child => {
             appendTo(nw, child);
         });
 
-        tag.SE.forEach(child => {
+        this.tree.SE.forEach(child => {
             appendTo(se, child);
         });
 
@@ -93,16 +115,18 @@ const TagGuiModule = {
         div.append(se);
         return div;
     }
-};
+}
 
-const VariableGuiModule = {
+class VariableGui extends GuiBase {
 
-    onclick: function(div) {
-        console.log("CLICK!", div);
-    },
+    constructor(variable) {
+        super();
+        this.tree = variable;
+        this.dom = this.buildDom();
+    }
 
-    render: function(variable) {
-        const div = $(`<div>x${variable.value}</div>`);
+    buildDom() {
+        const div = $(`<div>x${this.tree.value}</div>`);
 
         div.on("click", e => {
             e.stopPropagation();
@@ -110,19 +134,21 @@ const VariableGuiModule = {
         });
 
         div.addClass("variable");
-        div.data("expressionTree", variable);
+        div.data("expressionTree", this.tree);
         return div;
     }
-};
+}
 
-const LiteralGuiModule = {
+class LiteralGui extends GuiBase {
 
-    onclick: function(div) {
-        console.log("CLICK!", div);
-    },
+    constructor(literal) {
+        super();
+        this.tree = literal;
+        this.dom = this.buildDom();
+    }
 
-    render: function(literal) {
-        const div = $(`<div>${literal.value}</div>`);
+    buildDom() {
+        const div = $(`<div>${this.tree.value}</div>`);
 
         div.on("click", e => {
             e.stopPropagation();
@@ -130,7 +156,7 @@ const LiteralGuiModule = {
         });
         
         div.addClass("literal");
-        div.data("expressionTree", literal);
+        div.data("expressionTree", this.tree);
         return div;
     }
-};
+}
