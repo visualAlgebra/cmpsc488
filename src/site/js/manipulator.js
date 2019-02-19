@@ -1,4 +1,3 @@
-
 var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
@@ -54,7 +53,7 @@ function displayProblemFromDB(problem_id, container_id_working="canvas-container
             }
         });
         decompress_string_js(res.expression_goal,decomp => {
-            if(container_id_working!==null){
+            if(container_id_goal!==null){
                 let goal_canvas = document.getElementById(container_id_goal);
                 while (goal_canvas.lastChild) {
                     goal_canvas.removeChild(goal_canvas.lastChild);
