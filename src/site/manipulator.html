@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head onload="checkURL">
+  <head>
     <meta charset="utf-8">
     <title>Manipulator</title>
     <style media="screen">
@@ -63,13 +63,6 @@
         </ul>
       </section>
     </section>
-<script type="text/javascript">
-	function checkURL(){
-		if((window.location.href).substr((window.location.href).lastIndexOf("/")+1).replace('.html','').replace('.json','')==='manipulator'){
-			location.replace("Explorer.html");
-		}
-	}
-</script>
     <script src="http://localhost:8080/src/site/js/lzma-d.js"></script>
     <script src="http://localhost:8080/src/site/js/lzma-c.js"></script>
     <script src="http://localhost:8080/src/site/js/lzma_worker.js"></script>

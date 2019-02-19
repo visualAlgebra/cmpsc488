@@ -402,8 +402,8 @@ function DTest1() {
      new Tag( Orientation.NS, [factor, i2])
    ]);
 
-   const action = new Distribute();
-   action.apply();
+   // const action = new Distribute();
+   // action.apply();
 
    return assertAA(before, expected, "Distribute test 1 failed");
 }
@@ -426,8 +426,8 @@ function DTest2() {
     new Tag(Orientation.NS, [factor, l3])
   ]);
 
-  const action = new Distribute();
-  action.apply();
+  // const action = new Distribute();
+  // action.apply();
 
   return assertAA(before, expected, "Distribute test 2 failed");
 }
@@ -445,8 +445,8 @@ function FTest1() {
   const t1 = new Tag(Orientation.EW, [v1, v2]);
   const expected = new Tag(Orientation.NS, [factor, t1]);
 
-  const action = new Factor();
-  action.apply();
+  // const action = new Factor();
+  // action.apply();
 
    return assertAA(before, expected, "Factor test 1 failed");
 }
@@ -471,8 +471,8 @@ function FTest2() {
 
   const expected = new Tag(Orientation.NS, [factor, inner]);
 
-  const action = new Factor();
-  action.apply();
+  // const action = new Factor();
+  // action.apply();
 
   return assertAA(before, expected, "Factor test 2 failed");
 }
@@ -634,6 +634,46 @@ function QFTest3() {
   return assertAA(before, expected, "QuadrantFlip test 3 failed");
 }
 
+function CTest1() {
+
+  const v2a = new Variable(2);
+  const v2b = new Variable(2);
+  const before = new Tag(Orientation.NS,
+    [v1, v2a, v3],
+    [v2b]
+  );
+
+  const expected = new Tag(Orientation.NS,
+    [v1, v3],
+    []
+  );
+
+  const action = new Cancel(v2a, v2b);
+  action.apply();
+
+  return assertAA(before, expected, "Cancel test 1 failed");
+}
+
+function CTest2() {
+
+  const t1 = new Tag(Orientation.NS, [v1, v2], [l1]);
+  const t2 = new Tag(Orientation.NS, [new Variable(1), new Variable(2)], [new Literal(1)]);
+  const before = new Tag(Orientation.EW,
+    [v4, t1, l2, l3],
+    [t2]
+  );
+
+  const expected = new Tag(Orientation.EW,
+    [v4, l2, l3],
+    []
+  );
+
+  const action = new Cancel(t1, t2);
+  action.apply();
+
+  return assertAA(before, expected, "Cancel test 2 failed");
+}
+
 function testAll() {
 
   try {
@@ -666,6 +706,9 @@ function testAll() {
     }
     if(QFTest1()&&QFTest2()&&QFTest3()) {
       allPassed("QuadrantFlip");
+    }
+    if(CTest1()&&CTest2()) {
+      allPassed("Cancel");
     }
   } catch(error) {
     // console.log("Algebraic Action Reference errors has occurred");

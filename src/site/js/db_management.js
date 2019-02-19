@@ -14,7 +14,7 @@ function post_problem_from_site(problem){
     http.open("POST", "http://localhost:8080/problems/"+problem.problem_id);
     http.setRequestHeader("Content-type", "application/json");
     user="Fractalyst, ofcourse, why would any other user be here?";
-    http.setRequestHeader("account", user);
+    http.setRequestHeader("Account", user);
     let str='{ "problemName": "'+problem.problem_id+'\",';
     str+=      ' "startExpression": ['+problem.expression_start+'],';
     str+=      ' "goalExpression": ['+problem.expression_goal+'],';
@@ -30,6 +30,6 @@ function delete_problem_from_db(problem_id, acc_id){
   let http=new XMLHttpRequest();
   http.open("DELETE", "http://localhost:8080/problems/"+problem_id, true);
   http.setRequestHeader("Content-type", "application/json");
-  http.setRequestHeader('account', acc_id);
+  http.setRequestHeader('Account', acc_id);
   http.send();
 }
