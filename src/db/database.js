@@ -84,6 +84,49 @@ class DummyDatabase extends Database {
         });
     }
 
+    queryProblems(server, response, query) {
+	    query.number = parseInt(query.number);
+	if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
+		return server.respondWithError(response, 400, "Error 400: Query not supported");
+	} else if (query.number <= 0 || query.number >= 100 || query.sort !== "timeCreated") {
+		return server.respondWithError(response, 400, "Error 400: Query not supported");
+	} else {
+		let fileName = "src/db/dbfiles/queries/TEST_QUERY_0.json"
+		this.session.readFile(fileName, function (err, data) {
+		    if (err) {
+			return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+		    } else {
+			let queryResult = JSON.parse(data);
+			let obj = {};
+			obj.queryResults = queryResult.results.splice(0,query.number);
+			return server.respondWithData(response, 200, 'application/json', JSON.stringify(obj));
+		    }
+		});
+	}
+    }
+    
+    queryLessons(server, response, query) {
+	    query.number = parseInt(query.number);
+	if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
+		return server.respondWithError(response, 400, "Error 400: Query not supported");
+	} else if (query.number <= 0 || query.number >= 100 || query.sort !== "timeCreated") {
+		return server.respondWithError(response, 400, "Error 400: Query not supported");
+	} else {
+		let fileName = "src/db/dbfiles/queries/TEST_QUERY_1.json"
+		this.session.readFile(fileName, function (err, data) {
+		    if (err) {
+			return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+		    } else {
+			let queryResult = JSON.parse(data);
+			let obj = {};
+			obj.queryResults = queryResult.results.splice(0,query.number);
+			return server.respondWithData(response, 200, 'application/json', JSON.stringify(obj));
+		    }
+		});
+	}
+    }
+
+
     saveProblem(server, response, accountID, problem, enteredName) {
         let fileName = "";
         let usedName;
