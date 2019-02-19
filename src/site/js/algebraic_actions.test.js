@@ -465,10 +465,10 @@ function FTest1() {
   const t1 = new Tag(Orientation.EW, [v1, v2]);
   const expected = new Tag(Orientation.NS, [factor, t1]);
 
-   const action = new Factor(factor, before);
-   action.apply();
-
-   return assertAA(before, expected, "Factor test 1 failed");
+  const action = new Factor(factor, before);
+  action.apply();
+  console.log(before, expected);
+  return assertAA(before, expected, "Factor test 1 failed\n");
 }
 
 function FTest2() {

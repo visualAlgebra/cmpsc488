@@ -374,11 +374,18 @@ class Factor {
         addTag.addNorthWest(add);
       }
       else{
-        for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
-          if (this.tagToFactor.NW[i].NW[j] == valueToFactor){
+        this.tagToFactor.NW[i].removeNorthWest(this.valueToFactor);
+        if(this.tagToFactor.NW[i].NW.length == 1){
+          addTag.addNorthWest(this.tagToFactor.NW[i].NW[0]);
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+        }
+        //for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
+          
+          /*
+          if (this.tagToFactor.NW[i].NW[j].value == valueToFactor.value){
             this.tagToFactor.NW[i].removeNorthWest(this.tagToFactor.NW[i].NW[j]);
             if(this.tagToFactor.NW[i].NW.length == 1){
-              addTag.add(this.tagToFactor.NW[i].NW[0]);
+              addTag.addNorthWest(this.tagToFactor.NW[i].NW[0]);
               this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
             }
             else{
@@ -386,7 +393,8 @@ class Factor {
               this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
             }
           }
-        }
+          */
+        //}
       }
     }
 
