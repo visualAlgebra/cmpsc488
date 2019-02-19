@@ -106,6 +106,9 @@ function postFileTest(fileName, testNumber, compareData, accountID, successStatu
 	}	  
 	if(accountID === -1) {
 		options = {
+			hostname: 'localhost',
+			port: 8080,
+			path: '/' + fileName,
 			method: 'POST',
 			headers: {
 			  'Content-Type': 'application/json',
@@ -114,15 +117,18 @@ function postFileTest(fileName, testNumber, compareData, accountID, successStatu
 		};	
 	} else {
 		options = {
+			hostname: 'localhost',
+			port: 8080,
+			path: '/' + fileName,
 			method: 'POST',
 			headers: {
 			  'Content-Type': 'application/json',
 			  'Content-Length': Buffer.byteLength(compareData),
-			  'account': accountID
+			  'Account': accountID
 			}
 		};
 	} 
-	let req = http.request("http://localhost:8080/" + fileName, options, function (res) {
+	let req = http.request(options, function (res) {
 		let body = "";
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
@@ -160,17 +166,23 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 	}	  
 	if(accountID === -1) {
 		options = {
+			hostname: 'localhost',
+			port: 8080,
+			path: '/' + fileName,
 			method: 'DELETE',
 		};	
 	} else {
 		options = {
+			hostname: 'localhost',
+			port: 8080,
+			path: '/' + fileName,
 			method: 'DELETE',
 			headers: {
-			  'account': accountID
+			  'Account': accountID
 			}
 		};
 	} 
-	let req = http.request("http://localhost:8080/" + fileName, options, function (res) {
+	let req = http.request(options, function (res) {
 		let body = "";
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
