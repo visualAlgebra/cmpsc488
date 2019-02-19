@@ -326,28 +326,27 @@ class Distribute {
 }
 
 class Factor {
-  constructor(valueToFactor, indx, tagToFactor) {
+  constructor(valueToFactor, tagToFactor) {
     this.valueToFactor = valueToFactor;
-    this.indx = indx;
     this.tagToFactor = tagToFactor;
   }
 
   verify() {
-    if(tagToFactor.orientation != "eastwest")
+    if(this.tagToFactor.orientation != "eastwest")
       return false;
     var isGood = true;
-    for(var i = 0; i<tagToFactor.NW.length; i++){
-      if(!this.tagToFactor.NW[i] instanceof Tag){
-        if (this.tagToFactor.NW[i] !== valueToFactor)
+    for(var i = 0; i<this.tagToFactor.NW.length; i++){
+      if(!this.this.tagToFactor.NW[i] instanceof Tag){
+        if (this.this.tagToFactor.NW[i] !== valueToFactor)
           return false;
       }
       else{
-          if(this.tagToFactor.NW[i].orientation !== "northsouth"){
+          if(this.this.tagToFactor.NW[i].orientation !== "northsouth"){
             return false;
           }
           else{
-            for(var j = 0; j<tagToFactor.NW[i].NW.length; j++){
-              if (tagToFactor.NW[i].NW[j] == valueToFactor)
+            for(var j = 0; j<this.tagToFactor.NW[i].NW.length; j++){
+              if (this.tagToFactor.NW[i].NW[j] == valueToFactor)
                 isGood = true;
             }
             if(!isGood)
@@ -356,7 +355,7 @@ class Factor {
           }
       }
     }
-   
+
     return false;
 
   }
@@ -364,35 +363,35 @@ class Factor {
 
 
   apply() {
-    tagToFactor.orientation = orientation.NS;
-    tagToFactor.prependNorthWest(value);
-    var addTag;
-    for(var i = 0; i<tagToFactor.NW.length; i++){
-      if (!tagToFactor.NW[i] instanceof Tag){
-        tagToFactor.removeNorthWest(tagToFactor.NW[i]);
+    this.tagToFactor.orientation = Orientation.NS;
+    this.tagToFactor.prependNorthWest(this.valueToFactor);
+    var addTag = new Tag(Orientation.EW);
+    for(var i = 0; i<this.tagToFactor.NW.length; i++){
+      if (!this.tagToFactor.NW[i] instanceof Tag){
+        this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
         var add = new Literal(1);
-        add.parent = addTag;
+        // add.parent = addTag;
         addTag.addNorthWest(add);
       }
       else{
-        for(var j = 0; j<tagToFactor.NW[i].length; j++){
-          if (tagToFactor.NW[i].NW[j] == valueToFactor){
-            tagToFactor.NW[i].removeNorthWest(tagToFactor.NW[i].NW[j]);
-            if(tagToFactor.NW[i].NW.length == 1){
-              addTag.add(tagToFactor.NW[i].NW[0]);
-              tagToFactor.removeNorthWest(tagToFactor.NW[i]);
+        for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
+          if (this.tagToFactor.NW[i].NW[j] == valueToFactor){
+            this.tagToFactor.NW[i].removeNorthWest(this.tagToFactor.NW[i].NW[j]);
+            if(this.tagToFactor.NW[i].NW.length == 1){
+              addTag.add(this.tagToFactor.NW[i].NW[0]);
+              this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
             }
             else{
-              addTag.addNorthWest(tagToFactor.NW[i]);
-              tagToFactor.removeNorthWest(tagToFactor.NW[i]);
+              addTag.addNorthWest(this.tagToFactor.NW[i]);
+              this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
             }
           }
         }
       }
     }
 
-    tagToFactor.addNorthWest(addTag);
-    
+    this.tagToFactor.addNorthWest(addTag);
+
   }
 }
 
