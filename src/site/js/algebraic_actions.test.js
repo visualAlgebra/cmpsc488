@@ -591,34 +591,54 @@ function CFTest3() {
   return assertAA(before, expected, "CombineFrac test 3 failed");
 }
 
-function DFTest1() {
+function QFTest1() {
 
-  const before = new Tag(Orientation.NS, [v1, v2], [v3]);
+  const inner = new Tag(Orientation.NS, [v1, v2], [v3]);
+  const before = new Tag(Orientation.NS, [inner]);
 
   const expected = new Tag(Orientation.NS,
     [],
     [new Tag(Orientation.NS, [v3], [v1, v2])]
   );
 
-  const action = new DoubleFlip(before);
+  const action = new QuadrantFlip(inner, Quadrant.NW);
   action.apply();
 
-  return assertAA(before, expected, "DoubleFlip test 1 failed");
+  return assertAA(before, expected, "QuadrantFlip test 1 failed");
 }
 
-function DFTest2() {
+function QFTest2() {
 
-  const before = new Tag(Orientation.EW, [v1, v2, l1], [l2, v3]);
+  const inner = new Tag(Orientation.EW, [v1, v2, l1], [l2, v3]);
+  const before = new Tag(Orientation.EW, [inner]);
 
   const expected = new Tag(Orientation.EW,
     [],
     [new Tag(Orientation.EW, [l2, v3], [v1, v2, l1])]
   );
 
-  const action = new DoubleFlip(before);
+  const action = new QuadrantFlip(inner, Quadrant.NW);
   action.apply();
 
-  return assertAA(before, expected, "DoubleFlip test 2 failed");
+  return assertAA(before, expected, "QuadrantFlip test 2 failed");
+}
+
+function QFTest3() {
+
+  const inner = new Tag(Orientation.EW, [l2, v3], [v1, v2, l1]);
+  const before = new Tag(Orientation.EW,
+    [],
+    [inner]
+  );
+
+  const expected = new Tag(Orientation.EW,
+    [new Tag(Orientation.EW, [v1, v2, l1], [l2, v3])]
+  );
+
+  const action = new QuadrantFlip(inner, Quadrant.SE);
+  action.apply();
+
+  return assertAA(before, expected, "QuadrantFlip test 3 failed");
 }
 
 function testAll() {
@@ -650,6 +670,9 @@ function testAll() {
     }
     if(CFTest1()&&CFTest2()&&CFTest3()) {
       allPassed("CombineFrac");
+    }
+    if(QFTest1()&&QFTest2()&&QFTest3()) {
+      allPassed("QuadrantFlip");
     }
   } catch(error) {
     // console.log("Algebraic Action Reference errors has occurred");
