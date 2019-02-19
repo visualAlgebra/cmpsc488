@@ -214,8 +214,27 @@ class AssociativeIntro {
   }
 
   apply() {
-    let copy = Object.assign(this.tag);
-    this.tag = new Tag(copy.orientation, [copy]);
+    //creating a copy of the tag
+    const newTag = new Tag(this.tag.orientation);
+    for (let child of this.tag.NW) {
+      newTag.addNorthWest(child);
+    }
+    for (let child of this.tag.SE) {
+      newTag.addSouthEast(child);
+    }
+    //adding the copy
+    this.tag.addNorthWest(newTag);
+
+    for (let child of this.tag.NW) {
+      if(child !== newTag){
+        this.tag.removeNorthWest(child);
+      }
+    }
+    for (let child of this.tag.SE) {
+      if(child !== newTag){
+        this.tag.removeSouthEast(child);
+      }
+    }
   }
 }
 

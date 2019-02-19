@@ -213,9 +213,6 @@ function AITest1() {
 
   let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS, [p0, p1])]);
 
-  // console.log(p);
-  // console.log(expected);
-
   return assertAA(p, expected, "AssociativeIntro Test 1 failed");
 }
 
@@ -242,8 +239,8 @@ function AITest2() {
   return assertAA(m, expected, "AssociativeIntro Test 2 failed");
   */
 
-  let p = new Tag(Orientation.EW);
-  let p0 = new Literal(1);
+  let p = new Tag(Orientation.NS);
+  let p0 = new Variable(1);
   let p1 = new Literal(2);
   p.addSouthEast(p0);
   p.addSouthEast(p1);
@@ -251,9 +248,9 @@ function AITest2() {
   let intro = new AssociativeIntro(p);
   intro.apply();
 
-  let expected = new Tag(Orientation.EW, [p]);
+  let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS, [], [p0, p1])]);
 
-  return assertAA(m, expected, "AssociativeIntro Test 2 failed");
+  return assertAA(p, expected, "AssociativeIntro Test 2 failed");
 }
 
 function AETest1() {
