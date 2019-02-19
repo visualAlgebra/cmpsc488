@@ -13,7 +13,12 @@ window.onpopstate = (e) =>{
 
 function getProblemFromURL(){
     let prob=(window.location.href).substr((window.location.href).lastIndexOf("/")+1).replace('.html','').replace('.json','');
-    if(prob===('null')||prob==='manipulator'||prob===''){
+    if(prob==='manipulator'){
+        alert('ugh');
+        //location.replace("Explorer.html");
+        return;
+    }
+    if(prob===('null')||prob===''){
         alert("Error(manipulator.js): Please enter a problem after \"manipulator/problems/\" in the URL or select a problem from another page");
         return null;
     }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+  <head onload="checkURL">
     <meta charset="utf-8">
     <title>Manipulator</title>
     <style media="screen">
@@ -63,7 +63,13 @@
         </ul>
       </section>
     </section>
-
+<script type="text/javascript">
+	function checkURL(){
+		if((window.location.href).substr((window.location.href).lastIndexOf("/")+1).replace('.html','').replace('.json','')==='manipulator'){
+			location.replace("Explorer.html");
+		}
+	}
+</script>
     <script src="http://localhost:8080/src/site/js/lzma-d.js"></script>
     <script src="http://localhost:8080/src/site/js/lzma-c.js"></script>
     <script src="http://localhost:8080/src/site/js/lzma_worker.js"></script>
@@ -80,7 +86,7 @@
 			  src="https://code.jquery.com/jquery-3.3.1.min.js"
 			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 			  crossorigin="anonymous"></script>
-    <!--<script src="http://localhost:8080/src/site/js/algebraic_actions.js" charset="utf-8"></script>-->
-    <!--<script src="http://localhost:8080/src/site/js/algebraic_actions.test.js" charset="utf-8"></script>-->
+    <script src="http://localhost:8080/src/site/js/algebraic_actions.js" charset="utf-8"></script>
+    <script src="http://localhost:8080/src/site/js/algebraic_actions.test.js" charset="utf-8"></script>
   </body>
 </html>
