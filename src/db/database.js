@@ -136,6 +136,7 @@ class DummyDatabase extends Database {
             return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
         }
         account.accountID = accountID;
+	account.timeCreated = this.getCurrentTimeStamp();
         let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
         this.session.writeFile(fileName, JSON.stringify(account), function(err) {
             if(err) {

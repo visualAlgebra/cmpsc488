@@ -522,14 +522,19 @@ class QuadrantFlip {
 class Cancel {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;
-    this.sibling2 = sibling2;
+    this.sibling2 = sibling2
   }
 
   verify() {
-    // return this.sibling1 and this.sibling2 are actually siblings;
+    return this.sibling1.equals(this.sibling2)
+        && this.sibling1.parent.equals(this.sibling2.parent);
   }
 
   apply() {
+    const parent = this.sibling2.parent;
+
+    parent.removeNorthWest(this.sibling1);
+    parent.removeSouthEast(this.sibling2);
   }
 }
 
