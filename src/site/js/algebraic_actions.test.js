@@ -652,12 +652,12 @@ function testAll() {
     if(AETest1()&&AETest2()) {
       allPassed("AssociativeExtract");
     }
-    // if(DTest1()&&DTest2()) {
-    //   allPassed("Distribute");
-    // }
-    // if(FTest1()&&FTest2()) {
-    //   allPassed("Factor");
-    // }
+    if(DTest1()&&DTest2()) {
+      allPassed("Distribute");
+    }
+    if(FTest1()&&FTest2()) {
+      allPassed("Factor");
+    }
     if(SFTest1()&&SFTest2()&&SFTest3()) {
       allPassed("SplitFrac");
     }
