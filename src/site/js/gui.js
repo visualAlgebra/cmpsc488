@@ -9,11 +9,20 @@ const mouse = {
     this.eventDest = null;
   },
 
+
+  redisplayExpressionTree: function() {
+    displayExpressionTree(workingExpressionTree, "canvas-container");
+  },
+
   dragDetected: function() {
     console.log("Dragged from", this.eventSource, "to", this.eventDest);
     const x = this.eventSource.tree;
     const y = this.eventDest.tree;
 
+    // TODO: Make sure this works smoothly for ROOT ELEMENT which has no
+    // parent!       __/
+    //              /
+    //              V
     const xQuad = x.parent.NW.some(e => Object.is(e, x))
       ? Quadrant.NW
       : Quadrant.SE;
@@ -26,6 +35,8 @@ const mouse = {
       const action = new CommutativeSwap(x, y, xQuad);
       action.apply();
       console.log("Swapping siblings", x, "and", y);
+
+      this.redisplayExpressionTree()
     }
 
     this.reset();
