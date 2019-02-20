@@ -10,8 +10,24 @@ const mouse = {
     },
 
     dragDetected: function() {
-        console.log("Mouse dragged from", this.eventSource, "to", this.eventDest);
-        // [HANDLE MOUSE DRAG HERE]
+        console.log("Dragged from", this.eventSource, "to", this.eventDest);
+        const x = this.eventSource.tree;
+        const y = this.eventDest.tree;
+
+        const xQuad = x.parent.NW.some(e => Object.is(e, x))
+            ? Quadrant.NW
+            : Quadrant.SE;
+
+        const yQuad = y.parent.NW.some(e => Object.is(e, y))
+            ? Quadrant.NW
+            : Quadrant.SE;
+
+        if (Object.is(x.parent, y.parent) && xQuad === yQuad) {
+            const action = new CommutativeSwap(x, y, xQuad);
+            action.apply();
+            console.log("Swapping siblings", x, "and", y);
+        }
+
         this.reset();
     },
 
@@ -42,6 +58,23 @@ class GuiBase {
             mouse.dragDetected();
         }
     }
+
+    attachEventHandlers(dom) {
+        dom.on("click", e => {
+            e.stopPropagation();
+            this.onclick()
+        });
+
+        dom.on("mousedown", e => {
+            e.stopPropagation();
+            this.mousedown();
+        })
+
+        dom.on("mouseup", e => {
+            e.stopPropagation();
+            this.mouseup();
+        })
+    }
 }
 
 class TagGui extends GuiBase {
@@ -54,20 +87,7 @@ class TagGui extends GuiBase {
     buildDom() {
         const div = $("<div>")
 
-        div.on("click", e => {
-            e.stopPropagation();
-            this.onclick()
-        });
-
-        div.on("mousedown", e => {
-            e.stopPropagation();
-            this.mousedown(div);
-        })
-
-        div.on("mouseup", e => {
-            e.stopPropagation();
-            this.mouseup(div);
-        })
+        this.attachEventHandlers(div);
 
         div.addClass(
             (this.tree.orientation == Orientation.NS)
@@ -128,10 +148,7 @@ class VariableGui extends GuiBase {
     buildDom() {
         const div = $(`<div>x${this.tree.value}</div>`);
 
-        div.on("click", e => {
-            e.stopPropagation();
-            this.onclick(div);
-        });
+        this.attachEventHandlers(div);
 
         div.addClass("variable");
         div.data("expressionTree", this.tree);
@@ -150,11 +167,8 @@ class LiteralGui extends GuiBase {
     buildDom() {
         const div = $(`<div>${this.tree.value}</div>`);
 
-        div.on("click", e => {
-            e.stopPropagation();
-            this.onclick(div);
-        });
-        
+        this.attachEventHandlers(div);
+
         div.addClass("literal");
         div.data("expressionTree", this.tree);
         return div;
