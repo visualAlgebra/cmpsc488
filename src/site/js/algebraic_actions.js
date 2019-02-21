@@ -293,11 +293,9 @@ class AssociativeInsert {
 }
 
 class Distribute {
-  constructor(parent, value, tagToDistributeOver, startIndx) {
-    this.parent = parent;
+  constructor(value, tagToDistributeOver) {
     this.value = value;
     this.tagToDistributeOver = tagToDistributeOver;
-    this.startIndx = startIndx;
   }
 
   verify() {
@@ -305,26 +303,15 @@ class Distribute {
   }
 
   apply() {
-    for(var i = 0; i<tagToDistributeOver.NW.length; i++){
-      if(!tagToDistributeOver.NW[i] instanceof Tag){
-        var multTag = Tag("northsouth");
-        prependNorthWest(tagToDistributeOver.NW[i]);
-        prependNorthWest(value);
-        tagToDistributeOver.parent = multTag;
-      }
-      else{
-        if (tagToDistributeOver.NW[i].orientation == "northsouth")
-          tagToDistributeOver.NW[i].prependNorthWest(value);
-        else{
-          var multTag = Tag("northsouth");
-          prependNorthWest(tagToDistributeOver.NW[i]);
-          prependNorthWest(value);
-          tagToDistributeOver.parent = multTag;
-        }
-      }
+    var tagToDistributeOverNWLength = this.tagToDistributeOver.NW.length;
+    this.tagToDistributeOver.parent.orientation = Orientation.EW;
+    for(var i = 0; i<tagToDistributeOverNWLength; i++){
+      var multTag = new Tag(Orientation.NS);
+      multTag.addNorthWest(this.value);
+      multTag.addNorthWest(this.tagToDistributeOver.NW[i]);
+      this.tagToDistributeOver.removeNorthWest(this.tagToDistributeOver.NW[i]);
+      this.tagToDistributeOver.addNorthWest(multTag);
     }
-    parent.splice(startIndx, 2, multTag);
-
   }
 }
 

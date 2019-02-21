@@ -541,7 +541,6 @@ function FTest3() {
 
   const action = new Factor(factor, before);
   action.apply();
-  console.log(before, expected);
   return assertAA(before, expected, "Factor test 3 failed");
 }
 
