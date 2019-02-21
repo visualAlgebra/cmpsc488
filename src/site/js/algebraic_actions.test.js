@@ -536,12 +536,12 @@ function FTest3() {
     ]);
 
   const t1 = new Tag(Orientation.EW,
-    [new Variable(1), new Literal(1)]);
+    [v1, new Literal(1)]);
   const expected = new Tag(Orientation.NS, [factor, t1]);
 
   const action = new Factor(factor, before);
   action.apply();
-
+  console.log(before, expected);
   return assertAA(before, expected, "Factor test 3 failed");
 }
 

@@ -370,43 +370,57 @@ class Factor {
     var addTag = new Tag(Orientation.EW);
     var tagToFactorNWlength = this.tagToFactor.NW.length;
     for(var i = 0; i<tagToFactorNWlength; i++){
-      if (!(this.tagToFactor.NW[0] instanceof Tag)){
+      if ((this.tagToFactor.NW[0] instanceof Variable) || (this.tagToFactor.NW[0] instanceof Literal)){
         this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
-        var add = new Literal(1);
-        // add.parent = addTag;
-        addTag.addNorthWest(add);
+        addTag.addNorthWest(new Literal(1));
       }
       else{
         this.tagToFactor.NW[0].removeNorthWest(this.valueToFactor);
-        if(this.tagToFactor.NW[0].NW.length == 1){
+        if(this.tagToFactor.NW[0].NW.length+this.tagToFactor.NW[0].SE.length == 1){
           addTag.addNorthWest(this.tagToFactor.NW[0].NW[0]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
-        else{
+        else if(this.tagToFactor.NW[0].NW.length + this.tagToFactor.NW[0].SE.length != 0){
           addTag.addNorthWest(this.tagToFactor.NW[0]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
-        //for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
-
-          /*
-          if (this.tagToFactor.NW[i].NW[j].value == valueToFactor.value){
-            this.tagToFactor.NW[i].removeNorthWest(this.tagToFactor.NW[i].NW[j]);
-            if(this.tagToFactor.NW[i].NW.length == 1){
-              addTag.addNorthWest(this.tagToFactor.NW[i].NW[0]);
-              this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
-            }
-            else{
-              addTag.addNorthWest(this.tagToFactor.NW[i]);
-              this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
-            }
-          }
-          */
-        //}
+        else{
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
+          addTag.addNorthWest(new Literal(1));
+        }   
       }
+
+    }
+
+    var tagToFactorSELength = this.tagToFactor.SE.length;
+    for(var i = 0; i<tagToFactorSELength; i++){
+      if (!(this.tagToFactor.SE[0] instanceof Tag)){
+        this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
+        var add = new Literal(1);
+        addTag.addSouthEast(add);
+      }
+      else{
+        this.tagToFactor.SE[0].removeNorthWest(this.valueToFactor);
+        if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length == 1){
+          addTag.addSouthEast(this.tagToFactor.SE[0].NW[0]);
+          this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
+        }
+        else if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length !== 0){
+          addTag.addSouthEast(this.tagToFactor.SE[0]);
+          this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
+        }
+        else{
+          this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
+          addTag.addSouthEast(new Literal(1));
+        }   
+      }
+
     }
 
     this.tagToFactor.addNorthWest(addTag);
     this.tagToFactor.prependNorthWest(this.valueToFactor);
+
+
 
   }
 }
