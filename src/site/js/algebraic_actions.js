@@ -369,22 +369,23 @@ class Factor {
   apply() {
     this.tagToFactor.orientation = Orientation.NS;
     var addTag = new Tag(Orientation.EW);
-    for(var i = 0; i<this.tagToFactor.NW.length; i++){
-      if (!(this.tagToFactor.NW[i] instanceof Tag)){
-        this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+    var tagToFactorNWlength = this.tagToFactor.NW.length;
+    for(var i = 0; i<tagToFactorNWlength; i++){
+      if (!(this.tagToFactor.NW[0] instanceof Tag)){
+        this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         var add = new Literal(1);
         // add.parent = addTag;
         addTag.addNorthWest(add);
       }
       else{
-        this.tagToFactor.NW[i].removeNorthWest(this.valueToFactor);
-        if(this.tagToFactor.NW[i].NW.length == 1){
-          addTag.addNorthWest(this.tagToFactor.NW[i].NW[0]);
-          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+        this.tagToFactor.NW[0].removeNorthWest(this.valueToFactor);
+        if(this.tagToFactor.NW[0].NW.length == 1){
+          addTag.addNorthWest(this.tagToFactor.NW[0].NW[0]);
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
         else{
-          addTag.addNorthWest(this.tagToFactor.NW[i]);
-          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+          addTag.addNorthWest(this.tagToFactor.NW[0]);
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
         //for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
 
