@@ -241,11 +241,9 @@ class AssociativeIntro {
       const parent = this.expr.parent;
       let tag = new Tag(parent.orientation, [this.expr]);
       if (parent.NW.includes(this.expr)) {
-        parent.addNorthWest(tag);
-        parent.removeNorthWest(this.expr);
+        parent.findAndReplace(this.expr, tag, Quadrant.NW);
       } else {
-        parent.addSouthEast(tag);
-        parent.removeSouthEast(this.expr);        
+        parent.findAndReplace(this.expr, tag, Quadrant.SE);
       }
     }
 
