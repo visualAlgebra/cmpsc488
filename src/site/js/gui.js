@@ -39,6 +39,14 @@ const mouse = {
       this.redisplayExpressionTree()
     }
 
+    if (Object.is(x, y)) {
+      const action = new AssociativeIntro(x);
+      action.apply();
+      console.log("Enclosing ", x);
+
+      this.redisplayExpressionTree()
+    }
+
     this.reset();
   },
 
