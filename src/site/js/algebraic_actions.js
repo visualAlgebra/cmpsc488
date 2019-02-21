@@ -374,7 +374,7 @@ class Factor {
         else{
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
           addTag.addNorthWest(new Literal(1));
-        }   
+        }
       }
 
     }
@@ -399,7 +399,7 @@ class Factor {
         else{
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
           addTag.addSouthEast(new Literal(1));
-        }   
+        }
       }
 
     }
@@ -555,15 +555,24 @@ class Cancel {
 }
 
 class IdentityBalance {
-  constructor(sibling) {
-    this.sibling = sibling;
+  constructor(newChild, tag) {
+    this.newChild = newChild;
+    this.tag = tag;
   }
 
   verify() {
-    // return this.sibling1 and this.sibling2 are actually siblings;
+
   }
 
   apply() {
+    let copy;
+    if (this.newChild instanceof Variable){
+      copy = new Variable(this.newChild.value);
+    } else {
+      copy = new Literal(this.newChild.value);
+    }
 
+    this.tag.addNorthWest(this.newChild);
+    this.tag.addSouthEast(copy);
   }
 }

@@ -741,6 +741,30 @@ function CTest2() {
   return assertAA(before, expected, "Cancel test 2 failed");
 }
 
+function IBTest1() {
+
+  const before = new Tag(Orientation.NS, [v1, v2, l1]);
+
+  const expected = new Tag(Orientation.NS, [v1, v2, l1, l2], [new Literal(2)]);
+
+  const action = new IdentityBalance(new Literal(2), before);
+  action.apply();
+
+  return assertAA(before, expected, "IdentityBalance test 1 failed");
+}
+
+function IBTest2() {
+
+  const before = new Tag(Orientation.EW, [v1, l1, l2], [v2, v3]);
+
+  const expected = new Tag(Orientation.EW, [v1, l1, l2, v4], [v2, v3, new Variable(4)]);
+
+  const action = new IdentityBalance(new Variable(4), before);
+  action.apply();
+
+  return assertAA(before, expected, "IdentityBalance test 2 failed");
+}
+
 function testAll() {
 
   try {
@@ -776,6 +800,9 @@ function testAll() {
     }
     if(CTest1()&&CTest2()) {
       allPassed("Cancel");
+    }
+    if(IBTest1()&&IBTest2()) {
+      allPassed("IdentityBalance");
     }
   } catch(error) {
     // console.log("Algebraic Action Reference errors has occurred");
