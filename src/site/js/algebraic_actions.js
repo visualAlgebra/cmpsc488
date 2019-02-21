@@ -204,37 +204,51 @@ class AssociativeMerge {
 //Encloses a tag with another tag of the same orientation
 class AssociativeIntro {
 
-  constructor(tag) {
-    this.tag = tag;
+  constructor(expr) {
+    this.expr = expr;
   }
 
   //Valid if siblings is in parent in the correct order
   verify() {
-    return this.tag instanceof Tag;
+    return this.expr instanceof Tag
+        || this.expr.parent !== null;
   }
 
   apply() {
-    //creating a copy of the tag
-    const newTag = new Tag(this.tag.orientation);
-    for (let child of this.tag.NW) {
-      newTag.addNorthWest(child);
-    }
-    for (let child of this.tag.SE) {
-      newTag.addSouthEast(child);
-    }
-    //adding the copy
-    this.tag.addNorthWest(newTag);
+    //creating a copy of the expr
+    if (this.expr instanceof Tag) {
+      const newTag = new Tag(this.expr.orientation);
+      for (let child of this.expr.NW) {
+        newTag.addNorthWest(child);
+      }
+      for (let child of this.expr.SE) {
+        newTag.addSouthEast(child);
+      }
+      //adding the copy
+      this.expr.addNorthWest(newTag);
 
-    for (let child of this.tag.NW) {
-      if(child !== newTag){
-        this.tag.removeNorthWest(child);
+      for (let child of this.expr.NW) {
+        if(child !== newTag){
+          this.expr.removeNorthWest(child);
+        }
+      }
+      for (let child of this.expr.SE) {
+        if(child !== newTag){
+          this.expr.removeSouthEast(child);
+        }
+      }
+    } else {
+      const parent = this.expr.parent;
+      let tag = new Tag(parent.orientation, [this.expr]);
+      if (parent.NW.includes(this.expr)) {
+        parent.addNorthWest(tag);
+        parent.removeNorthWest(this.expr);
+      } else {
+        parent.addSouthEast(tag);
+        parent.removeSouthEast(this.expr);        
       }
     }
-    for (let child of this.tag.SE) {
-      if(child !== newTag){
-        this.tag.removeSouthEast(child);
-      }
-    }
+
   }
 }
 

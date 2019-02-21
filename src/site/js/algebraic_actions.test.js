@@ -253,6 +253,24 @@ function AITest2() {
   return assertAA(p, expected, "AssociativeIntro Test 2 failed");
 }
 
+function AITest3() {
+  const before = new Tag(Orientation.NS, [v1, v2, l1], [l2]);
+
+  const expected = new Tag(Orientation.NS,
+    [
+      new Variable(1),
+      new Tag(Orientation.NS, [new Variable(2)]),
+      new Literal(1)
+    ],
+    [new Literal (1)]
+  );
+
+  const action = new AssociativeIntro(v2);
+  action.apply();
+
+  return assertAA(before, expected, "AssociativeIntro Test 3 failed");
+}
+
 function AETest1() {
   const x = new Variable(1);
 
@@ -732,7 +750,7 @@ function testAll() {
     if(AMTest1()&&AMTest2()&&AMTest3()) {
       allPassed("AssociativeMerge");
     }
-    if(AITest1()&&AITest2()) {
+    if(AITest1()&&AITest2()&&AITest3()) {
       allPassed("AssociativeIntro");
     }
     if(AInsTest1()&&AInsTest2()&&AInsTest3()) {
