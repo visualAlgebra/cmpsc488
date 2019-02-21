@@ -215,36 +215,23 @@ class AssociativeIntro {
   }
 
   apply() {
-    //creating a copy of the expr
-    if (this.expr instanceof Tag) {
-      const newTag = new Tag(this.expr.orientation);
-      for (let child of this.expr.NW) {
-        newTag.addNorthWest(child);
-      }
-      for (let child of this.expr.SE) {
-        newTag.addSouthEast(child);
-      }
-      //adding the copy
-      this.expr.addNorthWest(newTag);
 
-      for (let child of this.expr.NW) {
-        if(child !== newTag){
-          this.expr.removeNorthWest(child);
-        }
-      }
-      for (let child of this.expr.SE) {
-        if(child !== newTag){
-          this.expr.removeSouthEast(child);
-        }
+    const parent = this.expr.parent;
+
+    if (parent !== null) {
+      const newTag = new Tag(parent.orientation);
+      newTag.parent = parent;
+      newTag.addNorthWest(this.expr);
+      if (parent.NW.includes(this.expr)) {
+        parent.findAndReplace(this.expr, newTag, Quadrant.NW);
+      } else {
+        parent.findAndReplace(this.expr, newTag, Quadrant.SE);
       }
     } else {
-      const parent = this.expr.parent;
-      let tag = new Tag(parent.orientation, [this.expr]);
-      if (parent.NW.includes(this.expr)) {
-        parent.findAndReplace(this.expr, tag, Quadrant.NW);
-      } else {
-        parent.findAndReplace(this.expr, tag, Quadrant.SE);
-      }
+      const newTag = new Tag(this.expr.orientation, this.expr.NW, this.expr.SE);
+      this.expr.emptyNorthWest();
+      this.expr.emptySouthWest();
+      this.expr.addNorthWest(newTag);
     }
 
   }

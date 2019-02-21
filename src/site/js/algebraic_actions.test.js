@@ -262,11 +262,12 @@ function AITest3() {
       new Tag(Orientation.NS, [new Variable(2)]),
       new Literal(1)
     ],
-    [new Literal (1)]
+    [new Literal (2)]
   );
 
   const action = new AssociativeIntro(v2);
   action.apply();
+  console.log(before,expected)
 
   return assertAA(before, expected, "AssociativeIntro Test 3 failed");
 }
