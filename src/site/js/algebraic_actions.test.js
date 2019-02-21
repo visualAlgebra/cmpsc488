@@ -253,6 +253,24 @@ function AITest2() {
   return assertAA(p, expected, "AssociativeIntro Test 2 failed");
 }
 
+function AITest3() {
+  const before = new Tag(Orientation.NS, [v1, v2, l1], [l2]);
+
+  const expected = new Tag(Orientation.NS,
+    [
+      new Variable(1),
+      new Tag(Orientation.NS, [new Variable(2)]),
+      new Literal(1)
+    ],
+    [new Literal (1)]
+  );
+
+  const action = new AssociativeIntro(v2);
+  action.apply();
+
+  return assertAA(before, expected, "AssociativeIntro Test 3 failed");
+}
+
 function AETest1() {
   const x = new Variable(1);
 
@@ -378,7 +396,7 @@ function AInsTest2() {
   //[v3><s]
   const expected = new Tag(Orientation.EW, [new Variable(3)], [innerExpected]);
 
-  const action = new AssociativeInsert(x, Quadrant.SE);
+  const action = new AssociativeInsert(x, inner);
   action.apply();
 
   return assertAA(before, expected, "AssociativeInsert test 2 failed");
@@ -386,20 +404,30 @@ function AInsTest2() {
 
 function AInsTest3() {
 
-  const t1 = new Tag(Orientation.NS, l1, l2);
-  const t2 = new Tag(Orientation.NS, l3);
-  const before = new Tag(Orientation.NS, [v1, v2, t1, t2], [l1]);
+  const t1 = new Tag(Orientation.NS, [l1], [l2]);
+  const t2 = new Tag(Orientation.NS, [l3]);
+  //[v1 v2 [l1 l2><] [l3><] >< v4]
+  const before = new Tag(Orientation.NS, [v1, v2, t1, t2], [v4]);
 
+  const inner = new Tag(Orientation.NS,
+    [
+      new Tag(Orientation.NS, [new Literal(1)], [new Literal(2)]),
+      new Literal(3)
+    ]
+  );
+  //[v1 v2 [ [l1 l2><] l3><] >< v4]
   const expected = new Tag(Orientation.NS,
     [
       new Variable(1),
       new Variable(2),
-      new Tag(Orientation.NS, [
-        new Tag(Orientation.NS, [new Literal(1), new Literal(2)]),
-        new Literal(1)])
-      ]);
+      inner
+    ],
+    [
+      new Variable(4)
+    ]
+  );
 
-  const action = new AssociativeIntro(t1, t2);
+  const action = new AssociativeInsert(t1, t2);
   action.apply();
 
   return assertAA(before, expected, "AssociativeInsert test 3 failed");
@@ -467,13 +495,12 @@ function FTest1() {
 
   const action = new Factor(factor, before);
   action.apply();
-  console.log(before, expected);
   return assertAA(before, expected, "Factor test 1 failed\n");
 }
 
 function FTest2() {
 
-  const factor = new Variable(4);
+  let factor = new Variable(4);
   factor = negative(factor);
 
   //[v3, l1 >< l2]
@@ -481,8 +508,8 @@ function FTest2() {
 
   const before = new Tag(Orientation.EW, [
     new Tag(Orientation.NS, [factor, v1]),
-    new Tag(Orientation.NS, [factor, v2]),
-    new Tag(Orientation.NS, [factor, x]),
+    new Tag(Orientation.NS, [v2, factor]),
+    new Tag(Orientation.NS, [x, factor]),
     new Tag(Orientation.NS, [factor, l3])
   ]);
 
@@ -491,8 +518,8 @@ function FTest2() {
 
   const expected = new Tag(Orientation.NS, [factor, inner]);
 
-  // const action = new Factor();
-  // action.apply();
+  const action = new Factor(factor, before);
+  action.apply();
 
   return assertAA(before, expected, "Factor test 2 failed");
 }
@@ -507,7 +534,8 @@ function FTest3() {
       new Tag(Orientation.NS, [factor])
     ]);
 
-  const t1 = new Tag(Orientation.EW, [v1, l1]);
+  const t1 = new Tag(Orientation.EW,
+    [new Variable(1), new Literal(1)]);
   const expected = new Tag(Orientation.NS, [factor, t1]);
 
   const action = new Factor(factor, before);
@@ -722,7 +750,7 @@ function testAll() {
     if(AMTest1()&&AMTest2()&&AMTest3()) {
       allPassed("AssociativeMerge");
     }
-    if(AITest1()&&AITest2()) {
+    if(AITest1()&&AITest2()&&AITest3()) {
       allPassed("AssociativeIntro");
     }
     if(AInsTest1()&&AInsTest2()&&AInsTest3()) {

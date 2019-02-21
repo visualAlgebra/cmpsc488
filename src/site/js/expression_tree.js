@@ -120,7 +120,14 @@ class Tag extends ExpressionTree {
     this.SE = [];
     this.updateParentTreeCount(-delta);
   }
-  
+
+  findAndReplace(oldVal, newVal, quadrantLabel) {
+    const delta = newVal.treeCount - oldVal.treeCount;
+    const idx = this[quadrantLabel].findIndex(x => x.equals(oldVal));
+    this[quadrantLabel][idx] = newVal;
+    this.updateParentTreeCount(delta);
+  }
+
   equals(that) {
     if (that.kind === "tag") {
       if (

@@ -204,37 +204,49 @@ class AssociativeMerge {
 //Encloses a tag with another tag of the same orientation
 class AssociativeIntro {
 
-  constructor(tag) {
-    this.tag = tag;
+  constructor(expr) {
+    this.expr = expr;
   }
 
   //Valid if siblings is in parent in the correct order
   verify() {
-    return this.tag instanceof Tag;
+    return this.expr instanceof Tag
+        || this.expr.parent !== null;
   }
 
   apply() {
-    //creating a copy of the tag
-    const newTag = new Tag(this.tag.orientation);
-    for (let child of this.tag.NW) {
-      newTag.addNorthWest(child);
-    }
-    for (let child of this.tag.SE) {
-      newTag.addSouthEast(child);
-    }
-    //adding the copy
-    this.tag.addNorthWest(newTag);
+    //creating a copy of the expr
+    if (this.expr instanceof Tag) {
+      const newTag = new Tag(this.expr.orientation);
+      for (let child of this.expr.NW) {
+        newTag.addNorthWest(child);
+      }
+      for (let child of this.expr.SE) {
+        newTag.addSouthEast(child);
+      }
+      //adding the copy
+      this.expr.addNorthWest(newTag);
 
-    for (let child of this.tag.NW) {
-      if(child !== newTag){
-        this.tag.removeNorthWest(child);
+      for (let child of this.expr.NW) {
+        if(child !== newTag){
+          this.expr.removeNorthWest(child);
+        }
+      }
+      for (let child of this.expr.SE) {
+        if(child !== newTag){
+          this.expr.removeSouthEast(child);
+        }
+      }
+    } else {
+      const parent = this.expr.parent;
+      let tag = new Tag(parent.orientation, [this.expr]);
+      if (parent.NW.includes(this.expr)) {
+        parent.findAndReplace(this.expr, tag, Quadrant.NW);
+      } else {
+        parent.findAndReplace(this.expr, tag, Quadrant.SE);
       }
     }
-    for (let child of this.tag.SE) {
-      if(child !== newTag){
-        this.tag.removeSouthEast(child);
-      }
-    }
+
   }
 }
 
@@ -277,15 +289,19 @@ class AssociativeInsert {
   }
 
   verify() {
-    return this.grandchild.parent !== null
-        && this.grandchild.parent.parent !== null;
+    return this.sibling.parent !== null
+        && this.sibling.parent.orientation === insertionTag.orientation;
   }
 
   apply() {
     const parent = this.sibling.parent;
 
-    parent.removeNorthWest(this.sibling);
     this.insertionTag.prependNorthWest(this.sibling);
+    if (parent.NW.includes(this.sibling)) {
+      parent.removeNorthWest(this.sibling);
+    } else {
+      parent.removeSouthEast(this.sibling);
+    }
   }
 }
 
@@ -364,23 +380,27 @@ class Factor {
 
   apply() {
     this.tagToFactor.orientation = Orientation.NS;
-    this.tagToFactor.prependNorthWest(this.valueToFactor);
     var addTag = new Tag(Orientation.EW);
-    for(var i = 0; i<this.tagToFactor.NW.length; i++){
-      if (!this.tagToFactor.NW[i] instanceof Tag){
-        this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+    var tagToFactorNWlength = this.tagToFactor.NW.length;
+    for(var i = 0; i<tagToFactorNWlength; i++){
+      if (!(this.tagToFactor.NW[0] instanceof Tag)){
+        this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         var add = new Literal(1);
         // add.parent = addTag;
         addTag.addNorthWest(add);
       }
       else{
-        this.tagToFactor.NW[i].removeNorthWest(this.valueToFactor);
-        if(this.tagToFactor.NW[i].NW.length == 1){
-          addTag.addNorthWest(this.tagToFactor.NW[i].NW[0]);
-          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+        this.tagToFactor.NW[0].removeNorthWest(this.valueToFactor);
+        if(this.tagToFactor.NW[0].NW.length == 1){
+          addTag.addNorthWest(this.tagToFactor.NW[0].NW[0]);
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
+        }
+        else{
+          addTag.addNorthWest(this.tagToFactor.NW[0]);
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
         //for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
-          
+
           /*
           if (this.tagToFactor.NW[i].NW[j].value == valueToFactor.value){
             this.tagToFactor.NW[i].removeNorthWest(this.tagToFactor.NW[i].NW[j]);
@@ -399,6 +419,7 @@ class Factor {
     }
 
     this.tagToFactor.addNorthWest(addTag);
+    this.tagToFactor.prependNorthWest(this.valueToFactor);
 
   }
 }
