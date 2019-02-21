@@ -364,10 +364,9 @@ class Factor {
 
   apply() {
     this.tagToFactor.orientation = Orientation.NS;
-    this.tagToFactor.prependNorthWest(this.valueToFactor);
     var addTag = new Tag(Orientation.EW);
     for(var i = 0; i<this.tagToFactor.NW.length; i++){
-      if (!this.tagToFactor.NW[i] instanceof Tag){
+      if (!(this.tagToFactor.NW[i] instanceof Tag)){
         this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
         var add = new Literal(1);
         // add.parent = addTag;
@@ -377,6 +376,10 @@ class Factor {
         this.tagToFactor.NW[i].removeNorthWest(this.valueToFactor);
         if(this.tagToFactor.NW[i].NW.length == 1){
           addTag.addNorthWest(this.tagToFactor.NW[i].NW[0]);
+          this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
+        }
+        else{
+          addTag.addNorthWest(this.tagToFactor.NW[i]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
         }
         //for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
@@ -399,6 +402,7 @@ class Factor {
     }
 
     this.tagToFactor.addNorthWest(addTag);
+    this.tagToFactor.prependNorthWest(this.valueToFactor);
 
   }
 }
