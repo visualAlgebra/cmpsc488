@@ -67,17 +67,19 @@
 </nav>
     <div id="userProfile">
         <div id="title">
-            <h1 class="title">USER ACCOUNT NAME's profile:</h1>
+            <h1 id="userAccountIdField" class="title"></h1>
         </div>
         <div id="accountContainer">
             <div id="accountData">
                 <h2 id="accountDataTitle" class="title">Account Info</h2>
-                <p>Account Creation Date: 1/27/19</p>
-                <p>Problems Saved: 6</p>
+                <p id="userAccountIdField2"></p>
+                <p id="creationDateField"></p>
+                <p id="problemsSavedAmountField"></p>
+                <p id="lessonsSavedAmountField"></p>
             </div>
 
             <div id="problemsAndLessonsBox">
-                <h2 id="problemsAndLessonsBoxTitle" class="title">USER ACCOUNT NAME's Problems and Lessons:</h2>
+                <h2 id="problemsAndLessonsBoxTitle" class="title">Problems and Lessons:</h2>
                 <div id="problemsAndLessons">
 
                     <div class="problemsRow">
@@ -116,6 +118,14 @@
         </div>
     </div>
 
-  <script src="http://localhost:8080/src/site/js/user_profile_page.js" charset="utf-8"></script>
+    <script src="http://localhost:8080/src/site/js/lzma-d.js"></script>
+    <script src="http://localhost:8080/src/site/js/lzma-c.js"></script>
+    <script src="http://localhost:8080/src/site/js/lzma_worker.js"></script>
+    <script src="http://localhost:8080/src/site/js/lzma.js"></script>
+    <script src="http://localhost:8080/src/site/js/gui.js"></script>
+    <script src="http://localhost:8080/src/site/js/expression_tree.js" charset="utf-8"></script>
+    <script src="http://localhost:8080/src/site/js/db_management.js" charset="utf-8"></script>
+    <script src="http://localhost:8080/src/site/js/user_profile_page.js" charset="utf-8"></script>
+    <script src="http://localhost:8080/src/site/js/display_feature.js" charset="utf-8"></script>
 </body>
 </html>

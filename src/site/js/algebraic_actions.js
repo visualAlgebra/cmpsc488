@@ -277,15 +277,19 @@ class AssociativeInsert {
   }
 
   verify() {
-    return this.grandchild.parent !== null
-        && this.grandchild.parent.parent !== null;
+    return this.sibling.parent !== null
+        && this.sibling.parent.orientation === insertionTag.orientation;
   }
 
   apply() {
     const parent = this.sibling.parent;
 
-    parent.removeNorthWest(this.sibling);
     this.insertionTag.prependNorthWest(this.sibling);
+    if (parent.NW.includes(this.sibling)) {
+      parent.removeNorthWest(this.sibling);
+    } else {
+      parent.removeSouthEast(this.sibling);
+    }
   }
 }
 
@@ -383,7 +387,7 @@ class Factor {
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[i]);
         }
         //for(var j = 0; j<this.tagToFactor.NW[i].length; j++){
-          
+
           /*
           if (this.tagToFactor.NW[i].NW[j].value == valueToFactor.value){
             this.tagToFactor.NW[i].removeNorthWest(this.tagToFactor.NW[i].NW[j]);

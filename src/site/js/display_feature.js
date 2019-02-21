@@ -1,44 +1,33 @@
+let workingExpressionTree = null;
+let goalExpressionTree = null;
+
+// Clears out the current container (given by `container_id`), renders the
+// expression tree inside `container_id`.
+function displayExpressionTree(tree, containerId) {
+    const container = $("#" + containerId);
+    container.empty();
+    const dom = tree.render();
+    container.append(dom);
+}
+
 //put undefined in place of argument you want to skip and it will be default
 function displayProblemFromStruct(problem, container_id_working, container_id_goal){
     if(container_id_working!==null){
         decompress_string_js(problem.expression_start,decomp => {
-            let working_canvas = document.getElementById(container_id_working);
-            while (working_canvas.lastChild) {
-                working_canvas.removeChild(working_canvas.lastChild);
-            }
-            $(working_canvas).append(Deserialize(decomp).render());
+            workingExpressionTree = Deserialize(decomp);
+            displayExpressionTree(workingExpressionTree, container_id_working);
         });
     }
     if(container_id_goal!==null){
         decompress_string_js(problem.expression_goal,decomp => {
-            let goal_canvas = document.getElementById(container_id_goal);
-            while (goal_canvas.lastChild) {
-                goal_canvas.removeChild(goal_canvas.lastChild);
-            }
-            $(goal_canvas).append(Deserialize(decomp).render());
+            goalExpressionTree = Deserialize(decomp);
+            displayExpressionTree(goalExpressionTree, container_id_goal);
         });
     }
 }
 //put undefined in place of argument you want to skip and it will be default
 function displayProblemFromDB(problem_id, container_id_working, container_id_goal){
    get_problem_from_db(problem_id, res => {
-        decompress_string_js(res.expression_start,decomp => {
-            if(container_id_working!==null){
-                let working_canvas = document.getElementById(container_id_working);
-                while (working_canvas.lastChild) {
-                    working_canvas.removeChild(working_canvas.lastChild);
-                }
-                $(working_canvas).append(Deserialize(decomp).render());
-            }
-        });
-        decompress_string_js(res.expression_goal,decomp => {
-            if(container_id_goal!==null){
-                let goal_canvas = document.getElementById(container_id_goal);
-                while (goal_canvas.lastChild) {
-                    goal_canvas.removeChild(goal_canvas.lastChild);
-                }
-                $(goal_canvas).append(Deserialize(decomp).render());
-            }
-        });
+        displayProblemFromStruct(res, container_id_working, container_id_goal);
     });
 }
