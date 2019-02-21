@@ -3,6 +3,18 @@
     --tag-button-size: 2rem;
 }
 
+/* Disable text highlighting on expression trees */
+.tag, .literal, .variable {
+    /* From: https://stackoverflow.com/a/4407335/9045161 */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                          supported by Chrome and Opera */
+}
+
 .tag {
     padding: 1rem;
     margin: 1rem;
