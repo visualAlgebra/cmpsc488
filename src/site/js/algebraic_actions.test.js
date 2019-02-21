@@ -477,13 +477,12 @@ function FTest1() {
 
   const action = new Factor(factor, before);
   action.apply();
-  console.log(before, expected);
   return assertAA(before, expected, "Factor test 1 failed\n");
 }
 
 function FTest2() {
 
-  const factor = new Variable(4);
+  let factor = new Variable(4);
   factor = negative(factor);
 
   //[v3, l1 >< l2]
@@ -491,8 +490,8 @@ function FTest2() {
 
   const before = new Tag(Orientation.EW, [
     new Tag(Orientation.NS, [factor, v1]),
-    new Tag(Orientation.NS, [factor, v2]),
-    new Tag(Orientation.NS, [factor, x]),
+    new Tag(Orientation.NS, [v2, factor]),
+    new Tag(Orientation.NS, [x, factor]),
     new Tag(Orientation.NS, [factor, l3])
   ]);
 
@@ -501,8 +500,8 @@ function FTest2() {
 
   const expected = new Tag(Orientation.NS, [factor, inner]);
 
-  // const action = new Factor();
-  // action.apply();
+  const action = new Factor(factor, before);
+  action.apply();
 
   return assertAA(before, expected, "Factor test 2 failed");
 }
@@ -517,7 +516,8 @@ function FTest3() {
       new Tag(Orientation.NS, [factor])
     ]);
 
-  const t1 = new Tag(Orientation.EW, [v1, l1]);
+  const t1 = new Tag(Orientation.EW,
+    [new Variable(1), new Literal(1)]);
   const expected = new Tag(Orientation.NS, [factor, t1]);
 
   const action = new Factor(factor, before);
