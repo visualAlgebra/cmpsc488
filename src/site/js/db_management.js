@@ -8,6 +8,18 @@ function get_problem_from_db(problem_id, callback){
   http.open("GET", "http://localhost:8080/problems/"+problem_id, true);
   http.send();
 }
+//{"problems": ["TEST_PROBLEM_1", "TEST_PROBLEM_2", "TEST_PROBLEM_3"], "creatorAccountID": "TEST_USER_1"}
+function get_lesson_from_db(lesson_id, callback){
+  let http=new XMLHttpRequest();
+  http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          callback(new LessonInfo(problem_id,JSON.parse(http.responseText).problems));
+        }
+    }
+  http.open("GET", "http://localhost:8080/lessons/"+lesson_id, true);
+  http.send();
+}
+
 function post_problem_from_site(problem){
   try{
     let http=new XMLHttpRequest();
@@ -44,5 +56,18 @@ function get_account_from_db(account_id, callback){
     }
   http.open("GET", "http://localhost:8080/accounts/"+account_id, true);
   http.setRequestHeader('account', account_id);
+  http.send();
+}
+
+//get_query_problems_from_db(2,res=>console.log(res));
+function get_problems_from_db(queryAmt, callback){
+  let http=new XMLHttpRequest();
+  http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          console.log(http.responseText);
+        }
+    }
+  http.open("GET", "http://localhost:8080/problems?number="+queryAmt+"&sort=timeCreated", true);// TODO hard coded query for now
+  http.setRequestHeader("Content-type", "application/json");
   http.send();
 }

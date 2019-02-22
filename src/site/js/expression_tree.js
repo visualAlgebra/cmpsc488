@@ -12,15 +12,31 @@ String.prototype.splice = function(index, str) {
   return this.slice(0, index) + str + this.slice(index);
 };
 
+
+class LessonInfo{
+    constructor(lesson_id, creations){
+        this.id=lesson_id;
+        this.creations=creations;
+    }
+
+  toString(){
+    let retval="{_LESSON{"+this.problem_id+"}{";
+    for(let form in this.creations){
+      retval+=this.creations[form].toString();
+    }
+    return retval+"}}";
+  }
+}
+
 class ProblemInfo {
   constructor(id,treestart,treegoal){
-    this.problem_id=id;
+    this.id=id;
     this.expression_start=treestart;
     this.expression_goal=treegoal
   }
 
   toString(){
-    return "{_PROBLEM{"+this.problem_id+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
+    return "{_PROBLEM{"+this.id+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
   }
 }
 

@@ -3,16 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var instances = M.Sidenav.init(elems);
 });
 window.onload = () => {
-    getElementsToFill();
+    getProblemsToDisplay();
 };
-function getElementsToFill(){
-    let empty=document.getElementsByName("problem_holder");
-    getProblemsToDisplay(empty);
-}
 
-function getProblemsToDisplay(arrElements){
+function getProblemsToDisplay(){
+    let empty=document.getElementsByName("problem_holder");
     let SAMPLE_PROBS=["RAND_723390538","RAND_492206274"];
-    for(let x=0; x<arrElements.length; x+=2){
-        displayProblemFromDB(SAMPLE_PROBS[Math.floor(x/2)],arrElements[x].id, arrElements[x].id+'g');
+    for(let x=0; x<empty.length; x+=2){
+        displayProblemFromDB(SAMPLE_PROBS[Math.floor(x/2)],empty[x].id, empty[x].id+'g');
     }
 }
