@@ -1,0 +1,28 @@
+Account:
+
+{
+"accountID": string,
+"creations": Array of strings (lesson/problem IDs),
+"timeCreated": Timestamp, 
+}
+
+
+
+Lesson: 
+
+{
+"creatorAccountID": string,
+"problems": array of strings (problem IDs),
+"timeCreated": timestamp,
+}
+
+
+
+Problem:
+
+{
+"creatorAccountID": string,
+"startExpression": array of numbers,
+"goalExpression": array of numbers,
+"timeCreated": timestamp
+}
