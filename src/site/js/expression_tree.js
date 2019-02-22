@@ -123,7 +123,8 @@ class Tag extends ExpressionTree {
 
   findAndReplace(oldVal, newVal, quadrantLabel) {
     const delta = newVal.treeCount - oldVal.treeCount;
-    const idx = this[quadrantLabel].findIndex(x => x.equals(oldVal));
+    const idx = this[quadrantLabel].findIndex(x => Object.is(x, oldVal));
+    newVal.parent = oldVal.parent;
     this[quadrantLabel][idx] = newVal;
     this.updateParentTreeCount(delta);
   }

@@ -131,6 +131,7 @@ class AssociativeMerge {
   //if the sibling is included in the parent
   //then return true
   verify() {
+    // TODO: don't use includes, use `some` with Object.is
     return this.parent.NW.includes(this.sibling)
         || (this.parent.SE.includes(this.sibling) && this.parent.orientation === Orientation.EW);
   }
@@ -154,10 +155,12 @@ class AssociativeMerge {
 
           for(let siblingChildNW of child.NW) {
             newQuadrantNW.push(siblingChildNW);
+            siblingChildNW.parent = this.parent;
           }
 
           for(let siblingChildSE of child.SE) {
             newQuadrantSE.push(siblingChildSE);
+            siblingChildSE.parent = this.parent;
           }
 
         } else {
@@ -184,10 +187,12 @@ class AssociativeMerge {
 
           for(let siblingChildNW of child.NW) {
             newQuadrantSE.push(siblingChildNW);
+            siblingChildNW.parent = this.parent;
           }
 
           for(let siblingChildSE of child.SE) {
             newQuadrantNW.push(siblingChildSE);
+            siblingChildSE.parent = this.parent;
           }
 
         } else {
@@ -222,7 +227,7 @@ class AssociativeIntro {
       const newTag = new Tag(parent.orientation);
       newTag.parent = parent;
       newTag.addNorthWest(this.expr);
-      if (parent.NW.includes(this.expr)) {
+      if (parent.NW.some(thing => Object.is(thing, this.expr))) {
         parent.findAndReplace(this.expr, newTag, Quadrant.NW);
       } else {
         parent.findAndReplace(this.expr, newTag, Quadrant.SE);
@@ -284,7 +289,7 @@ class AssociativeInsert {
     const parent = this.sibling.parent;
 
     this.insertionTag.prependNorthWest(this.sibling);
-    if (parent.NW.includes(this.sibling)) {
+    if (parent.NW.some(thing => Object.is(thing, this.sibling))) {
       parent.removeNorthWest(this.sibling);
     } else {
       parent.removeSouthEast(this.sibling);
