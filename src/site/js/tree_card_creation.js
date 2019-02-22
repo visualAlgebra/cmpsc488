@@ -107,9 +107,11 @@ function createCardForProblem(problem_id, cardID){
 function fillCreations(elementId, accInfo){
     let filldiv=document.getElementById(elementId);
     for(let creation in accInfo.creations){
+        creation=parseInt(creation);
         if(accInfo.creations[creation].toString().includes("problems")){
-            filldiv.appendChild(createCardForProblem(accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/'),accInfo.creations[creation].length),creation));
-            displayProblemFromDB(problem_id,creation+"_s",creation+"_g");
+            let str=accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/'),accInfo.creations[creation].length);
+            filldiv.appendChild(createCardForProblem(str,creation));
+            displayProblemFromDB(str,creation+"_s",creation+"_g");
         }else if(accInfo.creations[creation].toString().includes("lessons")){
             console.log("lesson to implement");
         }

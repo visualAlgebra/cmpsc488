@@ -22,7 +22,7 @@ function fillPage(accInfo){
     let id_field=document.getElementById('userAccountIdField');
     id_field.innerHTML=accInfo.id;
     let creation_date_field=document.getElementById('creationDateField');
-    creation_date_field.innerHTML="Creation date: "+Date.parse(accInfo.creationDate);//date hardcoded in and cant be parsed by Date.parse()
+    creation_date_field.innerHTML="Creation date: "+(accInfo.creationDate);//date hardcoded in and cant be parsed by Date.parse()
     let problems_amt=document.getElementById('problemsSavedAmountField');
     let lessons_amt=document.getElementById('lessonsSavedAmountField');
     let problemCount=0;
