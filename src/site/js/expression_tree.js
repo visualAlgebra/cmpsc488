@@ -184,11 +184,11 @@ class Tag extends ExpressionTree {
       }
 
       for (let i = 0; i < this.NW.length; i++) {
-        if (!this.NW[i].equals(that.NW[i])) return false;
+        if (!this.NW[i].fequals(that.NW[i])) return false;
       }
 
       for (let i = 0; i < this.SE.length; i++) {
-        if (!this.SE[i].equals(that.SE[i])) return false;
+        if (!this.SE[i].fequals(that.SE[i])) return false;
       }
 
       return true;

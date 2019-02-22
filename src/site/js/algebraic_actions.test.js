@@ -9,7 +9,7 @@ const l2 = new Literal(2);
 const l3 = new Literal(3);
 
 function assertAA (applied, expected, err) {
-  let retval = applied.equals(expected);
+  let retval = applied.fequals(expected);
   if(!retval) {
     console.log(err);
   }
@@ -36,8 +36,8 @@ function CSTest1 () {
   swapped.apply();
 
   let expected = new Tag(Orientation.NS);
-  expected.addNorthWest(a1);
-  expected.addNorthWest(a0);
+  expected.addNorthWest(new Literal(2));
+  expected.addNorthWest(new Literal(1));
 
   return assertAA(a, expected, "CommutativeSwap Test 1 failed");
 }
@@ -55,9 +55,9 @@ function CSTest2() {
   swapped.apply();
 
   let expected = new Tag(Orientation.NS);
-  expected.addNorthWest(a0);
-  expected.addNorthWest(a2);
-  expected.addNorthWest(a1);
+  expected.addNorthWest(new Literal(1));
+  expected.addNorthWest(new Tag(Orientation.EW, [new Literal(2), new Variable(2)]));
+  expected.addNorthWest(new Variable(1));
 
   return assertAA(a, expected, "CommutativeSwap Test 2 failed");
 }
@@ -78,10 +78,10 @@ function CSTest3() {
   swapped.apply();
 
   let expected = new Tag(Orientation.EW);
-  expected.addNorthWest(a0);
-  expected.addSouthEast(a1);
-  expected.addSouthEast(a3);
-  expected.addSouthEast(a2);
+  expected.addNorthWest(new Literal(1));
+  expected.addSouthEast(new Variable(1));
+  expected.addSouthEast(new Tag(Orientation.NS, [new Literal(2), new Literal(3)]));
+  expected.addSouthEast(new Tag(Orientation.EW, [new Variable(2), new Variable(3)]));
 
   return assertAA(a, expected, "CommutativeSwap Test 3 failed");
 }
@@ -101,34 +101,12 @@ function AMTest1() {
   let merge = new AssociativeMerge(s, p, Quadrant.NW);
   merge.apply();
 
-  return assertAA(p, s, "AssociativeMerge Test 1 failed");
+  const expected = new Tag(Orientation.NS, [new Literal(1), new Literal(2)]);
+
+  return assertAA(p, expected, "AssociativeMerge Test 1 failed");
 }
 
 function AMTest2() {
-  //old AM impl
-  /*
-  // [s0 [ s0 s1 ><] >< s1]
-  // =>
-  // [s0 s0 s1 >< s1]
-  let s = new Tag(Orientation.EW);
-  s0 = new Literal(1);
-  s1 = new Variable(2);
-  s.addNorthWest(s0);
-  s.addNorthWest(s1);
-  let p = new Tag(Orientation.EW);
-  p.addNorthWest(s0);
-  p.addNorthWest(s);
-  p.addSouthEast(s1);
-
-  let merge = new AssociativeMerge(s, p, Quadrant.NW);
-  merge.apply();
-
-  let expected = new Tag(Orientation.EW);
-  expected.addNorthWest(s0);
-  expected.addNorthWest(s0);
-  expected.addNorthWest(s1);
-  expected.addSouthEast(s1);
-  */
 
   let s = new Tag(Orientation.EW);
   let s0 = new Literal(1);
@@ -143,43 +121,14 @@ function AMTest2() {
   let merge = new AssociativeMerge(s, p, Quadrant.NW);
   merge.apply();
 
-  return assertAA(p, s, "AssociativeMerge Test 2 failed");
+  let expected = new Tag(Orientation.EW,
+    [],
+    [new Literal(1),new Literal(2),new Variable(1)]);
+
+  return assertAA(p, expected, "AssociativeMerge Test 2 failed");
 }
 
 function AMTest3() {
-  //old AM impl
-  /*
-  let s = new Tag(Orientation.EW);
-  s0 = new Literal(1);
-  s1 = new Variable(2);
-  s2 = new Variable(3);
-  s3 = new Tag(Orientation.NS, [s0, s1], [s2]);
-  s.addNorthWest(s0);
-  s.addNorthWest(s1);
-  s.addSouthEast(s2);
-  s.addSouthEast(s3);
-
-  let p = new Tag(Orientation.EW);
-  p.addNorthWest(s0);
-  p.addNorthWest(s);
-  p.addNorthWest(s2);
-  p.addNorthWest(s3);
-  p.addSouthEast(s1);
-
-
-  let merge = new AssociativeMerge(s, p, Quadrant.NW);
-  merge.apply();
-
-  let expected = new Tag(Orientation.EW);
-  expected.addNorthWest(s0);
-  expected.addNorthWest(s0);
-  expected.addNorthWest(s1);
-  expected.addNorthWest(s2);
-  expected.addNorthWest(s3);
-  expected.addSouthEast(s2);
-  expected.addSouthEast(s3);
-  expected.addSouthEast(s1);
-  */
 
   let s = new Tag(Orientation.NS);
   let s0 = new Literal(1);
@@ -196,7 +145,15 @@ function AMTest3() {
   let merge = new AssociativeMerge(s, p, Quadrant.NW);
   merge.apply();
 
-  let expected = new Tag(Orientation.NS, [], [s0, s1, s2, s3]);
+  let expected = new Tag(Orientation.NS,
+    [],
+    [
+      new Literal(1),
+      new Literal(2),
+      new Variable(1),
+      new Tag(Orientation.EW, [new Variable(6), new Literal(2), new Literal(1)])
+    ]
+  );
 
   return assertAA(p, expected, "AssociativeMerge Test 3 failed");
 }
@@ -211,33 +168,14 @@ function AITest1() {
   let intro = new AssociativeIntro(p);
   intro.apply();
 
-  let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS, [p0, p1])]);
+  let expected = new Tag(Orientation.NS,
+    [new Tag(Orientation.NS, [new Literal(1), new Literal(2)])]
+  );
 
   return assertAA(p, expected, "AssociativeIntro Test 1 failed");
 }
 
 function AITest2() {
-  //old impl
-  /*
-  let p = new Tag(Orientation.NS);
-  p0 = new Literal(1);
-  p1 = new Literal(2);
-  p2 = new Variable(3);
-  p3 = new Tag(Orientation.EW, [p0], [p2]);
-  p.addNorthWest(p0);
-  p.addNorthWest(p1);
-  p.addNorthWest(p2);
-  p.addNorthWest(p3);
-  let s = [p1, p2, p3];
-
-  let intro = new AssociativeIntro(s, p, p.NW);
-  let m = intro.apply();
-
-  let inner = new Tag(Orientation.NS, [p1, p2, p3]);
-  let expected = new Tag(Orientation.NS, [p0, inner]);
-
-  return assertAA(m, expected, "AssociativeIntro Test 2 failed");
-  */
 
   let p = new Tag(Orientation.NS);
   let p0 = new Variable(1);
@@ -248,7 +186,9 @@ function AITest2() {
   let intro = new AssociativeIntro(p);
   intro.apply();
 
-  let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS, [], [p0, p1])]);
+  let expected = new Tag(Orientation.NS, [new Tag(Orientation.NS,
+    [],
+    [new Variable(1), new Literal(2)])]);
 
   return assertAA(p, expected, "AssociativeIntro Test 2 failed");
 }
@@ -446,8 +386,8 @@ function DTest1() {
 
   const expected = new Tag(Orientation.EW,
    [
-     new Tag( Orientation.NS, [factor, i1]),
-     new Tag( Orientation.NS, [factor, i2])
+     new Tag( Orientation.NS, [new Literal(1), new Variable(1)]),
+     new Tag( Orientation.NS, [new Literal(1), new Variable(2)])
    ]);
 
    // const action = new Distribute();
@@ -468,10 +408,10 @@ function DTest2() {
   const before = new Tag(Orientation.NS, [factor, inner]);
 
   const expected = new Tag(Orientation.EW, [
-    new Tag(Orientation.NS, [factor, v1]),
-    new Tag(Orientation.NS, [factor, v2]),
-    new Tag(Orientation.NS, [factor, x]),
-    new Tag(Orientation.NS, [factor, l3])
+    new Tag(Orientation.NS, [new Variable(4), new Variable(1)]),
+    new Tag(Orientation.NS, [new Variable(4), new Variable(2)]),
+    new Tag(Orientation.NS, [new Variable(4), new Tag(Orientation.NS, [v3, l1], [l2])]),
+    new Tag(Orientation.NS, [new Variable(4), new Literal(3)])
   ]);
 
   // const action = new Distribute();
@@ -490,8 +430,13 @@ function FTest1() {
       new Tag(Orientation.NS, [factor, v2])
     ]);
 
-  const t1 = new Tag(Orientation.EW, [v1, v2]);
-  const expected = new Tag(Orientation.NS, [factor, t1]);
+  const t1 = new Tag(Orientation.EW, [new Variable(1), new Variable(2)]);
+  const expected = new Tag(Orientation.NS,
+    [
+      new Literal(4),
+      new Tag(Orientation.EW, [new Variable(1), new Variable(2)])
+    ]
+  );
 
   const action = new Factor(factor, before);
   action.apply();
@@ -504,19 +449,26 @@ function FTest2() {
   factor = negative(factor);
 
   //[v3, l1 >< l2]
-  const x = new Tag(Orientation.NS, [v3, l1], [l2])
+  const x = new Tag(Orientation.NS, [v3, l1], [l2]);
 
   const before = new Tag(Orientation.EW, [
-    new Tag(Orientation.NS, [factor, v1]),
-    new Tag(Orientation.NS, [v2, factor]),
-    new Tag(Orientation.NS, [x, factor]),
-    new Tag(Orientation.NS, [factor, l3])
+    new Tag(Orientation.NS, [new Variable(4), new Variable(1)]),
+    new Tag(Orientation.NS, [new Variable(2), new Variable(4)]),
+    new Tag(Orientation.NS, [x, new Variable(4)]),
+    new Tag(Orientation.NS, [new Variable(4), new Literal(3)])
   ]);
 
   //[v1, v2, x, l3 >< ]
-  const inner = new Tag(Orientation.EW, [v1, v2, x, l3]);
+  const inner = new Tag(Orientation.EW,
+    [
+      new Variable(1),
+      new Variable(2),
+      new Tag(Orientation.NS, [new Variable(3), new Literal(1)], [new Literal(2)]),
+      new Literal(3)
+    ]
+  );
 
-  const expected = new Tag(Orientation.NS, [factor, inner]);
+  const expected = new Tag(Orientation.NS, [negative(new Literal(4)), inner]);
 
   const action = new Factor(factor, before);
   action.apply();
@@ -530,16 +482,17 @@ function FTest3() {
 
   const before = new Tag(Orientation.EW,
     [
-      new Tag(Orientation.NS, [factor, v1]),
-      new Tag(Orientation.NS, [factor])
+      new Tag(Orientation.NS, [new Literal(4), new Variable(4)]),
+      new Tag(Orientation.NS, [new Literal(4)])
     ]);
 
   const t1 = new Tag(Orientation.EW,
-    [v1, new Literal(1)]);
-  const expected = new Tag(Orientation.NS, [factor, t1]);
+    [new Variable(1), new Literal(1)]);
+  const expected = new Tag(Orientation.NS, [new Literal(4), t1]);
 
   const action = new Factor(factor, before);
   action.apply();
+
   return assertAA(before, expected, "Factor test 3 failed");
 }
 
@@ -547,8 +500,8 @@ function SFTest1() {
 
   const before = new Tag(Orientation.NS, [new Tag(Orientation.EW, [v1, l1])], [v2]);
 
-  const e1 = new Tag(Orientation.NS, [v1], [v2]);
-  const e2 = new Tag(Orientation.NS, [l1], [v2]);
+  const e1 = new Tag(Orientation.NS, [new Variable(1)], [new Variable(2)]);
+  const e2 = new Tag(Orientation.NS, [new Literal(1)], [new Variable(2)]);
   const expected = new Tag(Orientation.EW, [e1, e2]);
 
   const action = new SplitFrac(before);
@@ -562,7 +515,12 @@ function SFTest2() {
   let t1 = new Tag(Orientation.NS, [v1, v2]);
   const before = new Tag(Orientation.NS, [new Tag(Orientation.EW, [t1], [v3])], [l1]);
 
-  const e1 = new Tag(Orientation.NS, [t1], [l1]);
+  const e1 = new Tag(Orientation.NS,
+    [
+      new Tag(Orientation.NS, [new Variable(1), new Variable(2)])
+    ],
+    [new Literal(1)]
+  );
   const e2 = new Tag(Orientation.NS, [v3], [l1]);
   const expected = new Tag(Orientation.EW, [e1], [e2]);
 
@@ -580,49 +538,47 @@ function SFTest3() {
     [v4, v5]
   );
 
-  const e1 = new Tag(Orientation.NS, [t1], [v4, v5]);
-  const e2 = new Tag(Orientation.NS, [l1], [v4, v5]);
-  const e3 = new Tag(Orientation.NS, [l2], [v4, v5]);
-  const e4 = new Tag(Orientation.NS, [v3], [v4, v5]);
-  const e5 = new Tag(Orientation.NS, [l3], [v4, v5]);
+  const e1 = new Tag(Orientation.NS,
+    [new Tag(Orientation.NS, [new Variable(1), new Variable(2)])],
+    [new Variable(4), new Variable(5)]
+  );
+  const e2 = new Tag(Orientation.NS, [new Literal(1)], [new Variable(4), new Variable(5)]);
+  const e3 = new Tag(Orientation.NS, [new Literal(2)], [new Variable(4), new Variable(5)]);
+  const e4 = new Tag(Orientation.NS, [new Variable(3)], [new Variable(4), new Variable(5)]);
+  const e5 = new Tag(Orientation.NS, [new Literal(3)], [new Variable(4), new Variable(5)]);
   const expected = new Tag(Orientation.EW, [e1, e2, e3], [e4, e5]);
 
   const action = new SplitFrac(before);
   action.apply();
-
-
 
   return assertAA(before, expected, "SplitFrac test 3 failed");
 }
 
 function CFTest1() {
 
-  let q = [v1, v2];
-  const t1 = new Tag(Orientation.NS, [l1], q);
-  const t2 = new Tag(Orientation.NS, [v3], q);
-  const t3 = new Tag(Orientation.NS, [l2], q);
+  const t1 = new Tag(Orientation.NS, [new Literal(1)], [new Variable(1), new Variable(2)]);
+  const t2 = new Tag(Orientation.NS, [new Variable(3)], [new Variable(1), new Variable(2)]);
+  const t3 = new Tag(Orientation.NS, [new Literal(2)], [new Variable(1), new Variable(2)]);
   const before = new Tag(Orientation.EW, [t1, t2, t3]);
 
-  const dividend = new Tag(Orientation.EW, [l1, v3, l2]);
-  const expected = new Tag(Orientation.NS, [dividend], q);
+  const dividend = new Tag(Orientation.EW, [new Literal(1), new Variable(3), new Literal(2)]);
+  const expected = new Tag(Orientation.NS, [dividend], [new Variable(1), new Variable(2)]);
 
   const action = new CombineFrac(before);
   action.apply();
-
 
   return assertAA(before, expected, "CombineFrac test 1 failed");
 }
 
 function CFTest2() {
 
-  let q = [v1, v2];
-  const t1 = new Tag(Orientation.NS, [l1], q);
-  const t2 = new Tag(Orientation.NS, [v3], q);
-  const t3 = new Tag(Orientation.NS, [l2], q);
+  const t1 = new Tag(Orientation.NS, [l1], [new Variable(1), new Variable(2)]);
+  const t2 = new Tag(Orientation.NS, [v3], [new Variable(1), new Variable(2)]);
+  const t3 = new Tag(Orientation.NS, [l2], [new Variable(1), new Variable(2)]);
   const before = new Tag(Orientation.EW, [], [t1, t2, t3]);
 
-  const dividend = new Tag(Orientation.EW, [],[l1, v3, l2]);
-  const expected = new Tag(Orientation.NS, [dividend], q);
+  const dividend = new Tag(Orientation.EW, [],[new Literal(1), new Variable(2), new Literal(3)]);
+  const expected = new Tag(Orientation.NS, [dividend], [new Variable(1), new Variable(2)]);
 
   const action = new CombineFrac(before);
   action.apply();
@@ -632,17 +588,34 @@ function CFTest2() {
 
 function CFTest3() {
 
-  let q = new Tag(Orientation.EW, [l1, v2])
   const ti = new Tag(Orientation.EW, [v4, v5]);
 
-  const t1 = new Tag(Orientation.NS, [v1], [q]);
-  const t2 = new Tag(Orientation.NS, [ti], [q]);
-  const t3 = new Tag(Orientation.NS, [l2], [q]);
-  const t4 = new Tag(Orientation.NS, [v3], [q]);
+  const t1 = new Tag(Orientation.NS,
+    [v1],
+    [new Tag(Orientation.EW, [new Literal(1), new Variable(2)])]
+  );
+  const t2 = new Tag(Orientation.NS,
+    [ti],
+    [new Tag(Orientation.EW, [new Literal(1), new Variable(2)])]
+  );
+  const t3 = new Tag(Orientation.NS,
+    [l2],
+    [new Tag(Orientation.EW, [new Literal(1), new Variable(2)])]
+  );
+  const t4 = new Tag(Orientation.NS,
+    [v3],
+    [new Tag(Orientation.EW, [new Literal(1), new Variable(2)])]
+  );
   const before = new Tag(Orientation.EW, [t1, t2], [t3, t4]);
 
-  const dividend = new Tag(Orientation.EW, [v1, ti], [l2, v3]);
-  const expected = new Tag(Orientation.NS, [dividend], [q]);
+  const dividend = new Tag(Orientation.EW,
+    [new Variable(1), new Tag(Orientation.EW, [v4, v5])],
+    [new Literal(2), new Variable(3)]
+  );
+  const expected = new Tag(Orientation.NS,
+    [dividend],
+    [new Tag(Orientation.EW, [new Literal(1), new Variable(2)])]
+  );
 
   const action = new CombineFrac(before);
   action.apply();
@@ -657,7 +630,7 @@ function QFTest1() {
 
   const expected = new Tag(Orientation.NS,
     [],
-    [new Tag(Orientation.NS, [v3], [v1, v2])]
+    [new Tag(Orientation.NS, [new Variable(3)], [new Variable(1), new Variable(2)])]
   );
 
   const action = new QuadrantFlip(inner, Quadrant.NW);
@@ -673,7 +646,11 @@ function QFTest2() {
 
   const expected = new Tag(Orientation.EW,
     [],
-    [new Tag(Orientation.EW, [l2, v3], [v1, v2, l1])]
+    [
+      new Tag(Orientation.EW,
+        [new Literal(2), new Variable(3)],
+        [new Variable(1), new Variable(2), new Literal(1)])
+    ]
   );
 
   const action = new QuadrantFlip(inner, Quadrant.NW);
@@ -691,7 +668,11 @@ function QFTest3() {
   );
 
   const expected = new Tag(Orientation.EW,
-    [new Tag(Orientation.EW, [v1, v2, l1], [l2, v3])]
+    [
+      new Tag(Orientation.EW,
+        [new Variable(1), new Variable(2), new Literal(1)],
+        [new Literal(2), new Variable(3)])
+    ]
   );
 
   const action = new QuadrantFlip(inner, Quadrant.SE);
@@ -710,7 +691,7 @@ function CTest1() {
   );
 
   const expected = new Tag(Orientation.NS,
-    [v1, v3],
+    [new Variable(1), new Variable(3)],
     []
   );
 
@@ -730,7 +711,7 @@ function CTest2() {
   );
 
   const expected = new Tag(Orientation.EW,
-    [v4, l2, l3],
+    [new Variable(4), new Literal(2), new Literal(3)],
     []
   );
 
@@ -744,7 +725,10 @@ function IBTest1() {
 
   const before = new Tag(Orientation.NS, [v1, v2, l1]);
 
-  const expected = new Tag(Orientation.NS, [v1, v2, l1, l2], [new Literal(2)]);
+  const expected = new Tag(Orientation.NS,
+    [new Variable(1), new Variable(2), new Literal(1), new Literal(2)],
+    [new Literal(2)]
+  );
 
   const action = new IdentityBalance(new Literal(2), before);
   action.apply();
@@ -756,7 +740,10 @@ function IBTest2() {
 
   const before = new Tag(Orientation.EW, [v1, l1, l2], [v2, v3]);
 
-  const expected = new Tag(Orientation.EW, [v1, l1, l2, v4], [v2, v3, new Variable(4)]);
+  const expected = new Tag(Orientation.EW,
+    [new Variable(1), new Literal(1), new Literal(2), new Variable(4)],
+    [new Variable(2), new Variable(3), new Variable(4)]
+  );
 
   const action = new IdentityBalance(new Variable(4), before);
   action.apply();

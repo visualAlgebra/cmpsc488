@@ -235,7 +235,7 @@ class AssociativeIntro {
     } else {
       const newTag = new Tag(this.expr.orientation, this.expr.NW, this.expr.SE);
       this.expr.emptyNorthWest();
-      this.expr.emptySouthWest();
+      this.expr.emptySouthEast();
       this.expr.addNorthWest(newTag);
     }
 
@@ -451,7 +451,7 @@ class SplitFrac {
     for (let child of newNW) {
       this.tag.addNorthWest(child);
     }
-    this.tag.emptySouthWest();
+    this.tag.emptySouthEast();
     for (let child of newSE) {
       this.tag.addSouthEast(child);
     }
@@ -495,7 +495,7 @@ class CombineFrac {
     this.tag.orientation = Orientation.NS;
     this.tag.emptyNorthWest();
     this.tag.addNorthWest(dividend);
-    this.tag.emptySouthWest();
+    this.tag.emptySouthEast();
     for (let child of divisor) {
       this.tag.addSouthEast(child);
     }
