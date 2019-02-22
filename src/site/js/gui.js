@@ -44,7 +44,16 @@ const mouse = {
       action.apply();
       console.log("Enclosing ", x);
 
-      this.redisplayExpressionTree()
+      this.redisplayExpressionTree();
+    }
+
+    if (Object.is(x.parent, y.parent) && !Object.is(x,y) && y instanceof Tag
+    && y.orientation === y.parent.orientation && xQuad === yQuad) {
+      const action = new AssociativeInsert(x, y);
+      action.apply();
+      console.log("Inserting", x, "to tag", y)
+
+      this.redisplayExpressionTree();
     }
 
     this.reset();
