@@ -124,7 +124,7 @@ class AssociativeMerge {
   constructor(sibling, parent, quadrantLabel) {
     this.sibling = sibling;
     this.parent = parent;
-    this.quadrantLabel = quadrantLabel;
+    this.quadrantLabel = quadrantLabel; // The quadrant that `sibling` is in.
   }
 
   //verifys if the arguments are valid by checking

@@ -1,3 +1,14 @@
+function findQuadrant(x) {
+  if (x.parent) {
+    return x.parent.NW.some(e => Object.is(e, x))
+      ? Quadrant.NW
+      : Quadrant.SE;
+  } else {
+    return null;
+  }
+}
+
+
 const mouse = {
   state: "idle",
   eventSource: null,
@@ -19,17 +30,8 @@ const mouse = {
     const x = this.eventSource.tree;
     const y = this.eventDest.tree;
 
-    // TODO: Make sure this works smoothly for ROOT ELEMENT which has no
-    // parent!       __/
-    //              /
-    //              V
-    const xQuad = x.parent.NW.some(e => Object.is(e, x))
-      ? Quadrant.NW
-      : Quadrant.SE;
-
-    const yQuad = y.parent.NW.some(e => Object.is(e, y))
-      ? Quadrant.NW
-      : Quadrant.SE;
+    const xQuad = findQuadrant(x);
+    const yQuad = findQuadrant(y);
 
     if (Object.is(x.parent, y.parent) && !Object.is(x,y) && y instanceof Tag
     && y.orientation === y.parent.orientation && xQuad === yQuad) {
@@ -40,11 +42,21 @@ const mouse = {
       this.redisplayExpressionTree();
     }
 
-    else if (Object.is(x.parent, y.parent) && xQuad === yQuad) {
+    else if (Object.is(x.parent, y.parent) && xQuad === yQuad && !Object.is(x, y)) {
       const action = new CommutativeSwap(x, y, xQuad);
       action.apply();
       console.log("Swapping siblings", x, "and", y);
 
+      this.redisplayExpressionTree()
+    }
+
+    else if (x instanceof Tag
+          && y instanceof Tag
+          && Object.is(x.parent, y)
+    ) {
+      const action = new AssociativeMerge(x, y, xQuad);
+      action.apply();
+      console.log("Merging", x, "into", y);
       this.redisplayExpressionTree()
     }
 
