@@ -6,33 +6,38 @@ document.addEventListener('DOMContentLoaded', function() {
 //user_profile_page/accounts/account_id
 //{"accountID":"TEST_USER_0","timeCreated":"120000T101010",
 //"creations":["/problems/TEST_PROBLEM_0", "/lessons/TEST_LESSON_0"]}
+//
 var account_to_load=getAccountFromURL();
 
 window.onload = () => {
     if(account_to_load!==null){
         get_account_from_db(account_to_load, res =>{
-            let id_field=document.getElementById('userAccountIdField');
-            id_field.innerHTML=res.id;
-            let id_field2=document.getElementById('userAccountIdField2');
-            id_field2.innerHTML=res.id;
-            let creation_date_field=document.getElementById('creationDateField');
-            creation_date_field.innerHTML=res.creationDate;
-            let problems_amt=document.getElementById('problemsSavedAmountField');
-            let lessons_amt=document.getElementById('lessonsSavedAmountField');
-            let problemCount=0;
-            let lessonCount=0;
-            for(let creation in res.creations){
-                if(res.creations[creation].toString().indexOf('problems')!==-1){
-                    problemCount++;
-                }else{
-                    lessonCount++;
-                }
-            }
-            problems_amt.innerHTML="Problems: "+problemCount;
-            lessons_amt.innerHTML="Lesson: "+lessonCount;
+            fillPage(res);
         });
     }
 };
+
+function fillPage(accInfo){
+    let id_field=document.getElementById('userAccountIdField');
+    id_field.innerHTML=accInfo.id;
+    let id_field2=document.getElementById('userAccountIdField2');
+    id_field2.innerHTML=accInfo.id;
+    let creation_date_field=document.getElementById('creationDateField');
+    creation_date_field.innerHTML="Creation date: "+(accInfo.creationDate);//date hardcoded in and cant be parsed by Date.parse()
+    let problems_amt=document.getElementById('problemsSavedAmountField');
+    let lessons_amt=document.getElementById('lessonsSavedAmountField');
+    let problemCount=0;
+    let lessonCount=0;
+    for(let creation in accInfo.creations){
+        if(accInfo.creations[creation].toString().indexOf('problems')!==-1){
+            problemCount++;
+        }else{
+            lessonCount++;
+        }
+    }
+    problems_amt.innerHTML="Problems: "+problemCount;
+    lessons_amt.innerHTML="Lessons: "+lessonCount;
+}
 
 class AccountInfo{
     constructor(account_id, time_created, creationArr){
