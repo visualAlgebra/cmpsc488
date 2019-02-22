@@ -10,7 +10,7 @@ function createCardForLesson(lesson_arr, cardID, elementId){
     titlespan.id="Lesson"+cardID;
     titlespan.innerHTML="Lesson "+cardID;
     contentdiv.appendChild(titlespan);
-    // GIDEON ADFJASLGKHALKGHJASLGKJ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // ERIC KSDJALSDJKAS
     let iconi=document.createElement("i");
     iconi.className="material-icons left";
     iconi.innerHTML="folder";
