@@ -31,22 +31,6 @@ const mouse = {
       ? Quadrant.NW
       : Quadrant.SE;
 
-    if (Object.is(x.parent, y.parent) && xQuad === yQuad) {
-      const action = new CommutativeSwap(x, y, xQuad);
-      action.apply();
-      console.log("Swapping siblings", x, "and", y);
-
-      this.redisplayExpressionTree()
-    }
-
-    if (Object.is(x, y)) {
-      const action = new AssociativeIntro(x);
-      action.apply();
-      console.log("Enclosing ", x);
-
-      this.redisplayExpressionTree();
-    }
-
     if (Object.is(x.parent, y.parent) && !Object.is(x,y) && y instanceof Tag
     && y.orientation === y.parent.orientation && xQuad === yQuad) {
       const action = new AssociativeInsert(x, y);
@@ -56,12 +40,26 @@ const mouse = {
       this.redisplayExpressionTree();
     }
 
+    else if (Object.is(x.parent, y.parent) && xQuad === yQuad) {
+      const action = new CommutativeSwap(x, y, xQuad);
+      action.apply();
+      console.log("Swapping siblings", x, "and", y);
+
+      this.redisplayExpressionTree()
+    }
+
     this.reset();
   },
 
   clickDetected: function() {
     console.log("Mouse clicked on", this.eventSource);
-    // [HANDLE MOUSE CLICK HERE]
+
+    const action = new AssociativeIntro(this.eventSource.tree);
+    action.apply();
+    console.log("Enclosing ", this.eventSource.tree);
+
+    this.redisplayExpressionTree();
+
     this.reset();
   }
 };
