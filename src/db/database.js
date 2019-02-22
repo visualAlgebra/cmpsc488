@@ -44,7 +44,7 @@ class DummyDatabase extends Database {
     }
 
     getCurrentTimeStamp() {
-        return "120000T10:10:10";
+        return "2012-12-12T10:10:10";
     }
 
     getProblem(server, serverResponse, link) {
@@ -109,7 +109,7 @@ class DummyDatabase extends Database {
 	    query.number = parseInt(query.number);
 	if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
 		return server.respondWithError(response, 400, "Error 400: Query not supported");
-	} else if (query.number <= 0 || query.number >= 100 || query.sort !== "timeCreated") {
+	} else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
 		return server.respondWithError(response, 400, "Error 400: Query not supported");
 	} else {
 		let fileName = "src/db/dbfiles/queries/TEST_QUERY_1.json"
@@ -181,7 +181,8 @@ class DummyDatabase extends Database {
         account.accountID = accountID;
 	account.timeCreated = this.getCurrentTimeStamp();
         let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
-        this.session.writeFile(fileName, JSON.stringify(account), function(err) {
+     
+	    this.session.writeFile(fileName, JSON.stringify(account), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
