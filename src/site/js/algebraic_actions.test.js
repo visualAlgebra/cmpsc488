@@ -267,7 +267,6 @@ function AITest3() {
 
   const action = new AssociativeIntro(v2);
   action.apply();
-  console.log(before,expected)
 
   return assertAA(before, expected, "AssociativeIntro Test 3 failed");
 }
