@@ -138,52 +138,76 @@ class TagGui extends GuiBase {
   buildDom() {
     const div = $("<div>");
 
-    this.attachEventHandlers(div);
-
     div.addClass(
       this.tree.orientation == Orientation.NS ? "north-south" : "east-west"
     );
 
     div.addClass("tag");
     div.data("expressionTree", this.tree);
+    
+    const nw = new TagQuadrantGui(this.tree, Quadrant.NW);
+    const button = new TagButtonGui(this.tree);
+    const se = new TagQuadrantGui(this.tree, Quadrant.SE);
 
-    const nw = $("<div>");
-    nw.addClass("north-west");
+    div.append(nw.dom);
+    div.append(button.dom);
+    div.append(se.dom);
+    return div;
+  }
+}
 
+class TagButtonGui extends GuiBase {
+  constructor(tag) {
+    super();
+    this.tree = tag;
+    this.dom = this.buildDom();
+  }
+
+  buildDom() {
     const button = $("<div>");
     button.addClass("tag-button");
+
+    this.attachEventHandlers(button);
 
     const buttonColumn = $("<div>");
     buttonColumn.addClass("tag-button-column");
     buttonColumn.append(button);
+    return buttonColumn;
+  }
+}
 
-    const se = $("<div>");
-    se.addClass("south-east");
+class TagQuadrantGui extends GuiBase {
+  constructor(tag, quadrantLabel) {
+    super();
+    this.tree = tag;
+    this.quadrantLabel = quadrantLabel;
+    this.dom = this.buildDom();
+  }
 
-    function appendTo(element, child) {
+  buildDom() {
+    const quadrant = $("<div>");
+    const quadrantClass = (this.quadrantLabel === Quadrant.NW)
+      ? "north-west"
+      : "south-east";
+
+    quadrant.addClass(quadrantClass);
+    this.attachEventHandlers(quadrant);
+
+    this.tree[this.quadrantLabel].forEach(child => {
       if (child.kind === "tag") {
-        element.append(child.render());
+        quadrant.append(child.render());
       } else {
         const container = $("<div>");
         container.addClass("tag-element-container");
         container.append(child.render());
-        element.append(container);
+        quadrant.append(container);
       }
-    }
-
-    this.tree.NW.forEach(child => {
-      appendTo(nw, child);
     });
 
-    this.tree.SE.forEach(child => {
-      appendTo(se, child);
-    });
-
-    div.append(nw);
-    div.append(buttonColumn);
-    div.append(se);
-    return div;
+    return quadrant;
   }
+
+
 }
 
 class VariableGui extends GuiBase {
