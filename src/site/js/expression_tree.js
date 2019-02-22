@@ -94,12 +94,14 @@ class Tag extends ExpressionTree {
   removeSouthEast(child) {
     this.SE = this.SE.filter(x => !Object.is(x, child));
     const delta = child.treeCount;
+    child.parent = null;
     this.updateParentTreeCount(-delta);
   }
 
   removeNorthWest(child) {
     this.NW = this.NW.filter(x => !Object.is(x, child));
     const delta = child.treeCount;
+    child.parent = null;
     this.updateParentTreeCount(-delta);
   }
 
@@ -107,15 +109,17 @@ class Tag extends ExpressionTree {
     let delta = 0;
     for (let child of this.NW) {
       delta += child.treeCount;
+      child.parent = null;
     }
     this.NW = [];
     this.updateParentTreeCount(-delta);
   }
 
-  emptySouthWest() {
+  emptySouthEast() {
     let delta = 0;
     for (let child of this.SE) {
       delta += child.treeCount;
+      child.parent = null;
     }
     this.SE = [];
     this.updateParentTreeCount(-delta);
