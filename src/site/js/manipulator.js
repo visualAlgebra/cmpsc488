@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems);
+});
+
 var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
