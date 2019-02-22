@@ -44,7 +44,7 @@ class DummyDatabase extends Database {
     }
 
     getCurrentTimeStamp() {
-        return "120000T101010";
+        return "120000T10:10:10";
     }
 
     getProblem(server, serverResponse, link) {
@@ -88,7 +88,7 @@ class DummyDatabase extends Database {
 	    query.number = parseInt(query.number);
 	if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
 		return server.respondWithError(response, 400, "Error 400: Query not supported");
-	} else if (query.number <= 0 || query.number >= 100 || query.sort !== "timeCreated") {
+	} else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
 		return server.respondWithError(response, 400, "Error 400: Query not supported");
 	} else {
 		let fileName = "src/db/dbfiles/queries/TEST_QUERY_0.json"
