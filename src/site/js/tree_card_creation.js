@@ -23,6 +23,8 @@ function createCardForLesson(lesson_id, cardID){
     rowdiv.className="row";
     contentdiv.appendChild(rowdiv);
 
+    // MERGE TEST
+
     let col1div=document.createElement("div");
     col1div.className="col";
     rowdiv.appendChild(col1div);
