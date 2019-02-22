@@ -1,4 +1,4 @@
-function createCardForLesson(lesson_id, cardID){
+function createCardForLesson(lesson_arr, cardID, elementId){
     let maindiv=document.createElement("div");
     maindiv.className="card blue-grey darken-1";
     let contentdiv=document.createElement("div");
@@ -7,11 +7,8 @@ function createCardForLesson(lesson_id, cardID){
 
     let titlespan=document.createElement("span");
     titlespan.className="card-title";
-    if(form.toString().indexOf("_LESSON")===1){
-        titlespan.innerHTML="Lesson "+cardID;
-    }else if(form.toString().indexOf("_PROBLEM")===1){
-        titlespan.innerHTML="Problem "+cardID;
-    }
+    titlespan.id="Lesson"+cardID;
+    titlespan.innerHTML="Lesson "+cardID;
     contentdiv.appendChild(titlespan);
 
     let iconi=document.createElement("i");
@@ -19,18 +16,21 @@ function createCardForLesson(lesson_id, cardID){
     iconi.innerHTML="folder";
     titlespan.prepend(iconi);
 
-    let rowdiv=document.createElement("div");
-    rowdiv.className="row";
-    contentdiv.appendChild(rowdiv);
+    for(let creation in lesson_arr.creations){
+        if(creation>=5){
+            break;
+        }
+        let rowdiv=document.createElement("div");
+        rowdiv.className="row";
+        contentdiv.appendChild(rowdiv);
 
-    let col1div=document.createElement("div");
-    col1div.className="col";
-    rowdiv.appendChild(col1div);
-
-    let li1holder=document.createElement("li");
-    li1holder.innerHTML="Problem "+cardID;
-    li1holder.setAttribute("data-lessonID","");
+        let adiv=document.createElement("a");
+        adiv.href="http://localhost:8080/problems/"+lesson_arr.creations[creation];
+        rowdiv.appendChild(adiv);
+    }
+    document.getElementById(elementId).appendChild(maindiv);
 }
+
 //    <div class="row">
 //		<div class="col s12 m6 l4">
 //            <div class="card blue-grey darken-1">
@@ -103,17 +103,27 @@ function createCardForProblem(problem_id, cardID){
 
     return maindiv;
 }
-
+var probAmt=0;
+var lessAmt=0;
 function fillCreations(elementId, accInfo){
     let filldiv=document.getElementById(elementId);
     for(let creation in accInfo.creations){
         creation=parseInt(creation);
         if(accInfo.creations[creation].toString().includes("problems")){
-            let str=accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/'),accInfo.creations[creation].length);
-            filldiv.appendChild(createCardForProblem(str,creation));
+            if(probAmt>=10){
+                continue;
+            }
+            let str=accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/')+1,accInfo.creations[creation].length);
+            filldiv.appendChild(createCardForProblem(str,probAmt));
             displayProblemFromDB(str,creation+"_s",creation+"_g");
+            probAmt++;
         }else if(accInfo.creations[creation].toString().includes("lessons")){
-            console.log("lesson to implement");
+            if(lessAmt>=5){
+                continue;
+            }
+            let str=accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/')+1,accInfo.creations[creation].length);
+            get_lesson_from_db(str,res=> createCardForLesson(res, creation, elementId));
+            lessAmt++;
         }
     }
 }

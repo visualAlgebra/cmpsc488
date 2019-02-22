@@ -13,7 +13,7 @@ function get_lesson_from_db(lesson_id, callback){
   let http=new XMLHttpRequest();
   http.onreadystatechange = function () {
         if (http.readyState == 4 && http.status == 200) {
-          callback(new LessonInfo(problem_id,JSON.parse(http.responseText).problems));
+          callback(new LessonInfo(lesson_id,JSON.parse(http.responseText).problems));
         }
     }
   http.open("GET", "http://localhost:8080/lessons/"+lesson_id, true);
