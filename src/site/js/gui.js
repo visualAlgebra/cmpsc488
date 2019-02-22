@@ -59,20 +59,28 @@ const mouse = {
 
 class GuiBase {
   onclick() {
-    mouse.eventSource = this;
-    mouse.clickDetected();
+    if (mouse.state !== "idle after drag") {
+      mouse.eventSource = this;
+      mouse.clickDetected();
+    }
   }
 
   mousedown() {
     if (mouse.state === "idle") {
-      mouse.state = "dragging";
+      mouse.state = "dragging?";
       mouse.eventSource = this;
+    }
+  }
+
+  mousemove() {
+    if (mouse.state === "dragging?") {
+      mouse.state = "dragging";
     }
   }
 
   mouseup() {
     if (mouse.state === "dragging") {
-      mouse.state = "idle";
+      mouse.state = "idle after drag";
       mouse.eventDest = this;
       mouse.dragDetected();
     }
@@ -87,6 +95,11 @@ class GuiBase {
     dom.on("mousedown", e => {
       e.stopPropagation();
       this.mousedown();
+    });
+
+    dom.on("mousemove", e => {
+      e.stopPropagation();
+      this.mousemove();
     });
 
     dom.on("mouseup", e => {
