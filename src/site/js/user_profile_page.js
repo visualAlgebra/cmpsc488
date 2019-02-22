@@ -17,7 +17,6 @@ window.onload = () => {
     }
 };
 
-
 function fillPage(accInfo){
     let id_field=document.getElementById('userAccountIdField');
     id_field.innerHTML=accInfo.id;
