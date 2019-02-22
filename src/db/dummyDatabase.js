@@ -1,39 +1,4 @@
-
-
-//abstract class
-class Database {
-    constructor(emitter) {
-        this.session;
-        this.eventEmitter = emitter;
-    }
-    getProblem(server, serverResponse, link) {
-        return server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
-    }
-    getLesson(server, serverResponse, link) {
-        return server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
-    }
-    getAccount(server, serverResponse, accountID) {
-        return server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
-    }
-    saveProblem(server, response, accountID, problem, enteredName) {
-        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    }
-    saveLesson(server, response, accountID, lesson, enteredName) {
-        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    }
-    addAccount(server, response, account, accountID) {
-        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    }
-    deleteProblem(server, response, accountID, problemID) {
-        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    }
-    deleteLesson(server, response, accountID, lessonID) {
-        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    }
-    deleteAccount(server, response, accountID) {
-        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    }
-}
+const Database = require('./database.js');
 
 
 //returns preset files rather than ones from actual database
@@ -60,7 +25,7 @@ class DummyDatabase extends Database {
     }
 
 
-    getLesson(server, serverResponse, link) { 
+    getLesson(server, serverResponse, link) {
         let filename = "src/db/dbfiles/lessons/" + link + ".json";
         this.session.readFile(filename, function (err, data) {
             if (err) {
@@ -85,45 +50,45 @@ class DummyDatabase extends Database {
     }
 
     queryProblems(server, response, query) {
-	    query.number = parseInt(query.number);
-	if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
+            query.number = parseInt(query.number);
+        if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
 		return server.respondWithError(response, 400, "Error 400: Query not supported");
-	} else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
-		return server.respondWithError(response, 400, "Error 400: Query not supported");
-	} else {
-		let fileName = "src/db/dbfiles/queries/TEST_QUERY_0.json"
-		this.session.readFile(fileName, function (err, data) {
-		    if (err) {
-			return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-		    } else {
-			let queryResult = JSON.parse(data);
-			let obj = {};
-			obj.queryResults = queryResult.results.splice(0,query.number);
-			return server.respondWithData(response, 200, 'application/json', JSON.stringify(obj));
-		    }
-		});
-	}
+        } else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
+                return server.respondWithError(response, 400, "Error 400: Query not supported");
+        } else {
+                let fileName = "src/db/dbfiles/queries/TEST_QUERY_0.json"
+                this.session.readFile(fileName, function (err, data) {
+                    if (err) {
+                        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+                    } else {
+                        let queryResult = JSON.parse(data);
+                        let obj = {};
+                        obj.queryResults = queryResult.results.splice(0,query.number);
+                        return server.respondWithData(response, 200, 'application/json', JSON.stringify(obj));
+                    }
+                });
+        }
     }
-    
+
     queryLessons(server, response, query) {
-	    query.number = parseInt(query.number);
-	if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
-		return server.respondWithError(response, 400, "Error 400: Query not supported");
-	} else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
-		return server.respondWithError(response, 400, "Error 400: Query not supported");
-	} else {
-		let fileName = "src/db/dbfiles/queries/TEST_QUERY_1.json"
-		this.session.readFile(fileName, function (err, data) {
-		    if (err) {
-			return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-		    } else {
-			let queryResult = JSON.parse(data);
-			let obj = {};
-			obj.queryResults = queryResult.results.splice(0,query.number);
-			return server.respondWithData(response, 200, 'application/json', JSON.stringify(obj));
-		    }
-		});
-	}
+            query.number = parseInt(query.number);
+        if (query.number === undefined || query.sort === undefined || typeof(query.number) != typeof(0)) {
+                return server.respondWithError(response, 400, "Error 400: Query not supported");
+        } else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
+                return server.respondWithError(response, 400, "Error 400: Query not supported");
+        } else {
+                let fileName = "src/db/dbfiles/queries/TEST_QUERY_1.json"
+                this.session.readFile(fileName, function (err, data) {
+                    if (err) {
+                        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+                    } else {
+                        let queryResult = JSON.parse(data);
+                        let obj = {};
+                        obj.queryResults = queryResult.results.splice(0,query.number);
+                        return server.respondWithData(response, 200, 'application/json', JSON.stringify(obj));
+                    }
+                });
+        }
     }
 
 
@@ -149,7 +114,7 @@ class DummyDatabase extends Database {
             } else {
                 return server.respondWithData(response, 201, 'text/plain', 'localhost:8080/problems/' + usedName);
             }
-        }); 
+        });
     }
 
     saveLesson(server, response, accountID, lesson, enteredName) {
@@ -171,7 +136,7 @@ class DummyDatabase extends Database {
             } else {
                 return server.respondWithData(response, 201, 'text/plain', 'localhost:8080/lessons/' + enteredName);
             }
-        }); 
+        });
     }
 
     addAccount(server, response, account, accountID) {
@@ -179,16 +144,16 @@ class DummyDatabase extends Database {
             return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
         }
         account.accountID = accountID;
-	account.timeCreated = this.getCurrentTimeStamp();
+        account.timeCreated = this.getCurrentTimeStamp();
         let fileName = "src/db/dbfiles/accounts/" + accountID + ".json";
-     
-	    this.session.writeFile(fileName, JSON.stringify(account), function(err) {
+
+            this.session.writeFile(fileName, JSON.stringify(account), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
                 return server.respondWithData(response, 201, 'text/plain', 'Added Account Successfully');
             }
-        }); 
+        });
     }
 
     unlinkFile(server, response, fileName, id) {
@@ -270,5 +235,5 @@ class DummyDatabase extends Database {
 
 }
 
-module.exports = Database;
-// let db = new DummyDatabase();
+module.exports = DummyDatabase;
+

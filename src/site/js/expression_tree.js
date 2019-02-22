@@ -12,15 +12,31 @@ String.prototype.splice = function(index, str) {
   return this.slice(0, index) + str + this.slice(index);
 };
 
+
+class LessonInfo{
+    constructor(lesson_id, creations){
+        this.id=lesson_id;
+        this.creations=creations;
+    }
+
+  toString(){
+    let retval="{_LESSON{"+this.problem_id+"}{";
+    for(let form in this.creations){
+      retval+=this.creations[form].toString();
+    }
+    return retval+"}}";
+  }
+}
+
 class ProblemInfo {
   constructor(id,treestart,treegoal){
-    this.problem_id=id;
+    this.id=id;
     this.expression_start=treestart;
     this.expression_goal=treegoal
   }
 
   toString(){
-    return "{_PROBLEM{"+this.problem_id+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
+    return "{_PROBLEM{"+this.id+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
   }
 }
 
@@ -94,12 +110,14 @@ class Tag extends ExpressionTree {
   removeSouthEast(child) {
     this.SE = this.SE.filter(x => !Object.is(x, child));
     const delta = child.treeCount;
+    child.parent = null;
     this.updateParentTreeCount(-delta);
   }
 
   removeNorthWest(child) {
     this.NW = this.NW.filter(x => !Object.is(x, child));
     const delta = child.treeCount;
+    child.parent = null;
     this.updateParentTreeCount(-delta);
   }
 
@@ -107,15 +125,17 @@ class Tag extends ExpressionTree {
     let delta = 0;
     for (let child of this.NW) {
       delta += child.treeCount;
+      child.parent = null;
     }
     this.NW = [];
     this.updateParentTreeCount(-delta);
   }
 
-  emptySouthWest() {
+  emptySouthEast() {
     let delta = 0;
     for (let child of this.SE) {
       delta += child.treeCount;
+      child.parent = null;
     }
     this.SE = [];
     this.updateParentTreeCount(-delta);
@@ -135,6 +155,30 @@ class Tag extends ExpressionTree {
         this.orientation !== that.orientation ||
         this.NW.length !== that.NW.length ||
         this.SE.length !== that.SE.length
+      ) {
+        return false;
+      }
+
+      for (let i = 0; i < this.NW.length; i++) {
+        if (!this.NW[i].equals(that.NW[i])) return false;
+      }
+
+      for (let i = 0; i < this.SE.length; i++) {
+        if (!this.SE[i].equals(that.SE[i])) return false;
+      }
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+  fequals(that){
+    if (that.kind === "tag") {
+      if (
+        this.orientation !== that.orientation ||
+        this.NW.length !== that.NW.length ||
+        this.SE.length !== that.SE.length ||
+        this.parent !== that.parent
       ) {
         return false;
       }
@@ -198,6 +242,10 @@ class Variable extends ExpressionTree {
     if (that.kind !== "variable") return false;
     return this.value === that.value;
   }
+  fequals(that){
+    if (that.kind !== "variable") return false;
+    return this.value === that.value;
+  }
 
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
@@ -224,6 +272,10 @@ class Literal extends ExpressionTree {
   }
 
   equals(that) {
+    if (that.kind !== "literal") return false;
+    return this.value === that.value;
+  }
+  fequals(that){
     if (that.kind !== "literal") return false;
     return this.value === that.value;
   }

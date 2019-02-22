@@ -20,8 +20,6 @@ window.onload = () => {
 function fillPage(accInfo){
     let id_field=document.getElementById('userAccountIdField');
     id_field.innerHTML=accInfo.id;
-    let id_field2=document.getElementById('userAccountIdField2');
-    id_field2.innerHTML=accInfo.id;
     let creation_date_field=document.getElementById('creationDateField');
     creation_date_field.innerHTML="Creation date: "+(accInfo.creationDate);//date hardcoded in and cant be parsed by Date.parse()
     let problems_amt=document.getElementById('problemsSavedAmountField');
@@ -37,6 +35,7 @@ function fillPage(accInfo){
     }
     problems_amt.innerHTML="Problems: "+problemCount;
     lessons_amt.innerHTML="Lessons: "+lessonCount;
+    fillCreations("creationHolder", accInfo);
 }
 
 class AccountInfo{
@@ -46,7 +45,6 @@ class AccountInfo{
         this.creations=creationArr;
     }
 }
-
 
 function getAccountFromURL(){
     let acc=(window.location.href).substr((window.location.href).indexOf('/user_profile_page'));
