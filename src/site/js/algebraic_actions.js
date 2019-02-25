@@ -42,34 +42,13 @@ class CommutativeSwap {
   //
   apply () {
 
-    const quadrant = this.sibling1.parent[this.quadrantLabel];
+    const parent = this.sibling1.parent;
+    const temp = new Literal(-999);
 
-    //Finds the index of the two siblings
-    var idx1 = quadrant.findIndex(x => Object.is(x, this.sibling1));
-    var idx2 = quadrant.findIndex(x => Object.is(x, this.sibling2));
-
-    //create a new array for the return tree
-    var newQuadrant = [];
-
-    //constructs the the array,
-    //if i matches one of the indices of the siblings,
-    //then the other sibling will be added
-    for (var i = 0; i < quadrant.length; i++) {
-      if (i === idx1) {
-        newQuadrant[i] = this.sibling2;
-      } else if (i === idx2) {
-        newQuadrant[i] = this.sibling1;
-      } else {
-        newQuadrant[i] = quadrant[i];
-      }
-    }
-
-    //if quadrant was NW, then replace NW, else replace SE
-    if (this.quadrantLabel === Quadrant.NW) {
-      this.sibling1.parent.NW = newQuadrant;
-    } else {
-      this.sibling1.parent.SE = newQuadrant;
-    }
+    //Swapping the siblings
+    parent.findAndReplace(this.sibling1, temp, this.quadrantLabel);
+    parent.findAndReplace(this.sibling2, this.sibling1, this.quadrantLabel);
+    parent.findAndReplace(temp, this.sibling2, this.quadrantLabel);
   }
 }
 
@@ -139,70 +118,28 @@ class AssociativeMerge {
 
   apply() {
 
-    const quadrant = this.parent[this.quadrantLabel];
-
-    //make a new array for new tree
-    var newQuadrantNW = [];
-    var newQuadrantSE = [];
-
-    // If the sibling is in the NW quadrant...
+    //Having pointers to quadrants of sibling
+    let newNW;
+    let newSE;
     if (this.quadrantLabel === Quadrant.NW) {
-
-      //add expressions into new quadrant
-      for(let child of quadrant) {
-
-        if(Object.is(child, this.sibling)) {
-
-          for(let siblingChildNW of child.NW) {
-            newQuadrantNW.push(siblingChildNW);
-            siblingChildNW.parent = this.parent;
-          }
-
-          for(let siblingChildSE of child.SE) {
-            newQuadrantSE.push(siblingChildSE);
-            siblingChildSE.parent = this.parent;
-          }
-
-        } else {
-          newQuadrantNW.push(child);
-        }
-      }
-
-      // Add everything from the parent's SE quadrant into the new SE quadrant.
-      for(let child of this.parent.SE) {
-        newQuadrantSE.push(child);
-      }
-
-    } else { // SE quadrant
-
-      // Add everything from the parent's NW quadrant into the new NW quadrant.
-      for(let child of this.parent.NW) {
-        newQuadrantNW.push(child);
-      }
-
-      //add expressions into new quadrant
-      for(let child of quadrant) {
-
-        if(Object.is(child, this.sibling)) {
-
-          for(let siblingChildNW of child.NW) {
-            newQuadrantSE.push(siblingChildNW);
-            siblingChildNW.parent = this.parent;
-          }
-
-          for(let siblingChildSE of child.SE) {
-            newQuadrantNW.push(siblingChildSE);
-            siblingChildSE.parent = this.parent;
-          }
-
-        } else {
-          newQuadrantSE.push(child);
-        }
-      }
+      newNW = this.sibling.NW;
+      newSE = this.sibling.SE;
+    } else {
+      newNW = this.sibling.SE;
+      newSE = this.sibling.NW;
     }
 
-    this.parent.NW = newQuadrantNW;
-    this.parent.SE = newQuadrantSE;
+    //wiping parent
+    this.parent.emptyNorthWest();
+    this.parent.emptySouthEast();
+
+    //adding sibling's children into parent
+    for (let child of newNW) {
+      this.parent.addNorthWest(child);
+    }
+    for (let child of newSE) {
+      this.parent.addSouthEast(child);
+    }
   }
 }
 
