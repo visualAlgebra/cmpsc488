@@ -9,8 +9,10 @@ const l2 = new Literal(2);
 const l3 = new Literal(3);
 
 function assertAA (applied, expected, err) {
-  let retval = applied.fequals(expected);
+  let retval = applied.equals(expected);
   if(!retval) {
+    console.log("Applied:", applied);
+    console.log("Expected:", expected);
     console.log(err);
   }
   return retval;
@@ -577,7 +579,7 @@ function CFTest2() {
   const t3 = new Tag(Orientation.NS, [l2], [new Variable(1), new Variable(2)]);
   const before = new Tag(Orientation.EW, [], [t1, t2, t3]);
 
-  const dividend = new Tag(Orientation.EW, [],[new Literal(1), new Variable(2), new Literal(3)]);
+  const dividend = new Tag(Orientation.EW, [],[new Literal(1), new Variable(3), new Literal(2)]);
   const expected = new Tag(Orientation.NS, [dividend], [new Variable(1), new Variable(2)]);
 
   const action = new CombineFrac(before);
