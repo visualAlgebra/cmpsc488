@@ -400,14 +400,16 @@ class CombineFrac {
     let newSE = [];
 
     //Creating divisor
-    let divisor = this.tag.NW[0].SE;
+    let divisor;
 
     //creating the dividend
     for (let child of this.tag.NW) {
       newNW = newNW.concat(child.NW);
+      divisor = child.SE;
     }
     for (let child of this.tag.SE) {
       newSE = newSE.concat(child.NW);
+      divisor = child.SE;
     }
     let dividend = new Tag(Orientation.EW, newNW, newSE);
 
