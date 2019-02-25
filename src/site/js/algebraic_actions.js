@@ -78,14 +78,12 @@ class AssociativeMerge {
     if (this.quadrantLabel === Quadrant.NW) {
       newNW = this.sibling.NW;
       newSE = this.sibling.SE;
+      this.parent.removeNorthWest(this.sibling);
     } else {
       newNW = this.sibling.SE;
       newSE = this.sibling.NW;
+      this.parent.removeSouthEast(this.sibling);
     }
-
-    //wiping parent
-    this.parent.emptyNorthWest();
-    this.parent.emptySouthEast();
 
     //adding sibling's children into parent
     for (let child of newNW) {
