@@ -172,30 +172,6 @@ class Tag extends ExpressionTree {
       return false;
     }
   }
-  fequals(that){
-    if (that.kind === "tag") {
-      if (
-        this.orientation !== that.orientation ||
-        this.NW.length !== that.NW.length ||
-        this.SE.length !== that.SE.length ||
-        this.parent !== that.parent
-      ) {
-        return false;
-      }
-
-      for (let i = 0; i < this.NW.length; i++) {
-        if (!this.NW[i].fequals(that.NW[i])) return false;
-      }
-
-      for (let i = 0; i < this.SE.length; i++) {
-        if (!this.SE[i].fequals(that.SE[i])) return false;
-      }
-
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   delete(ref) {
     array_delete(this.SE, ref);
@@ -242,10 +218,6 @@ class Variable extends ExpressionTree {
     if (that.kind !== "variable") return false;
     return this.value === that.value;
   }
-  fequals(that){
-    if (that.kind !== "variable") return false;
-    return this.value === that.value;
-  }
 
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
@@ -272,10 +244,6 @@ class Literal extends ExpressionTree {
   }
 
   equals(that) {
-    if (that.kind !== "literal") return false;
-    return this.value === that.value;
-  }
-  fequals(that){
     if (that.kind !== "literal") return false;
     return this.value === that.value;
   }
