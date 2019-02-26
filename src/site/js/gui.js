@@ -8,11 +8,16 @@ function findQuadrant(x) {
   }
 }
 
+const MouseMode = {
+  Manipulation: "General Manipulation",
+  MergingLiterals: "Merging Literals",
+};
 
 const mouse = {
   state: "idle",
   eventSource: null,
   eventDest: null,
+  mode: MouseMode.Manipulation,
 
   reset: function() {
     this.state = "idle";
@@ -43,6 +48,7 @@ const mouse = {
         && this.eventDest instanceof TagQuadrantGui
         && y.orientation === y.parent.orientation
         && xQuad === yQuad
+        && this.mode === MouseMode.Manipulation
     ) {
       const action = new AssociativeInsert(x, y);
       action.apply();
@@ -51,7 +57,11 @@ const mouse = {
       this.redisplayExpressionTree();
     }
 
-    else if (Object.is(x.parent, y.parent) && xQuad === yQuad && !Object.is(x, y)) {
+    else if (Object.is(x.parent, y.parent)
+        && xQuad === yQuad
+        && !Object.is(x, y)
+        && this.mode === MouseMode.Manipulation
+    ) {
       const action = new CommutativeSwap(x, y, xQuad);
       action.apply();
       console.log("Swapping siblings", x, "and", y);
@@ -64,6 +74,7 @@ const mouse = {
         && this.eventSource instanceof TagButtonGui
         && this.eventDest instanceof TagButtonGui
         && Object.is(x.parent, y)
+        && this.mode === MouseMode.Manipulation
     ) {
       const action = new AssociativeMerge(x, y, xQuad);
       action.apply();
@@ -77,11 +88,13 @@ const mouse = {
   clickDetected: function() {
     console.log("Mouse clicked on", this.eventSource);
 
-    const action = new AssociativeIntro(this.eventSource.tree);
-    action.apply();
-    console.log("Enclosing ", this.eventSource.tree);
+    if (mode === MouseMode.Manipulation) {
+      const action = new AssociativeIntro(this.eventSource.tree);
+      action.apply();
+      console.log("Enclosing ", this.eventSource.tree);
 
-    this.redisplayExpressionTree();
+      this.redisplayExpressionTree();
+    }
 
     this.reset();
   }
