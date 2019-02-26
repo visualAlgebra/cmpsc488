@@ -1,14 +1,17 @@
 function createCardForLesson(lesson_arr, cardID, elementId){
     let maindiv=document.createElement("div");
-    maindiv.className="card blue-grey darken-1";
+    maindiv.className="col s12 m6 l4";
+    let carddiv=document.createElement("div");
+    carddiv.className="card blue-grey darken-1";
+    maindiv.appendChild(carddiv);
     let contentdiv=document.createElement("div");
     contentdiv.className="card-content white-text";
-    maindiv.appendChild(contentdiv);
+    carddiv.appendChild(contentdiv);
 
     let titlespan=document.createElement("span");
     titlespan.className="card-title";
     titlespan.id="Lesson"+cardID;
-    titlespan.innerHTML="Lesson "+cardID;
+    titlespan.innerHTML="Lesson "+lesson_arr.id;
     contentdiv.appendChild(titlespan);
     
     let iconi=document.createElement("i");
@@ -33,14 +36,17 @@ function createCardForLesson(lesson_arr, cardID, elementId){
 }
 function createCardForProblem(problem_id, cardID){
     let maindiv=document.createElement("div");
-    maindiv.className="card blue-grey darken-1";
+    maindiv.className="col s12 m6 l4";
+    let carddiv=document.createElement("div");
+    carddiv.className="card blue-grey darken-1";
+    maindiv.appendChild(carddiv);
     let contentdiv=document.createElement("div");
     contentdiv.className="card-content white-text";
-    maindiv.appendChild(contentdiv);
+    carddiv.appendChild(contentdiv);
 
     let titlespan=document.createElement("span");
     titlespan.className="card-title";
-    titlespan.innerHTML="Problem "+cardID;
+    titlespan.innerHTML="Problem "+problem_id;
     contentdiv.appendChild(titlespan);
 
     let iconi=document.createElement("i");

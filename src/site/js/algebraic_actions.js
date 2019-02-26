@@ -308,14 +308,14 @@ class Factor {
   apply() {
     this.tagToFactor.orientation = Orientation.NS;
     var addTag = new Tag(Orientation.EW);
-    var tagToFactorNWlength = this.tagToFactor.NW.length;
+    const tagToFactorNWlength = this.tagToFactor.NW.length;
     for(var i = 0; i<tagToFactorNWlength; i++){
       if ((this.tagToFactor.NW[0] instanceof Variable) || (this.tagToFactor.NW[0] instanceof Literal)){
         this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         addTag.addNorthWest(new Literal(1));
       }
       else{
-        this.tagToFactor.NW[0].removeNorthWest(this.valueToFactor);
+        this.tagToFactor.NW[0].removeNorthWest(this.tagToFactor.NW[0].NW[0]);
         if(this.tagToFactor.NW[0].NW.length+this.tagToFactor.NW[0].SE.length == 1){
           addTag.addNorthWest(this.tagToFactor.NW[0].NW[0]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
@@ -340,7 +340,7 @@ class Factor {
         addTag.addSouthEast(add);
       }
       else{
-        this.tagToFactor.SE[0].removeNorthWest(this.valueToFactor);
+        this.tagToFactor.SE[0].removeNorthWest(this.tagToFactor.NW[0].NW[0]);
         if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length == 1){
           addTag.addSouthEast(this.tagToFactor.SE[0].NW[0]);
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
