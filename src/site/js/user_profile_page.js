@@ -11,15 +11,12 @@ var account_to_load = getAccountFromURL();
 
 window.onload = ()=>{
   if (account_to_load !== null) {
-    get_account_from_db(account_to_load, res=>{
-      fillPage(res);
-    }
-    );
+    get_account_from_db(account_to_load, res=>fillPage(res));
   }
 }
 ;
 
-function fillPage(accInfo) {
+function fillPage(accInfo) {//jacob needs to remake the structure for an account in db
   let id_field = document.getElementById('userAccountIdField');
   id_field.innerHTML = accInfo.id;
   let creation_date_field = document.getElementById('creationDateField');
