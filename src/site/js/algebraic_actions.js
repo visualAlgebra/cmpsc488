@@ -236,25 +236,14 @@ class Distribute {
 
     let newNW = [];
     let newSE = [];
-    let val = this.value.value;
-
 
     for (let child of this.tagToDistributeOver.NW) {
-      if (this.value instanceof Literal) {
-        newNW.push(new Tag(Orientation.NS, [new Literal(val), child]));
-      } else if (this.value instanceof Variable) {
-        newNW.push(new Tag(Orientation.NS, [new Variable(val), child]));
-      }
+      newNW.push(new Tag(Orientation.NS, [this.value.clone(), child]));
     }
     for(let child of this.tagToDistributeOver.SE) {
-      if (this.value instanceof Literal) {
-        newNW.push(new Tag(Orientation.NS, [new Literal(val), child]));
-      } else if (this.value instanceof Variable) {
-        newNW.push(new Tag(Orientation.NS, [new Variable(val), child]));
-      }
+      newSE.push(new Tag(Orientation.NS, [this.value.clone(), child]));
     }
 
-    
     const parent = this.value.parent;
     parent.orientation = Orientation.EW;
     parent.emptyNorthWest();
@@ -340,7 +329,7 @@ class Factor {
         addTag.addSouthEast(add);
       }
       else{
-        this.tagToFactor.SE[0].removeNorthWest(this.tagToFactor.NW[0].NW[0]);
+        this.tagToFactor.SE[0].removeNorthWest(this.tagToFactor.SE[0].NW[0]);
         if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length == 1){
           addTag.addSouthEast(this.tagToFactor.SE[0].NW[0]);
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
