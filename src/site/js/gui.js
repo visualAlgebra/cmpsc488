@@ -22,7 +22,7 @@ const mouse = {
 
 
   redisplayExpressionTree: function() {
-    displayExpressionTree(workingExpressionTree, "canvas-container");
+    displayExpressionTree(workingExpressionTree, "canvasContainer");
   },
 
   dragDetected: function() {
