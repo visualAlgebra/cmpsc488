@@ -22,7 +22,7 @@ const mouse = {
 
 
   redisplayExpressionTree: function() {
-    displayExpressionTree(workingExpressionTree, "canvas-container");
+    displayExpressionTree(workingExpressionTree, "canvasContainer");
   },
 
   dragDetected: function() {
@@ -33,11 +33,20 @@ const mouse = {
     const xQuad = findQuadrant(x);
     const yQuad = findQuadrant(y);
 
-    if (Object.is(x.parent, y.parent) && !Object.is(x,y) && y instanceof Tag
-    && y.orientation === y.parent.orientation && xQuad === yQuad) {
+    // Associative Insert IF
+    //    Trees have same parent
+    //    Trees are not same object
+    //    eventDest is a quadrant <--
+    //    ...
+    if (Object.is(x.parent, y.parent)
+        && !Object.is(x,y)
+        && this.eventDest instanceof TagQuadrantGui
+        && y.orientation === y.parent.orientation
+        && xQuad === yQuad
+    ) {
       const action = new AssociativeInsert(x, y);
       action.apply();
-      console.log("Inserting", x, "to tag", y)
+      console.log("Inserting", x, "to tag", y);
 
       this.redisplayExpressionTree();
     }
@@ -51,8 +60,10 @@ const mouse = {
     }
 
     else if (x instanceof Tag
-          && y instanceof Tag
-          && Object.is(x.parent, y)
+        && y instanceof Tag
+        && this.eventSource instanceof TagButtonGui
+        && this.eventDest instanceof TagButtonGui
+        && Object.is(x.parent, y)
     ) {
       const action = new AssociativeMerge(x, y, xQuad);
       action.apply();
