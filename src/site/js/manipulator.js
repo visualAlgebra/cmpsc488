@@ -9,6 +9,17 @@ window.onload = () => {
     if(problem_to_load!==null){
         displayProblemFromDB(problem_to_load,'canvasContainer','goalContainer');
     }
+
+    // Set up Materialize form select elements
+    $('select').formSelect();
+
+    const mouseModeSelect = M.FormSelect.getInstance($("#mouse-mode-selection"));
+    mouseModeSelect.el.onchange = function() {
+        mouse.mode = this.value;
+    };
+
+    // Set up initial value
+    mouse.mode = mouseModeSelect.el.value;
 };
 
 window.onpopstate = (e) =>{
