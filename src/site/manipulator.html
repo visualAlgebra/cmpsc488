@@ -22,46 +22,75 @@
   <body>
 <div id="navbarLocation"></div>
     <section class="container">
-      <h1>Manipulator</h1>
-      <section>
-        <button type="button" name="button">Hint</button>
-        <button type="button" name="button">Share</button>
-        <button type="button" name="button">Restart</button>
+      <section class="row">
+        <h1>Manipulator</h1>
       </section>
 
-      <section >
-        <div id="canvasContainer"></div>
-        <div>
-          <h2>Goal Expression</h2>
-		  <div id="goalContainer"></div>
+      <section class="row">
+        <button type="button" name="button" class="btn">Hint</button>
+        <button type="button" name="button" class="btn">Share</button>
+        <button type="button" name="button" class="btn">Restart</button>
+      </section>
+
+      <section class="row">
+        <div class="input-field col s12">
+          <select id="mouse-mode-selection">
+            <option value="General Manipulation">General Manipulation</option>
+            <option value="Merging Literals">Merging Literals</option>
+          </select>
+          <label>Materialize Select</label>
         </div>
       </section>
 
-      <section>
-        <h2>History Bar</h2>
-        <div id="historyContainer">
+      <section class="row">
+        <section class="col m2">
+          <h2>History</h2>
+          <div id="historyContainer">
+            <div style="padding: 2rem">EXAMPLE</div>
+            <div style="padding: 2rem">EXAMPLE</div>
+            <div style="padding: 2rem">EXAMPLE</div>
+            <div style="padding: 2rem">EXAMPLE</div>
+            <div style="padding: 2rem">EXAMPLE</div>
+            <div style="padding: 2rem">EXAMPLE</div>
+          </div>
+        </section>
 
-        </div>
+        <section class="col m10">
+          <section class="row">
+            <div id="canvasContainer"></div>
+          </section>
+          <div class="row">
+            <h2>Goal Expression</h2>
+            <div id="goalContainer"></div>
+          </div>
+        </section>
       </section>
     </section>
+
 	<script src="http://localhost:8080/src/site/js/navbarCreation.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/lzma-d.js"></script>
-    <script src="http://localhost:8080/src/site/js/lzma-c.js"></script>
-    <script src="http://localhost:8080/src/site/js/lzma_worker.js"></script>
-    <script src="http://localhost:8080/src/site/js/lzma.js"></script>
-    <script src="http://localhost:8080/src/site/js/gui.js"></script>
-    <script src="http://localhost:8080/src/site/js/expression_tree.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/db_management.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/expression_tree_test_problems.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/expression_tree.test.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/random_expression_creator.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/display_feature.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/manipulator.js" charset="utf-8"></script>
-    <script
-			  src="https://code.jquery.com/jquery-3.3.1.min.js"
-			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-			  crossorigin="anonymous"></script>
-    <script src="http://localhost:8080/src/site/js/algebraic_actions.js" charset="utf-8"></script>
-    <script src="http://localhost:8080/src/site/js/algebraic_actions.test.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/lzma-d.js"></script>
+  <script src="http://localhost:8080/src/site/js/lzma-c.js"></script>
+  <script src="http://localhost:8080/src/site/js/lzma_worker.js"></script>
+  <script src="http://localhost:8080/src/site/js/lzma.js"></script>
+  <script src="http://localhost:8080/src/site/js/gui.js"></script>
+  <script src="http://localhost:8080/src/site/js/expression_tree.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/db_management.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/expression_tree_test_problems.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/expression_tree.test.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/random_expression_creator.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/display_feature.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/manipulator.js" charset="utf-8"></script>
+  <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+  <script src="http://localhost:8080/src/site/js/algebraic_actions.js" charset="utf-8"></script>
+  <script src="http://localhost:8080/src/site/js/algebraic_actions.test.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('select').formSelect();
+    });
+  </script>
   </body>
 </html>
