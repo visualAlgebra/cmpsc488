@@ -52,11 +52,11 @@ class ExpressionTree {
     return "error";
   }
 
-  deepCopy(){
+  clone(){
     return _Deserialize(this.toString());
   }
 
-  
+
 } // end ExpressionTree class
 
 class Tag extends ExpressionTree {
@@ -184,7 +184,7 @@ class Tag extends ExpressionTree {
     array_delete(this.NW, ref);
   }
 
-  
+
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
