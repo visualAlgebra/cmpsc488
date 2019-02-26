@@ -64,7 +64,7 @@ function get_problems_from_db(queryAmt, callback){
   let http=new XMLHttpRequest();
   http.onreadystatechange = function () {
         if (http.readyState == 4 && http.status == 200) {
-          console.log(http.responseText);
+          callback(http.responseText);
         }
     }
   http.open("GET", "http://localhost:8080/problems?number="+queryAmt+"&sort=timeCreated", true);// TODO hard coded query for now

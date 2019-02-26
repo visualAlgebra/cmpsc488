@@ -19,5 +19,7 @@ function getInitialProblemsToDisplay(){
     //get_problems_from_db(4,res=>displayProblems(res));
 }
 function displayProblems(query){
+    console.log(query);
+    console.log(query.queryResults);
     
 }
