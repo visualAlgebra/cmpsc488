@@ -10,7 +10,7 @@ function createCardForLesson(lesson_arr, cardID, elementId){
     titlespan.id="Lesson"+cardID;
     titlespan.innerHTML="Lesson "+cardID;
     contentdiv.appendChild(titlespan);
-    // ERIC KSDJfdsgdfg
+    
     let iconi=document.createElement("i");
     iconi.className="material-icons left";
     iconi.innerHTML="folder";
@@ -25,7 +25,8 @@ function createCardForLesson(lesson_arr, cardID, elementId){
         contentdiv.appendChild(rowdiv);
 
         let adiv=document.createElement("a");
-        adiv.href="http://localhost:8080/problems/"+lesson_arr.creations[creation];
+        adiv.href="http://localhost:8080/manipulator/problems/"+lesson_arr.creations[creation];
+        adiv.innerHTML="Problem "+creation+" : "+lesson_arr.creations[creation];
         rowdiv.appendChild(adiv);
     }
     document.getElementById(elementId).appendChild(maindiv);
