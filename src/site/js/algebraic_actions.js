@@ -42,84 +42,17 @@ class CommutativeSwap {
   //
   apply () {
 
-    const quadrant = this.sibling1.parent[this.quadrantLabel];
+    const parent = this.sibling1.parent;
+    const temp = new Literal(-999);
 
-    //Finds the index of the two siblings
-    var idx1 = quadrant.findIndex(x => Object.is(x, this.sibling1));
-    var idx2 = quadrant.findIndex(x => Object.is(x, this.sibling2));
-
-    //create a new array for the return tree
-    var newQuadrant = [];
-
-    //constructs the the array,
-    //if i matches one of the indices of the siblings,
-    //then the other sibling will be added
-    for (var i = 0; i < quadrant.length; i++) {
-      if (i === idx1) {
-        newQuadrant[i] = this.sibling2;
-      } else if (i === idx2) {
-        newQuadrant[i] = this.sibling1;
-      } else {
-        newQuadrant[i] = quadrant[i];
-      }
-    }
-
-    //if quadrant was NW, then replace NW, else replace SE
-    if (this.quadrantLabel === Quadrant.NW) {
-      this.sibling1.parent.NW = newQuadrant;
-    } else {
-      this.sibling1.parent.SE = newQuadrant;
-    }
+    //Swapping the siblings
+    parent.findAndReplace(this.sibling1, temp, this.quadrantLabel);
+    parent.findAndReplace(this.sibling2, this.sibling1, this.quadrantLabel);
+    parent.findAndReplace(temp, this.sibling2, this.quadrantLabel);
   }
 }
 
-// (1 + 2) + 1 => 1 + 2 + 1
-
-// (1 - 2) + 1 => (1 + 1 - 2)
-
-// APPLY ASSOCIATIVE MERGE
-// [ [1><2] 1 ><]
-//                        Apply AssociativeMerge.
-// [ 1 1 >< 2 ]
-
-// APPLY ASSOCIATIVE INTRO
-// [1 2 >< 1]
-//                       Apply AssociativeIntro.
-// [ [1 2 >< 1] ><]
-
-// APPLY ASSOCIATIVE INTRO
-// 1
-//                       Apply AssociativeIntro.
-// [ 1 ><]
-
-// APPLY ASSOCIATIVE INTRO
-// [1 2 >< 1]
-//                       Apply AssociativeIntro.
-// [ [1><] 2 >< 1]
-
-// UNDO ASSOCIATIVE MERGE
-// [ 1 1 >< 2 ]
-//                        Enclose entire tag in tag of same orientation.
-// [ [1 1><2] ><]
-//                        Apply new kind of AssociativeIntro.
-// [ [ 1 [1><2] ><] ><]
-//                        Merge outer two tags.
-// [ 1 [1><2] ><]
-//                        Apply a commutative swap.
-// [ [1><2] 1 ><]
-
-// CRAZY ASSOCIATIVE INTRO
-// [1 2 >< 3]  <=Merge=  [1 [2><3] ><]
-//
-// [1 [2><] >< 3]
-//
-// [1 [2><] >< [3><]]
-//
-// [1 [2><3] ><]
-
-
-//Takes two tags of the same orientation and one is in the other.
-//The inner tag is collapsed into the outer tag
+//Collapses the outer tag into the inner tag
 class AssociativeMerge {
   constructor(sibling, parent, quadrantLabel) {
     this.sibling = sibling;
@@ -139,70 +72,26 @@ class AssociativeMerge {
 
   apply() {
 
-    const quadrant = this.parent[this.quadrantLabel];
-
-    //make a new array for new tree
-    var newQuadrantNW = [];
-    var newQuadrantSE = [];
-
-    // If the sibling is in the NW quadrant...
+    //Having pointers to quadrants of sibling
+    let newNW;
+    let newSE;
     if (this.quadrantLabel === Quadrant.NW) {
-
-      //add expressions into new quadrant
-      for(let child of quadrant) {
-
-        if(Object.is(child, this.sibling)) {
-
-          for(let siblingChildNW of child.NW) {
-            newQuadrantNW.push(siblingChildNW);
-            siblingChildNW.parent = this.parent;
-          }
-
-          for(let siblingChildSE of child.SE) {
-            newQuadrantSE.push(siblingChildSE);
-            siblingChildSE.parent = this.parent;
-          }
-
-        } else {
-          newQuadrantNW.push(child);
-        }
-      }
-
-      // Add everything from the parent's SE quadrant into the new SE quadrant.
-      for(let child of this.parent.SE) {
-        newQuadrantSE.push(child);
-      }
-
-    } else { // SE quadrant
-
-      // Add everything from the parent's NW quadrant into the new NW quadrant.
-      for(let child of this.parent.NW) {
-        newQuadrantNW.push(child);
-      }
-
-      //add expressions into new quadrant
-      for(let child of quadrant) {
-
-        if(Object.is(child, this.sibling)) {
-
-          for(let siblingChildNW of child.NW) {
-            newQuadrantSE.push(siblingChildNW);
-            siblingChildNW.parent = this.parent;
-          }
-
-          for(let siblingChildSE of child.SE) {
-            newQuadrantNW.push(siblingChildSE);
-            siblingChildSE.parent = this.parent;
-          }
-
-        } else {
-          newQuadrantSE.push(child);
-        }
-      }
+      newNW = this.sibling.NW;
+      newSE = this.sibling.SE;
+      this.parent.removeNorthWest(this.sibling);
+    } else {
+      newNW = this.sibling.SE;
+      newSE = this.sibling.NW;
+      this.parent.removeSouthEast(this.sibling);
     }
 
-    this.parent.NW = newQuadrantNW;
-    this.parent.SE = newQuadrantSE;
+    //adding sibling's children into parent
+    for (let child of newNW) {
+      this.parent.addNorthWest(child);
+    }
+    for (let child of newSE) {
+      this.parent.addSouthEast(child);
+    }
   }
 }
 
@@ -224,24 +113,38 @@ class AssociativeIntro {
     const parent = this.expr.parent;
 
     if (parent !== null) {
+
+      //make a new tag
       const newTag = new Tag(parent.orientation);
-      newTag.parent = parent;
+
+      //add expr into new Tag
       newTag.addNorthWest(this.expr);
+
+      //replace expr with newTag
       if (parent.NW.some(thing => Object.is(thing, this.expr))) {
         parent.findAndReplace(this.expr, newTag, Quadrant.NW);
       } else {
         parent.findAndReplace(this.expr, newTag, Quadrant.SE);
       }
     } else {
+
+      //if expr is a root tag,
+      //make a copy of expr, newTag
       const newTag = new Tag(this.expr.orientation, this.expr.NW, this.expr.SE);
+
+      //clear out expr
       this.expr.emptyNorthWest();
       this.expr.emptySouthEast();
+
+      //add newTag into expr
       this.expr.addNorthWest(newTag);
+
     }
 
   }
 }
 
+//Taking out a sibling from a tag and adding it into its grandparent
 class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
@@ -256,9 +159,12 @@ class AssociativeExtract {
   }
 
   apply() {
+
+    //setting pointers to parent and grandparent
     const parent = this.grandchild.parent;
     const grandparent = parent.parent;
 
+    //removing grandchild from grandparent and prepending into parent
     if (this.quadrantLabel === Quadrant.NW) {
       parent.removeNorthWest(this.grandchild);
       grandparent.prependNorthWest(this.grandchild);
@@ -272,6 +178,7 @@ class AssociativeExtract {
 // [ x [ y >< z ] ><]
 // =>
 // [ [ x y >< z ] ><]
+//Inserting a sibling into a sibling tag that has the same orientation as its parent
 class AssociativeInsert {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
@@ -286,9 +193,14 @@ class AssociativeInsert {
   }
 
   apply() {
+
+    //setting pointer to parent
     const parent = this.sibling.parent;
 
+    //inserting sibling into intersion tag
     this.insertionTag.prependNorthWest(this.sibling);
+
+    //removing pointer to sibling in parent
     if (parent.NW.some(thing => Object.is(thing, this.sibling))) {
       parent.removeNorthWest(this.sibling);
     } else {
@@ -417,6 +329,7 @@ class Factor {
   }
 }
 
+// if a NS tag has a sole EW tag in it's N quadrant, then split it
 class SplitFrac {
   constructor(tag) {
     this.tag = tag;
@@ -458,6 +371,7 @@ class SplitFrac {
   }
 }
 
+//Combine an EW tag of NS tags that have a common S quadrant
 class CombineFrac {
   //Where sibligns is the list of
   constructor(tag) {
@@ -479,9 +393,14 @@ class CombineFrac {
 
   apply() {
 
+    //Creating new NW and SE quadrants
     let newNW = [];
     let newSE = [];
-    let divisor = [];
+
+    //Creating divisor
+    let divisor;
+
+    //creating the dividend
     for (let child of this.tag.NW) {
       newNW = newNW.concat(child.NW);
       divisor = child.SE;
@@ -490,11 +409,16 @@ class CombineFrac {
       newSE = newSE.concat(child.NW);
       divisor = child.SE;
     }
-
     let dividend = new Tag(Orientation.EW, newNW, newSE);
+
+    //Swapping orientation
     this.tag.orientation = Orientation.NS;
+
+    //Adding the dividend
     this.tag.emptyNorthWest();
     this.tag.addNorthWest(dividend);
+
+    //Adding divisor
     this.tag.emptySouthEast();
     for (let child of divisor) {
       this.tag.addSouthEast(child);
@@ -507,7 +431,7 @@ class CombineFrac {
 // [><[><x]]
 //x = 1/(1/x)
 //x = -(-x)
-//TODO: get a better name for this.
+//Flipping the NW and SE quadrants when a tag switches quadrants in its parent
 class QuadrantFlip {
   constructor(tag, quadrantLabel) {
     this.tag = tag;
@@ -521,7 +445,7 @@ class QuadrantFlip {
 
   apply() {
 
-    //
+    //Setting pointer to parent
     const parent = this.tag.parent;
 
     //Swapping quadrants
@@ -529,6 +453,7 @@ class QuadrantFlip {
     this.tag.NW = this.tag.SE;
     this.tag.SE = temp;
 
+    //Adding the tag into it's opposite quadrant;
     if (this.quadrantLabel === Quadrant.NW) {
       parent.addSouthEast(this.tag);
       parent.removeNorthWest(this.tag);
@@ -540,6 +465,7 @@ class QuadrantFlip {
   }
 }
 
+//Canceling two siblings in opposite quadrants with equal value in a tag
 class Cancel {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;
@@ -552,13 +478,18 @@ class Cancel {
   }
 
   apply() {
+
+    //setting pointer to parent
     const parent = this.sibling2.parent;
 
+    //removing the siblings
     parent.removeNorthWest(this.sibling1);
     parent.removeSouthEast(this.sibling2);
   }
 }
 
+//Adding two siblings of equal value into the top and bottom quadrants of a tag
+//Only works with variables and literals
 class IdentityBalance {
   constructor(newChild, tag) {
     this.newChild = newChild;
@@ -570,6 +501,7 @@ class IdentityBalance {
   }
 
   apply() {
+    //creating of the new child to add
     let copy;
     if (this.newChild instanceof Variable){
       copy = new Variable(this.newChild.value);
@@ -577,6 +509,7 @@ class IdentityBalance {
       copy = new Literal(this.newChild.value);
     }
 
+    //adding a children in both quadrants
     this.tag.addNorthWest(this.newChild);
     this.tag.addSouthEast(copy);
   }
