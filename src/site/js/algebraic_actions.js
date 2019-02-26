@@ -220,14 +220,46 @@ class Distribute {
   }
 
   apply() {
-    var tagToDistributeOverNWLength = this.tagToDistributeOver.NW.length;
-    this.tagToDistributeOver.parent.orientation = Orientation.EW;
-    for(var i = 0; i<tagToDistributeOverNWLength; i++){
-      var multTag = new Tag(Orientation.NS);
-      multTag.addNorthWest(this.value);
-      multTag.addNorthWest(this.tagToDistributeOver.NW[i]);
-      this.tagToDistributeOver.removeNorthWest(this.tagToDistributeOver.NW[i]);
-      this.tagToDistributeOver.addNorthWest(multTag);
+    // var tagToDistributeOverNWLength = this.tagToDistributeOver.NW.length;
+    // this.tagToDistributeOver.parent.orientation = Orientation.EW;
+    // for(var i = 0; i<tagToDistributeOverNWLength; i++){
+    //   var multTag = new Tag(Orientation.NS);
+    //   multTag.addNorthWest(this.value);
+    //   multTag.addNorthWest(this.tagToDistributeOver.NW[i]);
+    //   this.tagToDistributeOver.removeNorthWest(this.tagToDistributeOver.NW[i]);
+    //   this.tagToDistributeOver.addNorthWest(multTag);
+    // }
+
+    let newNW = [];
+    let newSE = [];
+    let val = this.value.value;
+
+
+    for (let child of this.tagToDistributeOver.NW) {
+      if (this.value instanceof Literal) {
+        newNW.push(new Tag(Orientation.NS, [new Literal(val), child]));
+      } else if (this.value instanceof Variable) {
+        newNW.push(new Tag(Orientation.NS, [new Variable(val), child]));
+      }
+    }
+    for(let child of this.tagToDistributeOver.SE) {
+      if (this.value instanceof Literal) {
+        newNW.push(new Tag(Orientation.NS, [new Literal(val), child]));
+      } else if (this.value instanceof Variable) {
+        newNW.push(new Tag(Orientation.NS, [new Variable(val), child]));
+      }
+    }
+
+    
+    const parent = this.value.parent;
+    parent.orientation = Orientation.EW;
+    parent.emptyNorthWest();
+    for (let child of newNW) {
+      parent.addNorthWest(child);
+    }
+    parent.emptySouthEast();
+    for (let child of newSE) {
+      parent.addSouthEast(child);
     }
   }
 }
