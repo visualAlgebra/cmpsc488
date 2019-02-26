@@ -550,3 +550,49 @@ class IdentityBalance {
     this.tag.addSouthEast(copy);
   }
 }
+
+class LiteralMerge{
+  constructor(literalA, literalB, quadrantA, quadrantB){
+    this.literalA = literalA;
+    this.literalB = literalB;
+    this.quadrantA = quadrantA;
+    this.quadrantB = quadrantB;
+  }
+
+  verify(){
+    if (this.literalA.parent !== this.literalB.parent)
+      return false;
+    if (this.literalA.parent.orientation == Orientation.EW)
+      return true;
+    if (this.quadrantA != this.quadrantB)
+      return false;
+    return false;
+  }
+
+  apply(){
+    if(this.literalA.parent.orientation == Orientation.EW){
+      if(this.quadrantA == Quadrant.NW){
+        if(this.quadrantB == Quadrant.NW){
+          this.literalA.value = (this.literalA.value + this.literalB.value) % 3;
+          this.literalA.parent.removeNorthWest(this.literalB);
+        }
+        else{
+          this.literalA.value = (this.literalA.value - this.literalB.value) % 3;
+          this.literalA.parent.removeSouthEast(this.literalB);
+        }
+      }
+      else if(this.quadrantB == Quadrant.NW){
+        this.literalB.value = (this.literalB.value - this.literalA.value) % 3;
+        this.literalB.parent.removeSouthEast(this.literalA);
+      }
+      else{
+        this.literalA.value = Math.abs(-3 + (this.literalA.value - this.literalB.value) % 3);
+        this.literalA.parent.removeSouthEast(this.literalB);
+      }
+    }
+    else{
+      this.literalA.value *= this.literalB.value;
+      this.literalA.parent.removeNorthWest(this.literalB);
+    }
+  }
+}
