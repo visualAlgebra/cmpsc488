@@ -52,6 +52,10 @@ class CommutativeSwap {
   }
 }
 
+// TODO: AssociativeMerge does not preserve order
+//  [ 1 [2><] 3 ><]
+//  [ 1 3 2 ><]
+
 //Collapses the outer tag into the inner tag
 class AssociativeMerge {
   constructor(sibling, parent, quadrantLabel) {
@@ -117,15 +121,15 @@ class AssociativeIntro {
       //make a new tag
       const newTag = new Tag(parent.orientation);
 
-      //add expr into new Tag
-      newTag.addNorthWest(this.expr);
-
       //replace expr with newTag
       if (parent.NW.some(thing => Object.is(thing, this.expr))) {
         parent.findAndReplace(this.expr, newTag, Quadrant.NW);
       } else {
         parent.findAndReplace(this.expr, newTag, Quadrant.SE);
       }
+
+      //add expr into new Tag
+      newTag.addNorthWest(this.expr);
     } else {
 
       //if expr is a root tag,
