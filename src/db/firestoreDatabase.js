@@ -17,10 +17,8 @@ class FirestoreDatabase extends Database {
     }
 
     getProblem(server, serverResponse, link) {
-        console.log("==========================");
-        console.log(link);
-        var problemReference = this.session.collection('problems').doc(link);
-        var problemQuery = problemReference.get()
+        let problemReference = this.session.collection('problems').doc(link);
+        let problemQuery = problemReference.get()
             .then(doc => {
                 if (!doc.exists) {
                     server.respondWithError(serverResponse, 404, "Problem not found");
@@ -35,6 +33,44 @@ class FirestoreDatabase extends Database {
                 server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
             });
     }
+
+    getLesson(server, serverResponse, link) {
+        let lessonReference = this.session.collection('lessons').doc(link);
+        let lessonQuery = lessonReference.get()
+            .then(doc => {
+                if (!doc.exists) {
+                    server.respondWithError(serverResponse, 404, "Problem not found");
+                } else {
+                    let lesson = doc.data();
+                    lesson.timeCreated = lesson.timeCreated._seconds;
+                    server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(lesson));
+                }
+            })
+            .catch(err => {
+                console.log("Error getting file from database: ", err);
+                server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
+            });
+    }
+
+    getAccount(server, serverResponse, accountID) {
+        let accountReference = this.session.collection('accounts').doc(accountID);
+        let accountQuery = accountReference.get()
+            .then(doc => {
+                if (!doc.exists) {
+                    server.respondWithError(serverResponse, 404, "Problem not found");
+                } else {
+                    let account = doc.data();
+                    account.timeCreated = lesson.timeCreated._seconds;
+                    server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(account));
+                }
+            })
+            .catch(err => {
+                console.log("Error getting file from database: ", err);
+                server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
+            });
+    }
+
+
 
 
 }
