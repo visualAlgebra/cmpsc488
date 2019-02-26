@@ -7,7 +7,7 @@ var problem_to_load=getProblemFromURL();
 
 window.onload = () => {
     if(problem_to_load!==null){
-        displayProblemFromDB(problem_to_load,'canvas-container','goal-container');
+        displayProblemFromDB(problem_to_load,'canvasContainer','goalContainer');
     }
 };
 
