@@ -28,6 +28,7 @@ const mouse = {
 
   redisplayExpressionTree: function() {
     displayExpressionTree(workingExpressionTree, "canvasContainer");
+    addHistoryEntry(workingExpressionTree);
   },
 
   dragDetected: function() {
