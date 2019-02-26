@@ -585,15 +585,15 @@ function FTest4() {
               new Variable(6)
             ]
           )
-        ]
-      )
-    ],
-    [
-      new Variable(7),
-      new Tag(Orientation.NS,
+        ],
         [
-          new Variable(8),
-          new Tag(Orientation.EW, [new Literal(1), new Variable(9)])
+          new Variable(7),
+          new Tag(Orientation.NS,
+            [
+              new Variable(8),
+              new Tag(Orientation.EW, [new Literal(1), new Variable(9)])
+            ]
+          )
         ]
       )
     ]
