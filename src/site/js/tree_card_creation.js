@@ -80,27 +80,3 @@ function createCardForProblem(problem_id, cardID){
 
     return maindiv;
 }
-var probAmt=0;
-var lessAmt=0;
-function fillCreations(elementId, accInfo){
-    let filldiv=document.getElementById(elementId);
-    for(let creation in accInfo.creations){
-        creation=parseInt(creation);
-        if(accInfo.creations[creation].toString().includes("problems")){
-            if(probAmt>=10){
-                continue;
-            }
-            let str=accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/')+1,accInfo.creations[creation].length);
-            filldiv.appendChild(createCardForProblem(str,probAmt));
-            displayProblemFromDB(str,creation+"_s",creation+"_g");
-            probAmt++;
-        }else if(accInfo.creations[creation].toString().includes("lessons")){
-            if(lessAmt>=5){
-                continue;
-            }
-            let str=accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/')+1,accInfo.creations[creation].length);
-            get_lesson_from_db(str,res=> createCardForLesson(res, creation, elementId));
-            lessAmt++;
-        }
-    }
-}
