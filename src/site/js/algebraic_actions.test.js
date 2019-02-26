@@ -473,16 +473,15 @@ function FTest1() {
 function FTest2() {
 
   let factor = new Variable(4);
-  factor = negative(factor);
 
   //[v3, l1 >< l2]
   const x = new Tag(Orientation.NS, [v3, l1], [l2]);
 
   const before = new Tag(Orientation.EW, [
-    new Tag(Orientation.NS, [new Variable(4), new Variable(1)]),
-    new Tag(Orientation.NS, [new Variable(2), new Variable(4)]),
-    new Tag(Orientation.NS, [x, new Variable(4)]),
-    new Tag(Orientation.NS, [new Variable(4), new Literal(3)])
+    new Tag(Orientation.NS, [factor, new Variable(1)]),
+    new Tag(Orientation.NS, [factor, new Variable(2)]),
+    new Tag(Orientation.NS, [factor, x]),
+    new Tag(Orientation.NS, [factor, new Literal(3)])
   ]);
 
   //[v1, v2, x, l3 >< ]
@@ -495,7 +494,7 @@ function FTest2() {
     ]
   );
 
-  const expected = new Tag(Orientation.NS, [negative(new Literal(4)), inner]);
+  const expected = new Tag(Orientation.NS, [new Variable(4), inner]);
 
   const action = new Factor(factor, before);
   action.apply();
@@ -509,13 +508,13 @@ function FTest3() {
 
   const before = new Tag(Orientation.EW,
     [
-      new Tag(Orientation.NS, [new Literal(4), new Variable(4)]),
-      new Tag(Orientation.NS, [new Literal(4)])
+      new Tag(Orientation.NS, [factor, new Variable(1)]),
+      new Tag(Orientation.NS, [factor])
     ]);
 
   const t1 = new Tag(Orientation.EW,
     [new Variable(1), new Literal(1)]);
-  const expected = new Tag(Orientation.NS, [new Literal(4), t1]);
+  const expected = new Tag(Orientation.NS, [factor, t1]);
 
   const action = new Factor(factor, before);
   action.apply();

@@ -52,6 +52,10 @@ class CommutativeSwap {
   }
 }
 
+// TODO: AssociativeMerge does not preserve order
+//  [ 1 [2><] 3 ><]
+//  [ 1 3 2 ><]
+
 //Collapses the outer tag into the inner tag
 class AssociativeMerge {
   constructor(sibling, parent, quadrantLabel) {
@@ -117,15 +121,15 @@ class AssociativeIntro {
       //make a new tag
       const newTag = new Tag(parent.orientation);
 
-      //add expr into new Tag
-      newTag.addNorthWest(this.expr);
-
       //replace expr with newTag
       if (parent.NW.some(thing => Object.is(thing, this.expr))) {
         parent.findAndReplace(this.expr, newTag, Quadrant.NW);
       } else {
         parent.findAndReplace(this.expr, newTag, Quadrant.SE);
       }
+
+      //add expr into new Tag
+      newTag.addNorthWest(this.expr);
     } else {
 
       //if expr is a root tag,
@@ -304,14 +308,14 @@ class Factor {
   apply() {
     this.tagToFactor.orientation = Orientation.NS;
     var addTag = new Tag(Orientation.EW);
-    var tagToFactorNWlength = this.tagToFactor.NW.length;
+    const tagToFactorNWlength = this.tagToFactor.NW.length;
     for(var i = 0; i<tagToFactorNWlength; i++){
       if ((this.tagToFactor.NW[0] instanceof Variable) || (this.tagToFactor.NW[0] instanceof Literal)){
         this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         addTag.addNorthWest(new Literal(1));
       }
       else{
-        this.tagToFactor.NW[0].removeNorthWest(this.valueToFactor);
+        this.tagToFactor.NW[0].removeNorthWest(this.tagToFactor.NW[0].NW[0]);
         if(this.tagToFactor.NW[0].NW.length+this.tagToFactor.NW[0].SE.length == 1){
           addTag.addNorthWest(this.tagToFactor.NW[0].NW[0]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
@@ -336,7 +340,7 @@ class Factor {
         addTag.addSouthEast(add);
       }
       else{
-        this.tagToFactor.SE[0].removeNorthWest(this.valueToFactor);
+        this.tagToFactor.SE[0].removeNorthWest(this.tagToFactor.NW[0].NW[0]);
         if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length == 1){
           addTag.addSouthEast(this.tagToFactor.SE[0].NW[0]);
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
