@@ -197,15 +197,15 @@ class AssociativeInsert {
     //setting pointer to parent
     const parent = this.sibling.parent;
 
-    //inserting sibling into intersion tag
-    this.insertionTag.prependNorthWest(this.sibling);
-
     //removing pointer to sibling in parent
     if (parent.NW.some(thing => Object.is(thing, this.sibling))) {
       parent.removeNorthWest(this.sibling);
     } else {
       parent.removeSouthEast(this.sibling);
     }
+
+    //inserting sibling into intersion tag
+    this.insertionTag.prependNorthWest(this.sibling);
   }
 }
 
