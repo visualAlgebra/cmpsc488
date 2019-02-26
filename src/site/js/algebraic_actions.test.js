@@ -392,8 +392,8 @@ function DTest1() {
      new Tag( Orientation.NS, [new Literal(1), new Variable(2)])
    ]);
 
-   // const action = new Distribute();
-   // action.apply();
+   const action = new Distribute(factor, inner);
+   action.apply();
 
    return assertAA(before, expected, "Distribute test 1 failed");
 }
@@ -405,8 +405,8 @@ function DTest2() {
   //[v1, v2, x, l3 >< ]
   const inner = new Tag(Orientation.EW, [v1, v2, x, l3]);
 
-  factor = new Variable(4);
-  factor = negative(factor);
+  const factor = new Variable(4);
+
   const before = new Tag(Orientation.NS, [factor, inner]);
 
   const expected = new Tag(Orientation.EW, [
@@ -416,10 +416,35 @@ function DTest2() {
     new Tag(Orientation.NS, [new Variable(4), new Literal(3)])
   ]);
 
-  // const action = new Distribute();
-  // action.apply();
+  const action = new Distribute(factor, inner);
+  action.apply();
 
   return assertAA(before, expected, "Distribute test 2 failed");
+}
+
+function DTest3() {
+
+  const inner = new Tag(Orientation.EW, [v1, v2, l1], [l2, v3]);
+
+  const factor = new Tag(Orientation.EW, [v4], [l3]);
+
+  const before = new Tag(Orientation.NS, [factor, inner]);
+
+  const expected = new Tag(Orientation.EW,
+  [
+    new Tag(Orientation.NS, [new Tag(Orientation.EW, [v4], [l3]), new Variable(1)]),
+    new Tag(Orientation.NS, [new Tag(Orientation.EW, [v4], [l3]), new Variable(2)]),
+    new Tag(Orientation.NS, [new Tag(Orientation.EW, [v4], [l3]), new Literal(1)])
+  ],
+  [
+    new Tag(Orientation.NS, [new Tag(Orientation.EW, [v4], [l3]), new Literal(2)]),
+    new Tag(Orientation.NS, [new Tag(Orientation.EW, [v4], [l3]), new Variable(3)])
+  ]);
+
+  const action = new Distribute(factor, inner);
+  action.apply();
+
+  return assertAA(before, expected, "Distribute test 3 failed");
 }
 
 function FTest1() {
@@ -771,7 +796,7 @@ function testAll() {
     if(AETest1()&&AETest2()) {
       allPassed("AssociativeExtract");
     }
-    if(DTest1()&&DTest2()) {
+    if(DTest1()&&DTest2()&&DTest3()) {
       allPassed("Distribute");
     }
     if(FTest1()&&FTest2()&&FTest3()) {
