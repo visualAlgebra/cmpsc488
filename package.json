@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/visualAlgebra/cmpsc488#readme",
   "dependencies": {
+    "firebase-admin": "^7.0.0",
     "p5": "^0.7.3"
   },
   "devDependencies": {
