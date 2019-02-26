@@ -453,8 +453,8 @@ function FTest1() {
 
   const before = new Tag(Orientation.EW,
     [
-      new Tag(Orientation.NS, [factor, v1]),
-      new Tag(Orientation.NS, [factor, v2])
+      new Tag(Orientation.NS, [new Literal(4), v1]),
+      new Tag(Orientation.NS, [new Literal(4), v2])
     ]);
 
   const t1 = new Tag(Orientation.EW, [new Variable(1), new Variable(2)]);
@@ -478,10 +478,10 @@ function FTest2() {
   const x = new Tag(Orientation.NS, [v3, l1], [l2]);
 
   const before = new Tag(Orientation.EW, [
-    new Tag(Orientation.NS, [factor, new Variable(1)]),
-    new Tag(Orientation.NS, [factor, new Variable(2)]),
-    new Tag(Orientation.NS, [factor, x]),
-    new Tag(Orientation.NS, [factor, new Literal(3)])
+    new Tag(Orientation.NS, [new Literal(4), new Variable(1)]),
+    new Tag(Orientation.NS, [new Literal(4), new Variable(2)]),
+    new Tag(Orientation.NS, [new Literal(4), x]),
+    new Tag(Orientation.NS, [new Literal(4), new Literal(3)])
   ]);
 
   //[v1, v2, x, l3 >< ]
@@ -508,8 +508,8 @@ function FTest3() {
 
   const before = new Tag(Orientation.EW,
     [
-      new Tag(Orientation.NS, [factor, new Variable(1)]),
-      new Tag(Orientation.NS, [factor])
+      new Tag(Orientation.NS, [new Literal(4), new Variable(1)]),
+      new Tag(Orientation.NS, [new Literal(4)])
     ]);
 
   const t1 = new Tag(Orientation.EW,
@@ -520,6 +520,89 @@ function FTest3() {
   action.apply();
 
   return assertAA(before, expected, "Factor test 3 failed");
+}
+
+function FTest4() {
+
+  const factor = new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]);
+
+  //Going to look back at this and have no idea what I did here
+  const before = new Tag(Orientation.EW,
+    [
+      new Tag(Orientation.NS,
+        [
+          new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]),
+          new Variable(3)
+        ]
+      ),
+      new Tag(Orientation.NS,
+        [
+          new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]),
+          new Variable(4),
+          new Literal(2)
+        ]
+      ),
+      new Tag(Orientation.NS,
+        [
+          new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]),
+          new Variable(5),
+          new Variable(6)
+        ]
+      )
+    ],
+    [
+      new Tag(Orientation.NS,
+        [
+          new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]),
+          new Variable(7)
+        ]
+      ),
+      new Tag(Orientation.NS,
+        [
+          new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]),
+          new Variable(8),
+          new Tag(Orientation.EW, [new Literal(1), new Variable(9)])
+        ]
+      )
+    ]
+  );
+
+  const expected = new Tag(Orientation.NS,
+    [
+      new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2)]),
+      new Tag(Orientation.EW,
+        [
+          new Variable(3),
+          new Tag(Orientation.NS,
+            [
+              new Variable(4),
+              new Literal(2)
+            ]
+          ),
+          new Tag(Orientation.NS,
+            [
+              new Variable(5),
+              new Variable(6)
+            ]
+          )
+        ],
+        [
+          new Variable(7),
+          new Tag(Orientation.NS,
+            [
+              new Variable(8),
+              new Tag(Orientation.EW, [new Literal(1), new Variable(9)])
+            ]
+          )
+        ]
+      )
+    ]
+  );
+
+  const action = new Factor(factor, before);
+  action.apply();
+
+  return assertAA(before, expected, "Factor test 4 failed");
 }
 
 function SFTest1() {
@@ -798,7 +881,7 @@ function testAll() {
     if(DTest1()&&DTest2()&&DTest3()) {
       allPassed("Distribute");
     }
-    if(FTest1()&&FTest2()&&FTest3()) {
+    if(FTest1()&&FTest2()&&FTest3()&&FTest4()) {
       allPassed("Factor");
     }
     if(SFTest1()&&SFTest2()&&SFTest3()) {
