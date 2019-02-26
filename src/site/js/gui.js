@@ -70,8 +70,7 @@ const mouse = {
       this.redisplayExpressionTree()
     }
 
-    else if (x instanceof Tag
-        && y instanceof Tag
+    else if (x instanceof Tag && y instanceof Tag
         && this.eventSource instanceof TagButtonGui
         && this.eventDest instanceof TagButtonGui
         && Object.is(x.parent, y)
@@ -81,6 +80,16 @@ const mouse = {
       action.apply();
       console.log("Merging", x, "into", y);
       this.redisplayExpressionTree()
+    }
+
+    else if (x instanceof Literal && y instanceof Literal
+        && Object.is(x.parent, y.parent)
+        && this.mode === MouseMode.MergingLiterals
+    ) {
+      const action = new LiteralMerge(x, y, xQuad, yQuad);
+      action.apply();
+      console.log("Mergin Literals", x, "and", y);
+      this.redisplayExpressionTree();
     }
 
     this.reset();
