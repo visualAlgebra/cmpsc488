@@ -51,6 +51,12 @@ class ExpressionTree {
   toString() {
     return "error";
   }
+
+  deepCopy(){
+    return _Deserialize(this.toString());
+  }
+
+  
 } // end ExpressionTree class
 
 class Tag extends ExpressionTree {
@@ -178,6 +184,7 @@ class Tag extends ExpressionTree {
     array_delete(this.NW, ref);
   }
 
+  
   // Creates dom elements for the tag, returns dom node without putting
   // it on the page.
   render() {
@@ -344,6 +351,8 @@ function compress_string_js(text, callback) {
 function decompress_string_js(byte_arr, callback) {
   LZMA("http://localhost:8080/src/site/js/lzma_worker.js").decompress(byte_arr, callback);
 }
+
+
 
 /// /////////////////////////////////////////////////////////////////////////////
 /// //////////////////        Unused Functions   ////////////////////////////////
