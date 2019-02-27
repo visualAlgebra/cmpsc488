@@ -379,14 +379,14 @@ class SplitFrac {
     for (let child of this.tag.NW[0].NW) {
       let newDivisor = [];
       for (let div of divisor) {
-        divisor.push(div.clone());
+        newDivisor.push(div.clone());
       }
       newNW.push(new Tag(Orientation.NS, [child], newDivisor));
     }
     for(let child of this.tag.NW[0].SE) {
       let newDivisor = [];
       for (let div of divisor) {
-        divisor.push(div.clone());
+        newDivisor.push(div.clone());
       }
       newSE.push(new Tag(Orientation.NS, [child], newDivisor));
     }
