@@ -183,6 +183,7 @@ class AssociativeExtract {
 // =>
 // [ [ x y >< z ] ><]
 //Inserting a sibling into a sibling tag that has the same orientation as its parent
+//TODO: make sure this preserves order
 class AssociativeInsert {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
@@ -234,9 +235,11 @@ class Distribute {
     //   this.tagToDistributeOver.addNorthWest(multTag);
     // }
 
+    //Arrays to store new tags
     let newNW = [];
     let newSE = [];
 
+    //pushing the new tags into the arrays
     for (let child of this.tagToDistributeOver.NW) {
       newNW.push(new Tag(Orientation.NS, [this.value.clone(), child]));
     }
@@ -244,12 +247,19 @@ class Distribute {
       newSE.push(new Tag(Orientation.NS, [this.value.clone(), child]));
     }
 
+    //setting parent pointer
     const parent = this.value.parent;
+
+    //Flipping orientation of the parent
     parent.orientation = Orientation.EW;
+
+    //clearing out the NW quadrant and adding in the new tags
     parent.emptyNorthWest();
     for (let child of newNW) {
       parent.addNorthWest(child);
     }
+
+    //clearing out the SE quadrant and adding in the new tags
     parent.emptySouthEast();
     for (let child of newSE) {
       parent.addSouthEast(child);
@@ -377,17 +387,21 @@ class SplitFrac {
 
     //Push the split fractions into their respective quadrants
     for (let child of this.tag.NW[0].NW) {
+      //Cloning the children in divisor
       let newDivisor = [];
       for (let div of divisor) {
         newDivisor.push(div.clone());
       }
+      //Adding the new tags into NW quadrant
       newNW.push(new Tag(Orientation.NS, [child], newDivisor));
     }
     for(let child of this.tag.NW[0].SE) {
+      //Cloning the children in divisor
       let newDivisor = [];
       for (let div of divisor) {
         newDivisor.push(div.clone());
       }
+      //adding the new tags into SE quadrant
       newSE.push(new Tag(Orientation.NS, [child], newDivisor));
     }
 
@@ -488,11 +502,11 @@ class QuadrantFlip {
 
     //Adding the tag into it's opposite quadrant;
     if (this.quadrantLabel === Quadrant.NW) {
-      parent.addSouthEast(this.tag);
       parent.removeNorthWest(this.tag);
+      parent.addSouthEast(this.tag);
     } else {
-      parent.addNorthWest(this.tag);
       parent.removeSouthEast(this.tag);
+      parent.addNorthWest(this.tag);
     }
 
   }
@@ -535,12 +549,7 @@ class IdentityBalance {
 
   apply() {
     //creating of the new child to add
-    let copy;
-    if (this.newChild instanceof Variable){
-      copy = new Variable(this.newChild.value);
-    } else {
-      copy = new Literal(this.newChild.value);
-    }
+    let copy = this.newChild.clone();
 
     //adding a children in both quadrants
     this.tag.addNorthWest(this.newChild);
