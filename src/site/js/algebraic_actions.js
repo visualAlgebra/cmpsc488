@@ -589,6 +589,7 @@ class LiteralMerge{
     }
     else{
       this.literalA.value *= this.literalB.value;
+      this.literalA.value %= 3;
       this.literalA.parent.removeNorthWest(this.literalB);
     }
   }
