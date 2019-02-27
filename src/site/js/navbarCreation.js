@@ -4,14 +4,14 @@ function createNavbar(){
 	div.className="nav-wrapper";
 	nav.appendChild(div);
 	let a1=document.createElement("a");
-	a1.href="#";
+	a1.href="http://localhost:8080/index.html";
 	a1.className="brand-logo";
 	a1.innerHTML="VisualAlgebra";
 	div.appendChild(a1);
 	let a2=document.createElement("a");
 	a2.href="#";
 	a2.className="sidenav-trigger";
-	a2.setAttribute("data-target", "mobile-links");
+	a2.setAttribute("data-target", "navbarSidenav");
 	div.appendChild(a2);
 	let i=document.createElement("i");
 	i.className="material-icons";
@@ -42,7 +42,7 @@ function createNavbar(){
 
 	let ul2=document.createElement("ul");
 	ul2.className="sidenav";
-	ul2.id="mobile-links";
+	ul2.id="navbarSidenav";
 	let nav2=document.createElement("nav");
 	nav2.innerHTML='<div class="nav-wrapper"><a class="brand-logo" href="http://localhost:8080/index.html">VisualAlgebra</a></div>';
 	ul2.appendChild(nav2);
