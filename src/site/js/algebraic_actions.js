@@ -377,10 +377,18 @@ class SplitFrac {
 
     //Push the split fractions into their respective quadrants
     for (let child of this.tag.NW[0].NW) {
-      newNW.push(new Tag(Orientation.NS, [child], divisor));
+      let newDivisor = [];
+      for (let div of divisor) {
+        divisor.push(div.clone());
+      }
+      newNW.push(new Tag(Orientation.NS, [child], newDivisor));
     }
     for(let child of this.tag.NW[0].SE) {
-      newSE.push(new Tag(Orientation.NS, [child], divisor));
+      let newDivisor = [];
+      for (let div of divisor) {
+        divisor.push(div.clone());
+      }
+      newSE.push(new Tag(Orientation.NS, [child], newDivisor));
     }
 
     //update the tag with new orientation and quadrants
