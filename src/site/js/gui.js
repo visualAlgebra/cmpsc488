@@ -98,7 +98,7 @@ const mouse = {
   clickDetected: function() {
     console.log("Mouse clicked on", this.eventSource);
 
-    if (mode === MouseMode.Manipulation) {
+    if (this.mode === MouseMode.Manipulation) {
       const action = new AssociativeIntro(this.eventSource.tree);
       action.apply();
       console.log("Enclosing ", this.eventSource.tree);
