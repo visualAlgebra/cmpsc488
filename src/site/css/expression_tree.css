@@ -1,6 +1,8 @@
 :root {
     --tag-border-thickness: 0.3rem;
     --tag-button-size: 2rem;
+    --element-padding: 0.5rem;
+    --element-margin: 0.5rem;
 }
 
 /* Disable text highlighting on expression trees */
@@ -16,12 +18,12 @@
 }
 
 .tag {
-    padding: 1rem;
-    margin: 1rem;
+    padding: var(--element-padding);
+    margin: var(--element-margin);
 }
 
 .south-east, .north-west {
-    padding: 1rem;
+    padding: var(--element-padding);
     border-radius: 1rem;
 }
 
@@ -55,7 +57,7 @@
 
 .tag-element-container {
     display: flex;
-    padding: 0.5rem;
+    padding: var(--element-padding);
 }
 
 .tag-element-container > * {
