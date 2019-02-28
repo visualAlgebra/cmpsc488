@@ -77,21 +77,20 @@ class history{
   }
 
   add(tree){
-    if(this.index!==this.historyArray.length){
-      this.historyArray=this.historyArray.splice(0,this.index);
-      this.historyArray.push(tree.toString());
+    if(this.index<this.historyArray.length){
+      this.historyArray=this.historyArray.splice(0,this.index++);
     }else{
-      this.historyArray.push(tree.toString());
+      this.index++;
     }
+    this.historyArray.push(tree.toString());
     console.log("add: "+tree.toString());
-    this.index++;
   }
 
   undo(){
-    if(this.index<=1){
+    if(this.index-1<=0){
       return;
     }
-    displayTreeFromStruct(this.historyArray[(--this.index)-1],'canvasContainer', null);
+    displayTreeFromStruct(this.historyArray[(--this.index)-1],'canvasContainer', res=> workingExpressionTree=res);
     console.log("undo: "+this.historyArray[this.index]);
   }
 
@@ -99,7 +98,7 @@ class history{
     if(this.index>=this.historyArray.length){
       return;
     }
-    displayTreeFromStruct(this.historyArray[this.index++],'canvasContainer', null);
-    console.log("redo: "+this.historyArray[this.index]);
+    displayTreeFromStruct(this.historyArray[this.index],'canvasContainer', res=> workingExpressionTree=res);
+    console.log("redo: "+this.historyArray[this.index++]);
   }
 }

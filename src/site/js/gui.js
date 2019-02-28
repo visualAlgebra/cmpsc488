@@ -49,7 +49,9 @@ const mouse = {
     }
     else if (Object.is(x.parent, y.parent) && xQuad === yQuad && !Object.is(x, y) && this.mode === MouseMode.Manipulation) {
       const action = new CommutativeSwap(x,y,xQuad);
+      console.log(workingExpressionTree.toString());
       action.apply();
+      console.log(workingExpressionTree.toString());
       console.log("Swapping siblings", x, "and", y);
 
       this.redisplayExpressionTree()

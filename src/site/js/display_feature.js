@@ -12,8 +12,8 @@ function displayExpressionTree(tree, containerId, callback) {
     }
 }
 
-function displayTreeFromStruct(tree, container_id){
-   displayExpressionTree(Deserialize(tree), container_id);
+function displayTreeFromStruct(tree, container_id, callback){
+   displayExpressionTree(Deserialize(tree), container_id, callback);
 }
 
 function displayTreeFromDBStruct(tree, container_id, callback){
