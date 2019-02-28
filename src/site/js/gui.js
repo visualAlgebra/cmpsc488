@@ -1,8 +1,6 @@
 function findQuadrant(x) {
   if (x.parent) {
-    return x.parent.NW.some(e => Object.is(e, x))
-      ? Quadrant.NW
-      : Quadrant.SE;
+    return x.parent.NW.some(e=>Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;
   } else {
     return null;
   }
@@ -25,10 +23,8 @@ const mouse = {
     this.eventDest = null;
   },
 
-
   redisplayExpressionTree: function() {
-    displayExpressionTree(workingExpressionTree, "canvasContainer");
-    addHistoryEntry(workingExpressionTree);
+    displayExpressionTree(workingExpressionTree, "canvasContainer", res=>addHistoryEntry(res));
   },
 
   dragDetected: function() {
@@ -44,49 +40,28 @@ const mouse = {
     //    Trees are not same object
     //    eventDest is a quadrant <--
     //    ...
-    if (Object.is(x.parent, y.parent)
-        && !Object.is(x,y)
-        && this.eventDest instanceof TagQuadrantGui
-        && y.orientation === y.parent.orientation
-        && xQuad === yQuad
-        && this.mode === MouseMode.Manipulation
-    ) {
-      const action = new AssociativeInsert(x, y);
+    if (Object.is(x.parent, y.parent) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && y.orientation === y.parent.orientation && xQuad === yQuad && this.mode === MouseMode.Manipulation) {
+      const action = new AssociativeInsert(x,y);
       action.apply();
       console.log("Inserting", x, "to tag", y);
 
       this.redisplayExpressionTree();
     }
-
-    else if (Object.is(x.parent, y.parent)
-        && xQuad === yQuad
-        && !Object.is(x, y)
-        && this.mode === MouseMode.Manipulation
-    ) {
-      const action = new CommutativeSwap(x, y, xQuad);
+    else if (Object.is(x.parent, y.parent) && xQuad === yQuad && !Object.is(x, y) && this.mode === MouseMode.Manipulation) {
+      const action = new CommutativeSwap(x,y,xQuad);
       action.apply();
       console.log("Swapping siblings", x, "and", y);
 
       this.redisplayExpressionTree()
     }
-
-    else if (x instanceof Tag && y instanceof Tag
-        && this.eventSource instanceof TagButtonGui
-        && this.eventDest instanceof TagButtonGui
-        && Object.is(x.parent, y)
-        && this.mode === MouseMode.Manipulation
-    ) {
-      const action = new AssociativeMerge(x, y, xQuad);
+    else if (x instanceof Tag && y instanceof Tag && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && Object.is(x.parent, y) && this.mode === MouseMode.Manipulation) {
+      const action = new AssociativeMerge(x,y,xQuad);
       action.apply();
       console.log("Merging", x, "into", y);
       this.redisplayExpressionTree()
     }
-
-    else if (x instanceof Literal && y instanceof Literal
-        && Object.is(x.parent, y.parent)
-        && this.mode === MouseMode.MergingLiterals
-    ) {
-      const action = new LiteralMerge(x, y, xQuad, yQuad);
+    else if (x instanceof Literal && y instanceof Literal && Object.is(x.parent, y.parent) && this.mode === MouseMode.MergingLiterals) {
+      const action = new LiteralMerge(x,y,xQuad,yQuad);
       action.apply();
       console.log("Mergin Literals", x, "and", y);
       this.redisplayExpressionTree();
@@ -140,48 +115,51 @@ class GuiBase {
   }
 
   attachEventHandlers(dom) {
-    dom.on("click", e => {
+    dom.on("click", e=>{
       e.stopPropagation();
       this.onclick();
-    });
+    }
+    );
 
-    dom.on("mousedown", e => {
+    dom.on("mousedown", e=>{
       e.stopPropagation();
       this.mousedown();
-    });
+    }
+    );
 
-    dom.on("mousemove", e => {
+    dom.on("mousemove", e=>{
       e.stopPropagation();
       this.mousemove();
-    });
+    }
+    );
 
-    dom.on("mouseup", e => {
+    dom.on("mouseup", e=>{
       e.stopPropagation();
       this.mouseup();
-    });
+    }
+    );
   }
 }
 
 class TagGui extends GuiBase {
   constructor(tag) {
     super();
-    this.tree = tag; // Save the expression tree.
+    this.tree = tag;
+    // Save the expression tree.
     this.dom = this.buildDom();
   }
 
   buildDom() {
     const div = $("<div>");
 
-    div.addClass(
-      this.tree.orientation == Orientation.NS ? "north-south" : "east-west"
-    );
+    div.addClass(this.tree.orientation == Orientation.NS ? "north-south" : "east-west");
 
     div.addClass("tag");
     div.data("expressionTree", this.tree);
-    
-    const nw = new TagQuadrantGui(this.tree, Quadrant.NW);
+
+    const nw = new TagQuadrantGui(this.tree,Quadrant.NW);
     const button = new TagButtonGui(this.tree);
-    const se = new TagQuadrantGui(this.tree, Quadrant.SE);
+    const se = new TagQuadrantGui(this.tree,Quadrant.SE);
 
     div.append(nw.dom);
     div.append(button.dom);
@@ -220,14 +198,12 @@ class TagQuadrantGui extends GuiBase {
 
   buildDom() {
     const quadrant = $("<div>");
-    const quadrantClass = (this.quadrantLabel === Quadrant.NW)
-      ? "north-west"
-      : "south-east";
+    const quadrantClass = (this.quadrantLabel === Quadrant.NW) ? "north-west" : "south-east";
 
     quadrant.addClass(quadrantClass);
     this.attachEventHandlers(quadrant);
 
-    this.tree[this.quadrantLabel].forEach(child => {
+    this.tree[this.quadrantLabel].forEach(child=>{
       if (child.kind === "tag") {
         quadrant.append(child.render());
       } else {
@@ -236,11 +212,11 @@ class TagQuadrantGui extends GuiBase {
         container.append(child.render());
         quadrant.append(container);
       }
-    });
+    }
+    );
 
     return quadrant;
   }
-
 
 }
 

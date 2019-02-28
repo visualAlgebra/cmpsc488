@@ -18,34 +18,53 @@
   </head>
   <body>
     <div id="navbarLocation"></div>
-    <div id="historyNav" style="position:absolute;left:0px;top:56px;width:280px;height:835px">
-        
-    </div>
+    <div id="historyNav" style="position:absolute;left:0px;top:56px;width:280px;height:835px"></div>
     <section class="container">
       <section class="row">
         <h1>Manipulator</h1>
       </section>
       <section class="row">
-        <button type="button" name="button" class="btn">Hint</button>
-        <button type="button" name="button" class="btn">Share</button>
-        <button type="button" name="button" class="btn">Restart</button>
+        <a class="waves-effect waves-light btn">
+          <i class="material-icons left">compare_arrows</i>
+          Hint
+        </a>
+        <a class="waves-effect waves-light btn">
+          <i class="material-icons left">share</i>
+          Share
+        </a>
+        <a class="waves-effect waves-light btn">
+          <i class="material-icons left">rotate_left</i>
+          Restart
+        </a>
+      </section>
+      <section>
+        <form action="#">
+          <div class="row">
+            <label class="col m3">
+              <input name="manipulators" type="radio" checked/>
+              <span onclick="changeMouseMode(0)">General Manipulation</span>
+            </label>
+            <label class="col m3">
+              <input name="manipulators" type="radio"/>
+              <span onclick="changeMouseMode(1)">Merging Literals</span>
+            </label>
+          </div>
+        </form>
       </section>
       <section class="row">
-        <div class="input-field col s12">
-          <select id="mouse-mode-selection">
-            <option value="General Manipulation">General Manipulation</option>
-            <option value="Merging Literals">Merging Literals</option>
-          </select>
-          <label>Materialize Select</label>
-        </div>
+        <a class="waves-effect waves-light btn" onclick="histAction(0)">
+          <i class="material-icons left">undo</i>
+          Undo
+        </a>
+        <a class="waves-effect waves-light btn" onclick="histAction(1)">
+          <i class="material-icons left">redo</i>
+          Redo
+        </a>
       </section>
       <section class="row">
-        <section class="col m3">
-          <h2>History</h2>
-          <div id="historyContainer"></div>
-        </section>
         <section class="col m9">
           <section class="row">
+            <h2>Start Expression</h2>
             <div id="canvasContainer"></div>
           </section>
           <div class="row">
@@ -71,6 +90,5 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="http://localhost:8080/src/site/js/algebraic_actions.js" charset="utf-8"></script>
     <script src="http://localhost:8080/src/site/js/algebraic_actions.test.js" charset="utf-8"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
 </html>
