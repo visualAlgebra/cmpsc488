@@ -572,7 +572,9 @@ class LiteralMerge{
       return true;
     if (this.quadrantA != this.quadrantB)
       return false;
-    return false;
+    if (this.quadrantA == Quadrant.SE)
+      return false;
+    return true;
   }
 
   apply(){
