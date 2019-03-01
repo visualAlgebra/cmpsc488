@@ -6,13 +6,30 @@ var account_to_load = getAccountFromURL();
 
 window.onload = ()=>{
   if (account_to_load !== null) {
-    get_account_from_db(account_to_load, res=>fillPage(res));
+    get_account_from_db(account_to_load, res=>covertToInfo(res));
   }
 }
 ;
 
 var probAmt = 0;
 var lessAmt = 0;
+function covertToInfo(res){
+  let les=[];
+  for(let x in res.lessons){
+    x=parseInt(x);
+    let k=res.lessons[x];
+    les[x]=new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description);
+  }
+  let prob=[];
+  for(let x in res.problems){
+    x=parseInt(x);
+    let k=res.problems[x];
+    prob[x]=new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
+  }
+  res.lessons=les;
+  res.problems=prob;
+  fillPage(res);
+}
 function fillPage(accInfo) {
   let id_field = document.getElementById('userAccountIdField');
   id_field.innerHTML = accInfo.id;
@@ -27,14 +44,15 @@ function fillPage(accInfo) {
   //lessons
   let filldiv = document.getElementById("creationHolder");
   for(let lesson in accInfo.lessons){
-    //get_lesson_from_db(str, res=>createCollectionItemForLesson(res, "lessonHolder"));
+    lesson = parseInt(lesson);
+    createCollectionItemForLesson(accInfo.lessons[lesson], "lessonHolder");
     lessAmt++;
   }
   //problems
   for(let problem in accInfo.problems){
     problem = parseInt(problem);
     filldiv.appendChild(createCardForProblem(accInfo.problems[problem].problemID, probAmt));
-    displayProblemFromDB(accInfo.problems[problem].problemID, problem + "_s", problem + "_g");
+    displayProblemFromDBStruct(accInfo.problems[problem], problem + "_s", problem + "_g");
     probAmt++;
   }
 }
