@@ -585,16 +585,16 @@ class LiteralMerge{
           this.literalA.parent.removeNorthWest(this.literalB);
         }
         else{
-          this.literalA.value = (this.literalA.value - this.literalB.value) % 3;
+          this.literalA.value = (((this.literalA.value - this.literalB.value) % 3)+3)%3;
           this.literalA.parent.removeSouthEast(this.literalB);
         }
       }
       else if(this.quadrantB == Quadrant.NW){
-        this.literalB.value = (this.literalB.value - this.literalA.value) % 3;
+        this.literalB.value = (((this.literalB.value - this.literalA.value) % 3)+3)%3;
         this.literalB.parent.removeSouthEast(this.literalA);
       }
       else{
-        this.literalA.value = Math.abs(-3 + (this.literalA.value - this.literalB.value) % 3);
+        this.literalA.value = Math.abs(-3 + (this.literalA.value + this.literalB.value) % 3);
         this.literalA.parent.removeSouthEast(this.literalB);
       }
     }
