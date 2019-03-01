@@ -79,64 +79,24 @@ function createNavbar(){
 	if(page==="manipulator"){//create nav buttons
 		let manipdivrow=document.createElement("div");
 		manipdivrow.className="row";
+		let btnNames=["Hint","Share","Restart","Undo","Redo"];
+		let iconNames=["compare_arrows","share","rotate_left","undo","redo"];
 
-		//hint
-		let manipli1a=document.createElement("a");
-		manipli1a.className="tab waves-effect waves-light btn col";
-		let manipli1ai=document.createElement("i");
-		manipli1ai.className="material-icons left";
-		manipli1ai.innerHTML="compare_arrows";
-		manipli1a.appendChild(manipli1ai);
-
-		manipli1a.innerHTML+="Hint";
-		manipdivrow.appendChild(manipli1a);
-
-		//share
-		let manipli2a=document.createElement("a");
-		manipli2a.className="tab waves-effect waves-light btn col";
-		let manipli2ai=document.createElement("i");
-		manipli2ai.className="material-icons left";
-		manipli2ai.innerHTML="share";
-		manipli2a.appendChild(manipli2ai);
-
-		manipli2a.innerHTML+="Share";
-		manipdivrow.appendChild(manipli2a);
-
-		//restart
-		let manipli3a=document.createElement("a");
-		manipli3a.className="tab waves-effect waves-light btn col";
-		let manipli3ai=document.createElement("i");
-		manipli3ai.className="material-icons left";
-		manipli3ai.innerHTML="rotate_left";
-		manipli3a.appendChild(manipli3ai);
-
-		manipli3a.innerHTML+="Restart";
-		manipdivrow.appendChild(manipli3a);
-
-		//undo
-		let manipli4a=document.createElement("a");
-		manipli4a.className="tab waves-effect waves-light btn col";
-		manipli4a.onclick="histAction(0)";
-		let manipli4ai=document.createElement("i");
-		manipli4ai.className="material-icons left";
-		manipli4ai.innerHTML="undo";
-		manipli4a.appendChild(manipli4ai);
-
-		manipli4a.innerHTML+="Undo";
-		manipdivrow.appendChild(manipli4a);
-
-		//redo
-		let manipli5a=document.createElement("a");
-		manipli5a.className="tab waves-effect waves-light btn col";
-		manipli5a.onclick="histAction(1)";
-		let manipli5ai=document.createElement("i");
-		manipli5ai.className="material-icons left";
-		manipli5ai.innerHTML="redo";
-		manipli5a.appendChild(manipli5ai);
-
-		manipli5a.innerHTML+="Redo";
-		manipdivrow.appendChild(manipli5a);
-
+		for(let x=0; x<btnNames.length; x++){
+		    let a=document.createElement("a");
+		    a.className="tab waves-effect waves-light btn col";
+		    if(x===3){
+		    	a.onclick=function(){histAction(0);};
+		    }else if(x===4){
+		    	a.onclick=function(){histAction(1);};
+		    }
+		    let i=document.createElement("i");
+		    i.className="material-icons left";
+		    i.innerHTML=iconNames[x];
+		    a.appendChild(i);
+		    a.innerHTML+=btnNames[x];
+		    manipdivrow.appendChild(a);
+		}
 		return [nav, ul2, manipdivrow];
 	}
 	return [nav, ul2];

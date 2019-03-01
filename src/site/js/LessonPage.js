@@ -7,15 +7,24 @@ var lesson_to_load=getLessonFromURL();
 
 window.onload = ()=>{
   if (lesson_to_load !== null) {
-    get_lesson_from_db(lesson_to_load,res=>displayLesson(res));
+    get_lesson_from_db(lesson_to_load,res=>fillCreations(res));
   }
 }
 
-function displayLesson(lesson){//jacob needs to remake the structure for a lesson in db
-    let container=document.getElementById("lessonContainer");
-    for(let problem in lesson){
-        
+function fillCreations(lesson) {
+  let filldiv = document.getElementById("lessonContainer");
+  return null;
+  for (let creation in lesson.creations) {
+    creation = parseInt(creation);
+    if (lesson.creations[creation].toString().includes("problems")) {
+      let str = lesson.creations[creation].substring(lesson.creations[creation].lastIndexOf('/') + 1, lesson.creations[creation].length);
+      filldiv.appendChild(createCardForProblem(str, probAmt));
+      displayProblemFromDB(str, creation + "_s", creation + "_g");
+    } else if (lesson.creations[creation].toString().includes("lessons")) {
+      let str = lesson.creations[creation].substring(lesson.creations[creation].lastIndexOf('/') + 1, lesson.creations[creation].length);
+      get_lesson_from_db(str, res=>createCollectionForLesson(res, creation, elementId));
     }
+  }
 }
 
 function getLessonFromURL() {

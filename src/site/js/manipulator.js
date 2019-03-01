@@ -35,7 +35,7 @@ function changeMouseMode(num) {
 function getProblemFromURL() {
   let prob = (window.location.href).substr((window.location.href).indexOf('/manipulator'));
   if (prob.indexOf('manipulator/problems/') === -1 || prob === 'null' || prob === '' || prob === 'undefined') {
-    //location.replace("../Explorer.html");
+    //window.location.replace("../manipulator/problems/Getting%20Started");
     alert("Error(manipulator.js): Please enter a problem after \"manipulator/problems/\" in the URL or select a problem from another page");
     return null;
   }
@@ -91,7 +91,7 @@ class history{
     if(this.index>=this.historyArray.length){
       return;
     }
-    displayTreeFromStruct(this.historyArray[this.index],'canvasContainer', res=> workingExpressionTree=res);
+    displayTreeFromStruct(this.historyArray[this.index++],'canvasContainer', res=> workingExpressionTree=res);
     //console.log("redo: "+this.historyArray[this.index++]);
   }
 }

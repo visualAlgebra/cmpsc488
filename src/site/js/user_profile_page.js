@@ -69,7 +69,7 @@ function fillCreations(elementId, accInfo) {
         continue;
       }
       let str = accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/') + 1, accInfo.creations[creation].length);
-      get_lesson_from_db(str, res=>createCardForLesson(res, creation, elementId));
+      get_lesson_from_db(str, res=>createCollectionForLesson(res, creation, elementId));
       lessAmt++;
     }
   }

@@ -14,7 +14,7 @@ Lesson:
 {
 "creatorAccountID": string,
 "description": string (limited 1000 chars?),
-"problems": array of strings (problem IDs),
+"creations": array of problems/lessons,
 "timeCreated": timestamp,
 }
 

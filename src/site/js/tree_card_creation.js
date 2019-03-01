@@ -1,37 +1,10 @@
-function createCardForLesson(lesson_arr, cardID, elementId){
-    let maindiv=document.createElement("div");
-    maindiv.className="col s12 m6 l4";
-    let carddiv=document.createElement("div");
-    carddiv.className="card blue-grey darken-1";
-    maindiv.appendChild(carddiv);
-    let contentdiv=document.createElement("div");
-    contentdiv.className="card-content white-text";
-    carddiv.appendChild(contentdiv);
-
-    let titlespan=document.createElement("span");
-    titlespan.className="card-title";
-    titlespan.id="Lesson"+cardID;
-    titlespan.innerHTML="Lesson "+lesson_arr.id;
-    contentdiv.appendChild(titlespan);
+function createCollectionItemForLesson(lesson, elementId){
+    let li1=document.createElement('li');
+    li1.className="collection-item";
+    let span1=document.createElement('span');
+    span1.className="title";
+    span1.innerHTML=lesson.id;
     
-    let iconi=document.createElement("i");
-    iconi.className="material-icons left";
-    iconi.innerHTML="folder";
-    titlespan.prepend(iconi);
-
-    for(let creation in lesson_arr.creations){
-        if(creation>=5){
-            break;
-        }
-        let rowdiv=document.createElement("div");
-        rowdiv.className="row";
-        contentdiv.appendChild(rowdiv);
-
-        let adiv=document.createElement("a");
-        adiv.href="http://localhost:8080/manipulator/problems/"+lesson_arr.creations[creation];
-        adiv.innerHTML="Problem "+creation+" : "+lesson_arr.creations[creation];
-        rowdiv.appendChild(adiv);
-    }
     document.getElementById(elementId).appendChild(maindiv);
 }
 function createCardForProblem(problem_id, cardID){
