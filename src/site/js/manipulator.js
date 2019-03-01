@@ -5,8 +5,6 @@ window.onload = ()=>{
   changeMouseMode(0);
   if (problem_to_load !== null) {
     displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res, res2)=>onDisplay(res, res2));
-  } else {
-    console.log("let eric know if you see this message appear, if in lab, ty");
   }
 }
 ;
