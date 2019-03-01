@@ -24,7 +24,7 @@
 // If the siblings and quadrant are valid, then the siblings will be swapped.
 class CommutativeSwap {
 
-  constructor (sibling1, sibling2, quadrantLabel) {
+  constructor(sibling1, sibling2, quadrantLabel) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
     this.quadrantLabel = quadrantLabel;
@@ -32,15 +32,15 @@ class CommutativeSwap {
 
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
-  verify () {
+  verify() {
     const quadrant = this.sibling1.parent[this.quadrantLabel];
     return this.sibling1.parent === this.sibling2.parent
-        && quadrant.some(x => Object.is(x, sibling2))
-        && quadrant.some(x => Object.is(x, sibling1));
+      && quadrant.some(x => Object.is(x, sibling2))
+      && quadrant.some(x => Object.is(x, sibling1));
   }
 
   //
-  apply () {
+  apply() {
 
     const parent = this.sibling1.parent;
     const temp = new Literal(-999);
@@ -70,7 +70,7 @@ class AssociativeMerge {
   verify() {
     // TODO: don't use includes, use `some` with Object.is
     return this.parent.NW.includes(this.sibling)
-        || (this.parent.SE.includes(this.sibling) && this.parent.orientation === Orientation.EW);
+      || (this.parent.SE.includes(this.sibling) && this.parent.orientation === Orientation.EW);
   }
 
 
@@ -109,7 +109,7 @@ class AssociativeIntro {
   //Valid if siblings is in parent in the correct order
   verify() {
     return this.expr instanceof Tag
-        || this.expr.parent !== null;
+      || this.expr.parent !== null;
   }
 
   apply() {
@@ -132,13 +132,16 @@ class AssociativeIntro {
       newTag.addNorthWest(this.expr);
     } else {
 
-      //if expr is a root tag,
-      //make a copy of expr, newTag
-      const newTag = new Tag(this.expr.orientation, this.expr.NW, this.expr.SE);
+      const copyNW = this.expr.NW;
+      const copySE = this.expr.SE;
 
       //clear out expr
       this.expr.emptyNorthWest();
       this.expr.emptySouthEast();
+
+      //if expr is a root tag,
+      //make a copy of expr, newTag
+      const newTag = new Tag(this.expr.orientation, copyNW, copySE);
 
       //add newTag into expr
       this.expr.addNorthWest(newTag);
@@ -148,7 +151,8 @@ class AssociativeIntro {
   }
 }
 
-//Taking out a sibling from a tag and adding it into its grandparent
+// Taking out a sibling from a tag and adding it into its grandparent
+// TODO: Make this preserve order
 class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
@@ -159,7 +163,7 @@ class AssociativeExtract {
 
   verify() {
     return this.grandchild.parent !== null
-        && this.grandchild.parent.parent !== null;
+      && this.grandchild.parent.parent !== null;
   }
 
   apply() {
@@ -194,7 +198,7 @@ class AssociativeInsert {
 
   verify() {
     return this.sibling.parent !== null
-        && this.sibling.parent.orientation === insertionTag.orientation;
+      && this.sibling.parent.orientation === insertionTag.orientation;
   }
 
   apply() {
@@ -243,7 +247,7 @@ class Distribute {
     for (let child of this.tagToDistributeOver.NW) {
       newNW.push(new Tag(Orientation.NS, [this.value.clone(), child]));
     }
-    for(let child of this.tagToDistributeOver.SE) {
+    for (let child of this.tagToDistributeOver.SE) {
       newSE.push(new Tag(Orientation.NS, [this.value.clone(), child]));
     }
 
@@ -274,27 +278,27 @@ class Factor {
   }
 
   verify() {
-    if(this.tagToFactor.orientation != "eastwest")
+    if (this.tagToFactor.orientation != "eastwest")
       return false;
     var isGood = true;
-    for(var i = 0; i<this.tagToFactor.NW.length; i++){
-      if(!this.this.tagToFactor.NW[i] instanceof Tag){
+    for (var i = 0; i < this.tagToFactor.NW.length; i++) {
+      if (!this.this.tagToFactor.NW[i] instanceof Tag) {
         if (this.this.tagToFactor.NW[i] !== valueToFactor)
           return false;
       }
-      else{
-          if(this.this.tagToFactor.NW[i].orientation !== "northsouth"){
+      else {
+        if (this.this.tagToFactor.NW[i].orientation !== "northsouth") {
+          return false;
+        }
+        else {
+          for (var j = 0; j < this.tagToFactor.NW[i].NW.length; j++) {
+            if (this.tagToFactor.NW[i].NW[j] == valueToFactor)
+              isGood = true;
+          }
+          if (!isGood)
             return false;
-          }
-          else{
-            for(var j = 0; j<this.tagToFactor.NW[i].NW.length; j++){
-              if (this.tagToFactor.NW[i].NW[j] == valueToFactor)
-                isGood = true;
-            }
-            if(!isGood)
-              return false;
-            isGood = false;
-          }
+          isGood = false;
+        }
       }
     }
 
@@ -308,22 +312,22 @@ class Factor {
     this.tagToFactor.orientation = Orientation.NS;
     var addTag = new Tag(Orientation.EW);
     const tagToFactorNWlength = this.tagToFactor.NW.length;
-    for(var i = 0; i<tagToFactorNWlength; i++){
-      if ((this.tagToFactor.NW[0] instanceof Variable) || (this.tagToFactor.NW[0] instanceof Literal)){
+    for (var i = 0; i < tagToFactorNWlength; i++) {
+      if ((this.tagToFactor.NW[0] instanceof Variable) || (this.tagToFactor.NW[0] instanceof Literal)) {
         this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         addTag.addNorthWest(new Literal(1));
       }
-      else{
+      else {
         this.tagToFactor.NW[0].removeNorthWest(this.tagToFactor.NW[0].NW[0]);
-        if(this.tagToFactor.NW[0].NW.length+this.tagToFactor.NW[0].SE.length == 1){
+        if (this.tagToFactor.NW[0].NW.length + this.tagToFactor.NW[0].SE.length == 1) {
           addTag.addNorthWest(this.tagToFactor.NW[0].NW[0]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
-        else if(this.tagToFactor.NW[0].NW.length + this.tagToFactor.NW[0].SE.length != 0){
+        else if (this.tagToFactor.NW[0].NW.length + this.tagToFactor.NW[0].SE.length != 0) {
           addTag.addNorthWest(this.tagToFactor.NW[0]);
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
         }
-        else{
+        else {
           this.tagToFactor.removeNorthWest(this.tagToFactor.NW[0]);
           addTag.addNorthWest(new Literal(1));
         }
@@ -332,23 +336,23 @@ class Factor {
     }
 
     var tagToFactorSELength = this.tagToFactor.SE.length;
-    for(var i = 0; i<tagToFactorSELength; i++){
-      if (!(this.tagToFactor.SE[0] instanceof Tag)){
+    for (var i = 0; i < tagToFactorSELength; i++) {
+      if (!(this.tagToFactor.SE[0] instanceof Tag)) {
         this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
         var add = new Literal(1);
         addTag.addSouthEast(add);
       }
-      else{
+      else {
         this.tagToFactor.SE[0].removeNorthWest(this.tagToFactor.SE[0].NW[0]);
-        if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length == 1){
+        if (this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length == 1) {
           addTag.addSouthEast(this.tagToFactor.SE[0].NW[0]);
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
         }
-        else if(this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length !== 0){
+        else if (this.tagToFactor.SE[0].NW.length + this.tagToFactor.SE[0].SE.length !== 0) {
           addTag.addSouthEast(this.tagToFactor.SE[0]);
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
         }
-        else{
+        else {
           this.tagToFactor.removeSouthEast(this.tagToFactor.SE[0]);
           addTag.addSouthEast(new Literal(1));
         }
@@ -373,9 +377,9 @@ class SplitFrac {
   verify() {
     let dividend = this.tag.NW[0];
     return this.tag.orientation === Orientation.NS
-        && divident.orientation === Orientation.EW
-        && (dividend.NW.length+dividend.SE.length > 1)
-        && this.tag.SE.length <= 1;
+      && divident.orientation === Orientation.EW
+      && (dividend.NW.length + dividend.SE.length > 1)
+      && this.tag.SE.length <= 1;
   }
 
   apply() {
@@ -395,7 +399,7 @@ class SplitFrac {
       //Adding the new tags into NW quadrant
       newNW.push(new Tag(Orientation.NS, [child], newDivisor));
     }
-    for(let child of this.tag.NW[0].SE) {
+    for (let child of this.tag.NW[0].SE) {
       //Cloning the children in divisor
       let newDivisor = [];
       for (let div of divisor) {
@@ -487,7 +491,7 @@ class QuadrantFlip {
 
   verify() {
     return this.tag instanceof Tag
-        && this.tag.parent !==null;
+      && this.tag.parent !== null;
   }
 
   apply() {
@@ -521,7 +525,7 @@ class Cancel {
 
   verify() {
     return this.sibling1.equals(this.sibling2)
-        && this.sibling1.parent.equals(this.sibling2.parent);
+      && this.sibling1.parent.equals(this.sibling2.parent);
   }
 
   apply() {
@@ -557,15 +561,15 @@ class IdentityBalance {
   }
 }
 
-class LiteralMerge{
-  constructor(literalA, literalB, quadrantA, quadrantB){
+class LiteralMerge {
+  constructor(literalA, literalB, quadrantA, quadrantB) {
     this.literalA = literalA;
     this.literalB = literalB;
     this.quadrantA = quadrantA;
     this.quadrantB = quadrantB;
   }
 
-  verify(){
+  verify() {
     if (this.literalA.parent !== this.literalB.parent)
       return false;
     if (this.literalA.parent.orientation == Orientation.EW)
@@ -577,28 +581,28 @@ class LiteralMerge{
     return true;
   }
 
-  apply(){
-    if(this.literalA.parent.orientation == Orientation.EW){
-      if(this.quadrantA == Quadrant.NW){
-        if(this.quadrantB == Quadrant.NW){
+  apply() {
+    if (this.literalA.parent.orientation == Orientation.EW) {
+      if (this.quadrantA == Quadrant.NW) {
+        if (this.quadrantB == Quadrant.NW) {
           this.literalA.value = (this.literalA.value + this.literalB.value) % 3;
           this.literalA.parent.removeNorthWest(this.literalB);
         }
-        else{
-          this.literalA.value = (this.literalA.value - this.literalB.value) % 3;
+        else {
+          this.literalA.value = (((this.literalA.value - this.literalB.value) % 3) + 3) % 3;
           this.literalA.parent.removeSouthEast(this.literalB);
         }
       }
-      else if(this.quadrantB == Quadrant.NW){
-        this.literalB.value = (this.literalB.value - this.literalA.value) % 3;
+      else if (this.quadrantB == Quadrant.NW) {
+        this.literalB.value = (((this.literalB.value - this.literalA.value) % 3) + 3) % 3;
         this.literalB.parent.removeSouthEast(this.literalA);
       }
-      else{
-        this.literalA.value = Math.abs(-3 + (this.literalA.value - this.literalB.value) % 3);
+      else {
+        this.literalA.value = Math.abs(-3 + (this.literalA.value + this.literalB.value) % 3);
         this.literalA.parent.removeSouthEast(this.literalB);
       }
     }
-    else{
+    else {
       this.literalA.value *= this.literalB.value;
       this.literalA.value %= 3;
       this.literalA.parent.removeNorthWest(this.literalB);
