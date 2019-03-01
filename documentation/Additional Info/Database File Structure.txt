@@ -3,7 +3,7 @@ Account:
 {
 "accountID": string,
 "bio": string (limited 1000 chars?),
-"creations": Array of strings (lesson/problem IDs),
+"creations": Array of objs (lesson/problem),
 "timeCreated": Timestamp, 
 }
 
@@ -14,7 +14,7 @@ Lesson:
 {
 "creatorAccountID": string,
 "description": string (limited 1000 chars?),
-"creations": array of problems/lessons,
+"creations": Array of objs (lesson/problem),
 "timeCreated": timestamp,
 }
 
@@ -25,7 +25,6 @@ Problem:
 {
 "creatorAccountID": string,
 "description": string (limited 1000 chars?),
-"attachedLesson": string ("null" if no lesson),
 "startExpression": array of numbers,
 "goalExpression": array of numbers,
 "timeCreated": timestamp
