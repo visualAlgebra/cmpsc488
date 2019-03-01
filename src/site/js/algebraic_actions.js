@@ -611,7 +611,7 @@ class zeroMerge{
     this.siblingToMerge = siblingToMerge;
   }
 
-  verify(){
+  static verify(){
     if (this.zeroSibling.parent != this.siblingToMerge.parent)
       return false;
     if (this.zeroSibling.parent.orientation != Orientation.NS)
