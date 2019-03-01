@@ -1,8 +1,8 @@
 :root {
     --tag-border-thickness: 0.3rem;
     --tag-button-size: 2rem;
-    --element-padding: 0.5rem;
-    --element-margin: 0.5rem;
+    --element-padding: 0.75rem;
+    --element-margin: 0.75rem;
 }
 
 /* Disable text highlighting on expression trees */

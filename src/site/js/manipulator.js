@@ -29,6 +29,8 @@ function changeMouseMode(num) {
     mouse.mode = "General Manipulation";
   } else if (num === 1) {
     mouse.mode = "Merging Literals";
+  } else if (num === 2) {
+    mouse.mode = "Distribution";
   }
 }
 

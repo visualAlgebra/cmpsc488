@@ -9,6 +9,7 @@ function findQuadrant(x) {
 const MouseMode = {
   Manipulation: "General Manipulation",
   MergingLiterals: "Merging Literals",
+  Distribution: "Distribution"
 };
 
 const mouse = {
@@ -34,6 +35,8 @@ const mouse = {
 
     const xQuad = findQuadrant(x);
     const yQuad = findQuadrant(y);
+    
+    console.log(x,y,xQuad, yQuad)
 
     // Associative Insert IF
     //    Trees have same parent
@@ -42,8 +45,19 @@ const mouse = {
     //    ...
     if (Object.is(x.parent, y.parent) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && y.orientation === y.parent.orientation && xQuad === yQuad && this.mode === MouseMode.Manipulation) {
       const action = new AssociativeInsert(x,y);
-      action.apply();
-      console.log("Inserting", x, "to tag", y);
+      if (action.verify()) {
+        action.apply();
+        console.log("Inserting", x, "to tag", y);
+      }
+
+      this.redisplayExpressionTree();
+    }
+    else if (Object.is(x.parent.parent, y) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && x.parent.orientation === y.orientation && xQuad === yQuad && this.mode === MouseMode.Manipulation) {
+      const action = new AssociativeExtract(x, xQuad);
+      if (action.verify()) {
+        action.apply();
+        console.log("Extracting", x, "from", x.parent);
+      }
 
       this.redisplayExpressionTree();
     }
@@ -58,8 +72,11 @@ const mouse = {
     }
     else if (x instanceof Tag && y instanceof Tag && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && Object.is(x.parent, y) && this.mode === MouseMode.Manipulation) {
       const action = new AssociativeMerge(x,y,xQuad);
-      action.apply();
-      console.log("Merging", x, "into", y);
+      if (action.verify()) {
+        action.apply();
+        console.log("Merging", x, "into", y);
+      }
+
       this.redisplayExpressionTree()
     }
     else if (x instanceof Literal && y instanceof Literal && Object.is(x.parent, y.parent) && !Object.is(x, y) && this.mode === MouseMode.MergingLiterals) {
@@ -70,6 +87,15 @@ const mouse = {
       }
       this.redisplayExpressionTree();
     }
+    else if (Object.is(x.parent, y.parent) && !Object.is(x, y) && y instanceof Tag && this.eventDest instanceof TagQuadrantGui && y.orientation === Orientation.EW && xQuad === yQuad && this.mode === MouseMode.Distribution) {
+      const action = new Distribute(x, y); 
+      if (action.verify()){
+        action.apply();
+        console.log("Distributing", x, "over", y);
+      }
+      this.redisplayExpressionTree();
+    }
+
 
     this.reset();
   },
