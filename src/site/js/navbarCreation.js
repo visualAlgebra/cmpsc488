@@ -1,4 +1,5 @@
 function createNavbar(){
+	let page=getPage();
 	let nav=document.createElement("nav");
 	let div=document.createElement("div");
 	div.className="nav-wrapper";
@@ -22,18 +23,33 @@ function createNavbar(){
 	ul1.id="nav-mobile";
 	let li1=document.createElement("li");
 	li1.innerHTML='<a href="http://localhost:8080/index.html">Home</a>';
+	if(page==="index"){
+		li1.className+="active ";
+	}
 	ul1.appendChild(li1);
 	let li2=document.createElement("li");
 	li2.innerHTML='<a href="http://localhost:8080/creator.html">Create</a>';
+	if(page==="creator"){
+		li2.className+="active ";
+	}
 	ul1.appendChild(li2);
 	let li3=document.createElement("li");
 	li3.innerHTML='<a href="http://localhost:8080/manipulator.html">Manipulate</a>';
+	if(page==="manipulator"){
+		li3.className+="active ";
+	}
 	ul1.appendChild(li3);
 	let li4=document.createElement("li");
 	li4.innerHTML='<a href="http://localhost:8080/Explorer.html">Explore</a>';
+	if(page==="Explorer"){
+		li4.className+="active ";
+	}
 	ul1.appendChild(li4);
 	let li6=document.createElement("li");
 	li6.innerHTML='<a href="http://localhost:8080/user_profile_page.html">User Profile</a>';
+	if(page==="user_profile_page"){
+		li6.className+="active ";
+	}
 	ul1.appendChild(li6);
 	div.appendChild(ul1);
 
@@ -57,8 +73,29 @@ function initNav(){
 	maindiv.prepend(ret[1]);
 	maindiv.prepend(ret[0]);
 }
+function getPage() {
+  let one=(window.location.href).substr((window.location.href).indexOf("8080")+5);
+  let str="";
+  for (let x=0; x<one.length; x++){
+  	let char=one.charAt(x);
+  	if(char==='.'||char==='/'){
+  		break;
+  	}
+  	str+=char;
+  }
+  return str;
+}
 initNav();
 document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.sidenav');
     var instances = M.Sidenav.init(elems);
 });
+
+//<div class="nav-content">
+//      <ul class="tabs tabs-transparent">
+//        <li class="tab"><a href="#test1">Test 1</a></li>
+//        <li class="tab"><a class="active" href="#test2">Test 2</a></li>
+//        <li class="tab disabled"><a href="#test3">Disabled Tab</a></li>
+//        <li class="tab"><a href="#test4">Test 4</a></li>
+//      </ul>
+//    </div>

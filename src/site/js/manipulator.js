@@ -78,7 +78,7 @@ class history{
       this.index++;
     }
     this.historyArray.push(tree.toString());
-    console.log("add: "+tree.toString());
+    //console.log("add: "+tree.toString());
   }
 
   undo(){
@@ -86,7 +86,7 @@ class history{
       return;
     }
     displayTreeFromStruct(this.historyArray[(--this.index)-1],'canvasContainer', res=> workingExpressionTree=res);
-    console.log("undo: "+this.historyArray[this.index]);
+    //console.log("undo: "+this.historyArray[this.index]);
   }
 
   redo(){
@@ -94,6 +94,6 @@ class history{
       return;
     }
     displayTreeFromStruct(this.historyArray[this.index],'canvasContainer', res=> workingExpressionTree=res);
-    console.log("redo: "+this.historyArray[this.index++]);
+    //console.log("redo: "+this.historyArray[this.index++]);
   }
 }
