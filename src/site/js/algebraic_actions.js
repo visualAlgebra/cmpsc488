@@ -537,7 +537,13 @@ class IdentityBalance {
   }
 
   static verify() {
-
+    if (tag.orientation == Orientation.NS){
+      if ((newChild instanceof Literal) && newChild.value == 0)
+        return false;
+      if (newChild instanceof Tag)
+        return tagVerify(newChild)
+    }
+    return true;
   }
 
   apply() {
@@ -596,5 +602,25 @@ class LiteralMerge {
       this.literalA.value %= 3;
       this.literalA.parent.removeNorthWest(this.literalB);
     }
+  }
+}
+
+class zeroMerge{
+  constructor(zeroSibling, siblingToMerge){
+    this.zeroSibling  = zeroSibling;
+    this.siblingToMerge = siblingToMerge;
+  }
+
+  verify(){
+    if (this.zeroSibling.parent != this.siblingToMerge.parent)
+      return false;
+    if (this.zeroSibling.parent.orientation != Orientation.NS)
+      return false;
+
+    return true;
+  }
+
+  apply(){
+    this.zeroSibling.parent.removeNorthWest(siblingToMerge);
   }
 }
