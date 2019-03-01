@@ -80,15 +80,6 @@ function createNavbar(){
 		let manipdivrow=document.createElement("div");
 		manipdivrow.className="row";
 
-		////let manipdiv=document.createElement("div");
-		////manipdiv.className="col s12";
-		////manipdivrow.appendChild(manipdiv);
-
-		//let manipul1=document.createElement("ul");
-		//manipul1.className="tabs";
-		//manipdivrow.appendChild(manipul1);
-		////manipdiv.appendChild(manipul1);
-
 		//hint
 		let manipli1a=document.createElement("a");
 		manipli1a.className="tab waves-effect waves-light btn col";
@@ -99,7 +90,6 @@ function createNavbar(){
 
 		manipli1a.innerHTML+="Hint";
 		manipdivrow.appendChild(manipli1a);
-		//manipul1.appendChild(manipli1a);
 
 		//share
 		let manipli2a=document.createElement("a");
@@ -111,7 +101,6 @@ function createNavbar(){
 
 		manipli2a.innerHTML+="Share";
 		manipdivrow.appendChild(manipli2a);
-		//manipul1.appendChild(manipli2a);
 
 		//restart
 		let manipli3a=document.createElement("a");
@@ -123,7 +112,6 @@ function createNavbar(){
 
 		manipli3a.innerHTML+="Restart";
 		manipdivrow.appendChild(manipli3a);
-		//manipul1.appendChild(manipli3a);
 
 		//undo
 		let manipli4a=document.createElement("a");
@@ -136,7 +124,6 @@ function createNavbar(){
 
 		manipli4a.innerHTML+="Undo";
 		manipdivrow.appendChild(manipli4a);
-		//manipul1.appendChild(manipli4a);
 
 		//redo
 		let manipli5a=document.createElement("a");
@@ -149,26 +136,11 @@ function createNavbar(){
 
 		manipli5a.innerHTML+="Redo";
 		manipdivrow.appendChild(manipli5a);
-		//manipul1.appendChild(manipli5a);
 
 		return [nav, ul2, manipdivrow];
 	}
 	return [nav, ul2];
 }
-
-        //<a class="waves-effect waves-light btn">
-        //  <i class="material-icons left">compare_arrows</i>
-        //  Hint
-        //</a>
-
-//<div class="nav-content">
-//      <ul class="tabs tabs-transparent">
-//        <li class="tab"><a href="#test1">Test 1</a></li>
-//        <li class="tab"><a class="active" href="#test2">Test 2</a></li>
-//        <li class="tab disabled"><a href="#test3">Disabled Tab</a></li>
-//        <li class="tab"><a href="#test4">Test 4</a></li>
-//      </ul>
-//    </div>
 function initNav(){
 	let maindiv=document.getElementById("navbarLocation");
 	let ret=createNavbar();
