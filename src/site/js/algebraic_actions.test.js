@@ -6,7 +6,7 @@ const v4 = new Variable(4);
 const v5 = new Variable(5);
 const l1 = new Literal(1);
 const l2 = new Literal(2);
-const l3 = new Literal(3);
+const l3 = new Literal(0);
 
 function assertAA (applied, expected, err) {
   let retval = applied.equals(expected);
@@ -70,7 +70,7 @@ function CSTest3() {
   let a0 = new Literal(1);
   let a1 = new Variable(1);
   let a2 = new Tag(Orientation.EW, [new Variable(2), new Variable(3)]);
-  let a3 = new Tag(Orientation.NS, [new Literal(2), new Literal(3)]);
+  let a3 = new Tag(Orientation.NS, [new Literal(2), new Literal(0)]);
   a.addNorthWest(a0);
   a.addSouthEast(a1);
   a.addSouthEast(a2);
@@ -82,7 +82,7 @@ function CSTest3() {
   let expected = new Tag(Orientation.EW);
   expected.addNorthWest(new Literal(1));
   expected.addSouthEast(new Variable(1));
-  expected.addSouthEast(new Tag(Orientation.NS, [new Literal(2), new Literal(3)]));
+  expected.addSouthEast(new Tag(Orientation.NS, [new Literal(2), new Literal(0)]));
   expected.addSouthEast(new Tag(Orientation.EW, [new Variable(2), new Variable(3)]));
 
   return assertAA(a, expected, "CommutativeSwap Test 3 failed");
@@ -255,7 +255,7 @@ function AETest2() {
     ],
     [
       new Literal(2),
-      new Literal(3)
+      new Literal(0)
     ]);
 
   //[v3><s]
@@ -271,7 +271,7 @@ function AETest2() {
     ],
     [
       new Literal(2),
-      new Literal(3)
+      new Literal(0)
     ]);
 
   const expectedParent = new Tag(Orientation.EW, [new Variable(3)], [new Variable(1), s]);
@@ -318,7 +318,7 @@ function AInsTest2() {
     ],
     [
       new Literal(2),
-      new Literal(3)
+      new Literal(0)
     ]);
 
   const before = new Tag(Orientation.EW, [new Variable(3)], [inner, x]);
@@ -332,7 +332,7 @@ function AInsTest2() {
     ],
     [
       new Literal(2),
-      new Literal(3)
+      new Literal(0)
     ]);
 
   //[v3><s]
@@ -354,7 +354,7 @@ function AInsTest3() {
   const inner = new Tag(Orientation.NS,
     [
       new Tag(Orientation.NS, [new Literal(1)], [new Literal(2)]),
-      new Literal(3)
+      new Literal(0)
     ]
   );
   //[v1 v2 [ [l1 l2><] l3><] >< v4]
@@ -413,7 +413,7 @@ function DTest2() {
     new Tag(Orientation.NS, [new Variable(4), new Variable(1)]),
     new Tag(Orientation.NS, [new Variable(4), new Variable(2)]),
     new Tag(Orientation.NS, [new Variable(4), new Tag(Orientation.NS, [v3, l1], [l2])]),
-    new Tag(Orientation.NS, [new Variable(4), new Literal(3)])
+    new Tag(Orientation.NS, [new Variable(4), new Literal(0)])
   ]);
 
   const action = new Distribute(factor, inner);
@@ -481,7 +481,7 @@ function FTest2() {
     new Tag(Orientation.NS, [new Literal(4), new Variable(1)]),
     new Tag(Orientation.NS, [new Literal(4), new Variable(2)]),
     new Tag(Orientation.NS, [new Literal(4), x]),
-    new Tag(Orientation.NS, [new Literal(4), new Literal(3)])
+    new Tag(Orientation.NS, [new Literal(4), new Literal(0)])
   ]);
 
   //[v1, v2, x, l3 >< ]
@@ -490,7 +490,7 @@ function FTest2() {
       new Variable(1),
       new Variable(2),
       new Tag(Orientation.NS, [new Variable(3), new Literal(1)], [new Literal(2)]),
-      new Literal(3)
+      new Literal(0)
     ]
   );
 
@@ -654,7 +654,7 @@ function SFTest3() {
   const e2 = new Tag(Orientation.NS, [new Literal(1)], [new Variable(4), new Variable(5)]);
   const e3 = new Tag(Orientation.NS, [new Literal(2)], [new Variable(4), new Variable(5)]);
   const e4 = new Tag(Orientation.NS, [new Variable(3)], [new Variable(4), new Variable(5)]);
-  const e5 = new Tag(Orientation.NS, [new Literal(3)], [new Variable(4), new Variable(5)]);
+  const e5 = new Tag(Orientation.NS, [new Literal(0)], [new Variable(4), new Variable(5)]);
   const expected = new Tag(Orientation.EW, [e1, e2, e3], [e4, e5]);
 
   const action = new SplitFrac(before);
@@ -820,7 +820,7 @@ function CTest2() {
   );
 
   const expected = new Tag(Orientation.EW,
-    [new Variable(4), new Literal(2), new Literal(3)],
+    [new Variable(4), new Literal(2), new Literal(0)],
     []
   );
 
