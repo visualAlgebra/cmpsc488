@@ -59,7 +59,7 @@ function get_account_from_db(account_id, callback){
   http.send();
 }
 
-//get_query_problems_from_db(2,res=>console.log(res));
+//get_problems_from_db(2,res=>console.log(res));
 function get_problems_from_db(queryAmt, callback){
   let http=new XMLHttpRequest();
   http.onreadystatechange = function () {
@@ -68,6 +68,30 @@ function get_problems_from_db(queryAmt, callback){
         }
     }
   http.open("GET", "http://localhost:8080/problems?number="+queryAmt+"&sort=timeCreated", true);// TODO hard coded query for now
+  http.setRequestHeader("Content-type", "application/json");
+  http.send();
+}
+//get_lessons_from_db(2,res=>console.log(res));
+function get_lessons_from_db(queryAmt, callback){
+  let http=new XMLHttpRequest();
+  http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          callback(JSON.parse(http.responseText));
+        }
+    }
+  http.open("GET", "http://localhost:8080/lessons?number="+queryAmt+"&sort=timeCreated", true);// TODO hard coded query for now
+  http.setRequestHeader("Content-type", "application/json");
+  http.send();
+}
+//get_acc_problems_from_db("Fractalyst",res=>console.log(res));
+function get_acc_problems_from_db(acc, callback){
+  let http=new XMLHttpRequest();
+  http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          callback(JSON.parse(http.responseText));
+        }
+    }
+  http.open("GET", "http://localhost:8080/lessons?acc="+acc+"&sort=timeCreated", true);// TODO hard coded query for now
   http.setRequestHeader("Content-type", "application/json");
   http.send();
 }
