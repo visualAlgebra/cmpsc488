@@ -644,6 +644,8 @@ class IdentityMerge{
     if (this.sibling.parent != this.sibling2.parent)
       return false;
     if (this.sibling1.parent.orientation == Orientation.NS){
+      if(this.quadrant1 != Quadrant.NW || this.quadrant1 != this.quadrant2)
+        return false;
       if (this.sibling1 instanceof Literal){
         if(this.sibling1.value == 1)
           return true;
@@ -652,6 +654,9 @@ class IdentityMerge{
       }
       if (this.sibling2 instanceof Literal)
         return this.sibling2.value == 1;
+
+      if(this.quadrant1 == Quadrant.NW && this.quadrant1 == this.quadrant2)
+        return true;
       return false;
     }
     if(this.sibling1 instanceof Literal){
