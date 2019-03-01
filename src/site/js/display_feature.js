@@ -12,13 +12,8 @@ function displayExpressionTree(tree, containerId, callback) {
     }
 }
 
-function displayTreeFromStruct(tree, container_id, callback){
-   displayExpressionTree(Deserialize(tree), container_id, callback);
-}
-
 function displayTreeFromDBStruct(tree, container_id, callback){
-   const des=Deserialize(tree);
-   displayExpressionTree(des, container_id, callback);
+   displayExpressionTree(Deserialize(tree), container_id, callback);
 }
 
 //put undefined in place of argument you want to skip and it will be default

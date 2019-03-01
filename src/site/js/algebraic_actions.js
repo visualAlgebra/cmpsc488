@@ -32,7 +32,7 @@ class CommutativeSwap {
 
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
-  verify() {
+  static verify() {
     const quadrant = this.sibling1.parent[this.quadrantLabel];
     return this.sibling1.parent === this.sibling2.parent
       && quadrant.some(x => Object.is(x, sibling2))
@@ -67,7 +67,7 @@ class AssociativeMerge {
   //verifys if the arguments are valid by checking
   //if the sibling is included in the parent
   //then return true
-  verify() {
+  static verify() {
     // TODO: don't use includes, use `some` with Object.is
     return this.parent.NW.includes(this.sibling)
       || (this.parent.SE.includes(this.sibling) && this.parent.orientation === Orientation.EW);
@@ -107,7 +107,7 @@ class AssociativeIntro {
   }
 
   //Valid if siblings is in parent in the correct order
-  verify() {
+  static verify() {
     return this.expr instanceof Tag
       || this.expr.parent !== null;
   }
@@ -161,7 +161,7 @@ class AssociativeExtract {
     this.quadrantLabel = quadrantLabel;
   }
 
-  verify() {
+  static verify() {
     return this.grandchild.parent !== null
       && this.grandchild.parent.parent !== null;
   }
@@ -196,7 +196,7 @@ class AssociativeInsert {
     this.insertionTag = insertionTag;
   }
 
-  verify() {
+  static verify() {
     return this.sibling.parent !== null
       && this.sibling.parent.orientation === insertionTag.orientation;
   }
@@ -224,20 +224,20 @@ class Distribute {
     this.tagToDistributeOver = tagToDistributeOver;
   }
 
-  verify() {
-    // return this.sibling1 and this.sibling2 are actually siblings;
+  static verify() {
+    if (this.value.parent != this.tagToDistributeOver.parent)
+      return false;
+
+    if (this.value.parent.orientation != Orientation.NS)
+      return false;
+    
+    if (this.tagToDistributeOver.orientation != Orientation.EW)
+      return false;
+
+    return true;
   }
 
   apply() {
-    // var tagToDistributeOverNWLength = this.tagToDistributeOver.NW.length;
-    // this.tagToDistributeOver.parent.orientation = Orientation.EW;
-    // for(var i = 0; i<tagToDistributeOverNWLength; i++){
-    //   var multTag = new Tag(Orientation.NS);
-    //   multTag.addNorthWest(this.value);
-    //   multTag.addNorthWest(this.tagToDistributeOver.NW[i]);
-    //   this.tagToDistributeOver.removeNorthWest(this.tagToDistributeOver.NW[i]);
-    //   this.tagToDistributeOver.addNorthWest(multTag);
-    // }
 
     //Arrays to store new tags
     let newNW = [];
@@ -277,32 +277,21 @@ class Factor {
     this.tagToFactor = tagToFactor;
   }
 
-  verify() {
+  static verify() {
     if (this.tagToFactor.orientation != "eastwest")
       return false;
-    var isGood = true;
-    for (var i = 0; i < this.tagToFactor.NW.length; i++) {
-      if (!this.this.tagToFactor.NW[i] instanceof Tag) {
-        if (this.this.tagToFactor.NW[i] !== valueToFactor)
+    for (var i = 0; i<tagToFactor.NW.length; i++){
+      if (this.tagToFactor.NW[i] instanceof Tag){
+        if(this.tagToFactor.NW[i].NW[0] !== valueToFactor)
           return false;
       }
-      else {
-        if (this.this.tagToFactor.NW[i].orientation !== "northsouth") {
+      else{
+        if (this.tagToFactor.NW[i].value !== valueToFactor)
           return false;
-        }
-        else {
-          for (var j = 0; j < this.tagToFactor.NW[i].NW.length; j++) {
-            if (this.tagToFactor.NW[i].NW[j] == valueToFactor)
-              isGood = true;
-          }
-          if (!isGood)
-            return false;
-          isGood = false;
-        }
       }
     }
 
-    return false;
+    return true;
 
   }
 
@@ -374,7 +363,7 @@ class SplitFrac {
     this.tag = tag;
   }
 
-  verify() {
+  static verify() {
     let dividend = this.tag.NW[0];
     return this.tag.orientation === Orientation.NS
       && divident.orientation === Orientation.EW
@@ -429,7 +418,7 @@ class CombineFrac {
     this.tag = tag;
   }
 
-  verify() {
+  static verify() {
     if (tag.orientation !== Orientation.EW) {
       return false;
     }
@@ -489,7 +478,7 @@ class QuadrantFlip {
     this.quadrantLabel = quadrantLabel;
   }
 
-  verify() {
+  static verify() {
     return this.tag instanceof Tag
       && this.tag.parent !== null;
   }
@@ -523,7 +512,7 @@ class Cancel {
     this.sibling2 = sibling2
   }
 
-  verify() {
+  static verify() {
     return this.sibling1.equals(this.sibling2)
       && this.sibling1.parent.equals(this.sibling2.parent);
   }
@@ -547,8 +536,14 @@ class IdentityBalance {
     this.tag = tag;
   }
 
-  verify() {
-
+  static verify() {
+    if (tag.orientation == Orientation.NS){
+      if ((newChild instanceof Literal) && newChild.value == 0)
+        return false;
+      if (newChild instanceof Tag)
+        return tagVerify(newChild)
+    }
+    return true;
   }
 
   apply() {
@@ -569,7 +564,7 @@ class LiteralMerge {
     this.quadrantB = quadrantB;
   }
 
-  verify() {
+  static verify() {
     if (this.literalA.parent !== this.literalB.parent)
       return false;
     if (this.literalA.parent.orientation == Orientation.EW)
@@ -607,5 +602,25 @@ class LiteralMerge {
       this.literalA.value %= 3;
       this.literalA.parent.removeNorthWest(this.literalB);
     }
+  }
+}
+
+class zeroMerge{
+  constructor(zeroSibling, siblingToMerge){
+    this.zeroSibling  = zeroSibling;
+    this.siblingToMerge = siblingToMerge;
+  }
+
+  static verify(){
+    if (this.zeroSibling.parent != this.siblingToMerge.parent)
+      return false;
+    if (this.zeroSibling.parent.orientation != Orientation.NS)
+      return false;
+
+    return true;
+  }
+
+  apply(){
+    this.zeroSibling.parent.removeNorthWest(siblingToMerge);
   }
 }

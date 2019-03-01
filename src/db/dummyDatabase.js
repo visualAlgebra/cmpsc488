@@ -56,7 +56,7 @@ class DummyDatabase extends Database {
         } else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
                 return server.respondWithError(response, 400, "Error 400: Query not supported");
         } else {
-                let fileName = "src/db/dbfiles/queries/TEST_QUERY_0.json"
+                let fileName = "src/db/dbfiles/queries/TEST_QUERY_3.json"
                 this.session.readFile(fileName, function (err, data) {
                     if (err) {
                         return server.respondWithError(response, 500, "Error 500: Internal Server Error");
@@ -77,7 +77,7 @@ class DummyDatabase extends Database {
         } else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
                 return server.respondWithError(response, 400, "Error 400: Query not supported");
         } else {
-                let fileName = "src/db/dbfiles/queries/TEST_QUERY_1.json"
+                let fileName = "src/db/dbfiles/queries/TEST_QUERY_2.json"
                 this.session.readFile(fileName, function (err, data) {
                     if (err) {
                         return server.respondWithError(response, 500, "Error 500: Internal Server Error");
@@ -108,6 +108,7 @@ class DummyDatabase extends Database {
             problem.creatorAccountID = accountID;
 
         }
+	    problem.problemID = usedName;
         this.session.writeFile(fileName, JSON.stringify(problem), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
@@ -124,6 +125,7 @@ class DummyDatabase extends Database {
         }
         lesson.creatorAccountID = accountID;
         lesson.timeCreated = this.getCurrentTimeStamp();
+        lesson.lessonID = enteredName;
 
         if (enteredName === "") {
             fileName = "src/db/dbfiles/lessons/TEST_LESSON_0.json";
