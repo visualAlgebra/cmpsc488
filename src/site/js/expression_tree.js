@@ -27,7 +27,10 @@ class LessonInfo{
     for(let form in this.creations){
       retval+=this.creations[form].toString();
     }
-    return retval+"}}";
+    retval+="}{"+this.description+"}";
+    retval+="{"+this.creatorAccId+"}";
+    retval+="{"+this.timeCreated+"}";
+    return retval+"}";
   }
 }
 
@@ -51,7 +54,7 @@ class ProblemInfo {
   }
 
   toString(){
-    return "{_PROBLEM{"+this.problemID+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
+    return "{_PROBLEM{"+this.problemID+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}{"+this.description+"}{"+this.timeCreated+"}}";
   }
 }
 
