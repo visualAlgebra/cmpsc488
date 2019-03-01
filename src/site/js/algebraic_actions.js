@@ -593,7 +593,7 @@ class LiteralMerge {
         this.literalB.parent.removeSouthEast(this.literalA);
       }
       else {
-        this.literalA.value = Math.abs(-3 + (this.literalA.value + this.literalB.value) % 3);
+        this.literalA.value = Math.abs(-3 + (-1*(this.literalA.value + this.literalB.value)) % 3);
         this.literalA.parent.removeSouthEast(this.literalB);
       }
     }
@@ -605,22 +605,87 @@ class LiteralMerge {
   }
 }
 
-class zeroMerge{
-  constructor(zeroSibling, siblingToMerge){
-    this.zeroSibling  = zeroSibling;
-    this.siblingToMerge = siblingToMerge;
+class ZeroMerge{
+  constructor(sibling1, sibling2){
+    this.sibling1  = sibling1;
+    this.sibling2 = sibling2;
   }
 
   static verify(){
-    if (this.zeroSibling.parent != this.siblingToMerge.parent)
+    if (this.sibling1.parent != this.sibling2.parent)
       return false;
-    if (this.zeroSibling.parent.orientation != Orientation.NS)
+    if (this.sibling1.parent.orientation != Orientation.NS)
       return false;
 
     return true;
   }
 
   apply(){
-    this.zeroSibling.parent.removeNorthWest(siblingToMerge);
+    if (sibling1 instanceof Literal){
+      if (sibling1.value = 0)
+        this.sibling1.parent.removeNorthWest(sibling2);
+      else
+        this.sibling2.parent.removeNorthWest(sibling1);
+    }
+    else
+      this.sibling2.parent.removeNorthWest(sibling1)
+  }
+}
+
+class IdentityMerge{
+  constructor(sibling1, sibling2, quadrant1, quadrant2){
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+    this.quadrant1 = quadrant1;
+    this.quadrant2 = quadrant2;
+  }
+
+  static verify(){
+    if (this.sibling.parent != this.sibling2.parent)
+      return false;
+    if (this.sibling1.parent.orientation == Orientation.NS){
+      if (this.sibling1 instanceof Literal){
+        if(this.sibling1.value == 1)
+          return true;
+        if (this.sibling2 instanceof Literal)
+          return this.sibling2.value == 1;
+      }
+      if (this.sibling2 instanceof Literal)
+        return this.sibling2.value == 1;
+      return false;
+    }
+    if(this.sibling1 instanceof Literal){
+      if (this.sibling1.value == 0)
+        return true;
+      if (this.sibling2 instanceof Literal)
+        return this.sibling2.value == 0;
+    }
+    if (this.sibling2 instanceof Literal)
+      return this.sibling2.value == 0;
+      
+    return false;
+  }
+
+  apply(){
+    if (this.sibling1.parent.orientation == Orientation.NS)
+      if (this.sibling1 instanceof Literal && this.sibling1.value == 1)
+        this.sibling2.parent.removeNorthWest(this.sibling1);
+      else
+        this.sibling1.parent.removeNorthWest(this.sibling2);
+    
+    else{
+      if (this.sibling1 instanceof Literal && this.sibling1.value == 0){
+        if (this.quadrant1 == Quadrant.NW)
+          this.sibling2.parent.removeNorthWest(this.sibling1);
+        else
+          this.sibling2.parent.removeSouthEast(this.sibling1)
+      }
+      else{
+        if (this.quadrant2 == Quadrant.NW)
+          this.sibling1.parent.removeNorthWest(this.sibling2);
+        else
+          this.sibling1.parent.removeSouthEast(this.sibling2);
+      }
+    }
   }
 }
