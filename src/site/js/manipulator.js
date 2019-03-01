@@ -85,7 +85,7 @@ class history{
     if(this.index-1<=0){
       return;
     }
-    displayTreeFromStruct(this.historyArray[(--this.index)-1],'canvasContainer', res=> workingExpressionTree=res);
+    displayTreeFromDBStruct(this.historyArray[(--this.index)-1],'canvasContainer', res=> workingExpressionTree=res);
     //console.log("undo: "+this.historyArray[this.index]);
   }
 
@@ -93,7 +93,7 @@ class history{
     if(this.index>=this.historyArray.length){
       return;
     }
-    displayTreeFromStruct(this.historyArray[this.index++],'canvasContainer', res=> workingExpressionTree=res);
+    displayTreeFromDBStruct(this.historyArray[this.index++],'canvasContainer', res=> workingExpressionTree=res);
     //console.log("redo: "+this.historyArray[this.index++]);
   }
 }
