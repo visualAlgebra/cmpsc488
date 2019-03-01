@@ -9,17 +9,13 @@ function getInitialProblemsToDisplay() {
 function fillProblems(query) {
     let filldiv = document.getElementById("creationHolder");
     let probAmt = 0;
-    for (let q in query.queryResults) {
+    for (let q in query) {
         if (probAmt >= problemCount) {
             break;
         }
         q = parseInt(q);
-        let str="";
-        for(let key in query.queryResults[q]){
-            str=key;
-        }
-        filldiv.appendChild(createCardForProblem(str, probAmt));
-        displayProblemFromDB(str, q + "_s", q + "_g");
+        filldiv.appendChild(createCardForProblem(query[q].problemID, probAmt));
+        displayProblemFromDBStruct(query[q], q + "_s", q + "_g");
         probAmt++;
     }
 }

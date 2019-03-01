@@ -14,9 +14,12 @@ String.prototype.splice = function(index, str) {
 
 
 class LessonInfo{
-    constructor(lesson_id, creations){
-        this.id=lesson_id;
-        this.creations=creations;
+    constructor(lesson_id, creations, timeCreated, creatorAccId, description){
+      this.id=lesson_id;
+      this.creations=creations;
+      this.timeCreated=timeCreated;
+      this.creatorAccId=creatorAccId;
+      this.description=description;
     }
 
   toString(){
@@ -28,15 +31,27 @@ class LessonInfo{
   }
 }
 
+function parseMultiProblem(multi){
+    let ret=[];
+    for(let x in multi.queryResults){
+      x=parseInt(x);
+      let k=multi.queryResults[x];
+      ret[x]=new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated);
+    }
+    return ret;
+}
+
 class ProblemInfo {
-  constructor(id,treestart,treegoal){
-    this.id=id;
+  constructor(problemID,treestart,treegoal, description, timeCreated){
+    this.problemID=problemID;
     this.expression_start=treestart;
     this.expression_goal=treegoal
+    this.description=description;
+    this.timeCreated=timeCreated;
   }
 
   toString(){
-    return "{_PROBLEM{"+this.id+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
+    return "{_PROBLEM{"+this.problemID+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}}";
   }
 }
 

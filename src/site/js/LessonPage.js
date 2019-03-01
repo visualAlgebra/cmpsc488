@@ -13,16 +13,15 @@ window.onload = ()=>{
 
 function fillCreations(lesson) {
   let filldiv = document.getElementById("lessonContainer");
-  return null;
   for (let creation in lesson.creations) {
     creation = parseInt(creation);
-    if (lesson.creations[creation].toString().includes("problems")) {
-      let str = lesson.creations[creation].substring(lesson.creations[creation].lastIndexOf('/') + 1, lesson.creations[creation].length);
-      filldiv.appendChild(createCardForProblem(str, probAmt));
-      displayProblemFromDB(str, creation + "_s", creation + "_g");
-    } else if (lesson.creations[creation].toString().includes("lessons")) {
-      let str = lesson.creations[creation].substring(lesson.creations[creation].lastIndexOf('/') + 1, lesson.creations[creation].length);
-      get_lesson_from_db(str, res=>createCollectionForLesson(res, creation, elementId));
+    if (lesson.creations[creation].lessonID===undefined) {
+      filldiv.appendChild(createCardForProblem(lesson.creations[creation].problemID, creation));
+      let k=lesson.creations[creation];
+      let prob=new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated);
+      displayProblemFromDBStruct(prob, creation + "_s", creation + "_g");
+    } else {
+      //get_lesson_from_db(str, res=>createCollectionForLesson(res, creation, elementId));
     }
   }
 }

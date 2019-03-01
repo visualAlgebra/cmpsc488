@@ -1,12 +1,30 @@
 function createCollectionItemForLesson(lesson, elementId){
     let li1=document.createElement('li');
-    li1.className="collection-item";
-    let span1=document.createElement('span');
-    span1.className="title";
-    span1.innerHTML=lesson.id;
+    li1.className="collection-item blue-grey lighten-2";
+
+    let i1=document.createElement('i');
+    i1.className="material-icons";
+    i1.innerHTML="folder";
+    li1.appendChild(i1);
+
+    let div1=document.createElement('div');
+    div1.className="white-text";
+    div1.innerHTML=lesson.id;
     
-    document.getElementById(elementId).appendChild(maindiv);
+    li1.appendChild(div1);
+    let a1=document.createElement('a');
+    a1.href="#";
+    a1.className="secondary-content";
+    div1.appendChild(a1);
+
+    let i2=document.createElement('i');
+    i2.className="material-icons";
+    i2.innerHTML="send";
+    a1.appendChild(i2);
+    
+    document.getElementById(elementId).appendChild(li1);
 }
+      
 function createCardForProblem(problem_id, cardID){
     let maindiv=document.createElement("div");
     maindiv.className="col s12 m6 l4";

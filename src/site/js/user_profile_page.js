@@ -11,36 +11,43 @@ window.onload = ()=>{
 }
 ;
 
-function fillPage(accInfo) {//jacob needs to remake the structure for an account in db
+var probAmt = 0;
+var lessAmt = 0;
+function fillPage(accInfo) {
   let id_field = document.getElementById('userAccountIdField');
   id_field.innerHTML = accInfo.id;
+  let bio_field = document.getElementById('bioField');
+  bio_field.innerHTML=accInfo.bio;
   let creation_date_field = document.getElementById('creationDateField');
-  creation_date_field.innerHTML = "Creation date: " + (accInfo.creationDate);
-  //date hardcoded in and cant be parsed by Date.parse()
+  creation_date_field.innerHTML = "Creation date: " + new Date(accInfo.timeCreated);
   let problems_amt = document.getElementById('problemsSavedAmountField');
   let lessons_amt = document.getElementById('lessonsSavedAmountField');
-  let problemCount = 0;
-  let lessonCount = 0;
-  for (let creation in accInfo.creations) {
-    if (accInfo.creations[creation].toString().indexOf('problems') !== -1) {
-      problemCount++;
-    } else {
-      lessonCount++;
-    }
+  problems_amt.innerHTML = "Problems: " + accInfo.problems.length;
+  lessons_amt.innerHTML = "Lessons: " + accInfo.lessons.length;
+  //lessons
+  let filldiv = document.getElementById("creationHolder");
+  for(let lesson in accInfo.lessons){
+    //get_lesson_from_db(str, res=>createCollectionItemForLesson(res, "lessonHolder"));
+    lessAmt++;
   }
-  problems_amt.innerHTML = "Problems: " + problemCount;
-  lessons_amt.innerHTML = "Lessons: " + lessonCount;
-  fillCreations("creationHolder", accInfo);
+  //problems
+  for(let problem in accInfo.problems){
+    problem = parseInt(problem);
+    filldiv.appendChild(createCardForProblem(accInfo.problems[problem].problemID, probAmt));
+    displayProblemFromDB(accInfo.problems[problem].problemID, problem + "_s", problem + "_g");
+    probAmt++;
+  }
 }
 
 class AccountInfo {
-  constructor(account_id, time_created, creationArr) {
-    this.id = account_id;
-    this.creationDate = time_created;
-    this.creations = creationArr;
+  constructor(json) {
+    this.id = json.accountID;
+    this.bio = json.bio;
+    this.lessons = json.lessons;
+    this.problems = json.problems;
+    this.timeCreated = json.timeCreated;
   }
 }
-
 function getAccountFromURL() {
   let acc = (window.location.href).substr((window.location.href).indexOf('/user_profile_page'));
   if (acc.indexOf('user_profile_page/accounts/') === -1 || acc === 'null' || acc === '' || acc === 'undefined') {
@@ -49,28 +56,4 @@ function getAccountFromURL() {
     return null;
   }
   return acc.substring(acc.lastIndexOf('/') + 1, acc.length);
-}
-var probAmt = 0;
-var lessAmt = 0;
-function fillCreations(elementId, accInfo) {
-  let filldiv = document.getElementById(elementId);
-  for (let creation in accInfo.creations) {
-    creation = parseInt(creation);
-    if (accInfo.creations[creation].toString().includes("problems")) {
-      if (probAmt >= 10) {
-        continue;
-      }
-      let str = accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/') + 1, accInfo.creations[creation].length);
-      filldiv.appendChild(createCardForProblem(str, probAmt));
-      displayProblemFromDB(str, creation + "_s", creation + "_g");
-      probAmt++;
-    } else if (accInfo.creations[creation].toString().includes("lessons")) {
-      if (lessAmt >= 5) {
-        continue;
-      }
-      let str = accInfo.creations[creation].substring(accInfo.creations[creation].lastIndexOf('/') + 1, accInfo.creations[creation].length);
-      get_lesson_from_db(str, res=>createCollectionForLesson(res, creation, elementId));
-      lessAmt++;
-    }
-  }
 }
