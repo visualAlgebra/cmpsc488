@@ -13,21 +13,22 @@ class Node{
 function heuristicEval(a, b){
   if (a == b)
     return 0;
-  var numDiff = 0;
-  //if we recieve the string version of the function in standard math then the code is the following
-  var maxDiff = max(a.length - b.length, 0);
-  for(var i = 0; i<a.length-maxDiff; i++){
-    if (a[i]!=b[i]){
-      numDiff+=1;
+  if ((a instanceof Tag) && (b instanceof Tag)){
+    var numDiff = 0;
+    var lengthAdjustment = max(a.NW.length - b.NW.length, 0);
+    for (var i = 0; i<a.NW.length - lengthAdjustment; i++){
+      if((b.NW[i] instanceof Tag) && !(a.NW[i] instanceof Tag)){
+        numDiff += b.NW[i].treeCount;
+      }
+
     }
   }
-  return numDiff + Math.abs(a.length-b.length);
 }
 function solve(a, b){
   var head = Node(hesuristicEval(a, b), null, null, a, 0);
   /*
     Pseudocode:
-    While (unepandedNodeList != goal)
+    While (unexpandedNodeList != goal)
     try different actions
     add resulting node to node list
     node = select next node with best heuristic value

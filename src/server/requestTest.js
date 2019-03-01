@@ -63,6 +63,7 @@ function cleanup() {
 	for (let i = 0; i < filePathArray.length; i++) {
 		unlink(fileRTPath + filePathArray[i] + ".json");
 	}
+	unlink(fileRTPath + "problems/TEST_PROBLEM_0.json");
 	console.log("Cleanup finished");
 }
 

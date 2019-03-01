@@ -108,6 +108,7 @@ class DummyDatabase extends Database {
             problem.creatorAccountID = accountID;
 
         }
+	    problem.problemID = usedName;
         this.session.writeFile(fileName, JSON.stringify(problem), function(err) {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
@@ -124,6 +125,7 @@ class DummyDatabase extends Database {
         }
         lesson.creatorAccountID = accountID;
         lesson.timeCreated = this.getCurrentTimeStamp();
+        lesson.lessonID = enteredName;
 
         if (enteredName === "") {
             fileName = "src/db/dbfiles/lessons/TEST_LESSON_0.json";
