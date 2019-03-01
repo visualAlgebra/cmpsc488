@@ -1,8 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-  var elems = document.querySelectorAll('.sidenav');
-  var instances = M.Sidenav.init(elems);
-});
-
 //user_profile_page/accounts/account_id
 //{"accountID":"TEST_USER_0","timeCreated":"120000T101010",
 //"creations":["/problems/TEST_PROBLEM_0", "/lessons/TEST_LESSON_0"]}

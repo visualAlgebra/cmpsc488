@@ -32,9 +32,6 @@ function createNavbar(){
 	let li4=document.createElement("li");
 	li4.innerHTML='<a href="http://localhost:8080/Explorer.html">Explore</a>';
 	ul1.appendChild(li4);
-	let li5=document.createElement("li");
-	li5.innerHTML='<a href="http://localhost:8080/About_Contact_Us.html">About</a>';
-	ul1.appendChild(li5);
 	let li6=document.createElement("li");
 	li6.innerHTML='<a href="http://localhost:8080/user_profile_page.html">User Profile</a>';
 	ul1.appendChild(li6);
@@ -50,7 +47,6 @@ function createNavbar(){
 	ul2.appendChild(li2.cloneNode(true));
 	ul2.appendChild(li3.cloneNode(true));
 	ul2.appendChild(li4.cloneNode(true));
-	ul2.appendChild(li5.cloneNode(true));
 	ul2.appendChild(li6.cloneNode(true));
 	return [nav, ul2];
 }

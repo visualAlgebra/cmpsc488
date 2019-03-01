@@ -1,0 +1,7 @@
+.wavecard {
+  height: 150px;
+  display:inline-block;
+  width: auto;
+  border-width: 2px;
+  border-style: groove;
+}
