@@ -12,7 +12,8 @@ window.onload = ()=>{
 }
 
 function fillCreations(lesson) {
-  let filldiv = document.getElementById("lessonContainer");
+  document.getElementById("lessonIdField").innerHTML=lesson.id;
+  let filldiv = document.getElementById("problemContainer");
   for (let creation in lesson.creations) {
     creation = parseInt(creation);
     if (lesson.creations[creation].lessonID===undefined) {
@@ -21,7 +22,9 @@ function fillCreations(lesson) {
       let prob=new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated);
       displayProblemFromDBStruct(prob, creation + "_s", creation + "_g");
     } else {
-      //get_lesson_from_db(str, res=>createCollectionForLesson(res, creation, elementId));
+      let k=lesson.creations[creation];
+      let les=new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description)
+      createCollectionItemForLesson(les,"lessonContainer");
     }
   }
 }
