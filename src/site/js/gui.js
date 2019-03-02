@@ -41,21 +41,21 @@ const mouse = {
     //    Trees are not same object
     //    eventDest is a quadrant <--
     //    ...
-    if (this.mode === MouseMode.Manipulation && Object.is(x.parent, y.parent) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && y.orientation === y.parent.orientation && xQuad === yQuad) {
+    if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeInsert.verify(x, y)) {
+
       const action = new AssociativeInsert(x, y);
-      if (AssociativeInsert.verify(x, y)) {
-        action.apply();
-        console.log("Inserting", x, "to tag", y);
-      }
+      action.apply();
+
+      console.log("Inserting", x, "to tag", y);
 
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Manipulation && Object.is(x.parent.parent, y) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && x.parent.orientation === y.orientation && xQuad === yQuad) {
+    else if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeExtract.verify(x, y)) {
+
       const action = new AssociativeExtract(x, xQuad);
-      if (AssociativeExtract.verify(x)) {
-        action.apply();
-        console.log("Extracting", x, "from", x.parent);
-      }
+      action.apply();
+
+      console.log("Extracting", x, "from", x.parent);
 
       this.redisplayExpressionTree();
     }

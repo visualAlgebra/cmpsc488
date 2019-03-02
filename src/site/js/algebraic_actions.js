@@ -68,7 +68,8 @@ class AssociativeMerge {
   //if the sibling is included in the parent
   //then return true
   static verify(sibling, parent, quadrantLabel) {
-    return true || parent[quadrantLabel].some(x => Object.is(x, sibling));
+    return parent[quadrantLabel].some(x => Object.is(x, sibling)) 
+      && parent.orientation === sibling.orientation;
   }
 
 
@@ -159,9 +160,11 @@ class AssociativeExtract {
     this.quadrantLabel = quadrantLabel;
   }
 
-  static verify(grandchild) {
-    return grandchild.parent !== null
-      && grandchild.parent.parent !== null;
+  static verify(grandchild, grandparent) {
+    return grandparent !== null
+      && grandchild.parent !== null
+      && Object.is(grandchild.parent.parent, grandparent)
+      && grandchild.parent.orientation === grandparent.orientation;
   }
 
   apply() {
@@ -194,9 +197,12 @@ class AssociativeInsert {
     this.insertionTag = insertionTag;
   }
 
-  static verify(sibling, insertionTag) {
+  static verify(sibling, insertionTag, xQuad, yQuad) {
     return sibling.parent !== null
-      && sibling.parent.orientation === insertionTag.orientation;
+      && sibling.parent.orientation === insertionTag.orientation
+      && Object.is(sibling.parent, insertionTag.parent)
+      && !Object.is(sibling, insertionTag)
+      && xQuad === yQuad;
   }
 
   apply() {
