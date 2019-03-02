@@ -32,9 +32,9 @@ class CommutativeSwap {
 
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
-  static verify() {
-    const quadrant = this.sibling1.parent[this.quadrantLabel];
-    return this.sibling1.parent === this.sibling2.parent
+  static verify(sibling1, sibling2, quadrantLabel) {
+    const quadrant = sibling1.parent[quadrantLabel];
+    return sibling1.parent === sibling2.parent
       && quadrant.some(x => Object.is(x, sibling2))
       && quadrant.some(x => Object.is(x, sibling1));
   }
@@ -67,10 +67,8 @@ class AssociativeMerge {
   //verifys if the arguments are valid by checking
   //if the sibling is included in the parent
   //then return true
-  static verify() {
-    // TODO: don't use includes, use `some` with Object.is
-    return this.parent.NW.includes(this.sibling)
-      || (this.parent.SE.includes(this.sibling) && this.parent.orientation === Orientation.EW);
+  static verify(sibling, parent, quadrantLabel) {
+    return true || parent[quadrantLabel].some(x => Object.is(x, sibling));
   }
 
 
@@ -107,9 +105,9 @@ class AssociativeIntro {
   }
 
   //Valid if siblings is in parent in the correct order
-  static verify() {
-    return this.expr instanceof Tag
-      || this.expr.parent !== null;
+  static verify(expr) {
+    return expr instanceof Tag
+      || expr.parent !== null;
   }
 
   apply() {
@@ -161,9 +159,9 @@ class AssociativeExtract {
     this.quadrantLabel = quadrantLabel;
   }
 
-  static verify() {
-    return this.grandchild.parent !== null
-      && this.grandchild.parent.parent !== null;
+  static verify(grandchild) {
+    return grandchild.parent !== null
+      && grandchild.parent.parent !== null;
   }
 
   apply() {
@@ -196,9 +194,9 @@ class AssociativeInsert {
     this.insertionTag = insertionTag;
   }
 
-  static verify() {
-    return this.sibling.parent !== null
-      && this.sibling.parent.orientation === insertionTag.orientation;
+  static verify(sibling, insertionTag) {
+    return sibling.parent !== null
+      && sibling.parent.orientation === insertionTag.orientation;
   }
 
   apply() {
@@ -224,14 +222,14 @@ class Distribute {
     this.tagToDistributeOver = tagToDistributeOver;
   }
 
-  static verify() {
-    if (this.value.parent != this.tagToDistributeOver.parent)
+  static verify(value, tagToDistributeOver) {
+    if (value.parent != tagToDistributeOver.parent)
       return false;
 
-    if (this.value.parent.orientation != Orientation.NS)
+    if (value.parent.orientation != Orientation.NS)
       return false;
     
-    if (this.tagToDistributeOver.orientation != Orientation.EW)
+    if (tagToDistributeOver.orientation != Orientation.EW)
       return false;
 
     return true;
@@ -277,16 +275,16 @@ class Factor {
     this.tagToFactor = tagToFactor;
   }
 
-  static verify() {
-    if (this.tagToFactor.orientation != "eastwest")
+  static verify(tagToFactor, valueToFactor) {
+    if (tagToFactor.orientation != "eastwest")
       return false;
     for (var i = 0; i<tagToFactor.NW.length; i++){
-      if (this.tagToFactor.NW[i] instanceof Tag){
-        if(this.tagToFactor.NW[i].NW[0] !== valueToFactor)
+      if (tagToFactor.NW[i] instanceof Tag){
+        if(tagToFactor.NW[i].NW[0] !== valueToFactor)
           return false;
       }
       else{
-        if (this.tagToFactor.NW[i].value !== valueToFactor)
+        if (tagToFactor.NW[i].value !== valueToFactor)
           return false;
       }
     }
@@ -363,12 +361,12 @@ class SplitFrac {
     this.tag = tag;
   }
 
-  static verify() {
-    let dividend = this.tag.NW[0];
-    return this.tag.orientation === Orientation.NS
+  static verify(tag) {
+    let dividend = tag.NW[0];
+    return tag.orientation === Orientation.NS
       && divident.orientation === Orientation.EW
       && (dividend.NW.length + dividend.SE.length > 1)
-      && this.tag.SE.length <= 1;
+      && tag.SE.length <= 1;
   }
 
   apply() {
@@ -418,7 +416,7 @@ class CombineFrac {
     this.tag = tag;
   }
 
-  static verify() {
+  static verify(tag) {
     if (tag.orientation !== Orientation.EW) {
       return false;
     }
@@ -512,9 +510,9 @@ class Cancel {
     this.sibling2 = sibling2
   }
 
-  static verify() {
-    return this.sibling1.equals(this.sibling2)
-      && this.sibling1.parent.equals(this.sibling2.parent);
+  static verify(sibling1, sibling2) {
+    return sibling1.equals(sibling2)
+      && sibling1.parent.equals(sibling2.parent);
   }
 
   apply() {
@@ -536,7 +534,7 @@ class IdentityBalance {
     this.tag = tag;
   }
 
-  static verify() {
+  static verify(newChild, tag) {
     if (tag.orientation == Orientation.NS){
       if ((newChild instanceof Literal) && newChild.value == 0)
         return false;
@@ -564,14 +562,14 @@ class LiteralMerge {
     this.quadrantB = quadrantB;
   }
 
-  static verify() {
-    if (this.literalA.parent !== this.literalB.parent)
+  static verify(literalA, literalB, quadrantA, quadrantB) {
+    if (literalA.parent !== literalB.parent)
       return false;
-    if (this.literalA.parent.orientation == Orientation.EW)
+    if (literalA.parent.orientation == Orientation.EW)
       return true;
-    if (this.quadrantA != this.quadrantB)
+    if (quadrantA != quadrantB)
       return false;
-    if (this.quadrantA == Quadrant.SE)
+    if (quadrantA == Quadrant.SE)
       return false;
     return true;
   }
@@ -611,10 +609,10 @@ class ZeroMerge{
     this.sibling2 = sibling2;
   }
 
-  static verify(){
-    if (this.sibling1.parent != this.sibling2.parent)
+  static verify(sibling1, sibling2){
+    if (sibling1.parent != sibling2.parent)
       return false;
-    if (this.sibling1.parent.orientation != Orientation.NS)
+    if (sibling1.parent.orientation != Orientation.NS)
       return false;
 
     return true;
@@ -640,33 +638,33 @@ class IdentityMerge{
     this.quadrant2 = quadrant2;
   }
 
-  static verify(){
-    if (this.sibling.parent != this.sibling2.parent)
+  static verify(sibling1, sibling2, quadrant1, quadrant2){
+    if (sibling.parent != sibling2.parent)
       return false;
-    if (this.sibling1.parent.orientation == Orientation.NS){
-      if(this.quadrant1 != Quadrant.NW || this.quadrant1 != this.quadrant2)
+    if (sibling1.parent.orientation == Orientation.NS){
+      if(quadrant1 != Quadrant.NW || quadrant1 != quadrant2)
         return false;
-      if (this.sibling1 instanceof Literal){
-        if(this.sibling1.value == 1)
+      if (sibling1 instanceof Literal){
+        if(sibling1.value == 1)
           return true;
-        if (this.sibling2 instanceof Literal)
-          return this.sibling2.value == 1;
+        if (sibling2 instanceof Literal)
+          return sibling2.value == 1;
       }
-      if (this.sibling2 instanceof Literal)
-        return this.sibling2.value == 1;
+      if (sibling2 instanceof Literal)
+        return sibling2.value == 1;
 
-      if(this.quadrant1 == Quadrant.NW && this.quadrant1 == this.quadrant2)
+      if(quadrant1 == Quadrant.NW && quadrant1 == quadrant2)
         return true;
       return false;
     }
-    if(this.sibling1 instanceof Literal){
-      if (this.sibling1.value == 0)
+    if(sibling1 instanceof Literal){
+      if (sibling1.value == 0)
         return true;
-      if (this.sibling2 instanceof Literal)
-        return this.sibling2.value == 0;
+      if (sibling2 instanceof Literal)
+        return sibling2.value == 0;
     }
-    if (this.sibling2 instanceof Literal)
-      return this.sibling2.value == 0;
+    if (sibling2 instanceof Literal)
+      return sibling2.value == 0;
       
     return false;
   }

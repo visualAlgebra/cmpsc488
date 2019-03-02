@@ -43,7 +43,7 @@ const mouse = {
     //    ...
     if (this.mode === MouseMode.Manipulation && Object.is(x.parent, y.parent) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && y.orientation === y.parent.orientation && xQuad === yQuad) {
       const action = new AssociativeInsert(x, y);
-      if (AssociativeInsert.verify()) {
+      if (AssociativeInsert.verify(x, y)) {
         action.apply();
         console.log("Inserting", x, "to tag", y);
       }
@@ -52,7 +52,7 @@ const mouse = {
     }
     else if (this.mode === MouseMode.Manipulation && Object.is(x.parent.parent, y) && !Object.is(x, y) && this.eventDest instanceof TagQuadrantGui && x.parent.orientation === y.orientation && xQuad === yQuad) {
       const action = new AssociativeExtract(x, xQuad);
-      if (AssociativeExtract.verify()) {
+      if (AssociativeExtract.verify(x)) {
         action.apply();
         console.log("Extracting", x, "from", x.parent);
       }
@@ -61,16 +61,16 @@ const mouse = {
     }
     else if (this.mode === MouseMode.Manipulation && Object.is(x.parent, y.parent) && xQuad === yQuad && !Object.is(x, y)) {
       const action = new CommutativeSwap(x, y, xQuad);
-      console.log(workingExpressionTree.toString());
+      // console.log(workingExpressionTree.toString());
       action.apply();
-      console.log(workingExpressionTree.toString());
+      // console.log(workingExpressionTree.toString());
       console.log("Swapping siblings", x, "and", y);
 
       this.redisplayExpressionTree()
     }
     else if (this.mode === MouseMode.Manipulation && x instanceof Tag && y instanceof Tag && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && Object.is(x.parent, y)) {
       const action = new AssociativeMerge(x, y, xQuad);
-      if (AssociativeMerge.verify()) {
+      if (AssociativeMerge.verify(x, y, xQuad)) {
         action.apply();
         console.log("Merging", x, "into", y);
       }
@@ -79,15 +79,15 @@ const mouse = {
     }
     else if (this.mode === MouseMode.MergingLiterals && x instanceof Literal && y instanceof Literal && Object.is(x.parent, y.parent) && !Object.is(x, y)) {
       const action = new LiteralMerge(x, y, xQuad, yQuad);
-      if (action.verify()) {
+      if (LiteralMerge.verify(x, y, xQuad, yQuad)) {
         action.apply();
         console.log("Mergin Literals", x, "and", y);
       }
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Distribution && Object.is(x.parent, y.parent) && !Object.is(x, y) && y instanceof Tag && this.eventDest instanceof TagQuadrantGui && y.orientation === Orientation.EW && xQuad === yQuad) {
+    else if (this.mode === MouseMode.Distribution && Object.is(x.parent, y.parent) && !Object.is(x, y) && y instanceof Tag && this.eventDest instanceof TagButtonGui && y.orientation === Orientation.EW && xQuad === yQuad) {
       const action = new Distribute(x, y);
-      if (Distribute.verify()) {
+      if (Distribute.verify(x, y)) {
         action.apply();
         console.log("Distributing", x, "over", y);
       }
@@ -95,8 +95,10 @@ const mouse = {
     }
     else if (this.mode === MouseMode.Distribution && x instanceof Tag && y instanceof Tag && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && Object.is(x.parent, y)) {
       const action = new SplitFrac(y);
-      action.apply();
-      console.log("Splitting Fraction", y);
+      if (SplitFrac.verify(y)) {
+        action.apply();
+        console.log("Splitting Fraction", y);
+      }
 
       this.redisplayExpressionTree();
     }
