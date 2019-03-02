@@ -252,20 +252,28 @@ class Distribute {
     //setting parent pointer
     const parent = this.value.parent;
 
-    //Flipping orientation of the parent
-    parent.orientation = Orientation.EW;
-
-    //clearing out the NW quadrant and adding in the new tags
-    parent.emptyNorthWest();
-    for (let child of newNW) {
-      parent.addNorthWest(child);
+    if (parent.NW.length === 2) {
+      //Flipping orientation of the parent
+      parent.orientation = Orientation.EW;
+  
+      //clearing out the NW quadrant and adding in the new tags
+      parent.emptyNorthWest();
+      for (let child of newNW) {
+        parent.addNorthWest(child);
+      }
+  
+      //clearing out the SE quadrant and adding in the new tags
+      parent.emptySouthEast();
+      for (let child of newSE) {
+        parent.addSouthEast(child);
+      }
+    } else {
+      parent.removeNorthWest(this.value);
+      parent.removeNorthWest(this.tagToDistributeOver);
+      let newTag = new Tag(Orientation.EW, newNW, newSE);
+      parent.prependNorthWest(newTag);
     }
 
-    //clearing out the SE quadrant and adding in the new tags
-    parent.emptySouthEast();
-    for (let child of newSE) {
-      parent.addSouthEast(child);
-    }
   }
 }
 
