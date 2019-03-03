@@ -86,6 +86,15 @@ const mouse = {
 
       this.redisplayExpressionTree();
     }
+    else if (this.mode === MouseMode.Manipulation && Cancel.verify(x, y, xQuad, yQuad)) {
+
+      const action = new Cancel(x, y);
+      action.apply();
+
+      console.log("Cancelling", x, "and", y); 
+
+      this.redisplayExpressionTree();
+    }
     else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
 
       const action = new LiteralMerge(x, y, xQuad, yQuad);

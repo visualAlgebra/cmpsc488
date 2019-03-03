@@ -538,12 +538,14 @@ class QuadrantFlip {
 class Cancel {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;
-    this.sibling2 = sibling2
+    this.sibling2 = sibling2;
   }
 
-  static verify(sibling1, sibling2) {
-    return sibling1.equals(sibling2)
-      && sibling1.parent.equals(sibling2.parent);
+  static verify(x, y, xQuad, yQuad) {
+    return x.equals(y)
+      && !Object.is(x, y)
+      && Object.is(x.parent, y.parent)
+      && xQuad !== yQuad; 
   }
 
   apply() {
