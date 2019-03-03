@@ -32,9 +32,11 @@ class CommutativeSwap {
 
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
-  static verify(sibling1, sibling2, quadrantLabel) {
-    const quadrant = sibling1.parent[quadrantLabel];
-    return sibling1.parent === sibling2.parent
+  static verify(sibling1, sibling2, quadrant1, quadrant2) {
+    const quadrant = sibling1.parent[quadrant1];
+    return !Object.is(sibling1 , sibling2)
+      && quadrant1 === quadrant2
+      && Object.is(sibling1.parent, sibling2.parent)
       && quadrant.some(x => Object.is(x, sibling2))
       && quadrant.some(x => Object.is(x, sibling1));
   }
@@ -67,9 +69,11 @@ class AssociativeMerge {
   //verifys if the arguments are valid by checking
   //if the sibling is included in the parent
   //then return true
-  static verify(sibling, parent, quadrantLabel) {
-    return parent[quadrantLabel].some(x => Object.is(x, sibling)) 
-      && parent.orientation === sibling.orientation;
+  static verify(sibling, parent) {
+    return Object.is(sibling.parent, parent) 
+      && parent.orientation === sibling.orientation
+      && sibling instanceof Tag
+      && parent instanceof Tag;
   }
 
 

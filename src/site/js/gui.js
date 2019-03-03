@@ -59,22 +59,22 @@ const mouse = {
 
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Manipulation && Object.is(x.parent, y.parent) && xQuad === yQuad && !Object.is(x, y)) {
+    else if (this.mode === MouseMode.Manipulation && CommutativeSwap.verify(x, y, xQuad, yQuad)) {
+      
       const action = new CommutativeSwap(x, y, xQuad);
-      // console.log(workingExpressionTree.toString());
       action.apply();
-      // console.log(workingExpressionTree.toString());
+      
       console.log("Swapping siblings", x, "and", y);
 
       this.redisplayExpressionTree()
     }
-    else if (this.mode === MouseMode.Manipulation && x instanceof Tag && y instanceof Tag && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && Object.is(x.parent, y)) {
+    else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && AssociativeMerge.verify(x, y)) {
+      
       const action = new AssociativeMerge(x, y, xQuad);
-      if (AssociativeMerge.verify(x, y, xQuad)) {
-        action.apply();
-        console.log("Merging", x, "into", y);
-      }
-
+      action.apply();
+      
+      console.log("Merging", x, "into", y);
+      
       this.redisplayExpressionTree()
     }
     else if (this.mode === MouseMode.MergingLiterals && x instanceof Literal && y instanceof Literal && Object.is(x.parent, y.parent) && !Object.is(x, y)) {
@@ -109,7 +109,7 @@ const mouse = {
   clickDetected: function () {
     console.log("Mouse clicked on", this.eventSource);
 
-    if (this.mode === MouseMode.Manipulation) {
+    if (this.mode === MouseMode.Manipulation, AssociativeIntro.verify(this.eventSource.tree)) {
       const action = new AssociativeIntro(this.eventSource.tree);
       action.apply();
       console.log("Enclosing ", this.eventSource.tree);
