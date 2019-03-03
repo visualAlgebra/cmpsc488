@@ -104,6 +104,24 @@ const mouse = {
 
       this.redisplayExpressionTree();
     }
+    else if (this.mode === MouseMode.MergingLiterals && IdentityMerge.verify(x, y, xQuad, yQuad)) {
+
+      const action = new IdentityMerge(x, y, xQuad, yQuad);
+      action.apply();
+
+      console.log("Identity Merging", x, "and", y);
+
+      this.redisplayExpressionTree();
+    }
+    else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y)) {
+
+      const action = new ZeroMerge(x, y);
+      action.apply();
+
+      console.log("Zero Merging", x, "and", y);
+
+      this.redisplayExpressionTree();
+    }
     else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && Distribute.verify(x, y, xQuad, yQuad)) {
 
       const action = new Distribute(x, y);
@@ -119,6 +137,26 @@ const mouse = {
       action.apply();
 
       console.log("Splitting Fraction", y);
+
+      this.redisplayExpressionTree();
+    }
+    // TODO: fix verfiy for Factor
+    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
+      
+      const action = new Factor(x, y);
+      action.apply();
+
+      console.log("Factoring", x, "from", y);
+
+      this.redisplayExpressionTree();
+    }
+    // TODO: fix verify for CombineFrac
+    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && CombineFrac.verify(x, y)) {
+
+      const action = new CombineFrac(y);
+      action.apply();
+
+      console.log("Splitting", y);
 
       this.redisplayExpressionTree();
     }

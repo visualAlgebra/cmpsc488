@@ -445,14 +445,21 @@ class CombineFrac {
     this.tag = tag;
   }
 
-  static verify(tag) {
+  static verify(tag, divisor) {
     if (tag.orientation !== Orientation.EW) {
       return false;
     }
-    let divisor = tag.SE;
-    for (let child of siblings) {
-      if (child.SE !== divisor) {
-        return false;
+    
+    for (let frac of tag.NW.concat(tag.SE)) {
+      // if (child.SE !== divisor) {
+      //   return false;
+      // }
+      if (divisor instanceof Tag) {
+        for (let i = 0; i < tag.length; i++) {
+          if (!(frac.SE[i].equals(divisor[i]))) {
+            return false;
+          }
+        }
       }
     }
     return true;
@@ -656,14 +663,14 @@ class ZeroMerge{
   }
 
   apply(){
-    if (sibling1 instanceof Literal){
-      if (sibling1.value = 0)
-        this.sibling1.parent.removeNorthWest(sibling2);
+    if (this.sibling1 instanceof Literal){
+      if (this.sibling1.value = 0)
+        this.sibling1.parent.removeNorthWest(this.sibling2);
       else
-        this.sibling2.parent.removeNorthWest(sibling1);
+        this.sibling2.parent.removeNorthWest(this.sibling1);
     }
     else
-      this.sibling2.parent.removeNorthWest(sibling1)
+      this.sibling2.parent.removeNorthWest(this.sibling1)
   }
 }
 
@@ -676,7 +683,7 @@ class IdentityMerge{
   }
 
   static verify(sibling1, sibling2, quadrant1, quadrant2){
-    if (sibling.parent != sibling2.parent)
+    if (sibling1.parent != sibling2.parent)
       return false;
     if (sibling1.parent.orientation == Orientation.NS){
       if(quadrant1 != Quadrant.NW || quadrant1 != quadrant2)
