@@ -505,9 +505,11 @@ class QuadrantFlip {
     this.quadrantLabel = quadrantLabel;
   }
 
-  static verify() {
-    return this.tag instanceof Tag
-      && this.tag.parent !== null;
+  static verify(tag, parent, xQuad, yQuad) {
+    return tag instanceof Tag
+      && parent !== null
+      && Object.is(tag.parent, parent)
+      && xQuad !== yQuad;
   }
 
   apply() {

@@ -60,46 +60,55 @@ const mouse = {
       this.redisplayExpressionTree();
     }
     else if (this.mode === MouseMode.Manipulation && CommutativeSwap.verify(x, y, xQuad, yQuad)) {
-      
+
       const action = new CommutativeSwap(x, y, xQuad);
       action.apply();
-      
+
       console.log("Swapping siblings", x, "and", y);
 
       this.redisplayExpressionTree()
     }
     else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && AssociativeMerge.verify(x, y)) {
-      
+
       const action = new AssociativeMerge(x, y, xQuad);
       action.apply();
 
       console.log("Merging", x, "into", y);
-      
+
       this.redisplayExpressionTree()
     }
+    else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagQuadrantGui && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
+
+      const action = new QuadrantFlip(x, xQuad);
+      action.apply();
+
+      console.log("Flipping", x);
+
+      this.redisplayExpressionTree();
+    }
     else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
-      
+
       const action = new LiteralMerge(x, y, xQuad, yQuad);
       action.apply();
-      
+
       console.log("Mergin Literals", x, "and", y);
-      
+
       this.redisplayExpressionTree();
     }
     else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && Distribute.verify(x, y, xQuad, yQuad)) {
-      
+
       const action = new Distribute(x, y);
       action.apply();
-      
+
       console.log("Distributing", x, "over", y);
-      
+
       this.redisplayExpressionTree();
     }
     else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui, SplitFrac.verify(x, y)) {
-      
+
       const action = new SplitFrac(y);
       action.apply();
-      
+
       console.log("Splitting Fraction", y);
 
       this.redisplayExpressionTree();
