@@ -232,14 +232,23 @@ class Distribute {
     this.tagToDistributeOver = tagToDistributeOver;
   }
 
-  static verify(value, tagToDistributeOver) {
-    if (value.parent != tagToDistributeOver.parent)
-      return false;
-
-    if (value.parent.orientation != Orientation.NS)
+  static verify(value, tagToDistributeOver, xQuad, yQuad) {
+    if (xQuad !== yQuad)
       return false;
     
-    if (tagToDistributeOver.orientation != Orientation.EW)
+    if (value.parent !== tagToDistributeOver.parent)
+      return false;
+
+    if (Object.is(value, tagToDistributeOver))
+      return false;
+
+    if (!tagToDistributeOver instanceof Tag)
+      return false;
+
+    if (value.parent.orientation !== Orientation.NS)
+      return false;
+    
+    if (tagToDistributeOver.orientation !== Orientation.EW)
       return false;
 
     return true;
@@ -379,12 +388,14 @@ class SplitFrac {
     this.tag = tag;
   }
 
-  static verify(tag) {
-    let dividend = tag.NW[0];
-    return tag.orientation === Orientation.NS
-      && divident.orientation === Orientation.EW
+  static verify(dividend, frac) {
+    return dividend instanceof Tag
+      && frac instanceof Tag
+      && frac.orientation === Orientation.NS
+      && dividend.orientation === Orientation.EW
+      && Object.is(dividend.parent, frac)
       && (dividend.NW.length + dividend.SE.length > 1)
-      && tag.SE.length <= 1;
+      && frac.SE.length >= 1;
   }
 
   apply() {
@@ -582,6 +593,10 @@ class LiteralMerge {
 
   static verify(literalA, literalB, quadrantA, quadrantB) {
     if (literalA.parent !== literalB.parent)
+      return false;
+    if (!(literalA instanceof Literal && literalB instanceof Literal)) 
+      return false;
+    if (Object.is(literalA, literalB))
       return false;
     if (literalA.parent.orientation == Orientation.EW)
       return true;

@@ -72,33 +72,35 @@ const mouse = {
       
       const action = new AssociativeMerge(x, y, xQuad);
       action.apply();
-      
+
       console.log("Merging", x, "into", y);
       
       this.redisplayExpressionTree()
     }
-    else if (this.mode === MouseMode.MergingLiterals && x instanceof Literal && y instanceof Literal && Object.is(x.parent, y.parent) && !Object.is(x, y)) {
+    else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
+      
       const action = new LiteralMerge(x, y, xQuad, yQuad);
-      if (LiteralMerge.verify(x, y, xQuad, yQuad)) {
-        action.apply();
-        console.log("Mergin Literals", x, "and", y);
-      }
+      action.apply();
+      
+      console.log("Mergin Literals", x, "and", y);
+      
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Distribution && Object.is(x.parent, y.parent) && !Object.is(x, y) && y instanceof Tag && this.eventDest instanceof TagButtonGui && y.orientation === Orientation.EW && xQuad === yQuad) {
+    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && Distribute.verify(x, y, xQuad, yQuad)) {
+      
       const action = new Distribute(x, y);
-      if (Distribute.verify(x, y)) {
-        action.apply();
-        console.log("Distributing", x, "over", y);
-      }
+      action.apply();
+      
+      console.log("Distributing", x, "over", y);
+      
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Distribution && x instanceof Tag && y instanceof Tag && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && Object.is(x.parent, y)) {
+    else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui, SplitFrac.verify(x, y)) {
+      
       const action = new SplitFrac(y);
-      if (SplitFrac.verify(y)) {
-        action.apply();
-        console.log("Splitting Fraction", y);
-      }
+      action.apply();
+      
+      console.log("Splitting Fraction", y);
 
       this.redisplayExpressionTree();
     }
@@ -109,7 +111,7 @@ const mouse = {
   clickDetected: function () {
     console.log("Mouse clicked on", this.eventSource);
 
-    if (this.mode === MouseMode.Manipulation, AssociativeIntro.verify(this.eventSource.tree)) {
+    if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(this.eventSource.tree)) {
       const action = new AssociativeIntro(this.eventSource.tree);
       action.apply();
       console.log("Enclosing ", this.eventSource.tree);
