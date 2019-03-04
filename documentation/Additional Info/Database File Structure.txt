@@ -13,6 +13,7 @@ Account:
 Lesson: 
 
 {
+"lessonID": string,
 "creatorAccountID": string,
 "description": string (limited 1000 chars?),
 "creations": array of objects (problems/lessons),
@@ -24,6 +25,7 @@ Lesson:
 Problem:
 
 {
+"problemID": string,
 "creatorAccountID": string,
 "description": string (limited 1000 chars?),
 "startExpression": array of numbers,

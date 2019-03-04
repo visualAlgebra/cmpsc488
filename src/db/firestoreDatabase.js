@@ -34,6 +34,67 @@ class FirestoreDatabase extends Database {
 
 
 
+
+  assembleLesson(lesson, serverResponse, successCallback, failureCallback) {
+    let problemsQuery = this.session.collection('problems').where('ownerLessons', 'array-contains', lesson.lessonID);
+    let lessonsQuery = this.session.collection('lessons').where('ownerLessons', 'array-contains', lesson.lessonID);
+    let creations = lesson.creations;
+    let lessonsFinished = false;
+    let problemsFinished = false;
+
+
+    problemsQuery.get()
+      .then(snapshot => {
+        if(!snapshot.empty) {
+          snapshot.forEach(doc => {
+            let problem = doc.data();
+            problem.timeCreated = problem.timeCreated._seconds;
+            let index = creations.findIndex( element => {
+              return element === problem.problemID;
+            })
+            creations[index] = problem;
+          });
+        }
+        if (lessonsFinished) {
+          lesson.creations = creations;
+          successCallback(serverResponse, 200, "application/json", JSON.stringify(lesson))
+        } else {
+          problemsFinished = true;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        failureCallback(serverResponse, 500, "Error 500: Internal Server Error");
+      });
+
+
+      lessonsQuery.get()
+      .then(snapshot => {
+        if(!snapshot.empty) {
+          snapshot.forEach(doc => {
+            let newLesson = doc.data();
+            newLesson.timeCreated = newLesson.timeCreated._seconds;
+            let index = creations.findIndex( element => {
+              return element === newLesson.lessonID;
+            })
+            creations[index] = newLesson;
+          });
+        }
+        if (problemsFinished) {
+          lesson.creations = creations;
+          successCallback(serverResponse, 200, "application/json", JSON.stringify(lesson))
+        } else {
+          lessonsFinished = true;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        failureCallback(serverResponse, 500, "Error 500: Internal Server Error");
+      });
+  }
+
+
+
   getLesson(server, serverResponse, link) {
     let lessonReference = this.session.collection('lessons').doc(link);
     let lessonQuery = lessonReference.get()
@@ -43,7 +104,7 @@ class FirestoreDatabase extends Database {
         } else {
           let lesson = doc.data();
           lesson.timeCreated = lesson.timeCreated._seconds;
-          server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(lesson));
+          this.assembleLesson(lesson, serverResponse, server.respondWithData, server.respondWithError);
         }
       })
       .catch(err => {

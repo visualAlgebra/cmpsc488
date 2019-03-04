@@ -209,9 +209,20 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 }
 
 
+function firebaseTesting() {
+  // getFileTest("accounts/TEST_USER_0",0,"");
+  // getFileTest("lessons/TEST_LESSON_0",1,"");
+  // getFileTest("problems/TEST_PROBLEM_0",2, "");
+
+}
 
 
 function executeTesting() {
+
+
+//firebaseTesting();
+
+
 	fs.writeFileSync(fileRTPath + fileRT0Path + ".json",fileRT0);
 	fs.writeFileSync(fileRTPath + fileRT1Path + ".json",fileRT1);
 	fs.writeFileSync(fileRTPath + fileRT2Path + ".json",fileRT2);
