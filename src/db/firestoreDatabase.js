@@ -10,6 +10,7 @@ class FirestoreDatabase extends Database {
       databaseURL: 'https://vatest-83fa4.firebaseio.com'
     });
     this.session = this.admin.firestore();
+    this.ACCOUNT_BIO_CHARACTER_LIMIT = 1000; //?
   }
 
 
@@ -187,6 +188,109 @@ class FirestoreDatabase extends Database {
         console.log("Error getting file from database: ", err);
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
+  }
+
+
+  queryProblems(server, response, query) {
+    query.number = parseInt(query.number);
+    if (query.number === undefined || query.sort === undefined || typeof (query.number) != typeof (0)) {
+      return server.respondWithError(response, 400, "Error 400: Query not supported");
+    } else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
+      return server.respondWithError(response, 400, "Error 400: Query not supported");
+    } else {
+      let queryResponse = [];
+      let firebaseQuery = this.session.collection('problems').orderBy('timeCreated').limit(query.number);
+      firebaseQuery.get()
+      .then( snapshot => {
+        if(!snapshot.empty) {
+          snapshot.forEach(doc => {
+            let problem = doc.data();
+            problem.timeCreated = problem.timeCreated._seconds;
+            queryResponse.push(problem);
+          });
+        }
+        server.respondWithData(response, 200, 'application/json', JSON.stringify({'results': queryResponse}));
+      })
+      .catch( error => {
+        console.log("Error with querying problems: ==========");
+        console.log(error);
+        console.log("=======end of error========");
+        server.respondWithError(response, 500, "Error 500: Internal database error with query");
+      });
+    }
+  }
+
+
+  queryLessons(server, response, query) {
+    query.number = parseInt(query.number);
+    if (query.number === undefined || query.sort === undefined || typeof (query.number) != typeof (0)) {
+      return server.respondWithError(response, 400, "Error 400: Query not supported");
+    } else if (query.number <= 0 || query.number > 100 || query.sort !== "timeCreated") {
+      return server.respondWithError(response, 400, "Error 400: Query not supported");
+    } else {
+      let queryResponse = [];
+      let firebaseQuery = this.session.collection('lessons').orderBy('timeCreated').limit(query.number);
+      firebaseQuery.get()
+      .then( snapshot => {
+        if(!snapshot.empty) {
+          snapshot.forEach(doc => {
+            let lesson = doc.data();
+            lesson.timeCreated = lesson.timeCreated._seconds;
+            queryResponse.push(lesson);
+          });
+        }
+        server.respondWithData(response, 200, 'application/json', JSON.stringify({'results': queryResponse}));
+      })
+      .catch( error => {
+        console.log("Error with querying lessons: ==========");
+        console.log(error);
+        console.log("=======end of error========");
+        server.respondWithError(response, 500, "Error 500: Internal database error with query");
+      });
+    }
+  }
+
+
+// ==========================================================
+// ================== write handling ========================
+// ==========================================================
+  verifyAccountData(account) {
+    if(account.bio !== undefined && !(typeof(account.bio) == typeof(""))) {
+      return false;
+    } else if (account.bio.length > this.ACCOUNT_BIO_CHARACTER_LIMIT) {
+      return false;
+    }
+    return true;
+  }
+
+
+  addAccount(server, response, account, accountID) {
+    if (this.verifyAccountData(account)) {
+
+      //make database object to store in database
+      let databaseAccount = {};
+      databaseAccount.accountID = accountID;
+      databaseAccount.timeCreated = Date.now();
+      databaseAccount.bio = account.bio;
+      databaseAccount.lessons = [];
+      databaseAccount.problems = [];
+
+      //send query to database
+      this.session.collection("accounts").doc(accountID).set(databaseAccount)
+      .then(function() {
+        server.respondWithData(response, 201, 'application/text', "account " + accountID + " successfully created");
+      })
+      .catch(err => {
+        console.log(" =================== ");
+        console.log("Error posting account");
+        console.log(err);
+        console.elog(" =================== ");
+        server.respondWithError(response, 500, "Error 500: Internal Database Error");
+      });
+    } else {
+      server.respondWithError(response, 400, "Error 400: Account data not formatted correctly");
+    }
+    
   }
 
 

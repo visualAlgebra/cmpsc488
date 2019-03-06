@@ -209,18 +209,24 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 }
 
 
-function firebaseTesting() {
+function executeFirebaseTesting() {
   // getFileTest("accounts/TEST_USER_0",0,"");
   // getFileTest("lessons/TEST_LESSON_0",1,"");
   // getFileTest("problems/TEST_PROBLEM_0",2, "");
+  // getFileTest("problems?sort=timeCreated&number=1", 3, "");
+  // getFileTest("lessons?sort=timeCreated&number=1", 4, "");
+  postFileTest("accounts/TESTING_USER", 5, JSON.stringify({'bio': 'a bio for this account'}), "TESTING_USER", 201); //post problem w/ name w/ account
 
 }
 
-
 function executeTesting() {
+  //executeNormalTesting();
+  executeFirebaseTesting();
+}
+
+function executeNormalTesting() {
 
 
-//firebaseTesting();
 
 
 	fs.writeFileSync(fileRTPath + fileRT0Path + ".json",fileRT0);
