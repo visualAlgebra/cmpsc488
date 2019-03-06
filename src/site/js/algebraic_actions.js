@@ -71,13 +71,15 @@ class AssociativeMerge {
   //then return true
   static verify(sibling, parent) {
     return Object.is(sibling.parent, parent) 
-      && parent.orientation === sibling.orientation
+      && (parent.orientation === sibling.orientation || parent.treeCount - sibling.treeCount === 1)
       && sibling instanceof Tag
       && parent instanceof Tag;
   }
 
 
   apply() {
+
+    //TODO: Let a tag of different orientation collapse if it only has one child
 
     //Having pointers to quadrants of sibling
     let newNW;
@@ -654,6 +656,10 @@ class ZeroMerge{
   }
 
   static verify(sibling1, sibling2){
+    
+    if (Object.is(sibling1, sibling2)) 
+      return false; 
+    
     if (sibling1.parent != sibling2.parent)
       return false;
     if (sibling1.parent.orientation != Orientation.NS)
@@ -683,6 +689,10 @@ class IdentityMerge{
   }
 
   static verify(sibling1, sibling2, quadrant1, quadrant2){
+
+    if (Object.is(sibling1, sibling2))
+      return false;
+
     if (sibling1.parent != sibling2.parent)
       return false;
     if (sibling1.parent.orientation == Orientation.NS){
