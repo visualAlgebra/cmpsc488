@@ -131,7 +131,7 @@ const mouse = {
 
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui, SplitFrac.verify(x, y)) {
+    else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && SplitFrac.verify(x, y)) {
 
       const action = new SplitFrac(y);
       action.apply();
@@ -141,7 +141,7 @@ const mouse = {
       this.redisplayExpressionTree();
     }
     // TODO: fix verfiy for Factor
-    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
+    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui ) {
       
       const action = new Factor(x, y);
       action.apply();
@@ -150,8 +150,8 @@ const mouse = {
 
       this.redisplayExpressionTree();
     }
-    // TODO: fix verify for CombineFrac
-    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && CombineFrac.verify(x, y)) {
+    
+    else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagQuadrantGui && this.eventDest instanceof TagButtonGui && CombineFrac.verify(y, x)) {
 
       const action = new CombineFrac(y);
       action.apply();
