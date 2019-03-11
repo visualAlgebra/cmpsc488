@@ -1,9 +1,9 @@
 function createCollectionItemForLesson(lesson, elementId){
     let li1=document.createElement('li');
-    li1.className="collection-item blue-grey lighten-2";
+    li1.className="collection-item blue-grey darken-1";
 
     let i1=document.createElement('i');
-    i1.className="material-icons";
+    i1.className="material-icons white-text left";
     i1.innerHTML="folder";
     li1.appendChild(i1);
 
@@ -13,7 +13,7 @@ function createCollectionItemForLesson(lesson, elementId){
     
     li1.appendChild(div1);
     let a1=document.createElement('a');
-    a1.href="#";
+    a1.href="http://localhost:8080/LessonPage/"+lesson.id;
     a1.className="secondary-content";
     div1.appendChild(a1);
 
@@ -27,7 +27,7 @@ function createCollectionItemForLesson(lesson, elementId){
       
 function createCardForProblem(problem_id, cardID){
     let maindiv=document.createElement("div");
-    maindiv.className="col s12 m6 l4";
+    maindiv.className="col s12 m12 l12";//change l12 to l6 for 2 horizontal problems
     let carddiv=document.createElement("div");
     carddiv.className="card blue-grey darken-1";
     maindiv.appendChild(carddiv);
@@ -42,7 +42,7 @@ function createCardForProblem(problem_id, cardID){
 
     let iconi=document.createElement("i");
     iconi.className="material-icons left";
-    iconi.innerHTML="folder";
+    iconi.innerHTML="folder_open";
     titlespan.prepend(iconi);
 
     let rowdiv=document.createElement("div");
