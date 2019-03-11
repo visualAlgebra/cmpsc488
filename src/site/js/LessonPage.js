@@ -20,7 +20,12 @@ function fillCreations(lesson) {
       filldiv.appendChild(createCardForProblem(lesson.creations[creation].problemID, creation));
       let k=lesson.creations[creation];
       let prob=new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated);
-      displayProblemFromDBStruct(prob, creation + "_s", creation + "_g");
+      //displayProblemFromDBStruct(prob, creation + "_s", creation + "_g");
+      let temp1=document.getElementById(creation+"_s");
+      let temp2=document.getElementById(creation + "_g");
+      temp1.innerHTML="placeholder for minified problem";
+      temp2.innerHTML="placeholder for minified problem";
+      //TODO Display only minified problem (above)
     } else {
       let k=lesson.creations[creation];
       let les=new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description)

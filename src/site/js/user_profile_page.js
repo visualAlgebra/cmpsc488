@@ -53,6 +53,10 @@ function fillPage(accInfo) {
     problem = parseInt(problem);
     filldiv.appendChild(createCardForProblem(accInfo.problems[problem].problemID, probAmt));
     //displayProblemFromDBStruct(accInfo.problems[problem], problem + "_s", problem + "_g");
+      let temp1=document.getElementById(problem+"_s");
+      let temp2=document.getElementById(problem + "_g");
+      temp1.innerHTML="placeholder for minified problem";
+      temp2.innerHTML="placeholder for minified problem";
     //TODO Display only minified problem (above)
     probAmt++;
   }
