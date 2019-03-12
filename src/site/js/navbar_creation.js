@@ -75,38 +75,11 @@ function createNavbar(){
 	ul2.appendChild(li3.cloneNode(true));
 	ul2.appendChild(li4.cloneNode(true));
 	ul2.appendChild(li6.cloneNode(true));
-
-	if(page==="manipulator"){//create nav buttons
-		let manipdivrow=document.createElement("div");
-		manipdivrow.className="row";
-		let btnNames=["Hint","Share","Restart","Undo","Redo"];
-		let iconNames=["compare_arrows","share","rotate_left","undo","redo"];
-
-		for(let x=0; x<btnNames.length; x++){
-		    let a=document.createElement("a");
-		    a.className="tab waves-effect waves-light btn col";
-		    if(x===3){
-		    	a.onclick=function(){histAction(0);};
-		    }else if(x===4){
-		    	a.onclick=function(){histAction(1);};
-		    }
-		    let i=document.createElement("i");
-		    i.className="material-icons left";
-		    i.innerHTML=iconNames[x];
-		    a.appendChild(i);
-		    a.innerHTML+=btnNames[x];
-		    manipdivrow.appendChild(a);
-		}
-		return [nav, ul2, manipdivrow];
-	}
 	return [nav, ul2];
 }
 function initNav(){
 	let maindiv=document.getElementById("navbarLocation");
 	let ret=createNavbar();
-	if(ret.length===3){
-		maindiv.prepend(ret[2]);
-	}
 	maindiv.prepend(ret[1]);
 	maindiv.prepend(ret[0]);
 }
