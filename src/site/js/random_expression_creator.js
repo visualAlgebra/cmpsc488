@@ -1,4 +1,6 @@
-function createRandomExpression(num_nodes){
+import {compress_string_js, Literal, Orientation, ProblemInfo, Tag, Variable} from "./expression_tree";
+
+export function createRandomExpression(num_nodes){
     if(num_nodes===1){
         return _genRandomNode(false);
     }
@@ -10,7 +12,7 @@ function createRandomExpression(num_nodes){
     return retval;
 }
 
-function createDummyProblem(num_nodes,num_nodes2){
+export function createDummyProblem(num_nodes,num_nodes2){
     let retval=new ProblemInfo('RAND_'+Math.floor(Math.random()*1000000000));
     compress_string_js(createRandomExpression(num_nodes).toString(),res => {
       retval.expression_start=res;

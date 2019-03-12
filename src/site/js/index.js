@@ -1,3 +1,5 @@
-function fillRecent(){
-    
-}
+import {initNav} from "./navbar_creation";
+
+window.onload = () => {
+  initNav();
+};

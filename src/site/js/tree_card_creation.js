@@ -1,4 +1,4 @@
-function createCollectionItemForLesson(lesson, elementId){
+export function createCollectionItemForLesson(lesson, elementId){
     let li1=document.createElement('li');
     li1.className="collection-item blue-grey darken-1";
 
@@ -25,7 +25,7 @@ function createCollectionItemForLesson(lesson, elementId){
     document.getElementById(elementId).appendChild(li1);
 }
       
-function createCardForProblem(problem_id, cardID){
+export function createCardForProblem(problem_id, cardID){
     let maindiv=document.createElement("div");
     maindiv.className="col s12 m12 l12";//change l12 to l6 for 2 horizontal problems
     let carddiv=document.createElement("div");
@@ -77,27 +77,3 @@ function createCardForProblem(problem_id, cardID){
 
     return maindiv;
 }
-
-
-//<div class="col s12 m6 l4">
-//                <div class="card blue-grey darken-1">
-//                    <div class="card-content white-text">
-//                        <span class="card-title">
-//                            <i class="material-icons left">folder</i>
-//                            Lesson 1
-//                        </span>
-//                        <div class="row">
-//                            <div class="col">
-//                                <li>Problem 1
-//    								<div name="problem_holder" id="l1p1"></div>
-//                                </li>
-//                            </div>
-//                            <div class="col">
-//                                <li>Problem 1 Goal
-//    								<div name="problem_holder" id="l1p1g"></div>
-//                                </li>
-//                            </div>
-//                        </div>
-//                    </div>
-//                </div>
-//    		</div>

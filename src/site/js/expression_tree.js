@@ -1,9 +1,16 @@
-const Orientation = {
+import {LZMA} from './lzma_worker.js';
+import {LiteralGui, TagGui, VariableGui} from "./gui";
+// console.log("@@@@@@@@@@");
+// const my_lzma = require("lzma");
+// console.log(my_lzma);
+// console.log("@@@@@@@@@@");
+
+export const Orientation = {
   EW: "eastwest",
   NS: "northsouth"
 };
 
-const Quadrant = {
+export const Quadrant = {
   NW: "NW",
   SE: "SE"
 };
@@ -13,7 +20,7 @@ String.prototype.splice = function(index, str) {
 };
 
 
-class LessonInfo{
+export class LessonInfo{
     constructor(lesson_id, creations, timeCreated, creatorAccId, description){
       this.id=lesson_id;
       this.creations=creations;
@@ -34,7 +41,7 @@ class LessonInfo{
   }
 }
 
-function parseMultiProblem(multi){
+export function parseMultiProblem(multi){
     let ret=[];
     for(let x in multi.queryResults){
       x=parseInt(x);
@@ -44,7 +51,7 @@ function parseMultiProblem(multi){
     return ret;
 }
 
-class ProblemInfo {
+export class ProblemInfo {
   constructor(problemID,treestart,treegoal, description, timeCreated){
     this.problemID=problemID;
     this.expression_start=treestart;
@@ -59,7 +66,7 @@ class ProblemInfo {
 }
 
 // Abstract Class
-class ExpressionTree {
+export class ExpressionTree {
   constructor(kind) {
     this.kind = kind;
     this.treeCount = 1;
@@ -77,7 +84,7 @@ class ExpressionTree {
 
 } // end ExpressionTree class
 
-class Tag extends ExpressionTree {
+export class Tag extends ExpressionTree {
   constructor(orientation, nw, se) {
     super("tag");
     this.orientation = orientation;
@@ -233,7 +240,7 @@ class Tag extends ExpressionTree {
   }
 } // end Tag class
 
-class Variable extends ExpressionTree {
+export class Variable extends ExpressionTree {
   constructor(value) {
     super("variable");
     this.value = value;
@@ -262,7 +269,7 @@ class Variable extends ExpressionTree {
   }
 } // end Variable class
 
-class Literal extends ExpressionTree {
+export class Literal extends ExpressionTree {
   constructor(value) {
     super("literal");
     this.value = value;
@@ -293,16 +300,17 @@ class Literal extends ExpressionTree {
 
 // end of classes, start of functions
 
-function array_delete(arr, ref) {
+export function array_delete(arr, ref) {
   for (let i = 0; i < arr.length; i++) {
     if (Object.is(ref, arr[i])) {
       arr.splice(i, 1);
     }
   }
 }
+
 var nodecount=0;
-function Deserialize(text) {
-  now=Date.now();
+export function Deserialize(text) {
+  let now=Date.now();
   let retval=_Deserialize(text);
   let time=(Date.now()-now)/1000;
   if(time>0.5){
@@ -353,7 +361,7 @@ function _Deserialize(text) {
   }
 }
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
-function compress_string_js(text, callback) {
+export function compress_string_js(text, callback) {
   var arr;
   if (text[0] === "[" && text.slice(-1) === "]") {
     try {
@@ -363,11 +371,13 @@ function compress_string_js(text, callback) {
   if (arr) {
     text = arr;
   }
-  LZMA("http://localhost:8080/src/site/js/lzma_worker.js").compress(text, 9, callback);
+  // LZMA("http://localhost:8080/src/site/node_modules/lzma/src/lzma_worker.min.js").compress(text, 9, callback);
+  LZMA.compress(text, 9, callback);
 }
 
-function decompress_string_js(byte_arr, callback) {
-  LZMA("http://localhost:8080/src/site/js/lzma_worker.js").decompress(byte_arr, callback);
+export function decompress_string_js(byte_arr, callback) {
+  // LZMA("http://localhost:8080/src/site/node_modules/lzma/src/lzma_worker.min.js").decompress(byte_arr, callback);
+  LZMA.decompress(byte_arr, callback);
 }
 
 

@@ -1,11 +1,13 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.sidenav');
-    var instances = M.Sidenav.init(elems);
-});
+import {get_lesson_from_db} from "./database_management";
+import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_creation";
+import {LessonInfo, ProblemInfo} from "./expression_tree";
+import * as M from "materialize-css";
+import {initNav} from "./navbar_creation";
 
 var lesson_to_load=getLessonFromURL();
 
 window.onload = ()=>{
+  initNav();
   if (lesson_to_load !== null) {
     get_lesson_from_db(lesson_to_load,res=>fillCreations(res));
   }

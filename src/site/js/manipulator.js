@@ -1,11 +1,21 @@
+import {mouse, globals} from './gui';
+import {displayProblemFromDB} from './display_feature';
+import {initNav} from "./navbar_creation";
+import {addHistoryEntry, histAction} from "./history_nav";
+
 var problem_to_load = getProblemFromURL();
-var hist;
 
 window.onload = ()=>{
+  initNav();
   initManipulatorNavButtons();
   changeMouseMode(0);
   if (problem_to_load !== null) {
-    displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res,res2)=>onDisplay(res, res2));
+    displayProblemFromDB(
+        problem_to_load,
+        'canvasContainer',
+        'goalContainer',
+        (res,res2)=>onDisplay(res, res2)
+    );
   }
 }
 ;
@@ -49,7 +59,7 @@ function initManipulatorNavButtons() {
 
 function onDisplay(res, containerId) {
   if (containerId === "canvasContainer") {
-    workingExpressionTree = res;
+    globals.workingExpressionTree = res;
     addHistoryEntry(res);
   }
 }
@@ -72,58 +82,4 @@ function getProblemFromURL() {
     return null;
   }
   return prob.substring(prob.lastIndexOf('/'), prob.length);
-}
-
-function addHistoryEntry(tree) {
-  while (tree.parent !== null) {
-    tree = tree.parent;
-  }
-  if (hist === null || hist === undefined) {
-    hist = new history(tree);
-  }
-  hist.add(tree.toString());
-}
-
-function histAction(num) {
-  if (hist === null || hist === undefined) {
-    return;
-  }
-  if (num === 0) {
-    hist.undo();
-  } else if (num === 1) {
-    hist.redo();
-  }
-}
-
-class history {
-  constructor(initTree) {
-    this.historyArray = [];
-    this.index = 0;
-  }
-
-  add(tree) {
-    if (this.index < this.historyArray.length) {
-      this.historyArray = this.historyArray.splice(0, this.index++);
-    } else {
-      this.index++;
-    }
-    this.historyArray.push(tree.toString());
-    //console.log("add: "+tree.toString());
-  }
-
-  undo() {
-    if (this.index - 1 <= 0) {
-      return;
-    }
-    displayTreeFromDBStruct(this.historyArray[(--this.index) - 1], 'canvasContainer', res=>workingExpressionTree = res);
-    //console.log("undo: "+this.historyArray[this.index]);
-  }
-
-  redo() {
-    if (this.index >= this.historyArray.length) {
-      return;
-    }
-    displayTreeFromDBStruct(this.historyArray[this.index++], 'canvasContainer', res=>workingExpressionTree = res);
-    //console.log("redo: "+this.historyArray[this.index++]);
-  }
 }

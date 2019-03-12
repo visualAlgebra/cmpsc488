@@ -1,4 +1,6 @@
-function createNavbar(){
+import * as M from "materialize-css";
+
+export function createNavbar(){
 	let page=getPage();
 	let nav=document.createElement("nav");
 
@@ -77,13 +79,15 @@ function createNavbar(){
 	ul2.appendChild(li6.cloneNode(true));
 	return [nav, ul2];
 }
-function initNav(){
+export function initNav(){
 	let maindiv=document.getElementById("navbarLocation");
 	let ret=createNavbar();
 	maindiv.prepend(ret[1]);
 	maindiv.prepend(ret[0]);
+	var elems = document.querySelectorAll('.sidenav');
+	var instances = M.Sidenav.init(elems);
 }
-function getPage() {
+export function getPage() {
   let one=(window.location.href).substr((window.location.href).indexOf("8080")+5);
   let str="";
   for (let x=0; x<one.length; x++){
@@ -95,8 +99,3 @@ function getPage() {
   }
   return str;
 }
-initNav();
-document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.sidenav');
-    var instances = M.Sidenav.init(elems);
-});

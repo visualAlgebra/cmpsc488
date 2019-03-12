@@ -1,10 +1,16 @@
+import {get_account_from_db} from "./database_management";
+import {initNav} from "./navbar_creation";
+import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_creation";
+import {LessonInfo, ProblemInfo} from "./expression_tree";
+
 //user_profile_page/accounts/account_id
 //{"accountID":"TEST_USER_0","timeCreated":"120000T101010",
 //"creations":["/problems/TEST_PROBLEM_0", "/lessons/TEST_LESSON_0"]}
 //
-var account_to_load = getAccountFromURL();
+export var account_to_load = getAccountFromURL();
 
 window.onload = ()=>{
+  initNav();
   if (account_to_load !== null) {
     get_account_from_db(account_to_load, res=>covertToInfo(res));
   }
@@ -13,7 +19,7 @@ window.onload = ()=>{
 
 var probAmt = 0;
 var lessAmt = 0;
-function covertToInfo(res){
+export function covertToInfo(res){
   let les=[];
   for(let x in res.lessons){
     x=parseInt(x);
@@ -30,7 +36,7 @@ function covertToInfo(res){
   res.problems=prob;
   fillPage(res);
 }
-function fillPage(accInfo) {
+export function fillPage(accInfo) {
   let id_field = document.getElementById('userAccountIdField');
   id_field.innerHTML = accInfo.id;
   let bio_field = document.getElementById('bioField');
@@ -62,16 +68,7 @@ function fillPage(accInfo) {
   }
 }
 
-class AccountInfo {
-  constructor(json) {
-    this.id = json.accountID;
-    this.bio = json.bio;
-    this.lessons = json.lessons;
-    this.problems = json.problems;
-    this.timeCreated = json.timeCreated;
-  }
-}
-function getAccountFromURL() {
+export function getAccountFromURL() {
   let acc = (window.location.href).substr((window.location.href).indexOf('/profile'));
   if (acc.indexOf('profile/accounts/') === -1 || acc === 'null' || acc === '' || acc === 'undefined') {
     //location.replace("../Explorer.html");

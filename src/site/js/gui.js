@@ -1,4 +1,20 @@
-function findQuadrant(x) {
+import $ from "jquery";
+import {displayExpressionTree} from "./display_feature";
+import {addHistoryEntry} from "./history_nav";
+import {Orientation, Quadrant} from "./expression_tree";
+import {
+  AssociativeExtract,
+  AssociativeInsert, AssociativeIntro,
+  AssociativeMerge, Cancel, CombineFrac,
+  CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
+  QuadrantFlip, SplitFrac, ZeroMerge
+} from "./algebraic_actions";
+
+export const globals = {
+  workingExpressionTree: null
+};
+
+export function findQuadrant(x) {
   if (x.parent) {
     return x.parent.NW.some(e => Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;
   } else {
@@ -6,13 +22,13 @@ function findQuadrant(x) {
   }
 }
 
-const MouseMode = {
+export const MouseMode = {
   Manipulation: "General Manipulation",
   MergingLiterals: "Merging Literals",
   Distribution: "Distribution"
 };
 
-const mouse = {
+export const mouse = {
   state: "idle",
   eventSource: null,
   eventDest: null,
@@ -25,7 +41,7 @@ const mouse = {
   },
 
   redisplayExpressionTree: function () {
-    displayExpressionTree(workingExpressionTree, "canvasContainer", res => addHistoryEntry(res));
+    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => addHistoryEntry(res));
   },
 
   dragDetected: function () {
@@ -34,6 +50,7 @@ const mouse = {
     const y = this.eventDest.tree;
 
     const xQuad = findQuadrant(x);
+    // noinspection JSSuspiciousNameCombination
     const yQuad = findQuadrant(y);
 
     // Associative Insert IF
@@ -180,7 +197,7 @@ const mouse = {
   }
 };
 
-class GuiBase {
+export class GuiBase {
   onclick() {
     if (mouse.state !== "idle after drag") {
       mouse.eventSource = this;
@@ -195,6 +212,7 @@ class GuiBase {
     }
   }
 
+  // noinspection JSMethodCanBeStatic
   mousemove() {
     if (mouse.state === "dragging?") {
       mouse.state = "dragging";
@@ -236,7 +254,7 @@ class GuiBase {
   }
 }
 
-class TagGui extends GuiBase {
+export class TagGui extends GuiBase {
   constructor(tag) {
     super();
     this.tree = tag;
@@ -247,7 +265,7 @@ class TagGui extends GuiBase {
   buildDom() {
     const div = $("<div>");
 
-    div.addClass(this.tree.orientation == Orientation.NS ? "north-south" : "east-west");
+    div.addClass(this.tree.orientation === Orientation.NS ? "north-south" : "east-west");
 
     div.addClass("tag");
     div.data("expressionTree", this.tree);
@@ -315,7 +333,7 @@ class TagQuadrantGui extends GuiBase {
 
 }
 
-class VariableGui extends GuiBase {
+export class VariableGui extends GuiBase {
   constructor(variable) {
     super();
     this.tree = variable;
@@ -333,7 +351,7 @@ class VariableGui extends GuiBase {
   }
 }
 
-class LiteralGui extends GuiBase {
+export class LiteralGui extends GuiBase {
   constructor(literal) {
     super();
     this.tree = literal;

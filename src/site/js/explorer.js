@@ -1,4 +1,10 @@
+import {get_problems_from_db} from "./database_management";
+import {createCardForProblem} from "./tree_card_creation";
+import {displayProblemFromDBStruct} from "./display_feature";
+import {initNav} from "./navbar_creation";
+
 window.onload = ()=>{
+    initNav();
     getInitialProblemsToDisplay();
 }
 ;

@@ -22,7 +22,9 @@
 // 1 * 2 => 2 * 1
 // Takes in two siblings and a quadrant(the list where the siblings are located).
 // If the siblings and quadrant are valid, then the siblings will be swapped.
-class CommutativeSwap {
+import {Literal, Orientation, Quadrant, Tag, Variable} from "./expression_tree";
+
+export class CommutativeSwap {
 
   constructor(sibling1, sibling2, quadrantLabel) {
     this.sibling1 = sibling1;
@@ -59,7 +61,7 @@ class CommutativeSwap {
 //  [ 1 3 2 ><]
 
 //Collapses the outer tag into the inner tag
-class AssociativeMerge {
+export class AssociativeMerge {
   constructor(sibling, parent, quadrantLabel) {
     this.sibling = sibling;
     this.parent = parent;
@@ -105,7 +107,7 @@ class AssociativeMerge {
 }
 
 //Encloses a tag with another tag of the same orientation
-class AssociativeIntro {
+export class AssociativeIntro {
 
   constructor(expr) {
     this.expr = expr;
@@ -158,7 +160,7 @@ class AssociativeIntro {
 
 // Taking out a sibling from a tag and adding it into its grandparent
 // TODO: Make this preserve order
-class AssociativeExtract {
+export class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
   constructor(grandchild, quadrantLabel) {
@@ -195,7 +197,7 @@ class AssociativeExtract {
 // [ [ x y >< z ] ><]
 //Inserting a sibling into a sibling tag that has the same orientation as its parent
 //TODO: make sure this preserves order
-class AssociativeInsert {
+export class AssociativeInsert {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
   constructor(sibling, insertionTag) {
@@ -228,7 +230,7 @@ class AssociativeInsert {
   }
 }
 
-class Distribute {
+export class Distribute {
   constructor(value, tagToDistributeOver) {
     this.value = value;
     this.tagToDistributeOver = tagToDistributeOver;
@@ -298,7 +300,7 @@ class Distribute {
   }
 }
 
-class Factor {
+export class Factor {
   constructor(valueToFactor, tagToFactor) {
     this.valueToFactor = valueToFactor;
     this.tagToFactor = tagToFactor;
@@ -396,7 +398,7 @@ class Factor {
 }
 
 // if a NS tag has a sole EW tag in it's N quadrant, then split it
-class SplitFrac {
+export class SplitFrac {
   constructor(tag) {
     this.tag = tag;
   }
@@ -452,7 +454,7 @@ class SplitFrac {
 }
 
 //Combine an EW tag of NS tags that have a common S quadrant
-class CombineFrac {
+export class CombineFrac {
   //Where sibligns is the list of
   constructor(tag) {
     this.tag = tag;
@@ -529,7 +531,7 @@ class CombineFrac {
 //x = 1/(1/x)
 //x = -(-x)
 //Flipping the NW and SE quadrants when a tag switches quadrants in its parent
-class QuadrantFlip {
+export class QuadrantFlip {
   constructor(tag, quadrantLabel) {
     this.tag = tag;
     this.quadrantLabel = quadrantLabel;
@@ -565,7 +567,7 @@ class QuadrantFlip {
 }
 
 //Canceling two siblings in opposite quadrants with equal value in a tag
-class Cancel {
+export class Cancel {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
@@ -591,7 +593,7 @@ class Cancel {
 
 //Adding two siblings of equal value into the top and bottom quadrants of a tag
 //Only works with variables and literals
-class IdentityBalance {
+export class IdentityBalance {
   constructor(newChild, tag) {
     this.newChild = newChild;
     this.tag = tag;
@@ -617,7 +619,7 @@ class IdentityBalance {
   }
 }
 
-class LiteralMerge {
+export class LiteralMerge {
   constructor(literalA, literalB, quadrantA, quadrantB) {
     this.literalA = literalA;
     this.literalB = literalB;
@@ -670,7 +672,7 @@ class LiteralMerge {
   }
 }
 
-class ZeroMerge{
+export class ZeroMerge{
   constructor(sibling1, sibling2){
     this.sibling1  = sibling1;
     this.sibling2 = sibling2;
@@ -701,7 +703,7 @@ class ZeroMerge{
   }
 }
 
-class IdentityMerge{
+export class IdentityMerge{
   constructor(sibling1, sibling2, quadrant1, quadrant2){
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;

@@ -16,7 +16,7 @@ class Server {
         // this.eventEmitter = new events.EventEmitter();
         // this.eventEmitter.addListener("database file recieved", this.sendDatabaseFile);
 
-	    this.accessibleFolders = ["/src/site/assets/", "/src/site/css/","/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
+	    this.accessibleFolders = ["/src/site/assets/", "/src/site/css/","/src/site/js/", "/node_modules/", "/src/site/dist/"]; //filepath from default directory of folders that are accessible for requests
         this.accessibleHTMLFiles = ["/index.html", "/explorer.html", "/creator.html","/lesson-view.html", "/manipulator.html", "/profile.html"];
         this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
     }
