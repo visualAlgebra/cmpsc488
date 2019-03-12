@@ -72,10 +72,10 @@ class AccountInfo {
   }
 }
 function getAccountFromURL() {
-  let acc = (window.location.href).substr((window.location.href).indexOf('/user_profile_page'));
-  if (acc.indexOf('user_profile_page/accounts/') === -1 || acc === 'null' || acc === '' || acc === 'undefined') {
+  let acc = (window.location.href).substr((window.location.href).indexOf('/profile'));
+  if (acc.indexOf('profile/accounts/') === -1 || acc === 'null' || acc === '' || acc === 'undefined') {
     //location.replace("../Explorer.html");
-    alert("Error(user_profile_page.js): Please enter an account id after \"user_profile_page/accounts/\" in the URL or select a problem from another page");
+    alert("Error(profile.js): Please enter an account id after \"profile/accounts/\" in the URL or select a problem from another page");
     return null;
   }
   return acc.substring(acc.lastIndexOf('/') + 1, acc.length);
