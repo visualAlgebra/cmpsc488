@@ -70,16 +70,16 @@ class AssociativeMerge {
   //if the sibling is included in the parent
   //then return true
   static verify(sibling, parent) {
-    return Object.is(sibling.parent, parent) 
-      && (parent.orientation === sibling.orientation || parent.treeCount - sibling.treeCount === 1)
+    return Object.is(sibling.parent, parent)
+      && (parent.orientation === sibling.orientation
+        || (sibling.NW.length === 1 && sibling.SE.length === 0)
+        || (sibling.SE.length === 1 && sibling.NW.length === 0))
       && sibling instanceof Tag
       && parent instanceof Tag;
   }
 
 
   apply() {
-
-    //TODO: Let a tag of different orientation collapse if it only has one child
 
     //Having pointers to quadrants of sibling
     let newNW;
@@ -237,7 +237,7 @@ class Distribute {
   static verify(value, tagToDistributeOver, xQuad, yQuad) {
     if (xQuad !== yQuad)
       return false;
-    
+
     if (value.parent !== tagToDistributeOver.parent)
       return false;
 
@@ -249,7 +249,7 @@ class Distribute {
 
     if (value.parent.orientation !== Orientation.NS)
       return false;
-    
+
     if (tagToDistributeOver.orientation !== Orientation.EW)
       return false;
 
@@ -276,13 +276,13 @@ class Distribute {
     if (parent.NW.length === 2) {
       //Flipping orientation of the parent
       parent.orientation = Orientation.EW;
-  
+
       //clearing out the NW quadrant and adding in the new tags
       parent.emptyNorthWest();
       for (let child of newNW) {
         parent.addNorthWest(child);
       }
-  
+
       //clearing out the SE quadrant and adding in the new tags
       parent.emptySouthEast();
       for (let child of newSE) {
@@ -462,7 +462,7 @@ class CombineFrac {
     if (tag.orientation !== Orientation.EW) {
       return false;
     }
-    
+
     for (let frac of tag.NW.concat(tag.SE)) {
       // if (child.SE !== divisor) {
       //   return false;
@@ -503,7 +503,7 @@ class CombineFrac {
         newSE.push(newTag);
       } else {
         newSE = newSE.concat(child.NW);
-        divisor = child.SE;       
+        divisor = child.SE;
       }
     }
     let dividend = new Tag(Orientation.EW, newNW, newSE);
@@ -575,7 +575,7 @@ class Cancel {
     return x.equals(y)
       && !Object.is(x, y)
       && Object.is(x.parent, y.parent)
-      && xQuad !== yQuad; 
+      && xQuad !== yQuad;
   }
 
   apply() {
@@ -628,7 +628,7 @@ class LiteralMerge {
   static verify(literalA, literalB, quadrantA, quadrantB) {
     if (literalA.parent !== literalB.parent)
       return false;
-    if (!(literalA instanceof Literal && literalB instanceof Literal)) 
+    if (!(literalA instanceof Literal && literalB instanceof Literal))
       return false;
     if (Object.is(literalA, literalB))
       return false;
@@ -677,10 +677,10 @@ class ZeroMerge{
   }
 
   static verify(sibling1, sibling2){
-    
-    if (Object.is(sibling1, sibling2)) 
-      return false; 
-    
+
+    if (Object.is(sibling1, sibling2))
+      return false;
+
     if (sibling1.parent != sibling2.parent)
       return false;
     if (sibling1.parent.orientation != Orientation.NS)
@@ -740,7 +740,7 @@ class IdentityMerge{
     }
     if (sibling2 instanceof Literal)
       return sibling2.value == 0;
-      
+
     return false;
   }
 
@@ -750,7 +750,7 @@ class IdentityMerge{
         this.sibling2.parent.removeNorthWest(this.sibling1);
       else
         this.sibling1.parent.removeNorthWest(this.sibling2);
-    
+
     else{
       if (this.sibling1 instanceof Literal && this.sibling1.value == 0){
         if (this.quadrant1 == Quadrant.NW)
