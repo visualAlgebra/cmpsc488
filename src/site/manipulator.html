@@ -7,10 +7,41 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="http://localhost:8080/src/site/css/expression_tree.css">
     <link rel="stylesheet" href="http://localhost:8080/src/site/css/materialize.css">
+    <link rel="stylesheet" href="http://localhost:8080/src/site/css/manipulator.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
     <div id="navbarLocation"></div>
+    <div class="row">
+      <a class="tab waves-effect waves-light btn col">
+        <i class="material-icons left">compare_arrows</i>
+        Hint
+      </a>
+      <a class="tab waves-effect waves-light btn col">
+        <i class="material-icons left">share</i>
+        Share
+      </a>
+      <a class="tab waves-effect waves-light btn col">
+        <i class="material-icons left">rotate_left</i>
+        Restart
+      </a>
+      <a class="tab waves-effect waves-light btn col" onclick="histAction(0)">
+        <i class="material-icons left">undo</i>
+        Undo
+      </a>
+      <a class="tab waves-effect waves-light btn col" onclick="histAction(1)">
+        <i class="material-icons left">redo</i>
+        Redo
+      </a>
+      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" onclick="updateCanvas()">
+        <i class="material-icons left">subdirectory_arrow_right</i>
+        History tree
+      </a>
+    </div>
+    <ul class="sidenav" id="histNav">
+      <canvas id="histNavCanvas" width=0 height=0>
+      </canvas>
+    </ul>
     <section class="container">
       <section class="row">
         <h1>Manipulator</h1>
@@ -43,48 +74,68 @@
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               East-West
+            
+            
             </button>
           </div>
           <div class="row">
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               North-South
+            
+            
             </button>
           </div>
           <div class="row">
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               0
+            
+            
             </button>
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               1
+            
+            
             </button>
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               2
+            
+            
             </button>
           </div>
           <div class="row">
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               x1
+            
+            
             </button>
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               x2
+            
+            
             </button>
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               x3
+            
+            
             </button>
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               x4
+            
+            
             </button>
             <button class="btn waves-effect waves-light">
               <i class="material-icons left">add</i>
               x5
+            
+            
             </button>
           </div>
         </div>

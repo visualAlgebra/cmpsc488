@@ -2,7 +2,6 @@ var problem_to_load = getProblemFromURL();
 var hist;
 
 window.onload = ()=>{
-  initManipulatorNavButtons();
   changeMouseMode(0);
   if (problem_to_load !== null) {
     displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res,res2)=>onDisplay(res, res2));
@@ -16,42 +15,19 @@ window.onpopstate = (e)=>{
   }
 }
 ;
-function initManipulatorNavButtons() {
-  let manipdivrow = document.createElement("div");
-  manipdivrow.className = "row";
-  let btnNames = ["Hint", "Share", "Restart", "Undo", "Redo"];
-  let iconNames = ["compare_arrows", "share", "rotate_left", "undo", "redo"];
 
-  for (let x = 0; x < btnNames.length; x++) {
-    let a = document.createElement("a");
-    a.className = "tab waves-effect waves-light btn col";
-    if (x === 3) {
-      a.onclick = function() {
-        histAction(0);
-      }
-      ;
-    } else if (x === 4) {
-      a.onclick = function() {
-        histAction(1);
-      }
-      ;
-    }
-    let i = document.createElement("i");
-    i.className = "material-icons left";
-    i.innerHTML = iconNames[x];
-    a.appendChild(i);
-    a.innerHTML += btnNames[x];
-    manipdivrow.appendChild(a);
-  }
-  document.getElementById("navbarLocation").appendChild(manipdivrow);
-
+function updateCanvas(action) {
+  //let canvas=document.getElementById("histNavCanvas");
+  //if(action===0){//place dot
+  //}else if(action===1){//go back one dot
+  //}
 }
 
-function insertMenu(type){
-  if(type){
-    document.getElementById("manipulatorsSubPanel").style.display="inline";
-  }else{
-    document.getElementById("manipulatorsSubPanel").style.display="none";
+function insertMenu(type) {
+  if (type) {
+    document.getElementById("manipulatorsSubPanel").style.display = "inline";
+  } else {
+    document.getElementById("manipulatorsSubPanel").style.display = "none";
   }
 }
 
@@ -106,8 +82,10 @@ function histAction(num) {
 
 class history {
   constructor(initTree) {
-    this.historyArray = [];
+    this.historyArray = new Array();
     this.index = 0;
+    //this.indexX = 0;
+    //this.indexY = 0;
   }
 
   add(tree) {
@@ -121,7 +99,7 @@ class history {
   }
 
   undo() {
-    if (this.index - 1 <= 0) {
+    if (this.index <= 1) {
       return;
     }
     displayTreeFromDBStruct(this.historyArray[(--this.index) - 1], 'canvasContainer', res=>workingExpressionTree = res);
@@ -135,4 +113,8 @@ class history {
     displayTreeFromDBStruct(this.historyArray[this.index++], 'canvasContainer', res=>workingExpressionTree = res);
     //console.log("redo: "+this.historyArray[this.index++]);
   }
+
+  //displayCurrent(){
+  //  displayTreeFromDBStruct(this.historyArray[this.indexX][this.indexY], 'canvasContainer', res=>workingExpressionTree = res);
+  //}
 }
