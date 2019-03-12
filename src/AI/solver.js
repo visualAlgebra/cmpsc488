@@ -11,7 +11,7 @@ class Node{
 }
 
 function heuristicEval(a, b) {
-  if (a == b)
+  if (a.equals(b))
     return 0;
   if ((a instanceof Tag)) {
     if (b instanceof Tag) {
@@ -62,21 +62,57 @@ function heuristicEval(a, b) {
   return numDiff;
 }
 function solve(a, b){
+  if(a.equals(b))
+    return null;
   var head = Node(hesuristicEval(a, b), null, null, a, 0);
   var nodeArray = [];
   var expanded = [];
   nodeArray.push(head);
   var currentNodeIndex;
-  while (nodeArray.length != 1){
-    if(currentNode.currentExpression == b){
-      solutions.push(currentNode);
+  var currentNode = head;
+  var optimalNode = null;
+  while (nodeArray.length != 0){
+    if(currentNode.currentExpression.equals(b)){
+      optimalNode = currentNode;
+      break;
+    }
+    else{
+      if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length != 0)
+        expand(currentNode, nodeArray, expanded);
+      else
+      {
+        var dup = expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression)))[0];
+        if ((dup.heuristic + dup.numberOfMoves) > (currentNode.heuristic + currentNode.numberOfMoves)){
+          dup = currentNode;
+        }
+
+      }
+      nodeArray.splice(currentNodeIndex, 1);
+    }
+    if (nodeArray.length != 0) {
+      var lowestHeurAndSteps = nodeArray[0].numberOfMoves + nodeArray[0].heuristic;
+      currentNode = nodeArray[0];
+      currentNodeIndex = 0;
+      for (var i = 0; i < nodeArray.length; i++) {
+        if ((nodeArray[i].heuristic + nodeArray[i].numberOfMoves) < lowestHeurAndSteps) {
+          lowestHeurAndSteps = nodeArray[i].heuristic + nodeArray[i].numberOfMoves;
+          currentNode = nodeArray[i];
+          currentNodeIndex = i;
+        }
+      }
     }
   }
 
-  var optimalIndex = 0;
-  var counter = 0;
+  if (optimalNode == null)
+    return null;
+    
+  while (!currentNode.previousNode.currentExpression.equals(a)){
+    currentNode = currentNode.previousNode;
+  }
+
+  return currentNode.previousAction;
 }
 
 function expand(nodeToExpaand, nodeArray, expanded){
-  
+
 }
