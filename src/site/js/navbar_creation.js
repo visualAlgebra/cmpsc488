@@ -48,14 +48,14 @@ function createNavbar(){
 	ul1.appendChild(li3);
 
 	let li4=document.createElement("li");
-	li4.innerHTML='<a href="http://localhost:8080/Explorer.html">Explore</a>';
+	li4.innerHTML='<a href="http://localhost:8080/explorer.html">Explore</a>';
 	if(page==="Explorer"){
 		li4.className+="active ";
 	}
 	ul1.appendChild(li4);
 
 	let li6=document.createElement("li");
-	li6.innerHTML='<a href="http://localhost:8080/user_profile_page.html">User Profile</a>';
+	li6.innerHTML='<a href="http://localhost:8080/profile.html">User Profile</a>';
 	if(page==="user_profile_page"){
 		li6.className+="active ";
 	}

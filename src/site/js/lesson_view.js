@@ -35,10 +35,10 @@ function fillCreations(lesson) {
 }
 
 function getLessonFromURL() {
-  let lesson = (window.location.href).substr((window.location.href).indexOf('/LessonPage'));
-  if (lesson.indexOf('LessonPage/') === -1 || lesson === 'null' || lesson === '' || lesson === 'undefined') {
+  let lesson = (window.location.href).substr((window.location.href).indexOf('/lesson-view'));
+  if (lesson.indexOf('lesson-view/') === -1 || lesson === 'null' || lesson === '' || lesson === 'undefined') {
     //location.replace("../Explorer.html");
-    alert("Error(LessonPage.js): Please enter a lesson after \"LessonPage/\" in the URL or select a problem from another page");
+    alert("Error(lesson-view.js): Please enter a lesson after \"lesson-view/\" in the URL or select a problem from another page");
     return null;
   }
   return lesson.substring(lesson.lastIndexOf('/')+1, lesson.length);

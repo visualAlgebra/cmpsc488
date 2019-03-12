@@ -13,7 +13,7 @@ function createCollectionItemForLesson(lesson, elementId){
     
     li1.appendChild(div1);
     let a1=document.createElement('a');
-    a1.href="http://localhost:8080/LessonPage/"+lesson.id;
+    a1.href="http://localhost:8080/lesson-view/"+lesson.id;
     a1.className="secondary-content";
     div1.appendChild(a1);
 
