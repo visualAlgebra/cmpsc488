@@ -11,6 +11,7 @@ class FirestoreDatabase extends Database {
     });
     this.session = this.admin.firestore();
     this.ACCOUNT_BIO_CHARACTER_LIMIT = 1000; //?
+    this.domainName = "http://localhost:8080";
   }
 
 
@@ -254,14 +255,133 @@ class FirestoreDatabase extends Database {
 // ==========================================================
 // ================== write handling ========================
 // ==========================================================
+  verifyProblemData(problem) {
+    let failed = false;
+    if(problem.startExpression === undefined || typeof(problem.startExpression) !== 'object') {
+      return false;
+    } else if (problem.goalExpression === undefined || typeof(problem.goalExpression) !== 'object') {
+      return false;
+    } else if (problem.description !== undefined && typeof(problem.description) !== 'string') {
+      return false;
+    }
+
+
+    return true;
+  }
+
+  verifyLessonData(lesson) {
+    if(lesson.creations === undefined || typeof(lesson.creations) !== 'object') {
+      return false;
+    } else if (lesson.description !== undefined && typeof(lesson.description) !== 'string') {
+      return false;
+    }
+    for (let i = 0; i < lesson.creations.length; i++) {
+      if (typeof(lesson.creations[i]) !== 'string') {
+        return false;
+      }
+    }
+    return true;
+  }
+
   verifyAccountData(account) {
-    if(account.bio !== undefined && !(typeof(account.bio) == typeof(""))) {
+    if(account.bio !== undefined && !(typeof(account.bio) == 'string')) {
       return false;
     } else if (account.bio.length > this.ACCOUNT_BIO_CHARACTER_LIMIT) {
       return false;
     }
     return true;
   }
+
+
+  saveProblem(server, response, accountID, problem, enteredName) {
+    if(this.verifyProblemData(problem)) {
+      let databaseProblem = {};
+      databaseProblem.description = problem.description;
+      databaseProblem.startExpression = problem.startExpression;
+      databaseProblem.goalExpression = problem.goalExpression;
+      databaseProblem.timeCreated = Date.now();
+      databaseProblem.ownerLessons = [];
+
+      let documentReference;
+      if (accountID !== undefined) {
+        databaseProblem.problemID = accountID + "/" + enteredName;
+        databaseProblem.creatorAccountID = accountID;
+        documentReference = this.session.collection("problems").doc(databaseProblem.problemID);
+      } else {
+        documentReference = this.session.collection("problems").doc();
+        databaseProblem.problemID = documentReference.id;
+        console.log(documentReference.id);
+      }
+
+      documentReference.set(databaseProblem)
+      .then(function() {
+        server.respondWithData(response, 201, 'application/text', domainName + "/problems/" + databaseProblem.problemID);
+      })
+      .catch(err => {
+        console.log(" =================== ");
+        console.log("Error posting problem");
+        console.log(err);
+        console.elog(" =================== ");
+        server.respondWithError(response, 500, "Error 500: Internal Database Error");
+      });
+
+
+    } else {
+      return server.respondWithError(response, 400, "Error 400: Problem Data not formatted correctly");
+    }
+  }
+
+
+
+  saveLesson(server, response, accountID, lesson, enteredName) {
+    if(this.verifyLessonData(lesson)) {
+      let databaseLesson = {};
+      databaseLesson.description = lesson.description;
+      databaseLesson.creations = lesson.creations;
+      databaseLesson.timeCreated = Date.now();
+      databaseLesson.ownerLessons = [];
+      databaseLesson.lessonID = accountID + "/" + enteredName;
+      databaseLesson.creatorAccountID = accountID;
+
+      for(let i = 0; i < databaseLesson.creations.length; i++) {
+        let slashIndex = databaseLesson.creations[i].indexOf('/');
+        let creationType = databaseLesson.creations[i].substring(0,slashIndex);
+        if(creationType === 'problems') {
+          let problem = this.session.collection("problems").doc(databaseLesson.creations[i].substring(slashIndex+1));
+          var arrUnion = problem.update({
+            ownerLessons: admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
+          });
+        } else if (creationType === 'lessons') {
+          let lesson = this.session.collection("lessons").doc(databaseLesson.creations[i].substring(slashIndex+1));
+          var arrUnion = lesson.update({
+            ownerLessons: admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
+          });
+        } else {
+          console.log("====");
+          console.log("Error saving lesson:");
+          console.log("Provided lesson creation '" + databaseLesson.creations[i] + "' not a problem or lesson");
+          return server.respondWithError(response, 400, "Error 400: Lesson creation invalid");
+        }
+      }
+
+      this.session.collection("lessons").doc(databaseLesson.lessonID).set(databaseLesson)
+      .then(function() {
+        server.respondWithData(response, 201, 'application/text', domainName + "/lessons/" + databaseLesson.lessonID);
+      })
+      .catch(err => {
+        console.log(" =================== ");
+        console.log("Error posting lesson");
+        console.log(err);
+        console.elog(" =================== ");
+        server.respondWithError(response, 500, "Error 500: Internal Database Error");
+      });
+
+
+    } else {
+      return server.respondWithError(response, 400, "Error 400: Problem Data not formatted correctly");
+    }
+  }
+
 
 
   addAccount(server, response, account, accountID) {
@@ -292,6 +412,9 @@ class FirestoreDatabase extends Database {
     }
     
   }
+
+
+  
 
 
 
