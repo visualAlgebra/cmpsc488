@@ -65,13 +65,13 @@ function changeMouseMode(num) {
 }
 
 function getProblemFromURL() {
-  let prob = (window.location.href).substr((window.location.href).indexOf('/manipulator'));
+  let prob = (window.location.href).substr((window.location.href).indexOf('/manipulator/problems/'));
   if (prob.indexOf('manipulator/problems/') === -1 || prob === 'null' || prob === '' || prob === 'undefined') {
     //window.location.replace("../manipulator/problems/Getting%20Started");
     alert("Error(manipulator.js): Please enter a problem after \"manipulator/problems/\" in the URL or select a problem from another page");
     return null;
   }
-  return prob.substring(prob.lastIndexOf('/'), prob.length);
+  return prob.substr(22);
 }
 
 function addHistoryEntry(tree) {
