@@ -77,16 +77,8 @@ function solve(a, b){
       break;
     }
     else{
-      if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length != 0)
+      if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length == 0)
         expand(currentNode, nodeArray, expanded);
-      else
-      {
-        var dup = expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression)))[0];
-        if ((dup.heuristic + dup.numberOfMoves) > (currentNode.heuristic + currentNode.numberOfMoves)){
-          dup = currentNode;
-        }
-
-      }
       nodeArray.splice(currentNodeIndex, 1);
     }
     if (nodeArray.length != 0) {
@@ -113,6 +105,27 @@ function solve(a, b){
   return currentNode.previousAction;
 }
 
-function expand(nodeToExpaand, nodeArray, expanded){
+function addToNodeArray(nodeToAdd, nodeArray, expanded) {
+  if (expanded.filter(x => (x.currentExpression.equals(nodeToAdd.currentExpression))).length == 0)
+    nodeArray.push(nodeToAdd);
+  else {
+    var dup = expanded.filter(x => (x.currentExpression.equals(nodeToAdd.currentExpression)))[0];
+    if ((dup.heuristic + dup.numberOfMoves) > (nodeToAdd.heuristic + nodeToAdd.numberOfMoves)) {
+      dup = nodeToAdd;
+    }
+  }
+}
 
+function expand(nodeToExpand, nodeArray, expanded) {
+ expandAssociative(nodeToExpand, nodeArray, expanded);
+}
+
+function expandAssociative(nodeToExpand, nodeArray, expanded){
+  var action;
+  if (AssociativeIntro.verify(nodeToExpand.currentExpression)){
+    var currrentClone = nodeToExpand.currentExpression.clone();
+    action = new AssociativeIntro(currrentClone);
+    action.apply();
+    addToNodeArray(currrentClone, nodeArray, expanded);
+  }
 }
