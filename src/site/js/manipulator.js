@@ -47,6 +47,14 @@ function initManipulatorNavButtons() {
 
 }
 
+function insertMenu(type){
+  if(type){
+    document.getElementById("manipulatorsSubPanel").style.display="inline";
+  }else{
+    document.getElementById("manipulatorsSubPanel").style.display="none";
+  }
+}
+
 function onDisplay(res, containerId) {
   if (containerId === "canvasContainer") {
     workingExpressionTree = res;
@@ -55,6 +63,7 @@ function onDisplay(res, containerId) {
 }
 
 function changeMouseMode(num) {
+  insertMenu(false);
   if (num === 0) {
     mouse.mode = "General Manipulation";
   } else if (num === 1) {
