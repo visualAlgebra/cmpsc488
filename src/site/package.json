@@ -4,8 +4,14 @@
   "description": "The client-side code for the Visual Algebra web app",
   "private": true,
   "scripts": {
-    "test": "echo 'Error: No testing framework setup yet!' && exit 1"
+    "test": "echo 'Error: No testing framework setup yet!' && exit 1",
+    "watch": "webpack --watch",
+    "build": "webpack"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  }
 }
