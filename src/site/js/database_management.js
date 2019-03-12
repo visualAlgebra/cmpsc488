@@ -27,14 +27,14 @@ export function get_lesson_from_db(lesson_id, callback) {
 export function post_problem_from_site(problem) {
   try {
     let http = new XMLHttpRequest();
-    http.open("POST", "http://localhost:8080/problems/" + problem.problem_id, true);
+    http.open("POST", "http://localhost:8080/problems/" + problem.problemID, true);
     http.setRequestHeader("Content-type", "application/json");
     let user = "Fractalyst, ofcourse, why would any other user be here?";
     http.setRequestHeader("Account", user);
-    let str = '{ "problemName": "' + problem.id + '\",';
+    let str = '{ "problemName": "' + problem.problemID + '\",';
     str += ' "startExpression": [' + problem.expression_start + '],';
     str += ' "goalExpression": [' + problem.expression_goal + '],';
-    //str += ' "description": [' + problem.description + '],';
+    str += ' "description": \"' + problem.description + '\",';
     //str += ' "timeCreated": [' + problem.timeCreated + '],';
     str += ' "createdBy": "' + user + '" }';
     console.log(str);

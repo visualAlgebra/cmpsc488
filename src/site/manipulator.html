@@ -3,17 +3,43 @@
   <head>
     <meta charset="utf-8">
     <title>Manipulator</title>
-    <style media="screen">
-      img {
-        width: 100px;
-      }
-    </style>
     <link rel="stylesheet" href="http://localhost:8080/src/site/css/expression_tree.css">
     <link rel="stylesheet" href="http://localhost:8080/src/site/css/materialize.css">
+    <link rel="stylesheet" href="http://localhost:8080/src/site/css/manipulator.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
     <div id="navbarLocation"></div>
+    <div class="row">
+      <a class="tab waves-effect waves-light btn col">
+        <i class="material-icons left">compare_arrows</i>
+        Hint
+      </a>
+      <a class="tab waves-effect waves-light btn col">
+        <i class="material-icons left">share</i>
+        Share
+      </a>
+      <a class="tab waves-effect waves-light btn col">
+        <i class="material-icons left">rotate_left</i>
+        Restart
+      </a>
+      <a class="tab waves-effect waves-light btn col" onclick="histAction(0)">
+        <i class="material-icons left">undo</i>
+        Undo
+      </a>
+      <a class="tab waves-effect waves-light btn col" onclick="histAction(1)">
+        <i class="material-icons left">redo</i>
+        Redo
+      </a>
+      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" onclick="updateCanvas()">
+        <i class="material-icons left">subdirectory_arrow_right</i>
+        History tree
+      </a>
+    </div>
+    <ul class="sidenav" id="histNav">
+      <canvas id="histNavCanvas" width=0 height=0>
+      </canvas>
+    </ul>
     <section class="container">
       <section class="row">
         <h1>Manipulator</h1>
@@ -33,79 +59,95 @@
               <input name="manipulators" type="radio"/>
               <span onclick="changeMouseMode(2)">Distribution</span>
             </label>
+            <label class="col m3">
+              <input name="manipulators" type="radio"/>
+              <span onclick="insertMenu(true)">Insert</span>
+            </label>
           </div>
         </form>
       </section>
-
-
-      <!--<section class="row">
-        <div class="col s12">
-          <ul class="tabs" id="mouse-mode-tabs">
-            <li class="tab col s3"><a class="active" href="#manipulation-tab">Manipulation</a></li>
-            <li class="tab col s3"><a href="#literal-merging-tab">Merge Literals</a></li>
-            <li class="tab col s3"><a href="#creator-controls-tab">Insert</a></li>
-          </ul>
-        </div>
-      </section>
-      <section class="row" id="mouse-mode-tab-targets">
-        <aside id="manipulation-tag" class="col s12">Manipulating</aside>
-        <aside id="literal-merging-tag" class="col s12">Merging</aside>
-        <aside id="creator-controls-tab" class="col s12">
-          <div class="card-panel">
-            <div class="row">
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> East-West
-              </button>
-            </div>
-            <div class="row">
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> North-South
-              </button>
-            </div>
-            <div class="row">
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> 0
-              </button>
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> 1
-              </button>
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> 2
-              </button>
-            </div>
-            <div class="row">
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> x1
-              </button>
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> x2
-              </button>
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> x3
-              </button>
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> x4
-              </button>
-              <button class="btn waves-effect waves-light">
-                <i class="material-icons left">add</i> x5
-              </button>
-            </div>
-          </div>
-        </aside>
-      </section>-->
-
-
-      <section class="row">
-        <section class="col m9">
-          <section class="row">
-            <h2>Start Expression</h2>
-            <div id="canvasContainer"></div>
-          </section>
+      <section id="manipulatorsSubPanel" style="display:none">
+        <div class="card-panel">
           <div class="row">
-            <h2>Goal Expression</h2>
-            <div id="goalContainer"></div>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              East-West
+
+
+            </button>
           </div>
+          <div class="row">
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              North-South
+
+
+            </button>
+          </div>
+          <div class="row">
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              0
+
+
+            </button>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              1
+
+
+            </button>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              2
+
+
+            </button>
+          </div>
+          <div class="row">
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              x1
+
+
+            </button>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              x2
+
+
+            </button>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              x3
+
+
+            </button>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              x4
+
+
+            </button>
+            <button class="btn waves-effect waves-light">
+              <i class="material-icons left">add</i>
+              x5
+
+
+            </button>
+          </div>
+        </div>
+    </section>
+    <section class="row">
+      <section class="col m9">
+        <section class="row">
+          <h2>Start Expression</h2>
+          <div id="canvasContainer"></div>
         </section>
+        <div class="row">
+          <h2>Goal Expression</h2>
+          <div id="goalContainer"></div>
+        </div>
       </section>
     </section>
 

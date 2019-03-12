@@ -26,37 +26,19 @@ window.onpopstate = (e)=>{
   }
 }
 ;
-function initManipulatorNavButtons() {
-  let manipdivrow = document.createElement("div");
-  manipdivrow.className = "row";
-  let btnNames = ["Hint", "Share", "Restart", "Undo", "Redo"];
-  let iconNames = ["compare_arrows", "share", "rotate_left", "undo", "redo"];
 
-  for (let x = 0; x < btnNames.length; x++) {
-    let a = document.createElement("a");
-    a.className = "tab waves-effect waves-light btn col";
-    if (x === 3) {
-      a.onclick = function() {
-        histAction(0);
-      }
-      ;
-    } else if (x === 4) {
-      a.onclick = function() {
-        histAction(1);
-      }
-      ;
-    }
-    let i = document.createElement("i");
-    i.className = "material-icons left";
-    i.innerHTML = iconNames[x];
-    a.appendChild(i);
-    a.innerHTML += btnNames[x];
-    manipdivrow.appendChild(a);
-  }
-  document.getElementById("navbarLocation").appendChild(manipdivrow);
-
+function updateCanvas(action) {
+  //let canvas=document.getElementById("histNavCanvas");
+  //if(action===0){//place dot
+  //}else if(action===1){//go back one dot
+  //}
 }
-
+function insertMenu(type) {
+  if (type) {
+    document.getElementById("manipulatorsSubPanel").style.display = "inline";
+  } else {
+    document.getElementById("manipulatorsSubPanel").style.display = "none";
+  }
 function onDisplay(res, containerId) {
   if (containerId === "canvasContainer") {
     globals.workingExpressionTree = res;
@@ -65,6 +47,7 @@ function onDisplay(res, containerId) {
 }
 
 function changeMouseMode(num) {
+  insertMenu(false);
   if (num === 0) {
     mouse.mode = "General Manipulation";
   } else if (num === 1) {
@@ -75,11 +58,11 @@ function changeMouseMode(num) {
 }
 
 function getProblemFromURL() {
-  let prob = (window.location.href).substr((window.location.href).indexOf('/manipulator'));
+  let prob = (window.location.href).substr((window.location.href).indexOf('/manipulator/problems/'));
   if (prob.indexOf('manipulator/problems/') === -1 || prob === 'null' || prob === '' || prob === 'undefined') {
     //window.location.replace("../manipulator/problems/Getting%20Started");
     alert("Error(manipulator.js): Please enter a problem after \"manipulator/problems/\" in the URL or select a problem from another page");
     return null;
   }
-  return prob.substring(prob.lastIndexOf('/'), prob.length);
+  return prob.substr(22);
 }

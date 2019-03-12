@@ -17,7 +17,9 @@ class FirestoreDatabase extends Database {
 
 
   getProblem(server, serverResponse, link) {
-    let problemReference = this.session.collection('problems').doc(link);
+    let unassembledLink = link.split('/');
+    let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
+    let problemReference = this.session.collection('problems').doc(correctLink);
     let problemQuery = problemReference.get()
       .then(doc => {
         if (!doc.exists) {
@@ -25,6 +27,7 @@ class FirestoreDatabase extends Database {
         } else {
           let problem = doc.data();
           problem.timeCreated = problem.timeCreated._seconds;
+          console.log(problem);
           server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(problem));
         }
       })
@@ -98,7 +101,9 @@ class FirestoreDatabase extends Database {
 
 
   getLesson(server, serverResponse, link) {
-    let lessonReference = this.session.collection('lessons').doc(link);
+    let unassembledLink = link.split('/');
+    let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
+    let lessonReference = this.session.collection('lessons').doc(correctLink);
     let lessonQuery = lessonReference.get()
       .then(doc => {
         if (!doc.exists) {
@@ -304,8 +309,8 @@ class FirestoreDatabase extends Database {
 
       let documentReference;
       if (accountID !== undefined) {
-        //databaseProblem.problemID = accountID + "\/" + enteredName;
-        databaseProblem.problemID = enteredName;
+        databaseProblem.problemID = accountID + "\\" + enteredName;
+        //databaseProblem.problemID = enteredName;
         databaseProblem.creatorAccountID = accountID;
         documentReference = this.session.collection("problems").doc(databaseProblem.problemID);
       } else {

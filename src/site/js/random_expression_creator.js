@@ -20,6 +20,7 @@ export function createDummyProblem(num_nodes,num_nodes2){
     compress_string_js(createRandomExpression(num_nodes2).toString(),res => {
       retval.expression_goal=res;
     });
+    retval.description="lul";
     return retval;
 }
 

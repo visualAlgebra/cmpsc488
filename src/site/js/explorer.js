@@ -4,24 +4,28 @@ import {displayProblemFromDBStruct} from "./display_feature";
 import {initNav} from "./navbar_creation";
 
 window.onload = ()=>{
-    initNav();
-    getInitialProblemsToDisplay();
+  initNav();
+  getInitialProblemsToDisplay();
 }
 ;
-var problemCount=4;
+var problemCount = 4;
 function getInitialProblemsToDisplay() {
-    get_problems_from_db(problemCount, res=>fillProblems(res));
+  get_problems_from_db(problemCount, res=>fillProblems(res));
 }
 function fillProblems(query) {
-    let filldiv = document.getElementById("creationHolder");
-    let probAmt = 0;
-    for (let q in query) {
-        if (probAmt >= problemCount) {
-            break;
-        }
-        q = parseInt(q);
-        filldiv.appendChild(createCardForProblem(query[q].problemID, probAmt));
-        displayProblemFromDBStruct(query[q], q + "_s", q + "_g");
-        probAmt++;
+  let filldiv = document.getElementById("creationHolder");
+  let probAmt = 0;
+  for (let creation in query) {
+    if (probAmt >= problemCount) {
+      break;
     }
+    creation = parseInt(creation);
+    filldiv.appendChild(createCardForProblem(query[creation].problemID, probAmt));
+    //displayProblemFromDBStruct(prob, creation + "_s", creation + "_g");
+    let temp1 = document.getElementById(creation + "_s");
+    let temp2 = document.getElementById(creation + "_g");
+    temp1.innerHTML = "placeholder for minified problem";
+    temp2.innerHTML = "placeholder for minified problem";
+    probAmt++;
+  }
 }

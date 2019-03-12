@@ -1,0 +1,5 @@
+#histNavCanvas {
+  display:inline;
+  background-color: deepskyblue;
+  overflow:auto;
+}
