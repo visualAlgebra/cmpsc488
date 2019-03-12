@@ -304,16 +304,27 @@ class Factor {
     this.tagToFactor = tagToFactor;
   }
 
-  static verify(tagToFactor, valueToFactor) {
+  static verify(valueToFactor, tagToFactor) {
     if (tagToFactor.orientation != "eastwest")
       return false;
     for (var i = 0; i<tagToFactor.NW.length; i++){
       if (tagToFactor.NW[i] instanceof Tag){
-        if(tagToFactor.NW[i].NW[0] !== valueToFactor)
+        if(!tagToFactor.NW[i].NW[0].equals(valueToFactor))
           return false;
       }
       else{
-        if (tagToFactor.NW[i].value !== valueToFactor)
+        if (!tagToFactor.NW[i].value.equals(valueToFactor))
+          return false;
+      }
+    }
+
+    for (var i = 0; i<tagToFactor.SE.length; i++){
+      if (tagToFactor.SE[i] instanceof Tag){
+        if(!tagToFactor.SE[i].NW[0].equals(valueToFactor))
+          return false;
+      }
+      else{
+        if (!tagToFactor.SE[i].value.equals(valueToFactor))
           return false;
       }
     }

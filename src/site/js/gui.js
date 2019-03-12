@@ -141,7 +141,7 @@ const mouse = {
       this.redisplayExpressionTree();
     }
     // TODO: fix verfiy for Factor
-    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui ) {
+    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
       
       const action = new Factor(x, y);
       action.apply();
