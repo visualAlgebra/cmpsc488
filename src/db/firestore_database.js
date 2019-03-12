@@ -304,7 +304,8 @@ class FirestoreDatabase extends Database {
 
       let documentReference;
       if (accountID !== undefined) {
-        databaseProblem.problemID = accountID + "/" + enteredName;
+        //databaseProblem.problemID = accountID + "\/" + enteredName;
+        databaseProblem.problemID = enteredName;
         databaseProblem.creatorAccountID = accountID;
         documentReference = this.session.collection("problems").doc(databaseProblem.problemID);
       } else {
@@ -312,10 +313,10 @@ class FirestoreDatabase extends Database {
         databaseProblem.problemID = documentReference.id;
         console.log(documentReference.id);
       }
-
+      let self = this;
       documentReference.set(databaseProblem)
       .then(function() {
-        server.respondWithData(response, 201, 'application/text', domainName + "/problems/" + databaseProblem.problemID);
+        server.respondWithData(response, 201, 'application/text', self.domainName + "/problems/" + databaseProblem.problemID);
       })
       .catch(err => {
         console.log(" =================== ");

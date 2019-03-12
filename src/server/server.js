@@ -9,7 +9,7 @@ const path = require("path");
 
 class Server {
     constructor() {
-        let DB = require('../db/dummyDatabase.js');
+        let DB = require('../db/dummy_database.js');
         this.database = new DB();
 
         // //setting up event emitter for callbacks
@@ -355,7 +355,7 @@ let test = function test() {
 
 var server = new Server();
 server.listen();
-const requestTest = require('./requestTest');
+const requestTest = require('./request_test');
 
 setTimeout(test, 500);
 
