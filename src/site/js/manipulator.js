@@ -39,6 +39,8 @@ function insertMenu(type) {
   } else {
     document.getElementById("manipulatorsSubPanel").style.display = "none";
   }
+}
+
 function onDisplay(res, containerId) {
   if (containerId === "canvasContainer") {
     globals.workingExpressionTree = res;
@@ -66,3 +68,4 @@ function getProblemFromURL() {
   }
   return prob.substr(22);
 }
+
