@@ -34,7 +34,7 @@ function fillPage(accInfo) {
   let id_field = document.getElementById('userAccountIdField');
   id_field.innerHTML = accInfo.id;
   let bio_field = document.getElementById('bioField');
-  bio_field.innerHTML=accInfo.bio;
+  bio_field.innerHTML="Bio: " + accInfo.bio;
   let creation_date_field = document.getElementById('creationDateField');
   creation_date_field.innerHTML = "Creation date: " + new Date(accInfo.timeCreated);
   let problems_amt = document.getElementById('problemsSavedAmountField');
@@ -52,7 +52,12 @@ function fillPage(accInfo) {
   for(let problem in accInfo.problems){
     problem = parseInt(problem);
     filldiv.appendChild(createCardForProblem(accInfo.problems[problem].problemID, probAmt));
-    displayProblemFromDBStruct(accInfo.problems[problem], problem + "_s", problem + "_g");
+    //displayProblemFromDBStruct(accInfo.problems[problem], problem + "_s", problem + "_g");
+      let temp1=document.getElementById(problem+"_s");
+      let temp2=document.getElementById(problem + "_g");
+      temp1.innerHTML="placeholder for minified problem";
+      temp2.innerHTML="placeholder for minified problem";
+    //TODO Display only minified problem (above)
     probAmt++;
   }
 }

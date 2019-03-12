@@ -4,6 +4,7 @@
     <script src="http://localhost:8080/src/site/js/materialize.js"></script>
     <link rel="stylesheet" href="http://localhost:8080/src/site/css/expression_tree.css">
     <link rel="stylesheet" href="http://localhost:8080/src/site/css/materialize.css">
+    <link rel="stylesheet" href="http://localhost:8080/src/site/css/user_profile_page.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
@@ -16,13 +17,18 @@
             <p id="bioField"></p>
             <p id="creationDateField"></p>
             <p id="problemsSavedAmountField"></p>
-            <p id="lessonsSavedAmountField"></p>
           </div>
         </div>
       </div>
     </div>
-    <ul id="lessonHolder" class="collection with-header">
-        <li class="collection-header blue-grey lighten-2 white-text"><h4>Lessons</h4></li>
+    <ul class="collection with-header">
+      <li class="collection-header blue-grey darken-1 white-text">
+        <h4 id="lessonsSavedAmountField">Lessons</h4>
+      </li>
+      <table class="bordered">
+        <tbody id="lessonHolder">
+        </tbody>
+      </table>
     </ul>
     <div class="divider"></div>
     <div id="creationHolder" class="row"></div>
