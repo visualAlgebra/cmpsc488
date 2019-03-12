@@ -128,4 +128,15 @@ function expandAssociative(nodeToExpand, nodeArray, expanded){
     action.apply();
     addToNodeArray(currrentClone, nodeArray, expanded);
   }
+  
+  if (nodeToExpand.currentExpression instanceof Tag)
+    for (var i = 0; i < nodeToExpand.currentExpression.NW.length; i++) {
+      if (AssociativeMerge.verify(nodeToExpand.currentExpression.NW[i], nodeToExpand.currentExpression, Quadrant.NW)) {
+        var currrentClone = nodeToExpand.currentExpression.clone();
+        action = new AssociativeMerge(currentClone.NW[i], currrentClone, Quadrant.NW);
+        action.apply();
+        addToNodeArray(currrentClone, nodeArray, expanded);
+      }
+    }
+
 }
