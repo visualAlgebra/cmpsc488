@@ -489,12 +489,22 @@ class CombineFrac {
 
     //creating the dividend
     for (let child of this.tag.NW) {
-      newNW = newNW.concat(child.NW);
-      divisor = child.SE;
+      if (child.NW.length > 1) {
+        let newTag = new Tag(Orientation.NS, child.NW);
+        newNW.push(newTag);
+      } else {
+        newNW = newNW.concat(child.NW);
+        divisor = child.SE;
+      }
     }
     for (let child of this.tag.SE) {
-      newSE = newSE.concat(child.NW);
-      divisor = child.SE;
+      if (child.NW.length > 1) {
+        let newTag = new Tag(Orientation.NS, child.NW);
+        newSE.push(newTag);
+      } else {
+        newSE = newSE.concat(child.NW);
+        divisor = child.SE;       
+      }
     }
     let dividend = new Tag(Orientation.EW, newNW, newSE);
 
