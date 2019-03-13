@@ -31,6 +31,9 @@ window.onload=()=>{
   document.getElementById("histCanvasOpener").addEventListener("click", function(e){
     updateCanvas();
   });
+  document.getElementById("restartButton").addEventListener("click", function(e){
+    restart();
+  });
 };
 window.onpopstate=(e)=>{
   if(e.state){
@@ -38,6 +41,10 @@ window.onpopstate=(e)=>{
     displayProblemFromDB(e.state);
   }
 };
+
+function restart(){
+  //displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str);
+}
 
 function updateCanvas(action){
   //let canvas=document.getElementById("histNavCanvas");
@@ -58,6 +65,7 @@ function onDisplay(res, containerId){
   if(containerId==="canvasContainer"){
     globals.workingExpressionTree=res;
     addHistoryEntry(res);
+    //document.getElementById("restartButton")..setAttribute("data-str", res.toString());
   }
 }
 
