@@ -31,7 +31,7 @@
         <i class="material-icons left">redo</i>
         Redo
       </a>
-      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" onclick="updateCanvas()">
+      <a id="histCanvasOpener" class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
         <i class="material-icons left">subdirectory_arrow_right</i>
         History tree
       </a>
@@ -49,19 +49,19 @@
           <div class="row">
             <label class="col m3">
               <input name="manipulators" type="radio" checked/>
-              <span onclick="changeMouseMode(0)">General Manipulation</span>
+              <span id="manipGenMan">General Manipulation</span>
             </label>
             <label class="col m3">
               <input name="manipulators" type="radio"/>
-              <span onclick="changeMouseMode(1)">Merging Literals</span>
+              <span id="manipMerLit">Merging Literals</span>
             </label>
             <label class="col m3">
               <input name="manipulators" type="radio"/>
-              <span onclick="changeMouseMode(2)">Distribution</span>
+              <span id="manipDistri">Distribution</span>
             </label>
             <label class="col m3">
               <input name="manipulators" type="radio"/>
-              <span onclick="insertMenu(true)">Insert</span>
+              <span id="manipInsert">Insert</span>
             </label>
           </div>
         </form>

@@ -13,8 +13,23 @@ window.onload=()=>{
   document.getElementById("backwardHistButton").addEventListener("click", function(e){
     histAction(0);
   });
-  let forw=document.getElementById("forwardHistButton").addEventListener("click", function(e){
+  document.getElementById("forwardHistButton").addEventListener("click", function(e){
     histAction(1);
+  });
+  document.getElementById("manipGenMan").addEventListener("click", function(e){
+    changeMouseMode(0);
+  });
+  document.getElementById("manipMerLit").addEventListener("click", function(e){
+    changeMouseMode(1);
+  });
+  document.getElementById("manipDistri").addEventListener("click", function(e){
+    changeMouseMode(2);
+  });
+  document.getElementById("manipInsert").addEventListener("click", function(e){
+    insertMenu(true);
+  });
+  document.getElementById("histCanvasOpener").addEventListener("click", function(e){
+    updateCanvas();
   });
 };
 window.onpopstate=(e)=>{
