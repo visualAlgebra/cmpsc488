@@ -14,12 +14,6 @@ export const Quadrant = {
   NW: "NW",
   SE: "SE"
 };
-
-String.prototype.splice = function(index, str) {
-  return this.slice(0, index) + str + this.slice(index);
-};
-
-
 export class LessonInfo{
     constructor(lesson_id, creations, timeCreated, creatorAccId, description){
       this.id=lesson_id;

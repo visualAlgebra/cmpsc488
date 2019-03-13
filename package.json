@@ -22,6 +22,5 @@
   "dependencies": {
     "firebase-admin": "^7.0.0"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

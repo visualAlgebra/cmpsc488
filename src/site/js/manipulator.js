@@ -7,7 +7,6 @@ var problem_to_load = getProblemFromURL();
 
 window.onload = ()=>{
   initNav();
-  initManipulatorNavButtons();
   changeMouseMode(0);
   if (problem_to_load !== null) {
     displayProblemFromDB(
