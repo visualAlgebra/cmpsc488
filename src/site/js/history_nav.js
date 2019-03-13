@@ -1,5 +1,5 @@
 import {displayTreeFromDBStruct} from "./display_feature";
-
+import {globals} from './gui';
 var hist;
 
 export function addHistoryEntry(tree){
@@ -19,7 +19,6 @@ export function histAction(num){
   if(num===0){
     hist.undo();
   }else if(num===1){
-    I;
     hist.redo();
   }
 }
