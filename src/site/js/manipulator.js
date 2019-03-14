@@ -1,7 +1,7 @@
 import {globals, mouse} from './gui';
-import {displayProblemFromDB} from './display_feature';
+import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
-import {addHistoryEntry, histAction} from "./history_nav";
+import {addHistoryEntry, histAction, clearHist} from "./history_nav";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
@@ -43,7 +43,10 @@ window.onpopstate=(e)=>{
 };
 
 function restart(){
-  //displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str);
+  displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str, 'canvasContainer', res=>{
+    alert("Restarted");
+    clearHist(res.toString());
+  });
 }
 
 function updateCanvas(action){
@@ -65,7 +68,7 @@ function onDisplay(res, containerId){
   if(containerId==="canvasContainer"){
     globals.workingExpressionTree=res;
     addHistoryEntry(res);
-    //document.getElementById("restartButton")..setAttribute("data-str", res.toString());
+    document.getElementById("restartButton").setAttribute("data-str", res.toString());
   }
 }
 

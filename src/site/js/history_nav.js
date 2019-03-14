@@ -7,7 +7,8 @@ export function addHistoryEntry(tree){
     tree=tree.parent;
   }
   if(hist===null||hist===undefined){
-    hist=new history(tree);
+    hist=new history(tree.toString());
+    return;
   }
   hist.add(tree.toString());
 }
@@ -23,10 +24,16 @@ export function histAction(num){
   }
 }
 
+export function clearHist(tree){
+  hist=undefined;
+  hist=new history(tree.toString());
+}
+
 export class history{
-  constructor(){
+  constructor(treetxt){
     this.historyArray=[];
     this.index=0;
+    this.add(treetxt);
   }
 
   add(tree){
