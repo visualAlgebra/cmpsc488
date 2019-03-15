@@ -72,13 +72,39 @@ function restart(){
   });
 }
 
+Vue.component("expression-tree", {
+
+  props: ["tree"],
+
+  template: `
+  <div>
+    <div v-if="tree.kind === 'Tag'">
+      Tag
+    </div>
+    <div v-else-if="tree.kind === 'Variable'">
+      Variable
+    </div>
+    <div v-else-if="tree.kind === 'Literal'">
+      Literal
+    </div>
+  </div>
+  `,
+
+});
+
 const manipulatorWindow = new Vue({
 
   el: "#vueCanvasContainer",
 
+  template: `
+  <div>
+    <expression-tree :tree="workingExpressionTree"></expression-tree>
+  </div>
+  `,
+
   data() {
     return {
-      message: "Hello from Vue!",
+      workingExpressionTree: {"kind": "Literal"},
     }
   },
 

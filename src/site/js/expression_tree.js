@@ -166,6 +166,10 @@ export class Tag extends ExpressionTree {
     this.updateParentTreeCount(-delta);
   }
 
+  childQuadrant(child) {
+    return this.NW.some(x => Object.is(x, child)) ? Quadrant.NW : Quadrant.SE;
+  }
+
   find(child, quadrantLabel) {
     return this[quadrantLabel].findIndex(x => Object.is(x, child));
   }
