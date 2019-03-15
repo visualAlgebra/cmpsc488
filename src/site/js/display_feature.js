@@ -10,10 +10,9 @@ export function displayExpressionTree(tree, containerId, callback) {
     container.removeChild(container.firstChild);
   }
   container.setAttribute('data-str',tree.toString());
-  const doc = new DOMParser().parseFromString(tree.render(), "text/xml");
   let temp=tree.render()[0];
   container.appendChild(temp);
-  convertTreeToImage(tree);//attempt
+  //convertTreeToImage(tree);//attempt
   if (callback) {
     callback(tree, containerId);
   }
