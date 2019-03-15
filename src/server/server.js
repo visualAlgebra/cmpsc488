@@ -90,16 +90,6 @@ class Server {
     }
   }
 
-  static lessonIsValid(lesson) {
-    if (lesson.problems === undefined) {
-      return false;
-    } else if (typeof (lesson.problems) != typeof ([])) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   //as of now, we don't know what
   static accountIsValid(account) {
     return true;
@@ -156,6 +146,10 @@ class Server {
           try {
             jsonData = JSON.parse(body);
           } catch (error) {
+            console.log("============ Error =============");
+            console.log("Error parsing posted data");
+            console.log(error);
+            console.log("==========End of Error =========");
             return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
           }
           let accountID = self.authenticatedUser(self.getSentAccountID(request));
@@ -167,6 +161,9 @@ class Server {
           } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
             self.saveAccount(response, jsonData, accountID);
           } else {
+            console.log("============ Error =============");
+            console.log("Sent POST request does not match any api call");
+            console.log("==========End of Error =========");
             return self.respondWithError(response, 400, "Error 400: Bad Request");
           }
         });
@@ -290,22 +287,17 @@ class Server {
   //==========================================================================
 
   saveProblem(pathname, response, problem, accountID) {
-    if (Server.problemIsValid(problem)) {
+    //if (Server.problemIsValid(problem)) { //moved to database
       let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length));
       return this.database.saveProblem(this, response, accountID, problem, problemName);
-    } else {
-      return this.respondWithError(response, 400, "Error 400: Sent Problem is not Valid");
-    }
+
   }
 
 
   saveLesson(pathname, response, lesson, accountID) {
-    if (Server.lessonIsValid(lesson)) {
+    //if (Server.lessonIsValid(lesson)) { //moved to database
       let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length));
       return this.database.saveLesson(this, response, accountID, lesson, lessonName);
-    } else {
-      return this.respondWithError(response, 400, "Error 400: Sent Lesson is not Valid");
-    }
   }
 
 

@@ -11,11 +11,12 @@ class FirestoreDatabase extends Database {
     });
     this.session = this.admin.firestore();
     this.ACCOUNT_BIO_CHARACTER_LIMIT = 1000; //?
+    this.ACCOUNT_CREATION_LIMIT = 100;
     this.domainName = "http://localhost:8080";
   }
 
 
-
+  //firestore call to get problem in collection "problems" of document "link"
   getProblem(server, serverResponse, link) {
     let unassembledLink = link.split('/');
     let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
@@ -39,7 +40,7 @@ class FirestoreDatabase extends Database {
 
 
 
-
+  //calls firestore database to assemble the "creations" array in Lesson with full lessons and problems and not 
   assembleLesson(lesson, serverResponse, successCallback, failureCallback) {
     let problemsQuery = this.session.collection('problems').where('ownerLessons', 'array-contains', lesson.lessonID);
     let lessonsQuery = this.session.collection('lessons').where('ownerLessons', 'array-contains', lesson.lessonID);
@@ -299,6 +300,7 @@ class FirestoreDatabase extends Database {
 
 
   saveProblem(server, response, accountID, problem, enteredName) {
+    var self = this;
     if(this.verifyProblemData(problem)) {
       let databaseProblem = {};
       databaseProblem.description = problem.description;
@@ -307,34 +309,106 @@ class FirestoreDatabase extends Database {
       databaseProblem.timeCreated = Date.now();
       databaseProblem.ownerLessons = [];
 
-      let documentReference;
+      let problemReference;
       if (accountID !== undefined) {
-        databaseProblem.problemID = accountID + "\\" + enteredName;
-        //databaseProblem.problemID = enteredName;
-        databaseProblem.creatorAccountID = accountID;
-        documentReference = this.session.collection("problems").doc(databaseProblem.problemID);
+        let ownerAccountReference = this.session.collection("accounts").doc(accountID);
+
+        ownerAccountReference.get().then(doc => {
+          let ownerAccount = doc.data();
+          let creationCount = ownerAccount.lessons.length + ownerAccount.problems.length;
+          if (creationCount >= self.ACCOUNT_CREATION_LIMIT) {
+            return server.respondWithError(response, 400, "Account already has limit of " + self.ACCOUNT_CREATION_LIMIT + " creations. Delete an old creation to save a new one.")
+          }
+          databaseProblem.problemID = accountID + "\\" + enteredName;
+          databaseProblem.creatorAccountID = accountID;
+          problemReference = this.session.collection("problems").doc(databaseProblem.problemID);
+          let batch = self.session.batch();
+          batch.set(problemReference, databaseProblem);
+          batch.update(ownerAccountReference, {
+            problems: self.admin.firestore.FieldValue.arrayUnion(databaseProblem.problemID)
+          });
+          batch.commit().then(value => {
+            return server.respondWithData(response, 201, 'text/plain', "Problem Saved at " + self.domainName + "/problems/" + databaseProblem.problemID);
+          }).catch(error => {
+            return server.respondWithError(response, 500, "Internal Database Error");
+          });
+        })
+        .catch(err => {
+          console.log("============ Error =============");
+          console.log("Error posting lesson with account");
+          console.log(err);
+          console.log("==========End of Error =========");
+          server.respondWithError(response, 500, "Error 500: Internal Database Error");
+        });
+
       } else {
-        documentReference = this.session.collection("problems").doc();
-        databaseProblem.problemID = documentReference.id;
-        console.log(documentReference.id);
+        problemReference = this.session.collection("problems").doc();
+        databaseProblem.problemID = problemReference.id;
+        console.log(problemReference.id);
+        problemReference.set(databaseProblem)
+        .then(function() {
+          server.respondWithData(response, 201, 'application/text', "Problem Saved at " + self.domainName + "/problems/" + databaseProblem.problemID);
+        })
+        .catch(err => {
+          console.log(" =================== ");
+          console.log("Error posting problem");
+          console.log(err);
+          console.elog(" =================== ");
+          server.respondWithError(response, 500, "Error 500: Internal Database Error");
+        });
       }
-      let self = this;
-      documentReference.set(databaseProblem)
-      .then(function() {
-        server.respondWithData(response, 201, 'application/text', self.domainName + "/problems/" + databaseProblem.problemID);
-      })
-      .catch(err => {
-        console.log(" =================== ");
-        console.log("Error posting problem");
-        console.log(err);
-        console.elog(" =================== ");
-        server.respondWithError(response, 500, "Error 500: Internal Database Error");
-      });
-
-
     } else {
       return server.respondWithError(response, 400, "Error 400: Problem Data not formatted correctly");
     }
+  }
+
+
+  saveLessonBatchWrite(response, databaseLesson, successCallback, failureCallback) {
+    let batch = this.session.batch();
+    let self = this;
+    
+    for(let i = 0; i < databaseLesson.creations.length; i++) {
+      let slashIndex = databaseLesson.creations[i].indexOf('/');
+      let creationType = databaseLesson.creations[i].substring(0,slashIndex);
+      if(creationType === 'problems') {
+        if (databaseLesson.creations[i].indexOf('\\') === -1) {
+          return failureCallback(response, 400, "Error 400: Cannot create Lesson with a Problem created by a non-member");
+        }
+        let problem = this.session.collection("problems").doc(databaseLesson.creations[i].substring(slashIndex+1));
+        batch.update(problem, {
+          ownerLessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
+        });
+      } else if (creationType === 'lessons') {
+        let lesson = this.session.collection("lessons").doc(databaseLesson.creations[i].substring(slashIndex+1));
+        batch.update(lesson, {
+          ownerLessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
+        });
+      } else {
+        console.log("====");
+        console.log("Error saving lesson:");
+        console.log("Provided lesson creation '" + databaseLesson.creations[i] + "' not a problem or lesson");
+        return failureCallback(response, 400, "Error 400: Cannot create Lesson with a Problem created by a non-member");
+      }
+    }
+
+    let accountReference = this.session.collection("accounts").doc(databaseLesson.creatorAccountID);
+    batch.update(accountReference, {
+      lessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
+    });
+    
+    let lessonReference = this.session.collection("lessons").doc(databaseLesson.lessonID);
+    batch.set(lessonReference, databaseLesson);
+
+    return batch.commit().then(value => {
+      successCallback(response, 201, 'application/text', self.domainName + "/lessons/" + databaseLesson.lessonID);
+    })
+    .catch(error => {
+      console.log("============ Error =============");
+      console.log("Error with batch posting lesson to database");
+      console.log(error);
+      console.log("==========End of Error =========");
+      failureCallback(response, 500, "Error 500: Internal Database Error");
+    })
   }
 
 
@@ -346,45 +420,16 @@ class FirestoreDatabase extends Database {
       databaseLesson.creations = lesson.creations;
       databaseLesson.timeCreated = Date.now();
       databaseLesson.ownerLessons = [];
-      databaseLesson.lessonID = accountID + "/" + enteredName;
+      databaseLesson.lessonID = accountID + "\\" + enteredName;
       databaseLesson.creatorAccountID = accountID;
 
-      for(let i = 0; i < databaseLesson.creations.length; i++) {
-        let slashIndex = databaseLesson.creations[i].indexOf('/');
-        let creationType = databaseLesson.creations[i].substring(0,slashIndex);
-        if(creationType === 'problems') {
-          let problem = this.session.collection("problems").doc(databaseLesson.creations[i].substring(slashIndex+1));
-          var arrUnion = problem.update({
-            ownerLessons: admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
-          });
-        } else if (creationType === 'lessons') {
-          let lesson = this.session.collection("lessons").doc(databaseLesson.creations[i].substring(slashIndex+1));
-          var arrUnion = lesson.update({
-            ownerLessons: admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
-          });
-        } else {
-          console.log("====");
-          console.log("Error saving lesson:");
-          console.log("Provided lesson creation '" + databaseLesson.creations[i] + "' not a problem or lesson");
-          return server.respondWithError(response, 400, "Error 400: Lesson creation invalid");
-        }
-      }
-
-      this.session.collection("lessons").doc(databaseLesson.lessonID).set(databaseLesson)
-      .then(function() {
-        server.respondWithData(response, 201, 'application/text', domainName + "/lessons/" + databaseLesson.lessonID);
-      })
-      .catch(err => {
-        console.log(" =================== ");
-        console.log("Error posting lesson");
-        console.log(err);
-        console.elog(" =================== ");
-        server.respondWithError(response, 500, "Error 500: Internal Database Error");
-      });
-
+      this.saveLessonBatchWrite(response, databaseLesson, server.respondWithData, server.respondWithError);
 
     } else {
-      return server.respondWithError(response, 400, "Error 400: Problem Data not formatted correctly");
+      console.log("============ Error =============");
+      console.log("Posted lesson is not formatted correctly");
+      console.log("==========End of Error =========");
+      return server.respondWithError(response, 400, "Error 400: Lesson Data not formatted correctly");
     }
   }
 
@@ -410,7 +455,7 @@ class FirestoreDatabase extends Database {
         console.log(" =================== ");
         console.log("Error posting account");
         console.log(err);
-        console.elog(" =================== ");
+        console.log(" =================== ");
         server.respondWithError(response, 500, "Error 500: Internal Database Error");
       });
     } else {

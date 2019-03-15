@@ -211,12 +211,16 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 
 function executeFirebaseTesting() {
   //getFileTest("accounts/TEST_USER_0",0,"");
-  // getFileTest("lessons/TEST_LESSON_0",1,"");
-  // getFileTest("problems/TEST_PROBLEM_0",2, "");
+	// getFileTest("lessons/TEST_LESSON_0",1,"");
+	//console.log("TESTING_USER\\NEW_TEST");
+	//getFileTest("problems/TESTING_USER/NEW_TEST",2, "");
   // getFileTest("problems?sort=timeCreated&number=1", 3, "");
   // getFileTest("lessons?sort=timeCreated&number=1", 4, "");
   // postFileTest("accounts/TESTING_USER", 5, JSON.stringify({'bio': 'a bio for this account'}), "TESTING_USER", 201); //post problem w/ name w/ account
-	postFileTest("problems/NEW_TEST", 6, '{"startExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"goalExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"description": "A test problem. current schema as of 3/1"}', "TESTING_USER", 201);
+  //postFileTest("problems/NEW_TEST", 6, '{"startExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"goalExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"description": "A test problem. current schema as of 3/1"}', "TESTING_USER", 201);
+  postFileTest("lessons/NEW_LESSON", 7, JSON.stringify({"creations": ["problems/TESTING_USER\\NEW_TEST"],"description": "A test lesson. schema correct as of 3/1"}), "TESTING_USER", 201);
+
+  
 }
 
 function executeTesting() {
