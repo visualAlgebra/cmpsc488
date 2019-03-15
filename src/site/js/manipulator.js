@@ -15,14 +15,12 @@ window.onload=()=>{
   document.getElementById("backwardHistButton").addEventListener("click", function(e){
     let t=histAction(false);
     if(t!==null){
-      globals.workingExpressionTree=t;
       displayTreeFromDBStruct(t,'canvasContainer');
     }
   });
   document.getElementById("forwardHistButton").addEventListener("click", function(e){
     let t=histAction(true);
     if(t!==null){
-      globals.workingExpressionTree=t;
       displayTreeFromDBStruct(t,'canvasContainer');
     }
   });
