@@ -791,8 +791,9 @@ export class IdentityMerge{
 }
 
 export class LiteralConversion{
-  constructor(literal){
+  constructor(literal, quad){
     this.literal = literal;
+    this.quad = quad;
   }
 
   static verify(literal){
@@ -800,14 +801,14 @@ export class LiteralConversion{
   }
 
   apply(){
-    if (literal.value == 0){
-      literal = new Tag(Orientation.EW, [new Literal(1), new Literal(2)]);
+    if (this.literal.value == 0){
+      this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(1), new Literal(2)]), this.quad);
     }
-    else if (literal.value == 1){
-      literal = new Tag(Orientation.EW, [new Literal(2), new Literal(2)]);
+    else if (this.literal.value == 1){
+      this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(2), new Literal(2)]), this.quad);
     }
     else{
-      literal = new Tag(Orientation.EW, [new Literal(1), new Literal(1)]);
+      this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(1), new Literal(1)]), this.quad);
     }
   }
 }

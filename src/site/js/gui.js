@@ -7,7 +7,7 @@ import {
   AssociativeInsert, AssociativeIntro,
   AssociativeMerge, Cancel, CombineFrac,
   CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
-  QuadrantFlip, SplitFrac, ZeroMerge
+  QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
 
 export const globals = {
@@ -196,6 +196,14 @@ export const mouse = {
       const action = new AssociativeIntro(this.eventSource.tree);
       action.apply();
       console.log("Enclosing ", this.eventSource.tree);
+
+      this.redisplayExpressionTree();
+    }
+
+    if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(this.eventSource.tree)){
+      const action = new LiteralConversion(this.eventSource.tree, findQuadrant(this.eventSource.tree));
+      action.apply();
+      console.log("Converting ", this.eventSource.tree);
 
       this.redisplayExpressionTree();
     }
