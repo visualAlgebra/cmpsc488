@@ -105,6 +105,7 @@ function solve(a, b){
   return currentNode.previousAction;
 }
 
+/*
 function addToNodeArray(nodeToAdd, nodeArray, expanded) {
   if (expanded.filter(x => (x.currentExpression.equals(nodeToAdd.currentExpression))).length == 0)
     nodeArray.push(nodeToAdd);
@@ -115,6 +116,7 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
     }
   }
 }
+*/
 
 function expand(nodeToExpand, nodeArray, expanded) {
  expandAssociative(nodeToExpand, nodeArray, expanded);
@@ -126,7 +128,7 @@ function expandAssociative(nodeToExpand, nodeArray, expanded){
     var currrentClone = nodeToExpand.currentExpression.clone();
     action = new AssociativeIntro(currrentClone);
     action.apply();
-    addToNodeArray(currrentClone, nodeArray, expanded);
+    //addToNodeArray(currrentClone, nodeArray, expanded);
   }
   
   if (nodeToExpand.currentExpression instanceof Tag)
@@ -135,8 +137,9 @@ function expandAssociative(nodeToExpand, nodeArray, expanded){
         var currrentClone = nodeToExpand.currentExpression.clone();
         action = new AssociativeMerge(currentClone.NW[i], currrentClone, Quadrant.NW);
         action.apply();
-        addToNodeArray(currrentClone, nodeArray, expanded);
+        //addToNodeArray(currrentClone, nodeArray, expanded);
       }
     }
 
 }
+
