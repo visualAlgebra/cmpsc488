@@ -166,11 +166,22 @@ export class Tag extends ExpressionTree {
     this.updateParentTreeCount(-delta);
   }
 
-  findAndReplace(oldVal, newVal, quadrantLabel) {
+  find(child, quadrantLabel) {
+    return this[quadrantLabel].findIndex(x => Object.is(x, child));
+  }
+
+  replace(oldVal, newVal, quadrantLabel) {
     const delta = newVal.treeCount - oldVal.treeCount;
-    const idx = this[quadrantLabel].findIndex(x => Object.is(x, oldVal));
+    const idx = this.find(oldVal, quadrantLabel);
     newVal.parent = oldVal.parent;
     this[quadrantLabel][idx] = newVal;
+    this.updateParentTreeCount(delta);
+  }
+
+  insert(child, index, quadrantLabel) {
+    this[quadrantLabel].splice(index, 0, child);
+    child.parent = this;
+    const delta = child.treeCount;
     this.updateParentTreeCount(delta);
   }
 
