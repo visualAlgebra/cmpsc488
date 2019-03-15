@@ -6,6 +6,7 @@ import {get_problem_from_db} from "./database_management";
 // expression tree inside `container_id`.
 export function displayExpressionTree(tree, containerId, callback) {
     const container = $("#" + containerId);
+    container.attr("data-str", tree.toString());
     container.empty();
     const dom = tree.render();
     container.append(dom);
@@ -57,7 +58,6 @@ export function convertTreeToImage(treeStruct, container_id){
   tempImg.addEventListener('load', function(e){
     ctx.drawImage(e.target, 0, 0);
     targetImg.src = canvas.toDataURL();
-    console.log("here");
   });
   const dom=treeStruct.render().html();
   var doc = new DOMParser().parseFromString(dom, 'text/html');

@@ -159,7 +159,7 @@ export class AssociativeIntro {
 }
 
 // Taking out a sibling from a tag and adding it into its grandparent
-// TODO: Make this preserve order
+// TODO: Make this preserve order?
 export class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
@@ -168,11 +168,12 @@ export class AssociativeExtract {
     this.quadrantLabel = quadrantLabel;
   }
 
-  static verify(grandchild, grandparent) {
+  static verify(grandchild, grandparent, xQuad, yQuad) {
     return grandparent !== null
       && grandchild.parent !== null
       && Object.is(grandchild.parent.parent, grandparent)
-      && grandchild.parent.orientation === grandparent.orientation;
+      && grandchild.parent.orientation === grandparent.orientation
+      ;
   }
 
   apply() {
@@ -183,12 +184,24 @@ export class AssociativeExtract {
 
     //removing grandchild from grandparent and prepending into parent
     if (this.quadrantLabel === Quadrant.NW) {
-      parent.removeNorthWest(this.grandchild);
-      grandparent.prependNorthWest(this.grandchild);
+      if (grandparent.NW.some(x => Object.is(x, parent))) {
+        parent.removeNorthWest(this.grandchild);
+        grandparent.prependNorthWest(this.grandchild);
+      } else {
+        parent.removeNorthWest(this.grandchild);
+        grandparent.prependSouthEast(this.grandchild);
+      }
     } else {
-      parent.removeSouthEast(this.grandchild);
-      grandparent.prependSouthEast(this.grandchild);
+      if (grandparent.NW.some(x => Object.is(x, parent))) {
+        parent.removeSouthEast(this.grandchild);
+        grandparent.prependSouthEast(this.grandchild);
+      } else {
+        parent.removeSouthEast(this.grandchild);
+        grandparent.prependNorthWest(this.grandchild);
+      }
     }
+    
+    
   }
 }
 
