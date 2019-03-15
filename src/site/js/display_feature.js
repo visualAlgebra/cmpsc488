@@ -5,15 +5,18 @@ import {get_problem_from_db} from "./database_management";
 // Clears out the current container (given by `container_id`), renders the
 // expression tree inside `container_id`.
 export function displayExpressionTree(tree, containerId, callback) {
-    const container = $("#" + containerId);
-    container.attr("data-str", tree.toString());
-    container.empty();
-    const dom = tree.render();
-    container.append(dom);
-    convertTreeToImage(tree);//attempt
-    if (callback) {
-        callback(tree, containerId);
-    }
+  let container=document.getElementById(containerId);
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+  container.setAttribute('data-str',tree.toString());
+  const doc = new DOMParser().parseFromString(tree.render(), "text/xml");
+  let temp=tree.render()[0];
+  container.appendChild(temp);
+  convertTreeToImage(tree);//attempt
+  if (callback) {
+    callback(tree, containerId);
+  }
 }
 
 export function displayTreeFromDBStruct(tree, container_id, callback){

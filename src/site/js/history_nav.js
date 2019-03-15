@@ -4,11 +4,16 @@ export function addHistoryEntry(tree){
   tree=tree.toString();
   if(histControl===null||histControl===undefined){
     histControl=new historyController();
-    histControl.init(tree);
+    let temp=histControl.init(tree);
     console.log(histControl);
+    return temp;
   }else{
-    histControl.add(tree);
+    return histControl.add(tree);
   }
+}
+
+export function setGoalTree(goalTree){
+  histControl.setGoal(goalTree);
 }
 
 export function histAction(bool){
@@ -74,21 +79,26 @@ export function renderHist(canvas_id, curTree){
 }
 
 class historyController{
-  constructor(initialTree){
+  constructor(){
     this.loc;
     this.mainLine;
     this.idControl=0;
     this.widthControl=0;
+    this.goalTree="";
   }
 
   init(initialTree){
     this.mainLine=new historyLine(initialTree, this);
     this.updateLoc(this.mainLine);
-    return this.mainLine;
   }
 
   add(tree){
     this.loc.addBlock(tree);
+    return tree===this.goalTree;
+  }
+
+  setGoal(goalTree){
+    this.goalTree=goalTree;
   }
 
   forward(){

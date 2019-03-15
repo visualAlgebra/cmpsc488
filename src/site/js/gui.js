@@ -14,7 +14,6 @@ export const globals = {
   workingExpressionTree: null
 };
 
-// TODO, fix this when x is the root 
 export function findQuadrant(x) {
   if (x.parent) {
     return x.parent.NW.some(e => Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;
@@ -42,7 +41,12 @@ export const mouse = {
   },
 
   redisplayExpressionTree: function () {
-    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => addHistoryEntry(res));
+    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => {
+      let temp=addHistoryEntry(res);
+      if(temp){
+        alert("Win");
+      }
+      });
   },
 
   dragDetected: function () {
