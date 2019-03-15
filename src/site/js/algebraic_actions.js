@@ -789,3 +789,25 @@ export class IdentityMerge{
     }
   }
 }
+
+export class LiteralConversion{
+  constructor(literal){
+    this.literal = literal;
+  }
+
+  static verify(literal){
+    return (literal instanceof Literal);
+  }
+
+  apply(){
+    if (literal.value == 0){
+      literal = new Tag(Orientation.EW, [new Literal(1), new Literal(2)]);
+    }
+    else if (literal.value == 1){
+      literal = new Tag(Orientation.EW, [new Literal(2), new Literal(2)]);
+    }
+    else{
+      literal = new Tag(Orientation.EW, [new Literal(1), new Literal(1)]);
+    }
+  }
+}
