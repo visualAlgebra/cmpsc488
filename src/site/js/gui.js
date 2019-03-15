@@ -14,6 +14,7 @@ export const globals = {
   workingExpressionTree: null
 };
 
+// TODO, fix this when x is the root 
 export function findQuadrant(x) {
   if (x.parent) {
     return x.parent.NW.some(e => Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;
@@ -52,6 +53,9 @@ export const mouse = {
     const xQuad = findQuadrant(x);
     // noinspection JSSuspiciousNameCombination
     const yQuad = findQuadrant(y);
+    console.log('x:', x);
+    console.log('y:', y);
+    console.log('xQuad:', xQuad, 'yQuad:', yQuad);
 
     // Associative Insert IF
     //    Trees have same parent
@@ -67,7 +71,7 @@ export const mouse = {
 
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeExtract.verify(x, y)) {
+    else if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
 
       const action = new AssociativeExtract(x, xQuad);
       action.apply();
@@ -108,7 +112,7 @@ export const mouse = {
       const action = new Cancel(x, y);
       action.apply();
 
-      console.log("Cancelling", x, "and", y); 
+      console.log("Cancelling", x, "and", y);
 
       this.redisplayExpressionTree();
     }
@@ -159,7 +163,7 @@ export const mouse = {
     }
     // TODO: fix verfiy for Factor
     else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
-      
+
       const action = new Factor(x, y);
       action.apply();
 
@@ -167,7 +171,7 @@ export const mouse = {
 
       this.redisplayExpressionTree();
     }
-    
+
     else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagQuadrantGui && this.eventDest instanceof TagButtonGui && CombineFrac.verify(y, x)) {
 
       const action = new CombineFrac(y);
