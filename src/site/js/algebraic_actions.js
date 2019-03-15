@@ -50,9 +50,9 @@ export class CommutativeSwap {
     const temp = new Literal(-999);
 
     //Swapping the siblings
-    parent.findAndReplace(this.sibling1, temp, this.quadrantLabel);
-    parent.findAndReplace(this.sibling2, this.sibling1, this.quadrantLabel);
-    parent.findAndReplace(temp, this.sibling2, this.quadrantLabel);
+    parent.replace(this.sibling1, temp, this.quadrantLabel);
+    parent.replace(this.sibling2, this.sibling1, this.quadrantLabel);
+    parent.replace(temp, this.sibling2, this.quadrantLabel);
   }
 }
 
@@ -130,9 +130,9 @@ export class AssociativeIntro {
 
       //replace expr with newTag
       if (parent.NW.some(thing => Object.is(thing, this.expr))) {
-        parent.findAndReplace(this.expr, newTag, Quadrant.NW);
+        parent.replace(this.expr, newTag, Quadrant.NW);
       } else {
-        parent.findAndReplace(this.expr, newTag, Quadrant.SE);
+        parent.replace(this.expr, newTag, Quadrant.SE);
       }
 
       //add expr into new Tag
@@ -307,7 +307,7 @@ export class Distribute {
       parent.removeNorthWest(this.value);
       parent.removeNorthWest(this.tagToDistributeOver);
       let newTag = new Tag(Orientation.EW, newNW, newSE);
-      parent.prependNorthWest(newTag);
+      parent.prependNorthWest(newTag);      
     }
 
   }

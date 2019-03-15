@@ -14,7 +14,6 @@ export const globals = {
   workingExpressionTree: null
 };
 
-// TODO, fix this when x is the root 
 export function findQuadrant(x) {
   if (x.parent) {
     return x.parent.NW.some(e => Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;

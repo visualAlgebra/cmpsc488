@@ -10,9 +10,14 @@ module.exports = {
     profile: './js/profile.js',
     lesson_view: './js/lesson_view.js'
   },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },
   devtool: 'inline-source-map',
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
-  }
+  },
 };
