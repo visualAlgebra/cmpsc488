@@ -12,7 +12,7 @@ export function displayExpressionTree(tree, containerId, callback) {
   container.setAttribute('data-str',tree.toString());
   let temp=tree.render()[0];
   container.appendChild(temp);
-  convertTreeToImage(tree);//attempt
+  convertTreeToImage(tree,'pictureAttempt');//attempt
   if (callback) {
     callback(tree, containerId);
   }
@@ -54,8 +54,19 @@ String.prototype.splice = function(index, str) {
   return this.slice(0, index) + str + this.slice(index);
 };
 
+export function convertProblemInfoToImage(info, container_id_working, container_id_goal, callback){
+  if(container_id_working!==null){
+        decompress_string_js(info.expression_start,decomp => {
+            convertTreeToImage(Deserialize(decomp),container_id_working, callback)});
+    }
+    if(container_id_goal!==null){
+        decompress_string_js(info.expression_goal,decomp => {
+            convertTreeToImage(Deserialize(decomp),container_id_goal, callback)});
+    }
+}
+
 export function convertTreeToImage(treeStruct, container_id){
-  let container=document.getElementById('pictureAttempt');
+  let container=document.getElementById(container_id);
 
   let svg = document.createElement('svg');
   svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
