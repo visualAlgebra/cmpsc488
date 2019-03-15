@@ -121,7 +121,7 @@ export const mouse = {
       const action = new LiteralMerge(x, y, xQuad, yQuad);
       action.apply();
 
-      console.log("Mergin Literals", x, "and", y);
+      console.log("Merging Literals", x, "and", y);
 
       this.redisplayExpressionTree();
     }

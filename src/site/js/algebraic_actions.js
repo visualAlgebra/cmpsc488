@@ -709,30 +709,9 @@ export class ZeroMerge{
       return false;
     }
 
-    if (sibling1 instanceof Literal){
-      if (sibling1.value !== 0)
-      {
-        if(sibling2 instanceof Literal){
-          if (sibling2.value !== 0)
-            return false;
-          else
-            return true;
-        }
-        else
-          return false;
-      }
-      else
-        return true;
-    }
-    
-    if (sibling2 instanceof Literal){
-      if (sibling2.value !== 0)
-        return false;
-      else
-        return true;
-    }
+    return ((sibling1 instanceof Literal) && (sibling1.value == 0))
+    || ((sibling2 instanceof Literal) && (sibling2.value == 0));
 
-    return false;
   }
 
   apply(){
