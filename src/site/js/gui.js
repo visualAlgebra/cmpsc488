@@ -134,7 +134,7 @@ export const mouse = {
 
       this.redisplayExpressionTree();
     }
-    else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y)) {
+    else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y, xQuad, yQuad)) {
 
       const action = new ZeroMerge(x, y);
       action.apply();

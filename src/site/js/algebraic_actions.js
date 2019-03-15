@@ -691,17 +691,48 @@ export class ZeroMerge{
     this.sibling2 = sibling2;
   }
 
-  static verify(sibling1, sibling2){
+  static verify(sibling1, sibling2, quad1, quad2){
 
-    if (Object.is(sibling1, sibling2))
+    if (Object.is(sibling1, sibling2)){
       return false;
+    }  
 
-    if (sibling1.parent !== sibling2.parent)
+    if (sibling1.parent !== sibling2.parent){
       return false;
-    if (sibling1.parent.orientation !== Orientation.NS)
-      return false;
+    }
 
-    return true;
+    if (sibling1.parent.orientation !== Orientation.NS){
+      return false;
+    }
+
+    if (quad1 !== Quadrant.NW || quad2 !== Quadrant.NW){
+      return false;
+    }
+
+    if (sibling1 instanceof Literal){
+      if (sibling1.value !== 0)
+      {
+        if(sibling2 instanceof Literal){
+          if (sibling2.value !== 0)
+            return false;
+          else
+            return true;
+        }
+        else
+          return false;
+      }
+      else
+        return true;
+    }
+    
+    if (sibling2 instanceof Literal){
+      if (sibling2.value !== 0)
+        return false;
+      else
+        return true;
+    }
+
+    return false;
   }
 
   apply(){
@@ -729,7 +760,9 @@ export class IdentityMerge{
     if (Object.is(sibling1, sibling2))
       return false;
     
-    
+    if (!(sibling1 instanceof Literal) && !(sibling2 instanceof Literal)){
+      return false;
+    }
 
     if (sibling1.parent !== sibling2.parent)
       return false;
