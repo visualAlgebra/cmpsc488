@@ -58,23 +58,29 @@ export function convertTreeToImage(treeStruct, container_id){
   let container=document.getElementById('pictureAttempt');
 
   let svg = document.createElement('svg');
-  svg.xmlns="http://www.w3.org/2000/svg";
-  svg.height="100";
-  svg.width="100";
+  svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  svg.setAttribute("height","100px");
+  svg.setAttribute("width","100px");
   
   const dom=treeStruct.render().html();
   var doc = new DOMParser().parseFromString(dom, 'text/html');
   var result = new XMLSerializer().serializeToString(doc);
 
+//   const dom = treeStruct.render();
+//   const result = $(dom).clone()[0];
+
   let mainDiv=document.createElement('div');
   mainDiv.className=treeStruct.orientation.splice(treeStruct.orientation.length/2,"-")+" "+treeStruct.kind;
   mainDiv.innerHTML=result;
+//   mainDiv.appendChild(result);
 
   let foreign=document.createElement('foreignObject');
-  foreign.width="100%";
-  foreign.height="100%";
+  foreign.setAttribute("height","100");
+  foreign.setAttribute("width","100");
+  foreign.setAttribute("transform","scale(0.25,0.25)");
   foreign.appendChild(mainDiv);
 
   svg.appendChild(foreign);
+
   container.appendChild(svg);
 }
