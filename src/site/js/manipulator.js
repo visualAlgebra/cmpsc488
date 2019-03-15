@@ -3,7 +3,7 @@ import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
 import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
 import {Deserialize} from "./expression_tree";
-import Vue from "vue";
+import {manipulatorWindow} from "./manipulator_window";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
@@ -72,44 +72,6 @@ function restart(){
   });
 }
 
-Vue.component("expression-tree", {
-
-  props: ["tree"],
-
-  template: `
-  <div>
-    <div v-if="tree.kind === 'Tag'">
-      Tag
-    </div>
-    <div v-else-if="tree.kind === 'Variable'">
-      Variable
-    </div>
-    <div v-else-if="tree.kind === 'Literal'">
-      Literal
-    </div>
-  </div>
-  `,
-
-});
-
-const manipulatorWindow = new Vue({
-
-  el: "#vueCanvasContainer",
-
-  template: `
-  <div>
-    <expression-tree :tree="workingExpressionTree"></expression-tree>
-  </div>
-  `,
-
-  data() {
-    return {
-      workingExpressionTree: {"kind": "Literal"},
-    }
-  },
-
-});
-
 function drawCanvas(){
   renderHist("histCanvas", document.getElementById("canvasContainer").dataset.str);
 }
@@ -129,6 +91,7 @@ function insertMenu(type){
 function onDisplay(res, containerId){
   if(containerId==="canvasContainer"){
     globals.workingExpressionTree=res;
+    manipulatorWindow.workingExpressionTree = res;
     addHistoryEntry(res);
     document.getElementById("restartButton").setAttribute("data-str", res.toString());
   }else if(containerId==="goalContainer"){
