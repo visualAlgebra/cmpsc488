@@ -23,20 +23,22 @@ function getHistArray(){
   let histArray=[[0]];
   console.log(histArray);
   let currentLine=histControl.mainLine;
-  _getHistArray(histArray, 0, currentLine);
+  histControl.widthControl=0;
+  _getHistArray(histArray, currentLine);
   return histArray;
 }
 
-function _getHistArray(arr, x, lineToEval){
+function _getHistArray(arr, lineToEval){
   for(let xk=0; xk<lineToEval.line.length; xk++){
-    arr[x].push(lineToEval.line[xk]);
+    arr[histControl.widthControl].push(lineToEval.line[xk]);
   }
-  let temp=x;
+  let temp=histControl.widthControl;
   for(let xk=lineToEval.line.length-1; xk>=0; xk--){
     if(lineToEval.line[xk].refs.length!==0){
       for(let yk in lineToEval.line[xk].refs){
         arr.push([xk+arr[temp][0]+1]);
-        _getHistArray(arr,++x,lineToEval.line[xk].refs[yk]);
+        histControl.widthControl++;
+        _getHistArray(arr,lineToEval.line[xk].refs[yk]);
       }
     }
   }
@@ -76,6 +78,7 @@ class historyController{
     this.loc;
     this.mainLine;
     this.idControl=0;
+    this.widthControl=0;
   }
 
   init(initialTree){
