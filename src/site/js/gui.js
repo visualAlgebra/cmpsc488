@@ -59,131 +59,135 @@ export const mouse = {
     const yQuad = findQuadrant(y);
     console.log('x:', x);
     console.log('y:', y);
-    console.log('xQuad:', xQuad, 'yQuad:', yQuad);
+    console.log('xQuad:', xQuad, '\nyQuad:', yQuad);
 
     // Associative Insert IF
     //    Trees have same parent
     //    Trees are not same object
     //    eventDest is a quadrant <--
     //    ...
-    if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeInsert.verify(x, y)) {
-
-      const action = new AssociativeInsert(x, y);
-      action.apply();
-
-      console.log("Inserting", x, "to tag", y);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
-
-      const action = new AssociativeExtract(x, xQuad);
-      action.apply();
-
-      console.log("Extracting", x, "from", x.parent);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.Manipulation && CommutativeSwap.verify(x, y, xQuad, yQuad)) {
-
-      const action = new CommutativeSwap(x, y, xQuad);
-      action.apply();
-
-      console.log("Swapping siblings", x, "and", y);
-
-      this.redisplayExpressionTree()
-    }
-    else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && AssociativeMerge.verify(x, y)) {
-
-      const action = new AssociativeMerge(x, y, xQuad);
-      action.apply();
-
-      console.log("Merging", x, "into", y);
-
-      this.redisplayExpressionTree()
-    }
-    else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagQuadrantGui && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
-
-      const action = new QuadrantFlip(x, xQuad);
-      action.apply();
-
-      console.log("Flipping", x);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.Manipulation && Cancel.verify(x, y, xQuad, yQuad)) {
-
-      const action = new Cancel(x, y);
-      action.apply();
-
-      console.log("Cancelling", x, "and", y);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
-
-      const action = new LiteralMerge(x, y, xQuad, yQuad);
-      action.apply();
-
-      console.log("Merging Literals", x, "and", y);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.MergingLiterals && IdentityMerge.verify(x, y, xQuad, yQuad)) {
-
-      const action = new IdentityMerge(x, y, xQuad, yQuad);
-      action.apply();
-
-      console.log("Identity Merging", x, "and", y);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y, xQuad, yQuad)) {
-
-      const action = new ZeroMerge(x, y);
-      action.apply();
-
-      console.log("Zero Merging", x, "and", y);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && Distribute.verify(x, y, xQuad, yQuad)) {
-
-      const action = new Distribute(x, y);
-      action.apply();
-
-      console.log("Distributing", x, "over", y);
-
-      this.redisplayExpressionTree();
-    }
-    else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && SplitFrac.verify(x, y)) {
-
-      const action = new SplitFrac(y);
-      action.apply();
-
-      console.log("Splitting Fraction", y);
-
-      this.redisplayExpressionTree();
-    }
-    // TODO: fix verfiy for Factor
-    else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
-
-      const action = new Factor(x, y);
-      action.apply();
-
-      console.log("Factoring", x, "from", y);
-
-      this.redisplayExpressionTree();
-    }
-
-    else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagQuadrantGui && this.eventDest instanceof TagButtonGui && CombineFrac.verify(y, x)) {
-
-      const action = new CombineFrac(y);
-      action.apply();
-
-      console.log("Splitting", y);
-
-      this.redisplayExpressionTree();
+    try {
+      if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeInsert.verify(x, y)) {
+  
+        const action = new AssociativeInsert(x, y);
+        action.apply();
+  
+        console.log("Inserting", x, "to tag", y);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new AssociativeExtract(x, xQuad);
+        action.apply();
+  
+        console.log("Extracting", x, "from", x.parent);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.Manipulation && CommutativeSwap.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new CommutativeSwap(x, y, xQuad);
+        action.apply();
+  
+        console.log("Swapping siblings", x, "and", y);
+  
+        this.redisplayExpressionTree()
+      }
+      else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && AssociativeMerge.verify(x, y)) {
+  
+        const action = new AssociativeMerge(x, y, xQuad);
+        action.apply();
+  
+        console.log("Merging", x, "into", y);
+  
+        this.redisplayExpressionTree()
+      }
+      else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagQuadrantGui && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new QuadrantFlip(x, xQuad);
+        action.apply();
+  
+        console.log("Flipping", x);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.Manipulation && Cancel.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new Cancel(x, y);
+        action.apply();
+  
+        console.log("Cancelling", x, "and", y);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new LiteralMerge(x, y, xQuad, yQuad);
+        action.apply();
+  
+        console.log("Merging Literals", x, "and", y);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.MergingLiterals && IdentityMerge.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new IdentityMerge(x, y, xQuad, yQuad);
+        action.apply();
+  
+        console.log("Identity Merging", x, "and", y);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new ZeroMerge(x, y);
+        action.apply();
+  
+        console.log("Zero Merging", x, "and", y);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && Distribute.verify(x, y, xQuad, yQuad)) {
+  
+        const action = new Distribute(x, y);
+        action.apply();
+  
+        console.log("Distributing", x, "over", y);
+  
+        this.redisplayExpressionTree();
+      }
+      else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && SplitFrac.verify(x, y)) {
+  
+        const action = new SplitFrac(y);
+        action.apply();
+  
+        console.log("Splitting Fraction", y);
+  
+        this.redisplayExpressionTree();
+      }
+      // TODO: fix verfiy for Factor
+      else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
+  
+        const action = new Factor(x, y);
+        action.apply();
+  
+        console.log("Factoring", x, "from", y);
+  
+        this.redisplayExpressionTree();
+      }
+  
+      else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagQuadrantGui && this.eventDest instanceof TagButtonGui && CombineFrac.verify(y, x)) {
+  
+        const action = new CombineFrac(y);
+        action.apply();
+  
+        console.log("Splitting", y);
+  
+        this.redisplayExpressionTree();
+      }
+    } catch (error) {
+      console.error("An invalid action has occured\n", error);
     }
 
     this.reset();
@@ -192,12 +196,16 @@ export const mouse = {
   clickDetected: function () {
     console.log("Mouse clicked on", this.eventSource);
 
-    if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(this.eventSource.tree)) {
-      const action = new AssociativeIntro(this.eventSource.tree);
-      action.apply();
-      console.log("Enclosing ", this.eventSource.tree);
-
-      this.redisplayExpressionTree();
+    try {
+      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(this.eventSource.tree)) {
+        const action = new AssociativeIntro(this.eventSource.tree);
+        action.apply();
+        console.log("Enclosing ", this.eventSource.tree);
+  
+        this.redisplayExpressionTree();
+      }
+    } catch (error) {
+      console.error("An invalid action has occured")
     }
 
     if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(this.eventSource.tree)){
