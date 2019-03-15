@@ -789,3 +789,26 @@ export class IdentityMerge{
     }
   }
 }
+
+export class LiteralConversion{
+  constructor(literal, quad){
+    this.literal = literal;
+    this.quad = quad;
+  }
+
+  static verify(literal){
+    return (literal instanceof Literal);
+  }
+
+  apply(){
+    if (this.literal.value == 0){
+      this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(1), new Literal(2)]), this.quad);
+    }
+    else if (this.literal.value == 1){
+      this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(2), new Literal(2)]), this.quad);
+    }
+    else{
+      this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(1), new Literal(1)]), this.quad);
+    }
+  }
+}
