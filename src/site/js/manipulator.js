@@ -2,6 +2,7 @@ import {globals, mouse} from './gui';
 import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
 import {addHistoryEntry, histAction, clearHist, renderHist} from "./history_nav";
+import Vue from "vue";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
@@ -60,6 +61,18 @@ function restart(){
     //TODO clearHist(res.toString());
   });
 }
+
+const manipulatorWindow = new Vue({
+
+  el: "#vueCanvasContainer",
+
+  data() {
+    return {
+      message: "Hello from Vue!",
+    }
+  },
+
+});
 
 function drawCanvas(){
   renderHist("histCanvas", document.getElementById("canvasContainer").dataset.str);
