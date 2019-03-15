@@ -12,7 +12,7 @@ export function displayExpressionTree(tree, containerId, callback) {
   container.setAttribute('data-str',tree.toString());
   let temp=tree.render()[0];
   container.appendChild(temp);
-  //convertTreeToImage(tree);//attempt
+  convertTreeToImage(tree,'pictureAttempt');//attempt
   if (callback) {
     callback(tree, containerId);
   }
@@ -50,22 +50,48 @@ export function displayProblemFromDB(
     });
 }
 
-export function convertTreeToImage(treeStruct, container_id){
-  let container=document.getElementById('pictureAttempt');
+String.prototype.splice = function(index, str) {
+  return this.slice(0, index) + str + this.slice(index);
+};
 
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
+export function convertProblemInfoToImage(info, container_id_working, container_id_goal, callback){
+  if(container_id_working!==null){
+        decompress_string_js(info.expression_start,decomp => {
+            convertTreeToImage(Deserialize(decomp),container_id_working, callback)});
+    }
+    if(container_id_goal!==null){
+        decompress_string_js(info.expression_goal,decomp => {
+            convertTreeToImage(Deserialize(decomp),container_id_goal, callback)});
+    }
+}
+
+export function convertTreeToImage(treeStruct, container_id){
+  let container=document.getElementById(container_id);
+
+  let svg = document.createElement('svg');
+  svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  svg.setAttribute("height","100px");
+  svg.setAttribute("width","100px");
   
-  const tempImg = document.createElement('img');
-  tempImg.addEventListener('load', function(e){
-    ctx.drawImage(e.target, 0, 0);
-    targetImg.src = canvas.toDataURL();
-  });
   const dom=treeStruct.render().html();
   var doc = new DOMParser().parseFromString(dom, 'text/html');
   var result = new XMLSerializer().serializeToString(doc);
-  tempImg.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><foreignObject width="100%" height="100%">'+result+'</foreignObject></svg>');
-  
-  const targetImg = document.createElement('img');
-  container.appendChild(targetImg);
+
+//   const dom = treeStruct.render();
+//   const result = $(dom).clone()[0];
+
+  let mainDiv=document.createElement('div');
+  mainDiv.className=treeStruct.orientation.splice(treeStruct.orientation.length/2,"-")+" "+treeStruct.kind;
+  mainDiv.innerHTML=result;
+//   mainDiv.appendChild(result);
+
+  let foreign=document.createElement('foreignObject');
+  foreign.setAttribute("height","100");
+  foreign.setAttribute("width","100");
+  foreign.setAttribute("transform","scale(0.25,0.25)");
+  foreign.appendChild(mainDiv);
+
+  svg.appendChild(foreign);
+
+  container.appendChild(svg);
 }

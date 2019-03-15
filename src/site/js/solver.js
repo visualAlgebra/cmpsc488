@@ -19,7 +19,7 @@ function heuristicEval(a, b) {
       var lengthAdjustment = max(a.NW.length - b.NW.length, 0);
       for (var i = 0; i < a.NW.length - lengthAdjustment; i++) {
         if ((b.NW[i] instanceof Tag) && !(a.NW[i] instanceof Tag)) {
-          numDiff += b.NW[i].treeCount;
+          numDiff += 1 + heuristicEval(a.NW[i].NW[0], b.NW[i]);
         }
         else if ((a.NW[i] instanceof Tag) && !(b.NW[i] instanceof Tag)) {
           numDiff += a.NW[i].treeCount;
@@ -71,14 +71,14 @@ function solve(a, b){
   var currentNodeIndex;
   var currentNode = head;
   var optimalNode = null;
-  while (nodeArray.length != 0){
+  //while (nodeArray.length != 0){
     if(currentNode.currentExpression.equals(b)){
       optimalNode = currentNode;
       break;
     }
     else{
       if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length == 0)
-        expand(currentNode, nodeArray, expanded);
+        expand(currentNode, nodeArray/*, expanded*/);
       nodeArray.splice(currentNodeIndex, 1);
     }
     if (nodeArray.length != 0) {
@@ -93,16 +93,22 @@ function solve(a, b){
         }
       }
     }
-  }
+  //}
 
-  if (optimalNode == null)
+  /*if (optimalNode == null)
     return null;
     
   while (!currentNode.previousNode.currentExpression.equals(a)){
     currentNode = currentNode.previousNode;
   }
+  */
+ optimalNode = nodeArray[0];
 
-  return currentNode.previousAction;
+  for(var i = 0; i<nodeArray.length; i++){
+    if (nodeArray[i]. heuristic < optimalNode.heuristic)
+      optimalNode = nodeArray[i];
+  }
+  return optimalNode.previousAction; //currentNode.previousAction;
 }
 
 /*
@@ -118,7 +124,7 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
 }
 */
 
-function expand(nodeToExpand, nodeArray, expanded) {
+function expand(nodeToExpand, nodeArray/*, expanded*/) {
  expandAssociative(nodeToExpand, nodeArray, expanded);
 }
 
