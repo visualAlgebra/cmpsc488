@@ -42,7 +42,12 @@ export const mouse = {
   },
 
   redisplayExpressionTree: function () {
-    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => addHistoryEntry(res));
+    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => {
+      let temp=addHistoryEntry(res);
+      if(temp){
+        alert("Win");
+      }
+      });
   },
 
   dragDetected: function () {

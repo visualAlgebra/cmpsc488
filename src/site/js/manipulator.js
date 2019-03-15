@@ -1,14 +1,16 @@
 import {globals, mouse} from './gui';
 import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
-import {addHistoryEntry, histAction, clearHist, renderHist} from "./history_nav";
+import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
   initNav();
   changeMouseMode(0);
   if(problem_to_load!==null){
-    displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res, res2)=>onDisplay(res, res2));
+    displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res, res2)=>{
+      onDisplay(res, res2);
+  });
   }
   document.getElementById("backwardHistButton").addEventListener("click", function(e){
     let t=histAction(false);
@@ -41,10 +43,15 @@ window.onload=()=>{
     restart();
   });
   document.getElementById("_DEBUG_INSTANCES").addEventListener("click", function(e){
-    getHistArray();
+    console.log('_DEBUG_TRIGGERED');
+
+    console.log(document.getElementById("canvasContainer").dataset.str);
+    console.log(document.getElementById("goalContainer").dataset.str);
+
+    console.log('_DEBUG_FINISHED');
   });
   document.getElementById("histCanvas").addEventListener("click", function(e){
-    console.log(e.x+", "+e.y);
+    touchHistCanvas(e.x,e.y);
   });
 };
 window.onpopstate=(e)=>{
@@ -65,8 +72,8 @@ function drawCanvas(){
   renderHist("histCanvas", document.getElementById("canvasContainer").dataset.str);
 }
 
-function touchHistCanvas(){
-  
+function touchHistCanvas(x,y){
+  console.log(x+", "+y);
 }
 
 function insertMenu(type){
@@ -82,6 +89,9 @@ function onDisplay(res, containerId){
     globals.workingExpressionTree=res;
     addHistoryEntry(res);
     document.getElementById("restartButton").setAttribute("data-str", res.toString());
+  }else if(containerId==="goalContainer"){
+    let temp=document.getElementById("goalContainer").dataset.str;
+    setGoalTree(temp);
   }
 }
 
