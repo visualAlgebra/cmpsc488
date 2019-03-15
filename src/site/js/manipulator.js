@@ -2,6 +2,7 @@ import {globals, mouse} from './gui';
 import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
 import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
+import {Deserialize} from "./expression_tree";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
@@ -15,12 +16,14 @@ window.onload=()=>{
   document.getElementById("backwardHistButton").addEventListener("click", function(e){
     let t=histAction(false);
     if(t!==null){
+      globals.workingExpressionTree=Deserialize(t);
       displayTreeFromDBStruct(t,'canvasContainer');
     }
   });
   document.getElementById("forwardHistButton").addEventListener("click", function(e){
     let t=histAction(true);
     if(t!==null){
+      globals.workingExpressionTree=Deserialize(t);
       displayTreeFromDBStruct(t,'canvasContainer');
     }
   });
@@ -47,7 +50,7 @@ window.onload=()=>{
 
     console.log(document.getElementById("canvasContainer").dataset.str);
     console.log(document.getElementById("goalContainer").dataset.str);
-
+    console.log(globals.workingExpressionTree);
     console.log('_DEBUG_FINISHED');
   });
   document.getElementById("histCanvas").addEventListener("click", function(e){
