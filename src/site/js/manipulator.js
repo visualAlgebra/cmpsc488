@@ -1,7 +1,7 @@
 import {globals, mouse} from './gui';
 import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
-import {addHistoryEntry, histAction, clearHist} from "./history_nav";
+import {addHistoryEntry, histAction, clearHist, renderHist} from "./history_nav";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
@@ -11,10 +11,16 @@ window.onload=()=>{
     displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res, res2)=>onDisplay(res, res2));
   }
   document.getElementById("backwardHistButton").addEventListener("click", function(e){
-    histAction(0);
+    let t=histAction(false);
+    if(t!==null){
+      displayTreeFromDBStruct(t,'canvasContainer');
+    }
   });
   document.getElementById("forwardHistButton").addEventListener("click", function(e){
-    histAction(1);
+    let t=histAction(true);
+    if(t!==null){
+      displayTreeFromDBStruct(t,'canvasContainer');
+    }
   });
   document.getElementById("manipGenMan").addEventListener("click", function(e){
     changeMouseMode(0);
@@ -29,10 +35,16 @@ window.onload=()=>{
     insertMenu(true);
   });
   document.getElementById("histCanvasOpener").addEventListener("click", function(e){
-    updateCanvas();
+    drawCanvas();
   });
   document.getElementById("restartButton").addEventListener("click", function(e){
     restart();
+  });
+  document.getElementById("_DEBUG_INSTANCES").addEventListener("click", function(e){
+    getHistArray();
+  });
+  document.getElementById("histCanvas").addEventListener("click", function(e){
+    console.log(e.x+", "+e.y);
   });
 };
 window.onpopstate=(e)=>{
@@ -45,15 +57,16 @@ window.onpopstate=(e)=>{
 function restart(){
   displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str, 'canvasContainer', res=>{
     alert("Restarted");
-    clearHist(res.toString());
+    //TODO clearHist(res.toString());
   });
 }
 
-function updateCanvas(action){
-  //let canvas=document.getElementById("histNavCanvas");
-  //if(action===0){//place dot
-  //}else if(action===1){//go back one dot
-  //}
+function drawCanvas(){
+  renderHist("histCanvas", document.getElementById("canvasContainer").dataset.str);
+}
+
+function touchHistCanvas(){
+  
 }
 
 function insertMenu(type){
