@@ -6,8 +6,9 @@ Vue.component("expr-tree-tag-quadrant", {
   props: ["quadrant", "values"],
 
   template: `
-  <div :class="classes">
+  <div xmlns="http://www.w3.org/1999/xhtml" :class="classes">
     <div
+      xmlns="http://www.w3.org/1999/xhtml"
       v-for="subtree in values"
       class="tag-element-container"
     >
@@ -27,8 +28,11 @@ Vue.component("expr-tree-tag-quadrant", {
 
 Vue.component("expr-tree-tag-button", {
   template: `
-  <div class="tag-button-column">
-    <div class="tag-button"></div>
+  <div
+    xmlns="http://www.w3.org/1999/xhtml"
+    class="tag-button-column"
+   >
+    <div xmlns="http://www.w3.org/1999/xhtml" class="tag-button"></div>
   </div>
   `,
 });
@@ -37,7 +41,7 @@ Vue.component("expr-tree-tag", {
   props: ["tree"],
 
   template: `
-  <div :class="classes">
+  <div :xmlns="http://www.w3.org/1999/xhtml" class="classes">
     
     <expr-tree-tag-quadrant
       :quadrant="Quadrant.NW"
@@ -76,7 +80,7 @@ Vue.component("expr-tree-variable", {
   props: ["tree"],
 
   template: `
-  <div class="variable">
+  <div xmlns="http://www.w3.org/1999/xhtml" class="variable">
     {{ "x" + tree.value }}
   </div>
   `,
@@ -86,7 +90,7 @@ Vue.component("expr-tree-literal", {
   props: ["tree"],
 
   template: `
-  <div class="literal">
+  <div xmlns="http://www.w3.org/1999/xhtml" class="literal">
     {{ tree.value }}
   </div>
   `,
@@ -97,7 +101,7 @@ Vue.component("expression-tree", {
   props: ["tree"],
 
   template: `
-  <div>
+  <div xmlns="http://www.w3.org/1999/xhtml">
     <expr-tree-tag
       v-if="tree.kind === 'tag'"
       :tree="tree"
@@ -123,7 +127,7 @@ export const manipulatorWindow = new Vue({
   el: "#vueCanvasContainer",
 
   template: `
-  <div>
+  <div xmlns="http://www.w3.org/1999/xhtml">
     <expression-tree v-if="workingExpressionTree" :tree="workingExpressionTree"></expression-tree>
   </div>
   `,

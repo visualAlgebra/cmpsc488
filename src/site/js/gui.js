@@ -287,7 +287,7 @@ export class TagGui extends GuiBase {
   }
 
   buildDom() {
-    const div = $("<div>");
+    const div = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
 
     div.addClass(this.tree.orientation === Orientation.NS ? "north-south" : "east-west");
 
@@ -313,12 +313,12 @@ class TagButtonGui extends GuiBase {
   }
 
   buildDom() {
-    const button = $("<div>");
+    const button = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
     button.addClass("tag-button");
 
     this.attachEventHandlers(button);
 
-    const buttonColumn = $("<div>");
+    const buttonColumn = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
     buttonColumn.addClass("tag-button-column");
     buttonColumn.append(button);
     return buttonColumn;
@@ -334,7 +334,7 @@ class TagQuadrantGui extends GuiBase {
   }
 
   buildDom() {
-    const quadrant = $("<div>");
+    const quadrant = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
     const quadrantClass = (this.quadrantLabel === Quadrant.NW) ? "north-west" : "south-east";
 
     quadrant.addClass(quadrantClass);
@@ -344,7 +344,7 @@ class TagQuadrantGui extends GuiBase {
       if (child.kind === "tag") {
         quadrant.append(child.render());
       } else {
-        const container = $("<div>");
+        const container = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
         container.addClass("tag-element-container");
         container.append(child.render());
         quadrant.append(container);
@@ -365,7 +365,8 @@ export class VariableGui extends GuiBase {
   }
 
   buildDom() {
-    const div = $(`<div>x${this.tree.value}</div>`);
+    const div = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
+    div.text(`x${this.tree.value}`);
 
     this.attachEventHandlers(div);
 
@@ -383,7 +384,8 @@ export class LiteralGui extends GuiBase {
   }
 
   buildDom() {
-    const div = $(`<div>${this.tree.value}</div>`);
+    const div = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
+    div.text(this.tree.value);
 
     this.attachEventHandlers(div);
 
