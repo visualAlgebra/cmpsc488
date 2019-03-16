@@ -67,28 +67,25 @@ export function convertProblemInfoToImage(info, container_id_working, container_
 
 export function convertTreeToImage(treeStruct, container_id){
   let container=document.getElementById(container_id);
-
-  let svg = document.createElement('svg');
-  svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
-  svg.setAttribute("height","100px");
-  svg.setAttribute("width","100px");
+  let svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute("height","auto");
+  svg.setAttribute("width","auto");
   
   const dom=treeStruct.render().html();
   var doc = new DOMParser().parseFromString(dom, 'text/html');
   var result = new XMLSerializer().serializeToString(doc);
 
 //   const dom = treeStruct.render();
-//   const result = $(dom).clone()[0];
 
   let mainDiv=document.createElement('div');
   mainDiv.className=treeStruct.orientation.splice(treeStruct.orientation.length/2,"-")+" "+treeStruct.kind;
   mainDiv.innerHTML=result;
-//   mainDiv.appendChild(result);
+//   $(mainDiv).append(dom);
 
-  let foreign=document.createElement('foreignObject');
-  foreign.setAttribute("height","100");
-  foreign.setAttribute("width","100");
-  foreign.setAttribute("transform","scale(0.25,0.25)");
+  let foreign=document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
+  foreign.setAttribute("height","330");
+  foreign.setAttribute("width","1000");
+  foreign.setAttribute("transform","scale(.25,.25)");
   foreign.appendChild(mainDiv);
 
   svg.appendChild(foreign);
