@@ -41,7 +41,7 @@ Vue.component("expr-tree-tag", {
   props: ["tree"],
 
   template: `
-  <div :xmlns="http://www.w3.org/1999/xhtml" class="classes">
+  <div xmlns="http://www.w3.org/1999/xhtml" :class="classes">
     
     <expr-tree-tag-quadrant
       :quadrant="Quadrant.NW"
