@@ -509,8 +509,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
       }
     }
   }
-  var ret = new Problem(start, end);
-  return ret;
+  return new Problem(start, end);
 }
 
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
