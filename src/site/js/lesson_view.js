@@ -5,7 +5,10 @@ import * as M from "materialize-css";
 import {initNav} from "./navbar_creation";
 
 var lesson_to_load=getLessonFromURL();
-
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.collapsible');
+  var instances = M.Collapsible.init(elems);
+});
 window.onload = ()=>{
   initNav();
   if (lesson_to_load !== null) {

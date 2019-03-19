@@ -4,11 +4,12 @@ import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_c
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {convertProblemInfoToImage} from "./display_feature";
 
-//user_profile_page/accounts/account_id
-//{"accountID":"TEST_USER_0","timeCreated":"120000T101010",
-//"creations":["/problems/TEST_PROBLEM_0", "/lessons/TEST_LESSON_0"]}
-//
 export var account_to_load = getAccountFromURL();
+
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.collapsible');
+  var instances = M.Collapsible.init(elems);
+});
 
 window.onload = ()=>{
   initNav();
@@ -59,13 +60,7 @@ export function fillPage(accInfo) {
   for(let problem in accInfo.problems){
     problem = parseInt(problem);
     filldiv.appendChild(createCardForProblem(accInfo.problems[problem].problemID, probAmt));
-//     displayProblemFromDBStruct(accInfo.problems[problem], problem + "_s", problem + "_g");
     convertProblemInfoToImage(accInfo.problems[problem],problem+"_s", problem+"_g");
-//       let temp1=document.getElementById(problem+"_s");
-//       let temp2=document.getElementById(problem + "_g");
-//       temp1.innerHTML="placeholder for minified problem";
-//       temp2.innerHTML="placeholder for minified problem";
-//     TODO Display only minified problem (above)
     probAmt++;
   }
 }
