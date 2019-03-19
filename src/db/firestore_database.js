@@ -466,6 +466,50 @@ class FirestoreDatabase extends Database {
 
   // DELETE METHODS
 
+  deleteUsersProblem(accountID, problemID) {
+    let self = this;
+    //is problem deletable by user
+    let unassembledLink = problemID.split('/');
+    let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
+    return this.session.collection("problems").doc(correctLink).get()
+    .then(doc => {
+      if(!doc.exists) {
+        return -1;
+      }
+      //check if deleter is problem's creator
+      let problem = doc.data()
+      if(accountID !== problem.creatorAccountID) {
+        return -1;
+      }
+
+      //make deletes atomic
+      let batch = self.session.batch();
+      //remove problem from lessons that it exists in
+      problem.ownerLessons.forEach(lessonID => {
+        let lessonReference = self.session.collection("lessons").doc(lessonID);
+        batch.update(lessonReference, {
+          creations: self.admin.firestore.FieldValue.arrayRemove("problems/" + correctLink)
+        });
+      });
+
+      //remove problem
+      batch.delete(doc.ref);
+
+      //commit all deletes/updates
+      return batch.commit()
+      .then(result => {
+        return 0;
+      })
+      .catch(error => {
+        return -1;
+      });
+    })
+
+    .catch(error => {
+      return -1;
+    });
+  }
+
 
   //delete problem from database.  can only delete problems for which accountID == problem's creator
   // will also remove from user's creations and any lessons the problem is in
@@ -478,11 +522,6 @@ class FirestoreDatabase extends Database {
     .then(doc => {
       if(!doc.exists) {
         return server.respondWithError(response, 404, "Error 404: Problem not found");
-      }
-      //check if deleter is problem's creator
-      let problem = doc.data()
-      if(accountID !== problem.creatorAccountID) {
-        return server.respondWithError(response, 401, "Error 401: User does not have permission to delete file");
       }
 
       //make deletes atomic
@@ -519,7 +558,64 @@ class FirestoreDatabase extends Database {
     });
   }
 
+  
+  deleteUserLesson(accountID, lessonID) {
+    let self = this;
 
+    //is lesson deletable by user
+    let unassembledLink = lessonID.split('/');
+    let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
+    return this.session.collection("lessons").doc(correctLink).get()
+    .then(doc => {
+      if(!doc.exists) {
+        return -1;
+      }
+      let lesson = doc.data()
+      
+
+      //make deletes atomic
+      let batch = self.session.batch();
+
+      for(let i = 0; i < lesson.creations.length; i++) {
+        let databaseLink = lesson.creations[i];
+        let splitLink = databaseLink.split('/'); //since it should be "problems/lksjdflsdkjf" OR "lessons/laksjdflasdjf"
+        if (splitLink[0] === "problems") {
+          let problemReference = self.session.collection("problems").doc(splitLink[1]);
+          return batch.update(problemReference, {
+            ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+          });
+        } else if (splitLink[0] === "lessons") {
+          let problemReference = self.session.collection("lessons").doc(splitLink[1]);
+          return batch.update(problemReference, {
+            ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+          });
+        } else {
+          return -1;
+        }
+      }
+
+      //remove problem from list of account's creations
+      let accountReference = self.session.collection("accounts").doc(accountID);
+      batch.update(accountReference, {
+        lessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+      });
+
+      //remove problem
+      batch.delete(doc.ref);
+
+      //commit batched deletes/updates
+      return batch.commit()
+      .then(result => {
+        return 0;
+      })
+      .catch(error => {
+        return -1;
+      })
+    })
+    .catch(error => {
+      return -1;
+    })
+  }
 
 
   //deletes lesson from database atomically. only deletes if creatorAccountID == accountID.  removes
@@ -587,8 +683,20 @@ class FirestoreDatabase extends Database {
 
 
   deleteAccount(server, response, accountID) {
-    return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-}
+    let self = this;
+    this.session.collection("accounts").doc(accountID).get()
+    .then(doc => {
+      let account = doc.data();
+      account.lessons.forEach(lesson => {
+        
+      })
+
+    })
+    .catch(error => {
+      return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+    });
+  
+  }
 
 
   
