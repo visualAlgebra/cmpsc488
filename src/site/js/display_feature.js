@@ -69,9 +69,8 @@ export function convertTreeToImage(treeStruct, container_id){
   let container=document.getElementById(container_id);
   let svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   // svg.setAttribute("viewbox","0 0 330 300");
-
-  svg.setAttribute("height","300px");
-  svg.setAttribute("width","600px");
+  svg.setAttribute("height",container.getAttribute("height"));
+  svg.setAttribute("width",container.getAttribute("height"));
   const dom=treeStruct.render().html();
   var doc = new DOMParser().parseFromString(dom, 'text/html');
   var result = new XMLSerializer().serializeToString(doc);
@@ -88,8 +87,8 @@ export function convertTreeToImage(treeStruct, container_id){
   boxDiv.appendChild(mainDiv)
 
   let foreign=document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
-  foreign.setAttribute("height","300px");
-  foreign.setAttribute("width","600px");
+  foreign.setAttribute("height",container.getAttribute("height"));
+  foreign.setAttribute("width",container.getAttribute("height"));
   // foreign.setAttribute("transform","scale(1,1)");
   foreign.appendChild(boxDiv);
 

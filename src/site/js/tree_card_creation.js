@@ -70,6 +70,8 @@ export function createCardForProblem(problem_id, cardID){
     let startholderdiv=document.createElement("div");
     //startholderdiv.name="problem_holder";
     startholderdiv.id=cardID+"_s";
+    startholderdiv.setAttribute("height", "300px");
+    startholderdiv.setAttribute("width", "600px");
     li1holder.appendChild(startholderdiv);
 
     let col2div=document.createElement("div");
@@ -83,6 +85,8 @@ export function createCardForProblem(problem_id, cardID){
     let goalholderdiv=document.createElement("div");
     //goalholderdiv.name="problem_holder";
     goalholderdiv.id=cardID+"_g";
+    goalholderdiv.setAttribute("height", "300px");
+    goalholderdiv.setAttribute("width", "600px");
     li2holder.appendChild(goalholderdiv);
 
     return maindiv;
