@@ -378,6 +378,10 @@ export class Problem{
     this.goal = goal;
   }
 }
+
+// validActionsArr: is an array of boolean values corresponding to what actions the user wants available
+// numNodes: The number of nodes that the user wants originally
+// numActions: the number of actions that the user wants to be applied to get to the goal
 export function randomProblemGenerator(numNodes, validActionsArr, numActions){
   const start = createRandomExpression(numNodes);
   var end = start.clone();
@@ -385,9 +389,11 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions){
   var action;
   for(var i = 0; i<numActions; i++){
     actionApplied = false;
+    // the while makes sure that at least one action is applied before continuing
     while(!actionApplied){
       var actionIndx = Integer(Math.floor(Math.random()*validActionsArr.length))
       if(validActionsArr[actionIndx]){
+        // case ordering appears in the same order as the actions appear in algebraic_actions.js
         switch(actionIndx){
           case 0: 
             var quadToApply = Math.floor(Math.random()*2);
@@ -432,7 +438,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions){
           break;
 
           case 2:
-            
+
             
         }
       }

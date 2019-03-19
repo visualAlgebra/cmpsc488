@@ -61,6 +61,8 @@ function heuristicEval(a, b) {
 
   return numDiff;
 }
+// a: the start expression
+// b: the end expression
 function solve(a, b){
   if(a.equals(b))
     return null;
