@@ -1,5 +1,5 @@
 :root {
-    --tag-border-thickness: 0.3rem;
+    --border-thickness: 0.3rem;
     --tag-button-size: 2rem;
     --element-padding: 0.75rem;
     --element-margin: 0.75rem;
@@ -46,12 +46,12 @@
 /* GIT TEST */
 
 .north-west {
-    border: solid var(--tag-border-thickness) blue;
+    border: solid var(--border-thickness) blue;
     background: lightblue;
 }
 
 .south-east {
-    border: solid var(--tag-border-thickness) red;
+    border: solid var(--border-thickness) red;
     background: lightcoral;
 }
 

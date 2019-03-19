@@ -315,6 +315,7 @@ class TagButtonGui extends GuiBase {
   buildDom() {
     const button = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
     button.addClass("tag-button");
+    button.addClass("hoverable");
 
     this.attachEventHandlers(button);
 
@@ -338,6 +339,8 @@ class TagQuadrantGui extends GuiBase {
     const quadrantClass = (this.quadrantLabel === Quadrant.NW) ? "north-west" : "south-east";
 
     quadrant.addClass(quadrantClass);
+    quadrant.addClass("hoverable");
+
     this.attachEventHandlers(quadrant);
 
     this.tree[this.quadrantLabel].forEach(child => {
@@ -371,6 +374,7 @@ export class VariableGui extends GuiBase {
     this.attachEventHandlers(div);
 
     div.addClass("variable");
+    div.addClass("hoverable");
     div.data("expressionTree", this.tree);
     return div;
   }
@@ -390,6 +394,7 @@ export class LiteralGui extends GuiBase {
     this.attachEventHandlers(div);
 
     div.addClass("literal");
+    div.addClass("hoverable");
     div.data("expressionTree", this.tree);
     return div;
   }
