@@ -1,16 +1,16 @@
 export function createCollectionItemForLesson(lesson, elementId){
     let li1=document.createElement('li');
-    li1.className="collection-item blue-grey darken-1";
+
+
+    let div1=document.createElement('div');
+    div1.className="collapsible-header blue-grey darken-1 white-text";
 
     let i1=document.createElement('i');
     i1.className="material-icons white-text left";
     i1.innerHTML="folder";
-    li1.appendChild(i1);
+    div1.appendChild(i1);
+    div1.innerHTML+=lesson.id;
 
-    let div1=document.createElement('div');
-    div1.className="white-text";
-    div1.innerHTML=lesson.id;
-    
     li1.appendChild(div1);
     let a1=document.createElement('a');
     a1.href="http://localhost:8080/lesson-view/"+lesson.id;
@@ -22,6 +22,16 @@ export function createCollectionItemForLesson(lesson, elementId){
     i2.innerHTML="send";
     a1.appendChild(i2);
     
+    let div2=document.createElement('div');
+    div2.className="collapsible-body";
+
+    let span2=document.createElement('div');
+    span2.innerHTML="Created: "+new Date(lesson.timeCreated);
+    let span3=document.createElement('div');
+    span3.innerHTML=lesson.description;
+    div2.appendChild(span2);
+    div2.appendChild(span3);
+    li1.appendChild(div2);
     document.getElementById(elementId).appendChild(li1);
 }
       
