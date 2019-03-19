@@ -3,9 +3,13 @@ import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_c
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import * as M from "materialize-css";
 import {initNav} from "./navbar_creation";
+import {convertProblemInfoToImage} from "./display_feature";
 
 var lesson_to_load=getLessonFromURL();
-
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.collapsible');
+  var instances = M.Collapsible.init(elems);
+});
 window.onload = ()=>{
   initNav();
   if (lesson_to_load !== null) {
@@ -22,11 +26,7 @@ function fillCreations(lesson) {
       filldiv.appendChild(createCardForProblem(lesson.creations[creation].problemID, creation));
       let k=lesson.creations[creation];
       let prob=new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated);
-      //displayProblemFromDBStruct(prob, creation + "_s", creation + "_g");
-      let temp1=document.getElementById(creation+"_s");
-      let temp2=document.getElementById(creation + "_g");
-      temp1.innerHTML="placeholder for minified problem";
-      temp2.innerHTML="placeholder for minified problem";
+      convertProblemInfoToImage(prob,creation+"_s", creation+"_g");
       //TODO Display only minified problem (above)
     } else {
       let k=lesson.creations[creation];

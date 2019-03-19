@@ -1,5 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
+import { createRandomExpression } from './random_expression_creator.js';
+import { CommutativeSwap, AssociativeMerge } from './algebraic_actions.js';
 // console.log("@@@@@@@@@@");
 // const my_lzma = require("lzma");
 // console.log(my_lzma);
@@ -369,6 +371,77 @@ function _Deserialize(text) {
     return retval;
   }
 }
+
+export class Problem{
+  constructor(start, goal){
+    this.start = start;
+    this.goal = goal;
+  }
+}
+export function randomProblemGenerator(numNodes, validActionsArr, numActions){
+  const start = createRandomExpression(numNodes);
+  var end = start.clone();
+  var actionApplied;
+  var action;
+  for(var i = 0; i<numActions; i++){
+    actionApplied = false;
+    while(!actionApplied){
+      var actionIndx = Integer(Math.floor(Math.random()*validActionsArr.length))
+      if(validActionsArr[actionIndx]){
+        switch(actionIndx){
+          case 0: 
+            var quadToApply = Math.floor(Math.random()*2);
+            if (Integer(quadToApply) == 0){
+              var sib1 = Math.floor(Math.random()*end.NW.length);
+              var sib2 = Math.floor(Math.random()*end.NW.length);
+              if(CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)){
+                action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            else{
+              var sib1 = Math.floor(Math.random()*end.SE.length);
+              var sib2 = Math.floor(Math.random()*end.SE.length);
+              if(CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)){
+                action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 1:
+          var quadToApply = Math.floor(Math.random()*2);
+          if (Integer(quadToApply) == 0){
+            var sib1 = Math.floor(Math.random()*end.NW.length);
+            if(AssociativeMerge.verify(end.NW[sib1], end)){
+              action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
+              action.apply();
+              actionApplied = true;
+            }
+          }
+          else{
+            var sib1 = Math.floor(Math.random()*end.SE.length);
+            if(AssociativeMerge.verify(end.SE[sib1], end)){
+              action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
+              action.apply();
+              actionApplied = true;
+            }
+          }
+          break;
+
+          case 2:
+            
+            
+        }
+      }
+    }
+  }
+  var ret = new Problem(start, end);
+  return ret;
+}
+
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
 export function compress_string_js(text, callback) {
   var arr;

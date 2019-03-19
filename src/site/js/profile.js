@@ -2,12 +2,14 @@ import {get_account_from_db} from "./database_management";
 import {initNav} from "./navbar_creation";
 import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_creation";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
+import {convertProblemInfoToImage} from "./display_feature";
 
-//user_profile_page/accounts/account_id
-//{"accountID":"TEST_USER_0","timeCreated":"120000T101010",
-//"creations":["/problems/TEST_PROBLEM_0", "/lessons/TEST_LESSON_0"]}
-//
 export var account_to_load = getAccountFromURL();
+
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.collapsible');
+  var instances = M.Collapsible.init(elems);
+});
 
 window.onload = ()=>{
   initNav();
@@ -47,23 +49,18 @@ export function fillPage(accInfo) {
   let lessons_amt = document.getElementById('lessonsSavedAmountField');
   problems_amt.innerHTML = "Problems: " + accInfo.problems.length;
   lessons_amt.innerHTML = "Lessons: " + accInfo.lessons.length;
-  //lessons
+//   lessons
   let filldiv = document.getElementById("creationHolder");
   for(let lesson in accInfo.lessons){
     lesson = parseInt(lesson);
     createCollectionItemForLesson(accInfo.lessons[lesson], "lessonHolder");
     lessAmt++;
   }
-  //problems
+//   problems
   for(let problem in accInfo.problems){
     problem = parseInt(problem);
     filldiv.appendChild(createCardForProblem(accInfo.problems[problem].problemID, probAmt));
-    //displayProblemFromDBStruct(accInfo.problems[problem], problem + "_s", problem + "_g");
-      let temp1=document.getElementById(problem+"_s");
-      let temp2=document.getElementById(problem + "_g");
-      temp1.innerHTML="placeholder for minified problem";
-      temp2.innerHTML="placeholder for minified problem";
-    //TODO Display only minified problem (above)
+    convertProblemInfoToImage(accInfo.problems[problem],problem+"_s", problem+"_g");
     probAmt++;
   }
 }
@@ -71,7 +68,7 @@ export function fillPage(accInfo) {
 export function getAccountFromURL() {
   let acc = (window.location.href).substr((window.location.href).indexOf('/profile'));
   if (acc.indexOf('profile/accounts/') === -1 || acc === 'null' || acc === '' || acc === 'undefined') {
-    //location.replace("../Explorer.html");
+//     location.replace("../Explorer.html");
     alert("Error(profile.js): Please enter an account id after \"profile/accounts/\" in the URL or select a problem from another page");
     return null;
   }
