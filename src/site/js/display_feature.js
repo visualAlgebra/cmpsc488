@@ -68,8 +68,6 @@ export function convertProblemInfoToImage(info, container_id_working, container_
 export function convertTreeToImage(treeStruct, container_id){
   let container=document.getElementById(container_id);
   let svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute("height","auto");
-  svg.setAttribute("width","auto");
   
   const dom=treeStruct.render().html();
   var doc = new DOMParser().parseFromString(dom, 'text/html');
