@@ -450,7 +450,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
             else {
               var sib1 = Math.floor(Math.random() * end.SE.length);
               if (AssociativeIntro.verify(end.SE[sib1])) {
-                action = new AssociativeMerge(end.SE[sib1]);
+                action = new AssociativeIntro(end.SE[sib1]);
                 action.apply();
                 actionApplied = true;
               }
@@ -466,7 +466,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 if (Integer(quadToApply2) == 0) {
                   var sib2 = Math.floor(Math.random() * end.NW[sib1].NW.length)
                   if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
-                    action = new AssociativeIntro(end.NW[sib1].NW[sib2], end);
+                    action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
                     action.apply();
                     actionApplied = true;
                   }
@@ -474,7 +474,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 else {
                   var sib2 = Math.floor(Math.random() * end.NW[sib1].SE.length)
                   if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
-                    action = new AssociativeIntro(end.NW[sib1].SE[sib2], end);
+                    action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
                     action.apply();
                     actionApplied = true;
                   }
@@ -488,7 +488,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 if (Integer(quadToApply2) == 0) {
                   var sib2 = Math.floor(Math.random() * end.SE[sib1].NW.length)
                   if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
-                    action = new AssociativeIntro(end.SE[sib1].NW[sib2], end);
+                    action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
                     action.apply();
                     actionApplied = true;
                   }
@@ -496,7 +496,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 else {
                   var sib2 = Math.floor(Math.random() * end.SE[sib1].SE.length)
                   if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
-                    action = new AssociativeIntro(end.SE[sib1].SE[sib2], end);
+                    action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
                     action.apply();
                     actionApplied = true;
                   }
