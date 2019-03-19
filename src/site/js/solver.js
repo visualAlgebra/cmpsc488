@@ -129,7 +129,9 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
 */
 
 function expand(nodeToExpand, nodeArray/*, expanded*/) {
-  expandAssociative(nodeToExpand, nodeArray, expanded);
+  expandAssociativeIntro(nodeToExpand, nodeArray);
+  expandAssociativeMerge(nodeToExpand, nodeArray);
+  expandAssociativeExtract(nodeToExpand, nodeArray);
 }
 
 function expandAssociativeIntro(nodeToExpand, nodeArray) {
