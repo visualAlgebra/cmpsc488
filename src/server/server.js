@@ -97,6 +97,7 @@ class Server {
 
 
   static getSentID(pathname) {
+    console.log("sent: " + pathname);
     return path.basename(pathname);
   }
 
@@ -315,14 +316,14 @@ class Server {
   //==========================================================================
 
   deleteProblem(response, pathname, accountID) {
-    let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length));
-    return this.database.deleteProblem(this, response, accountID, problemName);
+    //let problemName = Server.getSentID(pathname.substr(this.databaseActions[0].length)); //not sure why this is here...
+    return this.database.deleteProblem(this, response, accountID, pathname.substr(this.databaseActions[0].length));
   }
 
 
   deleteLesson(response, pathname, accountID) {
-    let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length));
-    return this.database.deleteLesson(this, response, accountID, lessonName);
+    //let lessonName = Server.getSentID(pathname.substr(this.databaseActions[1].length)); //not sure if necessary?
+    return this.database.deleteLesson(this, response, accountID, pathname.substr(this.databaseActions[1].length));
   }
 
 

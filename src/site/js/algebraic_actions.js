@@ -74,8 +74,7 @@ export class AssociativeMerge {
   static verify(sibling, parent) {
     return Object.is(sibling.parent, parent)
       && (parent.orientation === sibling.orientation
-        || (sibling.NW.length === 1 && sibling.SE.length === 0)
-        || (sibling.SE.length === 1 && sibling.NW.length === 0))
+        || (sibling.NW.length === 1 && sibling.SE.length === 0))
       && sibling instanceof Tag
       && parent instanceof Tag;
   }
@@ -547,7 +546,8 @@ export class QuadrantFlip {
     return tag instanceof Tag
       && parent !== null
       && Object.is(tag.parent, parent)
-      && xQuad !== yQuad;
+      && xQuad !== yQuad
+      && tag.orientation === parent.orientation;
   }
 
   apply() {
@@ -563,10 +563,10 @@ export class QuadrantFlip {
     //Adding the tag into it's opposite quadrant;
     if (this.quadrantLabel === Quadrant.NW) {
       parent.removeNorthWest(this.tag);
-      parent.insert(this.tag, this.tag.SE.length, Quadrant.SE);
+      parent.insert(this.tag, parent.SE.length, Quadrant.SE);
     } else {
       parent.removeSouthEast(this.tag);
-      parent.insert(this.tag, this.tag.SE.length, Quadrant.NW);
+      parent.insert(this.tag, parent.NW.length, Quadrant.NW);
     }
 
   }

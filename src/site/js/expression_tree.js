@@ -1,5 +1,7 @@
-import {LZMA} from './lzma_worker.js';
-import {LiteralGui, TagGui, VariableGui} from "./gui";
+import { LZMA } from './lzma_worker.js';
+import { LiteralGui, TagGui, VariableGui } from "./gui";
+import { createRandomExpression } from './random_expression_creator.js';
+import { CommutativeSwap, AssociativeMerge, AssociativeIntro } from './algebraic_actions.js';
 // console.log("@@@@@@@@@@");
 // const my_lzma = require("lzma");
 // console.log(my_lzma);
@@ -14,48 +16,48 @@ export const Quadrant = {
   NW: "NW",
   SE: "SE"
 };
-export class LessonInfo{
-    constructor(lesson_id, creations, timeCreated, creatorAccId, description){
-      this.id=lesson_id;
-      this.creations=creations;
-      this.timeCreated=timeCreated;
-      this.creatorAccId=creatorAccId;
-      this.description=description;
-    }
+export class LessonInfo {
+  constructor(lesson_id, creations, timeCreated, creatorAccId, description) {
+    this.id = lesson_id;
+    this.creations = creations;
+    this.timeCreated = timeCreated;
+    this.creatorAccId = creatorAccId;
+    this.description = description;
+  }
 
-  toString(){
-    let retval="{_LESSON{"+this.problem_id+"}{";
-    for(let form in this.creations){
-      retval+=this.creations[form].toString();
+  toString() {
+    let retval = "{_LESSON{" + this.problem_id + "}{";
+    for (let form in this.creations) {
+      retval += this.creations[form].toString();
     }
-    retval+="}{"+this.description+"}";
-    retval+="{"+this.creatorAccId+"}";
-    retval+="{"+this.timeCreated+"}";
-    return retval+"}";
+    retval += "}{" + this.description + "}";
+    retval += "{" + this.creatorAccId + "}";
+    retval += "{" + this.timeCreated + "}";
+    return retval + "}";
   }
 }
 
-export function parseMultiProblem(multi){
-    let ret=[];
-    for(let x in multi.queryResults){
-      x=parseInt(x);
-      let k=multi.queryResults[x];
-      ret[x]=new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated);
-    }
-    return ret;
+export function parseMultiProblem(multi) {
+  let ret = [];
+  for (let x in multi.queryResults) {
+    x = parseInt(x);
+    let k = multi.queryResults[x];
+    ret[x] = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
+  }
+  return ret;
 }
 
 export class ProblemInfo {
-  constructor(problemID,treestart,treegoal, description, timeCreated){
-    this.problemID=problemID;
-    this.expression_start=treestart;
-    this.expression_goal=treegoal
-    this.description=description;
-    this.timeCreated=timeCreated;
+  constructor(problemID, treestart, treegoal, description, timeCreated) {
+    this.problemID = problemID;
+    this.expression_start = treestart;
+    this.expression_goal = treegoal
+    this.description = description;
+    this.timeCreated = timeCreated;
   }
 
-  toString(){
-    return "{_PROBLEM{"+this.problemID+"}{"+this.expression_start.toString()+"}{"+this.expression_goal.toString()+"}{"+this.description+"}{"+this.timeCreated+"}}";
+  toString() {
+    return "{_PROBLEM{" + this.problemID + "}{" + this.expression_start.toString() + "}{" + this.expression_goal.toString() + "}{" + this.description + "}{" + this.timeCreated + "}}";
   }
 }
 
@@ -71,7 +73,7 @@ export class ExpressionTree {
     return "error";
   }
 
-  clone(){
+  clone() {
     return _Deserialize(this.toString());
   }
 
@@ -243,7 +245,7 @@ export class Tag extends ExpressionTree {
     return retval + "}}}";
   }
   compress() {
-    compress_string_js(this.toString(),res => {
+    compress_string_js(this.toString(), res => {
       console.log(JSON.stringify(res));
     });
   }
@@ -272,7 +274,7 @@ export class Variable extends ExpressionTree {
   }
 
   compress() {
-    compress_string_js(this.toString(),res => {
+    compress_string_js(this.toString(), res => {
       console.log(JSON.stringify(res));
     });
   }
@@ -301,7 +303,7 @@ export class Literal extends ExpressionTree {
   }
 
   compress() {
-    compress_string_js(this.toString(),res => {
+    compress_string_js(this.toString(), res => {
       console.log(JSON.stringify(res));
     });
   }
@@ -317,15 +319,15 @@ export function array_delete(arr, ref) {
   }
 }
 
-var nodecount=0;
+var nodecount = 0;
 export function Deserialize(text) {
-  let now=Date.now();
-  let retval=_Deserialize(text);
-  let time=(Date.now()-now)/1000;
-  if(time>0.5){
-    console.log('time: '+time+' secs from: '+nodecount+' nodes.');
+  let now = Date.now();
+  let retval = _Deserialize(text);
+  let time = (Date.now() - now) / 1000;
+  if (time > 0.5) {
+    console.log('time: ' + time + ' secs from: ' + nodecount + ' nodes.');
   }
-  nodecount=0;
+  nodecount = 0;
   return retval;
 }
 function _Deserialize(text) {
@@ -338,27 +340,27 @@ function _Deserialize(text) {
   }
   if (text.substr(0, 2) === "{t") {
     let retval = new Tag(Orientation[text.substr(2, 2)]);
-    let inNW=true;
+    let inNW = true;
     let counter = 0;
     let tempstr = "";
-    for (let i = 6; i < text.length-3; i++) {
-      tempstr+=text.charAt(i);
+    for (let i = 6; i < text.length - 3; i++) {
+      tempstr += text.charAt(i);
       if (text.charAt(i) === "{") {
         counter++;
       } else if (text.charAt(i) === "}") {
         counter--;
-        if (counter===-1){
-          inNW=false;
+        if (counter === -1) {
+          inNW = false;
           i++;
-          tempstr="";
-          counter=0;
+          tempstr = "";
+          counter = 0;
           continue;
         }
         if (counter === 0) {
-          if(tempstr.substr(tempstr.length-2)!=="{}"){
-            if(inNW){
+          if (tempstr.substr(tempstr.length - 2) !== "{}") {
+            if (inNW) {
               retval.addNorthWest(_Deserialize(tempstr));
-            }else{
+            } else {
               retval.addSouthEast(_Deserialize(tempstr));
             }
           }
@@ -369,13 +371,155 @@ function _Deserialize(text) {
     return retval;
   }
 }
+
+export class Problem {
+  constructor(start, goal) {
+    this.start = start;
+    this.goal = goal;
+  }
+}
+
+// validActionsArr: is an array of boolean values corresponding to what actions the user wants available
+// numNodes: The number of nodes that the user wants originally
+// numActions: the number of actions that the user wants to be applied to get to the goal
+export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
+  const start = createRandomExpression(numNodes);
+  var end = start.clone();
+  var actionApplied;
+  var action;
+  for (var i = 0; i < numActions; i++) {
+    actionApplied = false;
+    // the while makes sure that at least one action is applied before continuing
+    while (!actionApplied) {
+      var actionIndx = Integer(Math.floor(Math.random() * validActionsArr.length))
+      if (validActionsArr[actionIndx]) {
+        // case ordering appears in the same order as the actions appear in algebraic_actions.js
+        switch (actionIndx) {
+          case 0:
+            var quadToApply = Math.floor(Math.random() * 2);
+            if (Integer(quadToApply) == 0) {
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              var sib2 = Math.floor(Math.random() * end.NW.length);
+              if (CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)) {
+                action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * end.SE.length);
+              var sib2 = Math.floor(Math.random() * end.SE.length);
+              if (CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)) {
+                action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 1:
+            var quadToApply = Math.floor(Math.random() * 2);
+            if (Integer(quadToApply) == 0) {
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              if (AssociativeMerge.verify(end.NW[sib1], end)) {
+                action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * end.SE.length);
+              if (AssociativeMerge.verify(end.SE[sib1], end)) {
+                action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 2:
+            var quadToApply = Math.floor(Math.random() * 2);
+            if (Integer(quadToApply) == 0) {
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              if (AssociativeIntro.verify(end.NW[sib1])) {
+                action = new AssociativeIntro(end.NW[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * end.SE.length);
+              if (AssociativeIntro.verify(end.SE[sib1])) {
+                action = new AssociativeIntro(end.SE[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 3:
+            var quadToApply = Math.floor(Math.random() * 2);
+            if (Integer(quadToApply) == 0) {
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              if (end.NW[sib1] instanceof Tag) {
+                var quadToApply2 = Math.floor(Math.random() * 2);
+                if (Integer(quadToApply2) == 0) {
+                  var sib2 = Math.floor(Math.random() * end.NW[sib1].NW.length)
+                  if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
+                    action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+                else {
+                  var sib2 = Math.floor(Math.random() * end.NW[sib1].SE.length)
+                  if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
+                    action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * end.SE.length);
+              if (end.SE[sib1] instanceof Tag) {
+                var quadToApply2 = Math.floor(Math.random() * 2);
+                if (Integer(quadToApply2) == 0) {
+                  var sib2 = Math.floor(Math.random() * end.SE[sib1].NW.length)
+                  if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
+                    action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+                else {
+                  var sib2 = Math.floor(Math.random() * end.SE[sib1].SE.length)
+                  if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
+                    action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
+            }
+            break;
+
+        }
+      }
+    }
+  }
+  var ret = new Problem(start, end);
+  return ret;
+}
+
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
 export function compress_string_js(text, callback) {
   var arr;
   if (text[0] === "[" && text.slice(-1) === "]") {
     try {
       arr = JSON.parse(text);
-    } catch (e) {}
+    } catch (e) { }
   }
   if (arr) {
     text = arr;
@@ -395,34 +539,34 @@ export function decompress_string_js(byte_arr, callback) {
 /// //////////////////        Unused Functions   ////////////////////////////////
 
 //x=createRandomExpression(6).toString(); helper(x.substr(5,x.length-7));
- function helper(text){
-    let rettext="";
-    let temp=0;
-    let zeroamt=0;
-    let i=0;
-    for(i=0; i<text.length; i++){
-      if(text.charAt(i)==="{"){
-        if(temp===0){
-          rettext+="*";
-        }else{
-          rettext+=temp;
-        }
-        temp++;
-      }else if(text.charAt(i)==="}"){
-        temp--;
-        if(temp===0){
-          rettext+="*";
-        }else{
-          rettext+=temp;
-        }
-        if(temp===0){
-          zeroamt++;
-        }
-      }else{
-        rettext=rettext+" ";
+function helper(text) {
+  let rettext = "";
+  let temp = 0;
+  let zeroamt = 0;
+  let i = 0;
+  for (i = 0; i < text.length; i++) {
+    if (text.charAt(i) === "{") {
+      if (temp === 0) {
+        rettext += "*";
+      } else {
+        rettext += temp;
       }
+      temp++;
+    } else if (text.charAt(i) === "}") {
+      temp--;
+      if (temp === 0) {
+        rettext += "*";
+      } else {
+        rettext += temp;
+      }
+      if (temp === 0) {
+        zeroamt++;
+      }
+    } else {
+      rettext = rettext + " ";
     }
-    console.log(text);
-    console.log(rettext+"  :  Valid? "+(temp===0)+"  :  "+zeroamt);
   }
+  console.log(text);
+  console.log(rettext + "  :  Valid? " + (temp === 0) + "  :  " + zeroamt);
+}
 /// /////////////////////////////////////////////////////////////////////////////
