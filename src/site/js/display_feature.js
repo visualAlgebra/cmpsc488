@@ -12,7 +12,6 @@ export function displayExpressionTree(tree, containerId, callback) {
   container.setAttribute('data-str',tree.toString());
   let temp=tree.render()[0];
   container.appendChild(temp);
-  convertTreeToImage(tree,'pictureAttempt');//attempt
   if (callback) {
     callback(tree, containerId);
   }

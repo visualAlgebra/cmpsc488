@@ -5,7 +5,7 @@ export function addHistoryEntry(tree){
   if(histControl===null||histControl===undefined){
     histControl=new historyController();
     let temp=histControl.init(tree);
-    console.log(histControl);
+    //console.log(histControl);
     return temp;
   }else{
     return histControl.add(tree);
@@ -26,7 +26,7 @@ export function histAction(bool){
 
 function getHistArray(){
   let histArray=[[0]];
-  console.log(histArray);
+  //console.log(histArray);
   let currentLine=histControl.mainLine;
   histControl.widthControl=0;
   _getHistArray(histArray, currentLine);
