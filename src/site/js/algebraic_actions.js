@@ -22,7 +22,7 @@
 // 1 * 2 => 2 * 1
 // Takes in two siblings and a quadrant(the list where the siblings are located).
 // If the siblings and quadrant are valid, then the siblings will be swapped.
-import {Literal, Orientation, Quadrant, Tag, Variable} from "./expression_tree";
+import { Literal, Orientation, Quadrant, Tag, Variable } from "./expression_tree";
 
 export class CommutativeSwap {
 
@@ -36,7 +36,7 @@ export class CommutativeSwap {
   //if the Siblings are in the same quadrant, then return true
   static verify(sibling1, sibling2, quadrant1, quadrant2) {
     const quadrant = sibling1.parent[quadrant1];
-    return !Object.is(sibling1 , sibling2)
+    return !Object.is(sibling1, sibling2)
       && quadrant1 === quadrant2
       && Object.is(sibling1.parent, sibling2.parent)
       && quadrant.some(x => Object.is(x, sibling2))
@@ -72,11 +72,11 @@ export class AssociativeMerge {
   //if the sibling is included in the parent
   //then return true
   static verify(sibling, parent) {
-    return Object.is(sibling.parent, parent)
+    return sibling instanceof Tag
+      && parent instanceof Tag
+      && Object.is(sibling.parent, parent)
       && (parent.orientation === sibling.orientation
-        || (sibling.NW.length === 1 && sibling.SE.length === 0))
-      && sibling instanceof Tag
-      && parent instanceof Tag;
+        || (sibling.NW.length === 1 && sibling.SE.length === 0));
   }
 
 
@@ -168,7 +168,8 @@ export class AssociativeExtract {
   }
 
   static verify(grandchild, grandparent) {
-    return grandparent !== null
+    return grandparent instanceof Tag
+      && grandparent !== null
       && grandchild.parent !== null
       && Object.is(grandchild.parent.parent, grandparent)
       && grandchild.parent.orientation === grandparent.orientation;
@@ -190,8 +191,8 @@ export class AssociativeExtract {
       parent.removeSouthEast(this.grandchild);
       grandparent.insert(this.grandchild, grandparent.NW.length, insertQuad);
     }
-    
-    
+
+
   }
 }
 
@@ -209,7 +210,8 @@ export class AssociativeInsert {
   }
 
   static verify(sibling, insertionTag, xQuad, yQuad) {
-    return sibling.parent !== null
+    return insertionTag instanceof Tag
+      && sibling.parent !== null
       && sibling.parent.orientation === insertionTag.orientation
       && Object.is(sibling.parent, insertionTag.parent)
       && !Object.is(sibling, insertionTag)
@@ -240,6 +242,9 @@ export class Distribute {
   }
 
   static verify(value, tagToDistributeOver, xQuad, yQuad) {
+    if (!tagToDistributeOver instanceof Tag) {
+      return false;
+    }
     if (xQuad !== yQuad)
       return false;
 
@@ -299,7 +304,7 @@ export class Distribute {
       parent.removeNorthWest(this.value);
       parent.removeNorthWest(this.tagToDistributeOver);
       let newTag = new Tag(Orientation.EW, newNW, newSE);
-      parent.insert(newTag, index, quad);      
+      parent.insert(newTag, index, quad);
     }
 
   }
@@ -312,25 +317,29 @@ export class Factor {
   }
 
   static verify(valueToFactor, tagToFactor) {
+    if (!tagToFactor instanceof Tag) {
+      return false;
+    }
+
     if (tagToFactor.orientation != "eastwest")
       return false;
-    for (var i = 0; i<tagToFactor.NW.length; i++){
-      if (tagToFactor.NW[i] instanceof Tag){
-        if(!tagToFactor.NW[i].NW[0].equals(valueToFactor))
+    for (var i = 0; i < tagToFactor.NW.length; i++) {
+      if (tagToFactor.NW[i] instanceof Tag) {
+        if (!tagToFactor.NW[i].NW[0].equals(valueToFactor))
           return false;
       }
-      else{
+      else {
         if (!tagToFactor.NW[i].value.equals(valueToFactor))
           return false;
       }
     }
 
-    for (var i = 0; i<tagToFactor.SE.length; i++){
-      if (tagToFactor.SE[i] instanceof Tag){
-        if(!tagToFactor.SE[i].NW[0].equals(valueToFactor))
+    for (var i = 0; i < tagToFactor.SE.length; i++) {
+      if (tagToFactor.SE[i] instanceof Tag) {
+        if (!tagToFactor.SE[i].NW[0].equals(valueToFactor))
           return false;
       }
-      else{
+      else {
         if (!tagToFactor.SE[i].value.equals(valueToFactor))
           return false;
       }
@@ -466,6 +475,9 @@ export class CombineFrac {
   }
 
   static verify(tag, divisor) {
+    if (!(tag instanceof Tag && divisor instanceof Tag)) {
+      return false; 
+    }
     if (tag.orientation !== Orientation.EW) {
       return false;
     }
@@ -606,7 +618,10 @@ export class IdentityBalance {
   }
 
   static verify(newChild, tag) {
-    if (tag.orientation == Orientation.NS){
+    if (!tag instanceof Tag) {
+      return false;
+    }
+    if (tag.orientation == Orientation.NS) {
       if ((newChild instanceof Literal) && newChild.value == 0)
         return false;
       if (newChild instanceof Tag)
@@ -620,7 +635,7 @@ export class IdentityBalance {
     let copy = this.newChild.clone();
 
     //adding a children in both quadrants
-    this.tag.insert(this.newChild, 0 , Quadrant.NW);
+    this.tag.insert(this.newChild, 0, Quadrant.NW);
     this.tag.insert(copy, 0, Quadrant.SE);
   }
 }
@@ -666,7 +681,7 @@ export class LiteralMerge {
         this.literalB.parent.removeSouthEast(this.literalA);
       }
       else {
-        this.literalA.value = Math.abs(-3 + (-1*(this.literalA.value + this.literalB.value)) % 3);
+        this.literalA.value = Math.abs(-3 + (-1 * (this.literalA.value + this.literalB.value)) % 3);
         this.literalA.parent.removeSouthEast(this.literalB);
       }
     }
@@ -678,37 +693,37 @@ export class LiteralMerge {
   }
 }
 
-export class ZeroMerge{
-  constructor(sibling1, sibling2){
-    this.sibling1  = sibling1;
+export class ZeroMerge {
+  constructor(sibling1, sibling2) {
+    this.sibling1 = sibling1;
     this.sibling2 = sibling2;
   }
 
-  static verify(sibling1, sibling2, quad1, quad2){
-
-    if (Object.is(sibling1, sibling2)){
-      return false;
-    }  
-
-    if (sibling1.parent !== sibling2.parent){
+  static verify(sibling1, sibling2, quad1, quad2) {
+    
+    if (Object.is(sibling1, sibling2)) {
       return false;
     }
 
-    if (sibling1.parent.orientation !== Orientation.NS){
+    if (sibling1.parent !== sibling2.parent) {
       return false;
     }
 
-    if (quad1 !== Quadrant.NW || quad2 !== Quadrant.NW){
+    if (sibling1.parent.orientation !== Orientation.NS) {
+      return false;
+    }
+
+    if (quad1 !== Quadrant.NW || quad2 !== Quadrant.NW) {
       return false;
     }
 
     return ((sibling1 instanceof Literal) && (sibling1.value == 0))
-    || ((sibling2 instanceof Literal) && (sibling2.value == 0));
+      || ((sibling2 instanceof Literal) && (sibling2.value == 0));
 
   }
 
-  apply(){
-    if (this.sibling1 instanceof Literal){
+  apply() {
+    if (this.sibling1 instanceof Literal) {
       if (this.sibling1.value = 0)
         this.sibling1.parent.removeNorthWest(this.sibling2);
       else
@@ -719,30 +734,30 @@ export class ZeroMerge{
   }
 }
 
-export class IdentityMerge{
-  constructor(sibling1, sibling2, quadrant1, quadrant2){
+export class IdentityMerge {
+  constructor(sibling1, sibling2, quadrant1, quadrant2) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
     this.quadrant1 = quadrant1;
     this.quadrant2 = quadrant2;
   }
 
-  static verify(sibling1, sibling2, quadrant1, quadrant2){
+  static verify(sibling1, sibling2, quadrant1, quadrant2) {
 
     if (Object.is(sibling1, sibling2))
       return false;
-    
-    if (!(sibling1 instanceof Literal) && !(sibling2 instanceof Literal)){
+
+    if (!(sibling1 instanceof Literal) && !(sibling2 instanceof Literal)) {
       return false;
     }
 
     if (sibling1.parent !== sibling2.parent)
       return false;
-    if (sibling1.parent.orientation == Orientation.NS){
-      if(quadrant1 != Quadrant.NW || quadrant1 != quadrant2)
+    if (sibling1.parent.orientation == Orientation.NS) {
+      if (quadrant1 != Quadrant.NW || quadrant1 != quadrant2)
         return false;
-      if (sibling1 instanceof Literal){
-        if(sibling1.value == 1)
+      if (sibling1 instanceof Literal) {
+        if (sibling1.value == 1)
           return true;
         if (sibling2 instanceof Literal)
           return sibling2.value == 1;
@@ -750,11 +765,11 @@ export class IdentityMerge{
       if (sibling2 instanceof Literal)
         return sibling2.value == 1;
 
-      if(quadrant1 == Quadrant.NW && quadrant1 == quadrant2)
+      if (quadrant1 == Quadrant.NW && quadrant1 == quadrant2)
         return true;
       return false;
     }
-    if(sibling1 instanceof Literal){
+    if (sibling1 instanceof Literal) {
       if (sibling1.value == 0)
         return true;
       if (sibling2 instanceof Literal)
@@ -766,21 +781,21 @@ export class IdentityMerge{
     return false;
   }
 
-  apply(){
+  apply() {
     if (this.sibling1.parent.orientation == Orientation.NS)
       if (this.sibling1 instanceof Literal && this.sibling1.value == 1)
         this.sibling2.parent.removeNorthWest(this.sibling1);
       else
         this.sibling1.parent.removeNorthWest(this.sibling2);
 
-    else{
-      if (this.sibling1 instanceof Literal && this.sibling1.value == 0){
+    else {
+      if (this.sibling1 instanceof Literal && this.sibling1.value == 0) {
         if (this.quadrant1 == Quadrant.NW)
           this.sibling2.parent.removeNorthWest(this.sibling1);
         else
           this.sibling2.parent.removeSouthEast(this.sibling1)
       }
-      else{
+      else {
         if (this.quadrant2 == Quadrant.NW)
           this.sibling1.parent.removeNorthWest(this.sibling2);
         else
@@ -790,24 +805,24 @@ export class IdentityMerge{
   }
 }
 
-export class LiteralConversion{
-  constructor(literal, quad){
+export class LiteralConversion {
+  constructor(literal, quad) {
     this.literal = literal;
     this.quad = quad;
   }
 
-  static verify(literal){
+  static verify(literal) {
     return (literal instanceof Literal);
   }
 
-  apply(){
-    if (this.literal.value == 0){
+  apply() {
+    if (this.literal.value == 0) {
       this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(1), new Literal(2)]), this.quad);
     }
-    else if (this.literal.value == 1){
+    else if (this.literal.value == 1) {
       this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(2), new Literal(2)]), this.quad);
     }
-    else{
+    else {
       this.literal.parent.replace(this.literal, new Tag(Orientation.EW, [new Literal(1), new Literal(1)]), this.quad);
     }
   }
