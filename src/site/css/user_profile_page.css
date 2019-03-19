@@ -1,5 +1,5 @@
-tbody {
+#lessonHolder {
     display:block;
-    height:210px;
+    height:280px;
     overflow:auto;
 }
