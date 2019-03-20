@@ -12,6 +12,10 @@ export function addHistoryEntry(tree){
   }
 }
 
+export function clearHist(){
+  histControl=undefined;
+}
+
 export function setGoalTree(goalTree){
   histControl.setGoal(goalTree);
 }

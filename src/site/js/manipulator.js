@@ -66,7 +66,8 @@ window.onpopstate=(e)=>{
 function restart(){
   displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str, 'canvasContainer', res=>{
     alert("Restarted");
-    //TODO clearHist(res.toString());
+    clearHist();
+    addHistoryEntry(document.getElementById("canvasContainer").dataset.str);
   });
 }
 
