@@ -27,15 +27,15 @@ svg {
 }
 
 ::-webkit-scrollbar-track {
-  border: 1px solid hotpink;
+  border: 1px solid gray;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: green;
+  background: gray;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: midnightblue;
+  background: darkgray;
 }

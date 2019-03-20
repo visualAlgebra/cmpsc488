@@ -11,9 +11,7 @@ export const creator_page = new Vue({
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml">
     <ToolBar></ToolBar>
-    <ExpressionTree v-if="workingExpressionTree":tree="workingExpressionTree">
-    
-</ExpressionTree>
+    <ExpressionTree v-if="workingExpressionTree" :tree="workingExpressionTree"></ExpressionTree>
   </div>
   `,
 

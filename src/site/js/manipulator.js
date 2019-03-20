@@ -48,9 +48,7 @@ window.onload=()=>{
   });
   document.getElementById("_DEBUG_INSTANCES").addEventListener("click", function(e){
     console.log('_DEBUG_TRIGGERED');
-
-    console.log(document.getElementById("canvasContainer").dataset.str);
-    console.log(document.getElementById("goalContainer").dataset.str);
+    console.log("Current tree: "+document.getElementById("canvasContainer").dataset.str);
     console.log(globals.workingExpressionTree);
     console.log('_DEBUG_FINISHED');
   });
@@ -73,6 +71,7 @@ function restart(){
 }
 
 function drawCanvas(){
+  renderHist("histCanvas", document.getElementById("canvasContainer").dataset.str);
   renderHist("histCanvas", document.getElementById("canvasContainer").dataset.str);
 }
 
