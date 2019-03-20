@@ -553,7 +553,9 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
 
             break;
 
-
+            default:
+            console.log("ERROR: INVALID ACTION INDEX IN GENERATOR")
+            break;
         }
       }
     }
