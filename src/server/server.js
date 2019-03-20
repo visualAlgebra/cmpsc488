@@ -97,7 +97,6 @@ class Server {
 
 
   static getSentID(pathname) {
-    console.log("sent: " + pathname);
     return path.basename(pathname);
   }
 
@@ -328,7 +327,8 @@ class Server {
 
 
   deleteAccount(response, pathname, accountID) {
-    let accountName = Server.getSentID(pathname.substr(this.databaseActions[2].length));
+   // let accountName = Server.getSentID(pathname.substr(this.databaseActions[2].length));
+    let accountName = pathname.substr(this.databaseActions[2].length);
     return this.database.deleteAccount(server, response, accountName, accountID);
   }
 

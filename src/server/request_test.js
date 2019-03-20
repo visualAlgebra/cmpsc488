@@ -209,16 +209,25 @@ function deleteFileTest(fileName, testNumber, accountID, successStatusCode) {
 }
 
 
+
+
+
 function executeFirebaseTesting() {
-  //getFileTest("accounts/TEST_USER_0",0,"");
+  postFileTest("accounts/TEST_USER_0", 0, JSON.stringify({"bio":"a bio for this account","accountID":"TEST_USER_0"}), "TEST_USER_0", 400);
+  postFileTest("problems/TEST_USER_0/TEST_PROBLEM_0", 1, JSON.stringify({ "problemName": "TEST_PROBLEM_0",
+  "startExpression": [93,0,0,0,2,-28,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,90,8,-85,11,71,75,-96,89,-84,-114,-34,11,-70,-102,-115,-125,78,39,99,64,-75,27,-123,-124,9,-43,-34,-39,34,-85,-19,125,39,-109,103,58,54,86,-52,-56,10,32,-121,-3,-38,-16,104,-56,79,-36,88,1,-72,66,-41,17,-1,-119,-42,-1,-19,88,-72,0],
+  "goalExpression":[93,0,0,0,2,125,0,0,0,0,0,0,0,0,61,-99,5,-48,-24,113,90,8,-110,32,113,-87,-75,-61,4,117,-40,123,0,72,-105,88,-31,114,116,95,54,114,-67,59,-65,-107,-49,27,74,-17,-61,80,-60,56,48,124,95,-92,-13,-10,-86,-126,96,29,-88,-51,-1,124,84,78,108,-30,-47,-61,115,-124,28,127,-1,88,111,-128,0],
+  }), "TEST_USER_0",400);
+  postFileTest("lessons/TEST_USER_0/TEST_LESSON_0", 2, JSON.stringify({"creations": ["problems/TEST_USER_0\\TEST_PROBLEM_0"], "creatorAccountID": "TEST_USER_0"}), "TEST_USER_0", 400);
+  // postFileTest("")
+  // getFileTest("accounts/TEST_USER_0",0,"");
 	// getFileTest("lessons/TEST_LESSON_0",1,"");
-	//console.log("TESTING_USER\\NEW_TEST");
-	//getFileTest("problems/TESTING_USER/NEW_TEST",2, "");
-  // getFileTest("problems?sort=timeCreated&number=1", 3, "");
-  // getFileTest("lessons?sort=timeCreated&number=1", 4, "");
-  // postFileTest("accounts/TESTING_USER", 5, JSON.stringify({'bio': 'a bio for this account'}), "TESTING_USER", 201); //post problem w/ name w/ account
-  //postFileTest("problems/NEW_TEST", 6, '{"startExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"goalExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"description": "A test problem. current schema as of 3/1"}', "TESTING_USER", 201);
-  postFileTest("lessons/NEW_LESSON", 7, JSON.stringify({"creations": ["problems/TESTING_USER\\NEW_TEST"],"description": "A test lesson. schema correct as of 3/1"}), "TESTING_USER", 201);
+	// getFileTest("problems/TESTING_USER/NEW_TEST",2, "");
+  // // getFileTest("problems?sort=timeCreated&number=1", 3, "");
+  // // getFileTest("lessons?sort=timeCreated&number=1", 4, "");
+  // // postFileTest("accounts/TESTING_USER", 5, JSON.stringify({'bio': 'a bio for this account'}), "TESTING_USER", 201); //post problem w/ name w/ account
+  // //postFileTest("problems/NEW_TEST", 6, '{"startExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"goalExpression":[93,0,0,0,2,57,0,0,0,0,0,0,0,0,61,-99,4,-88,114,97,89,-26,-16,13,-93,-21,1,72,49,-53,93,-18,-7,-112,51,64,12,-3,-53,-46,-49,13,62,-33,105,-58,27,-73,-64,29,53,3,-35,107,-48,-33,-2,84,-91,-128],"description": "A test problem. current schema as of 3/1"}', "TESTING_USER", 201);
+  // postFileTest("lessons/NEW_LESSON", 7, JSON.stringify({"creations": ["problems/TESTING_USER\\NEW_TEST"],"description": "A test lesson. schema correct as of 3/1"}), "TESTING_USER", 201);
 
   
 }
