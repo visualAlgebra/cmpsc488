@@ -505,6 +505,57 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
             }
             break;
 
+            case 4: // AssociativeInsert
+
+            break;
+
+            case 5: // Distribute
+
+            break;
+
+            case 6: // Factor
+
+            break;
+
+            case 7: // SplitFrac
+
+            break;
+
+            case 8: // CombineFrac
+
+            break;
+
+            case 9: // Quadrant Flip
+
+            break;
+
+            case 10: // Cancel
+
+            break;
+
+            case 11: // Identity Balence
+
+            break;
+
+            case 12: // Literal Merge
+
+            break;
+
+            case 13: // Zero Merge
+
+            break;
+
+            case 14: // Identity Merge
+
+            break;
+
+            case 15: // Literal Conversion
+
+            break;
+
+            default:
+            console.log("ERROR: INVALID ACTION INDEX IN GENERATOR")
+            break;
         }
       }
     }

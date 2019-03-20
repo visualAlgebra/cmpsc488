@@ -128,10 +128,23 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
 }
 */
 
-function expand(nodeToExpand, nodeArray/*, expanded*/) {
+function expand(nodeToExpand, nodeArray) {
   expandAssociativeIntro(nodeToExpand, nodeArray);
   expandAssociativeMerge(nodeToExpand, nodeArray);
   expandAssociativeExtract(nodeToExpand, nodeArray);
+  expandAssociativeInsert(nodeToExpand, nodeArray);
+  expandCommutativeSwap(nodeToExpand, nodeArray);
+  expandLiteralMerge(nodeToExpand, nodeArray);
+  expandLiteralConversion(nodeToExpand, nodeArray);
+  expandIdentityMerge(nodeToExpand, nodeArray);
+  expandZeroMerge(nodeToExpand, nodeArray);
+  expandCancel(nodeToExpand, nodeArray);
+  expandQuadrantFlip(nodeToExpand, nodeArray);
+  expandCombineFrac(nodeToExpand, nodeArray);
+  expnadSplitFrac(nodeToExpand, nodeArray);
+  expandFactor(nodeToExpand, nodeArray);
+  expandDistribute(nodeToExpand, nodeArray);
+  expandIdentityBalence(nodeToExpand, nodeArray);
 }
 
 function expandAssociativeIntro(nodeToExpand, nodeArray) {
@@ -232,6 +245,49 @@ function expandCommutativeSwap(nodeToExpand, nodeArray) {
   }
 }
 
+function expandCancel(nodeToExpand, nodeArray){
+
+}
+
+function expandCombineFrac(nodeToExpand, nodeArray){
+
+}
+
+function expandDistribute(nodeToExpand, nodeArray){
+
+}
+
+function expandFactor(nodeToExpand, nodeArray){
+  
+}
+
+function expandIdentityBalence(nodeToExpand, nodeArray){
+  
+}
+
+function expandIdentityMerge(nodeToExpand, nodeArray){
+  
+}
+
+function expandLiteralConversion(nodeToExpand, nodeArray){
+  
+}
+
+function expandLiteralMerge(nodeToExpand, nodeArray){
+  
+}
+
+function expandQuadrantFlip(nodeToExpand, nodeArray){
+  
+}
+
+function expnadSplitFrac(nodeToExpand, nodeArray){
+  
+}
+
+function expandZeroMerge(nodeToExpand, nodeArray){
+  
+}
 
 
 function findQuadrant(x) {
