@@ -1,9 +1,9 @@
 import * as M from "materialize-css";
 
 export default {
-  name: "LessonHolder", props: ["lessons"], template: `
+  name: "SingleLessonDisplay", props: ["lessons"], template: `
   <div>
-    <ul id="lessonHolder" class="collapsible">
+    <ul class="collapsible">
       <li v-for="(lesson, index) in lessons">
         <div class="collapsible-header blue-grey darken-1 white-text">
           <i class="material-icons white-text left">folder</i>

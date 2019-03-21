@@ -6,6 +6,7 @@ import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {account_to_load, fillPage} from "./profile";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
 import InvalidPage from "./vue_components/InvalidPage";
+import LessonHolder from "./vue_components/LessonHolder";
 
 export const profile_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -17,13 +18,13 @@ export const profile_vue=new Vue({
     v-bind:time="time"
     v-bind:problemCount="problems.length">
     </ProfilePageTop>
-    <!--<LessonContainer v-if="displayPage"></LessonContainer>-->
+    <LessonHolder v-if="displayPage" v-bind:lessons="lessons"></LessonHolder>
     <div class="divider"></div>
     <!--<ProblemHolder v-if="displayPage"></ProblemHolder>-->
   </div>
   `, data(){
     return {
-      display: false, accountID: null, lessons:null, problems:null, bio: null, time:0,
+      display: false, accountID: null, lessons: null, problems: null, bio: null, time: 0,
     };
   }, methods: {
     getAccountFromURL(){
@@ -50,7 +51,6 @@ export const profile_vue=new Vue({
       }
       this.lessons=les;
       this.problems=prob;
-
       this.display=true;
     },
   }, mounted(){
@@ -65,6 +65,6 @@ export const profile_vue=new Vue({
       return false;
     }
   }, components: {
-    NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage,
+    NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonHolder,
   },
 });
