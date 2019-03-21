@@ -51,6 +51,12 @@ export function displayProblemFromDBStruct(
   }
 }
 
+export function singleExpressionDecompression(expressionArr, callback){
+  decompress_string_js(expressionArr, decomp => {
+    callback(decomp);
+  });
+}
+
 /*
 Use this function to pass (problem_id string, working string, goal string, callback function)
                            =/= null           or "null"       or "null"    or "null"

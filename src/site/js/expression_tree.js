@@ -2,6 +2,7 @@ import { LZMA } from './lzma_worker.js';
 import { LiteralGui, TagGui, VariableGui } from "./gui";
 import { createRandomExpression } from './random_expression_creator.js';
 import { CommutativeSwap, AssociativeMerge, AssociativeIntro } from './algebraic_actions.js';
+import {singleExpressionDecompression} from "./display_feature";
 // console.log("@@@@@@@@@@");
 // const my_lzma = require("lzma");
 // console.log(my_lzma);

@@ -1,33 +1,27 @@
 import Vue from "vue";
 import ExpressionTree from "./vue_components/ExpressionTree";
-import {Variable} from "./expression_tree";
 import NavigationBar from "./vue_components/NavigationBar";
 import ExplorerPageTop from "./vue_components/ExplorerPageTop";
-import ExplorerPageProblems from "./vue_components/ExplorerPageProblems";
+import ExplorerPageProblemsHolder from "./vue_components/ExplorerPageProblemsHolder";
+import {get_problems_from_db} from "./database_management";
 
-export const explorer = new Vue({
-  name: "Root",
-
-  el: "#vue-app",
-
-  template: `
+export const explorer_vue=new Vue({
+  name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
-    <ExplorerPageProblems></ExplorerPageProblems>
+    <ExplorerPageProblemsHolder
+      v-if="problemsToDisplay"
+      :problems="problemsToDisplay"
+      ></ExplorerPageProblemsHolder>
   </div>
-  `,
-
-  data() {
+  `, data(){
     return {
-      workingExpressionTree: new Variable(6),
+      problemsToDisplayCount: 1, problemsToDisplay: null,
     };
-  },
-
-  components: {
-    ExpressionTree,
-    NavigationBar,
-    ExplorerPageTop,
-    ExplorerPageProblems,
+  }, mounted(){
+    get_problems_from_db(this.problemsToDisplayCount, res=>this.problemsToDisplay=res);
+  }, components: {
+    ExpressionTree, NavigationBar, ExplorerPageTop, ExplorerPageProblemsHolder,
   },
 });

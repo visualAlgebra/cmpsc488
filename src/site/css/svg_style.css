@@ -6,11 +6,10 @@ svg {
   border-width: 2px;
   border-style: groove;
 }
-/*foreignObject{*/
-  /*height: 100px;*/
-  /*width: 100px;*/
-  /*padding: 10px;*/
-/*}*/
+foreignObject{
+  height: 100%;
+  width: 100%;
+}
 .myBox {
   border: none;
   padding: 5px;
