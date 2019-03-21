@@ -28,7 +28,6 @@ class FirestoreDatabase extends Database {
         } else {
           let problem = doc.data();
           problem.timeCreated = problem.timeCreated._seconds;
-          console.log(problem);
           server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(problem));
         }
       })
@@ -54,9 +53,10 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
+          
             problem.timeCreated = problem.timeCreated._seconds;
             let index = creations.findIndex( element => {
-              return element === problem.problemID;
+              return element === "problems/" + problem.problemID;
             })
             creations[index] = problem;
           });
@@ -81,7 +81,7 @@ class FirestoreDatabase extends Database {
             let newLesson = doc.data();
             newLesson.timeCreated = newLesson.timeCreated._seconds;
             let index = creations.findIndex( element => {
-              return element === newLesson.lessonID;
+              return element === "lessons/" + newLesson.lessonID;
             })
             creations[index] = newLesson;
           });
