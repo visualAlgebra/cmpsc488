@@ -5,23 +5,26 @@ import ExprTreeLiteral from "./ExprTreeLiteral";
 export default {
   name: "ExpressionTree",
 
-  props: ["tree"],
+  props: ["tree", "hoverable"],
 
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml">
     <ExprTreeTag
       v-if="tree.kind === 'tag'"
       :tree="tree"
+      :hoverable="hoverable"
     >
     </ExprTreeTag>
     <ExprTreeVariable
       v-else-if="tree.kind === 'variable'"
       :tree="tree"
+      :hoverable="hoverable"
     >
     </ExprTreeVariable>
     <ExprTreeLiteral
       v-else-if="tree.kind === 'literal'"
       :tree="tree"
+      :hoverable="hoverable"
     >
     </ExprTreeLiteral>
   </div>

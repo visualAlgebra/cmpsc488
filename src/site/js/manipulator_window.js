@@ -11,6 +11,7 @@ export const manipulatorWindow = new Vue({
     <ExpressionTree
       v-if="workingExpressionTree"
       :tree="workingExpressionTree"
+      hoverable="true"
     ></ExpressionTree>
   </div>
   `,

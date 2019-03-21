@@ -42,9 +42,5 @@ function getLessonFromURL() {
     alert("Error(lesson-view.js): Please enter a lesson after \"lesson-view/\" in the URL or select a problem from another page");
     return null;
   }
-  //console.log(lesson.lastIndexOf('/') + 1);
-  //console.log(lesson.indexOf('/lesson-view')+'/lesson-view'.length);
-  //console.log(lesson.substring(lesson.lastIndexOf('/') + 1, lesson.length));
-  //console.log(lesson.substring(lesson.indexOf('/lesson-view')+'/lesson-view/'.length, lesson.length));
-  return lesson.substring(lesson.lastIndexOf('/') + 1, lesson.length);
+  return lesson.substring(lesson.indexOf('/lesson-view') + '/lesson-view/'.length, lesson.length);
 }
