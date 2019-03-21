@@ -3,6 +3,10 @@ import {get_problem_from_db} from "./database_management";
 
 // Clears out the current container (given by `container_id`), renders the
 // expression tree inside `container_id`.
+
+/*
+Use this function to pass (upper-most tag of tree, string, callback function)
+ */
 export function displayExpressionTree(tree, containerId, callback) {
   let container = document.getElementById(containerId);
   while (container.firstChild) {
@@ -16,6 +20,10 @@ export function displayExpressionTree(tree, containerId, callback) {
   }
 }
 
+/*
+Use this function to pass (serialized-tree string, string, callback function)
+                           =/= null                =/= "null", or "null"
+ */
 export function displayTreeFromDBStruct(tree, container_id, callback) {
   displayExpressionTree(Deserialize(tree), container_id, callback);
 }
