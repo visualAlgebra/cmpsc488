@@ -30,7 +30,7 @@ export default {
   </div>  
   `, data(){
     return {
-      url: "http://localhost:8080/lesson-view/"+this.problemID,
+      url: "http://localhost:8080/manipulator/problems/"+this.problemID,
     };
   }, components: {
     ExpressionTree, SingleExpressionDisplay,
