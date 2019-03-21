@@ -91,7 +91,7 @@ export function get_lessons_from_db(queryAmt, callback) {
 
 export class AccountInfo {
   constructor(json) {
-    this.id = json.accountID;
+    this.accountID = json.accountID;
     this.bio = json.bio;
     this.lessons = json.lessons;
     this.problems = json.problems;

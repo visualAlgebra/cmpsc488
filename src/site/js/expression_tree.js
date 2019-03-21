@@ -19,7 +19,7 @@ export const Quadrant = {
 };
 export class LessonInfo {
   constructor(lesson_id, creations, timeCreated, creatorAccId, description) {
-    this.id = lesson_id;
+    this.lessonID = lesson_id;
     this.creations = creations;
     this.timeCreated = timeCreated;
     this.creatorAccId = creatorAccId;
@@ -27,7 +27,7 @@ export class LessonInfo {
   }
 
   toString() {
-    let retval = "{_LESSON{" + this.problem_id + "}{";
+    let retval = "{_LESSON{" + this.lessonID + "}{";
     for (let form in this.creations) {
       retval += this.creations[form].toString();
     }

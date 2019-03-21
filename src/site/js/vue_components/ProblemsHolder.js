@@ -1,7 +1,7 @@
 import SingleProblemDisplay from "./SingleProblemDisplay";
 
 export default {
-  name: "ExplorerPageProblemsHolder", props: ["problems"], template: `
+  name: "ProblemsHolder", props: ["problems"], template: `
   <div>
     <SingleProblemDisplay v-for="(problem, index) in problems" 
       :key="index"

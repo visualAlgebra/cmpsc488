@@ -2,7 +2,7 @@ import Vue from "vue";
 import ExpressionTree from "./vue_components/ExpressionTree";
 import NavigationBar from "./vue_components/NavigationBar";
 import ExplorerPageTop from "./vue_components/ExplorerPageTop";
-import ExplorerPageProblemsHolder from "./vue_components/ExplorerPageProblemsHolder";
+import ProblemsHolder from "./vue_components/ProblemsHolder";
 import {get_problems_from_db} from "./database_management";
 
 export const explorer_vue=new Vue({
@@ -10,10 +10,10 @@ export const explorer_vue=new Vue({
   <div>
     <NavigationBar></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
-    <ExplorerPageProblemsHolder
+    <ProblemsHolder
       v-if="problemsToDisplay"
       :problems="problemsToDisplay"
-      ></ExplorerPageProblemsHolder>
+      ></ProblemsHolder>
   </div>
   `, data(){
     return {
@@ -22,6 +22,6 @@ export const explorer_vue=new Vue({
   }, mounted(){
     get_problems_from_db(this.problemsToDisplayCount, res=>this.problemsToDisplay=res);
   }, components: {
-    ExpressionTree, NavigationBar, ExplorerPageTop, ExplorerPageProblemsHolder,
+    ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder,
   },
 });
