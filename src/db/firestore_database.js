@@ -544,11 +544,11 @@ class FirestoreDatabase extends Database {
       if(doc.exists) {
         return server.respondWithError(response, 400, 'text/plain', "account already exists");
       } else {
-        return self.addAccountCallback(server,response,account,accountID);
+        return self.addAccountIntoDatabase(server,response,account,accountID);
       }
     })
     .catch(error => {
-      return self.addAccountCallback(server,response,account,accountID);
+      return self.addAccountIntoDatabase(server,response,account,accountID);
     })
     
   }
@@ -575,6 +575,7 @@ class FirestoreDatabase extends Database {
       //make deletes atomic
       let batch = self.session.batch();
       //remove problem from lessons that it exists in
+      let problem = doc.data();
       problem.ownerLessons.forEach(lessonID => {
         let lessonReference = self.session.collection("lessons").doc(lessonID);
         batch.update(lessonReference, {
@@ -618,6 +619,7 @@ class FirestoreDatabase extends Database {
       //make deletes atomic
       let batch = self.session.batch();
       //remove problem from lessons that it exists in
+      let problem = doc.data();
       problem.ownerLessons.forEach(lessonID => {
         let lessonReference = self.session.collection("lessons").doc(lessonID);
         batch.update(lessonReference, {
@@ -640,11 +642,19 @@ class FirestoreDatabase extends Database {
         return server.respondWithData(response, 200, 'text/plain', problemID + " deleted successfully");
       })
       .catch(error => {
+        console.log("============ Error =============");
+        console.log("Error with comitting batch delete in deleteProblem()");
+        console.log(error);
+        console.log("==========End of Error =========");
         return server.respondWithError(response, 500, 'Error 500: Internal Server Error');
       });
     })
 
     .catch(error => {
+      console.log("============ Error =============");
+      console.log("Error with getting problem in deleteProblem())");
+      console.log(error);
+      console.log("==========End of Error =========");
       return server.respondWithError(response, 500, "Error 500: Internal Server Error");
     });
   }
@@ -801,16 +811,24 @@ class FirestoreDatabase extends Database {
         self.deleteUserProblem(problem);
       });
 
-      account.ref.delete()
+      doc.ref.delete()
       .then(results => {
         return server.respondWithData(response, 200, 'text/plain', "account deleted successfully");
       })
       .catch(error => {
+        console.log("============ Error =============");
+        console.log("Error with deleting account in deleteAccount()");
+        console.log(error);
+        console.log("==========End of Error =========");
         return server.respondWithError(response, 500, "Error 500: Interal Server Error");
       })
 
     })
     .catch(error => {
+      console.log("============ Error =============");
+      console.log("Error with getting account in deleteAccount()");
+      console.log(error);
+      console.log("==========End of Error =========");
       return server.respondWithError(response, 500, "Error 500: Internal Server Error");
     });
   
