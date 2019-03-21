@@ -1,8 +1,8 @@
 import {get_account_from_db} from "./database_management";
-import {initNav} from "./navbar_creation";
 import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_creation";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {convertProblemInfoToImage} from "./display_feature";
+import {profile_vue} from "./profile_vue";
 
 export var account_to_load = getAccountFromURL();
 
@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.onload = ()=>{
-  initNav();
   if (account_to_load !== null) {
     get_account_from_db(account_to_load, res=>covertToInfo(res));
   }

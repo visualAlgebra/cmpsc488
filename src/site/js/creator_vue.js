@@ -1,12 +1,12 @@
 import Vue from "vue";
 import ExpressionTree from "./vue_components/ExpressionTree";
 import {Variable} from "./expression_tree";
-import ToolBar from "./vue_components/ToolBar";
+import ToolBar from "./vue_components/NavigationBar";
 
-export const creator_page = new Vue({
+export const creator_vue = new Vue({
   name: "Root",
 
-  el: "#vueCanvasContainer",
+  el: "#vue-app",
 
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml">

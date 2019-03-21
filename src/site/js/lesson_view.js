@@ -2,7 +2,6 @@ import {get_lesson_from_db} from "./database_management";
 import {createCardForProblem, createCollectionItemForLesson} from "./tree_card_creation";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import * as M from "materialize-css";
-import {initNav} from "./navbar_creation";
 import {convertProblemInfoToImage} from "./display_feature";
 
 var lesson_to_load = getLessonFromURL();
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var instances = M.Collapsible.init(elems);
 });
 window.onload = () => {
-  initNav();
   if (lesson_to_load !== null) {
     get_lesson_from_db(lesson_to_load, res => fillCreations(res));
   }

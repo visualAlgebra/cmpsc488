@@ -1,5 +1,1 @@
-import {initNav} from "./navbar_creation";
-
-window.onload = () => {
-  initNav();
-};
+import {index_vue} from "./index_vue";

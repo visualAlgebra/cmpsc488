@@ -1,14 +1,13 @@
 import {globals, mouse} from './gui';
 import {displayProblemFromDB, displayTreeFromDBStruct, displayProblemFromDBStruct} from './display_feature';
-import {initNav} from "./navbar_creation";
 import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
 import {Deserialize} from "./expression_tree";
 import {manipulatorWindow} from "./manipulator_window";
 import {createDummyProblem} from "./random_expression_creator";
+import {manipulatorVue} from "./manipulator_vue";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
-  initNav();
   changeMouseMode(0);
   if(problem_to_load!==null){
     displayProblemFromDB(problem_to_load, 'canvasContainer', 'goalContainer', (res, res2)=>{
