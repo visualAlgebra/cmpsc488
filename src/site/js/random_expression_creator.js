@@ -21,9 +21,6 @@ export async function createDummyProblem(num_nodes, num_nodes2) {
     retval.expression_goal = res;
   });
   retval.description = "lul";
-  while (x.expression_goal === undefined || x.expression_start === undefined) {
-    await new Promise(resolve => setTimeout(resolve, 50))
-  }
   return retval;
 }
 //function _pushDownNode(tree,node){

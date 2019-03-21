@@ -51,8 +51,6 @@ window.onload=()=>{
     console.log('_DEBUG_TRIGGERED');
     console.log("Current tree: " + document.getElementById("canvasContainer").dataset.str);
     console.log(globals.workingExpressionTree);
-    let x = createDummyProblem(30, 1);
-    displayProblemFromDBStruct(x, 'canvasContainer', 'goalContainer');
     console.log('_DEBUG_FINISHED');
   });
   document.getElementById("histCanvas").addEventListener("click", function(e){
