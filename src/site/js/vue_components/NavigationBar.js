@@ -1,3 +1,5 @@
+import * as M from "materialize-css";
+
 export default {
   name: "NavigationBar", template: `
   <div>
