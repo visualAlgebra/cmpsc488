@@ -42,5 +42,5 @@ function getLessonFromURL() {
     alert("Error(lesson-view.js): Please enter a lesson after \"lesson-view/\" in the URL or select a problem from another page");
     return null;
   }
-  return lesson.substring(lesson.lastIndexOf('/') + 1, lesson.length);
+  return lesson.substring(lesson.indexOf('/lesson-view') + '/lesson-view/'.length, lesson.length);
 }
