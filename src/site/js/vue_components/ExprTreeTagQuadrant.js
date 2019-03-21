@@ -3,7 +3,7 @@ import {Quadrant} from "../expression_tree";
 export default {
   name: "ExprTreeTagQuadrant",
 
-  props: ["quadrant", "values"],
+  props: ["quadrant", "values", "hoverable"],
 
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml" :class="classes">
@@ -12,7 +12,10 @@ export default {
       v-for="subtree in values"
       class="tag-element-container"
     >
-      <ExpressionTree :tree="subtree"></ExpressionTree>
+      <ExpressionTree
+        :tree="subtree"
+        :hoverable="hoverable"
+      ></ExpressionTree>
     </div>
   </div>
   `,
@@ -27,6 +30,7 @@ export default {
     classes() {
       return [
         this.quadrant === Quadrant.NW ? "north-west" : "south-east",
+        this.hoverable ? "hoverable" : "",
       ];
     },
   },

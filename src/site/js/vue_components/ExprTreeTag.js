@@ -5,7 +5,7 @@ import ExprTreeTagQuadrant from "./ExprTreeTagQuadrant";
 export default {
   name: "ExprTreeTag",
 
-  props: ["tree"],
+  props: ["tree", "hoverable"],
 
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml" :class="classes">
@@ -13,14 +13,18 @@ export default {
     <ExprTreeTagQuadrant
       :quadrant="Quadrant.NW"
       :values="tree.NW"
+      :hoverable="hoverable"
     >
     </ExprTreeTagQuadrant>
     
-    <ExprTreeTagButton></ExprTreeTagButton>
+    <ExprTreeTagButton
+      :hoverable="hoverable"
+    ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
       quadrant="Quadrant.SE"
       :values="tree.SE"
+      :hoverable="hoverable"
     >
     </ExprTreeTagQuadrant>
     
@@ -42,7 +46,7 @@ export default {
     classes() {
       return [
         this.tree.orientation === Orientation.NS ? "north-south" : "east-west",
-        "tag"
+        "tag",
       ];
     },
   },
