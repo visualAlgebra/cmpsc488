@@ -76,8 +76,6 @@ export class ExpressionTree {
   clone() {
     return _Deserialize(this.toString());
   }
-
-
 } // end ExpressionTree class
 
 export class Tag extends ExpressionTree {

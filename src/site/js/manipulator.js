@@ -1,9 +1,10 @@
 import {globals, mouse} from './gui';
-import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
+import {displayProblemFromDB, displayTreeFromDBStruct, displayProblemFromDBStruct} from './display_feature';
 import {initNav} from "./navbar_creation";
 import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
 import {Deserialize} from "./expression_tree";
 import {manipulatorWindow} from "./manipulator_window";
+import {createDummyProblem} from "./random_expression_creator";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
@@ -46,9 +47,9 @@ window.onload=()=>{
   document.getElementById("restartButton").addEventListener("click", function(e){
     restart();
   });
-  document.getElementById("_DEBUG_INSTANCES").addEventListener("click", function(e){
+  document.getElementById("_DEBUG_INSTANCES").addEventListener("click", async function (e) {
     console.log('_DEBUG_TRIGGERED');
-    console.log("Current tree: "+document.getElementById("canvasContainer").dataset.str);
+    console.log("Current tree: " + document.getElementById("canvasContainer").dataset.str);
     console.log(globals.workingExpressionTree);
     console.log('_DEBUG_FINISHED');
   });
@@ -62,6 +63,7 @@ window.onpopstate=(e)=>{
     displayProblemFromDB(e.state);
   }
 };
+
 
 function restart(){
   displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str, 'canvasContainer', res=>{
