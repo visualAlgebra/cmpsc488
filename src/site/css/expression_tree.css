@@ -166,7 +166,6 @@ html {
 }
 
 .hoverable:hover {
-    filter: brightness(105%);
     border-style: dashed;
     box-shadow: 10px 10px 30px black;
     transition: 0.2s box-shadow;
