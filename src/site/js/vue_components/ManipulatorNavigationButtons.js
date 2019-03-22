@@ -2,6 +2,8 @@ import {drawCanvas, historyAction, restart} from "../manipulator";
 import {globals} from "../gui";
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import ExpressionTree from "./ExpressionTree";
+import { solve } from "../solver";
+import { Deserialize } from "../expression_tree";
 
 export default {
   name: "ManipulatorNavigationButtons", props:["dataFunc"], template: `
@@ -40,7 +42,8 @@ export default {
   </div>  
   `, methods: {
     hint(){
-      Alert("hi");
+      let problems = this.dataFunc();
+      solve(Deserialize(problems[0]), Deserialize(problems[1]));
     }, share(){
       console.log("tehehehe");
     }, restart(){
