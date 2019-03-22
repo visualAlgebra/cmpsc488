@@ -11,10 +11,10 @@
     --atom-opacity: 1.0;
 
     /*********COLORSCHEME 4*************************/
-    --tag-positive-color: #cecece;
+    --tag-positive-color: #dedede;
     --tag-positive-color-secondary: #bebebe;
     --tag-negative-color: #616161;
-    --tag-negative-color-secondary: #717171;
+    --tag-negative-color-secondary: #818181;
 
     /*--variable-color: #ad5221;*/
     /*--variable-color-secondary: #F5782F;*/
@@ -102,10 +102,6 @@
     /*--tag-button-color-secondary: hsla(210, 100%, 90%, 0.9);*/
 }
 
-html {
-    /*background: #333;*/
-}
-
 /* Disable text highlighting on expression trees */
 .tag, .literal, .variable {
     /* From: https://stackoverflow.com/a/4407335/9045161 */
@@ -136,7 +132,6 @@ html {
 
 .east-west {
     display: flex;
-    /* align-items: stretch; */
 }
 
 .east-west > * {
