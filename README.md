@@ -3,6 +3,7 @@
 ## Build Instructions
 
 ### QUICK START
+If you're running on Ubuntu (or have the `gnome-terminal` command):
 ```shell
 $ git clone https://github.com/visualAlgebra/cmpsc488.git
 $ cd cmpsc488
