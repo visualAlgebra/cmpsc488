@@ -9,7 +9,7 @@ const path = require("path");
 
 class Server {
   constructor() {
-    let DB = require('../db/firestore_database.js');
+    let DB = require('../db/dummy_database.js');
     this.database = new DB();
 
     // //setting up event emitter for callbacks
