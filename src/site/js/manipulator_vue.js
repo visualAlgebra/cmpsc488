@@ -3,7 +3,7 @@ import NavigationBar from "./vue_components/NavigationBar";
 import InvalidPage from "./vue_components/InvalidPage";
 import ManipulatorNavigationButtons from "./vue_components/ManipulatorNavigationButtons";
 import ManipulatorSpecificActionButtons from "./vue_components/ManipulatorSpecificActionButtons";
-import {getProblemFromDBVue} from "./display_feature";
+import {getProblemFromDBVue, singleExpressionDecompression} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import ExpressionTree from "./vue_components/ExpressionTree";
 import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
@@ -14,14 +14,14 @@ export const manipulator_vue=new Vue({
   <div>
     <NavigationBar></NavigationBar>
     <InvalidPage v-if="!displayPage"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="displayPage"></ManipulatorNavigationButtons>
+    <ManipulatorNavigationButtons v-if="displayPage&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="displayPage"></ManipulatorSpecificActionButtons>
     <ManipulatorWindow v-if="displayPage&&workTree" :tree="workTree"></ManipulatorWindow>
     <SingleExpressionDisplay v-if="displayPage&&goalTree" v-bind:tree="goalTree" v-bind:hoverable="false"></SingleExpressionDisplay> 
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"",
+      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null,
     };
   }, mounted(){
     if(this.getURL()===null){
@@ -44,10 +44,15 @@ export const manipulator_vue=new Vue({
         this.workTree=Deserialize(res);
       }else if(code===3){//goal
         this.goalTree=res;
+        singleExpressionDecompression(this.goalTree, res=>{
+          this.goalTreeStr=res;
+        });
       }
       if(++this.dbInfo===3){
         this.display=true;
       }
+    }, getTreeData(){
+      return [this.workTree.toString(), this.goalTreeStr.toString()];
     }
   }, computed: {
     displayPage: function(){

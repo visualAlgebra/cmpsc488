@@ -1,9 +1,10 @@
 import {drawCanvas, historyAction, restart} from "../manipulator";
 import {globals} from "../gui";
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
+import ExpressionTree from "./ExpressionTree";
 
 export default {
-  name: "ManipulatorNavigationButtons", template: `
+  name: "ManipulatorNavigationButtons", props:["dataFunc"], template: `
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col" v-on:click="hint()">
@@ -34,14 +35,14 @@ export default {
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
       </a>
-      <HistoryNavigationPopout></HistoryNavigationPopout>
+      <!--<HistoryNavigationPopout></HistoryNavigationPopout>-->
     </div>
   </div>  
   `, methods: {
     hint(){
       Alert("hi");
     }, share(){
-      Alert("tehehehe");
+      console.log("tehehehe");
     }, restart(){
       restart();
     }, undo(){
@@ -52,11 +53,8 @@ export default {
       drawCanvas();
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
-      console.log("Current tree: "+document.getElementById("canvasContainer").dataset.str);
-      console.log(globals.workingExpressionTree);
+      console.log(this.dataFunc());
       console.log('_DEBUG_FINISHED');
-    },components:{
-      HistoryNavigationPopout,
-    }
+    },
   }
 };
