@@ -8,6 +8,8 @@ import {Deserialize} from "./expression_tree";
 import ExpressionTree from "./vue_components/ExpressionTree";
 import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
+import GoalExpression from "./vue_components/GoalExpression";
+import * as M from "materialize-css";
 
 export const manipulator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -17,13 +19,17 @@ export const manipulator_vue=new Vue({
     <ManipulatorNavigationButtons v-if="displayPage&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="displayPage"></ManipulatorSpecificActionButtons>
     <ManipulatorWindow v-if="displayPage&&workTree" :tree="workTree"></ManipulatorWindow>
-    <SingleExpressionDisplay v-if="displayPage&&goalTree" v-bind:tree="goalTree"></SingleExpressionDisplay> 
+    <GoalExpression
+      v-if="displayPage && goalTree"
+      :tree="goalTree"
+    ></GoalExpression>
   </div>
   `, data(){
     return {
       display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null,
     };
   }, mounted(){
+    M.AutoInit();
     if(this.getURL()===null){
       return;
     }
@@ -62,6 +68,6 @@ export const manipulator_vue=new Vue({
       return false;
     }
   }, components: {
-    NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay, ManipulatorWindow
+    NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay, ManipulatorWindow, GoalExpression
   },
 });
