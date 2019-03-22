@@ -82,7 +82,7 @@ export default {
   `, methods: {
     generalManipulation(){
       this.changeMouseMode(0);
-    }, mergingLiterals(){
+    }, mergeLiterals(){
       this.changeMouseMode(1);
     }, distribution(){
       this.changeMouseMode(2);
