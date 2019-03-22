@@ -28,6 +28,14 @@ export const MouseMode = {
   Distribution: "Distribution"
 };
 
+const TreeComponentKind = {
+  Tag: "Tag",
+  TagQuadrant: "TagQuadrant",
+  TagButton: "TagButton",
+  Variable: "Variable",
+  Literal: "Literal",
+};
+
 export const mouse = {
   state: "idle",
   eventSource: null,
@@ -67,7 +75,7 @@ export const mouse = {
     //    eventDest is a quadrant <--
     //    ...
     try {
-      if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeInsert.verify(x, y)) {
+      if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeInsert.verify(x, y)) {
   
         const action = new AssociativeInsert(x, y);
         action.apply();
@@ -76,7 +84,7 @@ export const mouse = {
   
         this.redisplayExpressionTree();
       }
-      else if (this.mode === MouseMode.Manipulation && this.eventDest instanceof TagQuadrantGui && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
+      else if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
   
         const action = new AssociativeExtract(x, xQuad);
         action.apply();
@@ -94,7 +102,7 @@ export const mouse = {
   
         this.redisplayExpressionTree()
       }
-      else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && AssociativeMerge.verify(x, y)) {
+      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagButton && AssociativeMerge.verify(x, y)) {
   
         const action = new AssociativeMerge(x, y, xQuad);
         action.apply();
@@ -103,7 +111,7 @@ export const mouse = {
   
         this.redisplayExpressionTree()
       }
-      else if (this.mode === MouseMode.Manipulation && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagQuadrantGui && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
+      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagQuadrant && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
   
         const action = new QuadrantFlip(x, xQuad);
         action.apply();
@@ -148,7 +156,7 @@ export const mouse = {
   
         this.redisplayExpressionTree();
       }
-      else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagButtonGui && Distribute.verify(x, y, xQuad, yQuad)) {
+      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === TreeComponentKind.TagButton && Distribute.verify(x, y, xQuad, yQuad)) {
   
         const action = new Distribute(x, y);
         action.apply();
@@ -157,7 +165,7 @@ export const mouse = {
   
         this.redisplayExpressionTree();
       }
-      else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagButtonGui && this.eventDest instanceof TagButtonGui && SplitFrac.verify(x, y)) {
+      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagButton && SplitFrac.verify(x, y)) {
   
         const action = new SplitFrac(y);
         action.apply();
@@ -167,7 +175,7 @@ export const mouse = {
         this.redisplayExpressionTree();
       }
       // TODO: fix verfiy for Factor
-      else if (this.mode === MouseMode.Distribution && this.eventDest instanceof TagQuadrantGui && Factor.verify(x, y)) {
+      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === TreeComponentKind.TagQuadrant && Factor.verify(x, y)) {
   
         const action = new Factor(x, y);
         action.apply();
@@ -177,7 +185,7 @@ export const mouse = {
         this.redisplayExpressionTree();
       }
   
-      else if (this.mode === MouseMode.Distribution && this.eventSource instanceof TagQuadrantGui && this.eventDest instanceof TagButtonGui && CombineFrac.verify(y, x)) {
+      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === TreeComponentKind.TagQuadrant && this.eventDest.kind === TreeComponentKind.TagButton && CombineFrac.verify(y, x)) {
   
         const action = new CombineFrac(y);
         action.apply();
@@ -221,31 +229,42 @@ export const mouse = {
   }
 };
 
+const MouseState = {
+  IdleAfterDrag: "idle after drag",
+  Idle: "idle",
+  MaybeDragging: "dragging?",
+  Dragging: "dragging",
+};
+
 export class GuiBase {
+  constructor(kind) {
+    this.kind = kind;
+  }
+
   onclick() {
-    if (mouse.state !== "idle after drag") {
+    if (mouse.state !== MouseState.IdleAfterDrag) {
       mouse.eventSource = this;
       mouse.clickDetected();
     }
   }
 
   mousedown() {
-    if (mouse.state === "idle") {
-      mouse.state = "dragging?";
+    if (mouse.state === MouseState.Idle) {
+      mouse.state = MouseState.MaybeDragging;
       mouse.eventSource = this;
     }
   }
 
   // noinspection JSMethodCanBeStatic
   mousemove() {
-    if (mouse.state === "dragging?") {
-      mouse.state = "dragging";
+    if (mouse.state === MouseState.MaybeDragging) {
+      mouse.state = MouseState.Dragging;
     }
   }
 
   mouseup() {
-    if (mouse.state === "dragging") {
-      mouse.state = "idle after drag";
+    if (mouse.state === MouseState.Dragging) {
+      mouse.state = MouseState.IdleAfterDrag;
       mouse.eventDest = this;
       mouse.dragDetected();
     }
@@ -280,7 +299,7 @@ export class GuiBase {
 
 export class TagGui extends GuiBase {
   constructor(tag) {
-    super();
+    super(TreeComponentKind.Tag);
     this.tree = tag;
     // Save the expression tree.
     this.dom = this.buildDom();
@@ -307,7 +326,7 @@ export class TagGui extends GuiBase {
 
 class TagButtonGui extends GuiBase {
   constructor(tag) {
-    super();
+    super(TreeComponentKind.TagButton);
     this.tree = tag;
     this.dom = this.buildDom();
   }
@@ -328,7 +347,7 @@ class TagButtonGui extends GuiBase {
 
 class TagQuadrantGui extends GuiBase {
   constructor(tag, quadrantLabel) {
-    super();
+    super(TreeComponentKind.TagQuadrant);
     this.tree = tag;
     this.quadrantLabel = quadrantLabel;
     this.dom = this.buildDom();
@@ -362,7 +381,7 @@ class TagQuadrantGui extends GuiBase {
 
 export class VariableGui extends GuiBase {
   constructor(variable) {
-    super();
+    super(TreeComponentKind.Variable);
     this.tree = variable;
     this.dom = this.buildDom();
   }
@@ -382,7 +401,7 @@ export class VariableGui extends GuiBase {
 
 export class LiteralGui extends GuiBase {
   constructor(literal) {
-    super();
+    super(TreeComponentKind.Literal);
     this.tree = literal;
     this.dom = this.buildDom();
   }
