@@ -221,31 +221,38 @@ export const mouse = {
   }
 };
 
+const MouseState = {
+  IdleAfterDrag: "idle after drag",
+  Idle: "idle",
+  MaybeDragging: "dragging?",
+  Dragging: "dragging",
+};
+
 export class GuiBase {
   onclick() {
-    if (mouse.state !== "idle after drag") {
+    if (mouse.state !== MouseState.IdleAfterDrag) {
       mouse.eventSource = this;
       mouse.clickDetected();
     }
   }
 
   mousedown() {
-    if (mouse.state === "idle") {
-      mouse.state = "dragging?";
+    if (mouse.state === MouseState.Idle) {
+      mouse.state = MouseState.MaybeDragging;
       mouse.eventSource = this;
     }
   }
 
   // noinspection JSMethodCanBeStatic
   mousemove() {
-    if (mouse.state === "dragging?") {
-      mouse.state = "dragging";
+    if (mouse.state === MouseState.MaybeDragging) {
+      mouse.state = MouseState.Dragging;
     }
   }
 
   mouseup() {
-    if (mouse.state === "dragging") {
-      mouse.state = "idle after drag";
+    if (mouse.state === MouseState.Dragging) {
+      mouse.state = MouseState.IdleAfterDrag;
       mouse.eventDest = this;
       mouse.dragDetected();
     }
