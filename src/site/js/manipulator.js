@@ -8,7 +8,6 @@ import {manipulatorVue} from "./manipulator_vue";
 
 var problem_to_load=getProblemFromURL();
 window.onload=()=>{
-  changeMouseMode(0);
   if(problem_to_load!==null){
     displayProblemFromDB(problem_to_load, 'canvasContainer', null, (res, res2)=>{
       onDisplay(res, res2);
@@ -40,14 +39,6 @@ function touchHistCanvas(x,y){
   console.log(x+", "+y);
 }
 
-function insertMenu(type){
-  if(type){
-    document.getElementById("manipulatorsSubPanel").style.display="inline";
-  }else{
-    document.getElementById("manipulatorsSubPanel").style.display="none";
-  }
-}
-
 function onDisplay(res, containerId){
   if(containerId==="canvasContainer"){
     globals.workingExpressionTree=res;
@@ -56,17 +47,6 @@ function onDisplay(res, containerId){
   }else if(containerId==="goalContainer"){
     let temp=document.getElementById("goalContainer").dataset.str;
     setGoalTree(temp);
-  }
-}
-
-function changeMouseMode(num){
-  insertMenu(false);
-  if(num===0){
-    mouse.mode="General Manipulation";
-  }else if(num===1){
-    mouse.mode="Merging Literals";
-  }else if(num===2){
-    mouse.mode="Distribution";
   }
 }
 
