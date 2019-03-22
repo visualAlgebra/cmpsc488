@@ -16,7 +16,7 @@ export const manipulator_vue=new Vue({
     <InvalidPage v-if="!displayPage"></InvalidPage>
     <ManipulatorNavigationButtons v-if="displayPage"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="displayPage"></ManipulatorSpecificActionButtons>
-    <ManipulatorWindow></ManipulatorWindow>
+    <ManipulatorWindow v-if="displayPage&&workTree" :tree="workTree"></ManipulatorWindow>
     <SingleExpressionDisplay v-if="displayPage&&goalTree" v-bind:tree="goalTree" v-bind:hoverable="false"></SingleExpressionDisplay> 
   </div>
   `, data(){
