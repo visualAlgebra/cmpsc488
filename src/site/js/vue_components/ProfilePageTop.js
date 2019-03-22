@@ -1,5 +1,5 @@
 export default {
-  name: "ProfilePageTop", props: ["bio","time","problemCount"], template: `
+  name: "ProfilePageTop", props: ["bio", "time", "problemCount"], template: `
   <div>
     <div class="row">
       <div class="col s12 m12">
@@ -14,12 +14,5 @@ export default {
       </div>
     </div>
   </div>  
-  `,
-  data() {
-    return {
-
-    };
-  },
-  mounted(){
-  }
+  `
 };

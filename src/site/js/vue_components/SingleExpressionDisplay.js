@@ -11,17 +11,16 @@ export default {
   </div>  
   `, data(){
     return {
-      workingExpressionTree:null,
-      display:false,
+      workingExpressionTree: null, display: false,
     };
-  },mounted(){
+  }, mounted(){
     singleExpressionDecompression(this.tree, res=>{
       this.workingExpressionTree=Deserialize(res);
       this.display=true;
     });
-  }, computed:{
-    displayPage: function() {
-      if(this.display === true){
+  }, computed: {
+    displayPage: function(){
+      if(this.display===true){
         return true;
       }
       return false;

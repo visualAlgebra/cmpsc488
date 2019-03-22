@@ -8,9 +8,7 @@ export const index_vue=new Vue({
     <NavigationBar></NavigationBar>
     <IndexPageViewVue></IndexPageViewVue>
   </div>
-  `, data(){
-    return {};
-  }, components: {
+  `, components: {
     NavigationBar, IndexPageViewVue,
   },
 });

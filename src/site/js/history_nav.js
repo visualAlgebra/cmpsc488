@@ -47,7 +47,7 @@ function _getHistArray(arr, lineToEval){
       for(let yk in lineToEval.line[xk].refs){
         arr.push([xk+arr[temp][0]+1]);
         histControl.widthControl++;
-        _getHistArray(arr,lineToEval.line[xk].refs[yk]);
+        _getHistArray(arr, lineToEval.line[xk].refs[yk]);
       }
     }
   }
@@ -56,8 +56,8 @@ function _getHistArray(arr, lineToEval){
 export function renderHist(canvas_id, curTree){
   let histArr=getHistArray();
   let canvas=document.getElementById(canvas_id);
-  const ctx = canvas.getContext('2d');
-  const ctxx=canvas.context
+  const ctx=canvas.getContext('2d');
+  const ctxx=canvas.context;
 //   ctx.clearRect(0, 0, canvas.width, canvas.height);
   canvas.width=60+histArr.length*40;
   for(let x=0; x<histArr.length; x++){
@@ -70,12 +70,12 @@ export function renderHist(canvas_id, curTree){
       let radius=15;
       if(histArr[x][y].data===curTree){
         ctx.beginPath();
-      	ctx.fillStyle = '#d42a00';
+        ctx.fillStyle='#d42a00';
         if(histControl.loc.line[histControl.loc.index].id===histArr[x][y].id){
-      	  ctx.fillStyle = '#2ad400';
+          ctx.fillStyle='#2ad400';
         }
-	      ctx.fillRect((xc-radius)-3, (yc-radius)-3, (radius*2)+6, (radius*2)+6);
-	      ctx.fill();
+        ctx.fillRect((xc-radius)-3, (yc-radius)-3, (radius*2)+6, (radius*2)+6);
+        ctx.fill();
       }
       ctx.beginPath();
       ctx.arc(xc, yc, radius, 0, 2*Math.PI);
@@ -124,6 +124,7 @@ class historyController{
     return this.idControl++;
   }
 }
+
 class historyLine{
   constructor(initialTree, rootHandle){
     this.id=histControl.getID();
@@ -177,6 +178,7 @@ class historyLine{
     }
   }
 }
+
 class lineBlock{
   constructor(tree, parent){
     this.id=histControl.getID();

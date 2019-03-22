@@ -48,13 +48,7 @@ export default {
       </div>
     </div>    
   </div>  
-  `,
-  data() {
-    return {
-
-    };
-  },
-  mounted(){
+  `, mounted(){
     M.AutoInit();
   }
 };

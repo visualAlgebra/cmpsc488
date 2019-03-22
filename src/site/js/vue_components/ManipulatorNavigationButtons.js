@@ -1,5 +1,6 @@
-import {restart, drawCanvas, historyAction} from "../manipulator";
+import {drawCanvas, historyAction, restart} from "../manipulator";
 import {globals} from "../gui";
+
 export default {
   name: "ManipulatorNavigationButtons", template: `
   <div>
@@ -34,22 +35,22 @@ export default {
       </a>
     </div>
   </div>  
-  `, methods:{
+  `, methods: {
     hint(){
       Alert("hi");
-    },share(){
+    }, share(){
       Alert("tehehehe");
-    },restart(){
+    }, restart(){
       restart();
-    },undo(){
+    }, undo(){
       historyAction(true);
-    },redo(){
+    }, redo(){
       historyAction(true);
-    },historyTree(){
+    }, historyTree(){
       drawCanvas();
-    },DEBUG_INSTANCES(){
+    }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
-      console.log("Current tree: " + document.getElementById("canvasContainer").dataset.str);
+      console.log("Current tree: "+document.getElementById("canvasContainer").dataset.str);
       console.log(globals.workingExpressionTree);
       console.log('_DEBUG_FINISHED');
     }

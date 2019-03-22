@@ -39,12 +39,12 @@ export const lesson_view_vue=new Vue({
       this.desc=res.description;
       this.time=res.timeCreated;
       for(let creation in res.creations){
-        let k = res.creations[creation];
-        if (res.creations[creation].lessonID === undefined){
-          let prob = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
+        let k=res.creations[creation];
+        if(res.creations[creation].lessonID===undefined){
+          let prob=new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
           this.problems.push(prob);
         }else{
-          let les = new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description);
+          let les=new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description);
           this.lessons.push(les);
         }
       }
