@@ -36,7 +36,6 @@ export class LessonInfo {
 export function parseMultiProblem(multi) {
   let ret = [];
   for (let x in multi.queryResults) {
-    x = parseInt(x);
     let k = multi.queryResults[x];
     ret[x] = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
   }
@@ -272,9 +271,6 @@ export class Literal extends ExpressionTree {
     return "{l" + this.value + "}";
   }
 } // end Literal class
-
-// end of classes, start of functions
-
 export function array_delete(arr, ref) {
   for (let i = 0; i < arr.length; i++) {
     if (Object.is(ref, arr[i])) {
@@ -300,8 +296,7 @@ export function Deserialize(text) {
       if (text.charAt(i) === "{") {
         counter++;
       } else if (text.charAt(i) === "}") {
-        counter--;
-        if (counter === -1) {
+        if (--counter === -1) {
           inNW = false;
           i++;
           tempstr = "";
