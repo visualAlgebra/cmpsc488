@@ -5,7 +5,7 @@ import {
   CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
-import { ExpressionTree } from "./expression_tree";
+import { ExpressionTree, Tag } from "./expression_tree";
 
 class Node {
   constructor(heuristic, previousNode, previousAction, currentExpression, numberOfMoves) {
@@ -72,55 +72,55 @@ function heuristicEval(a, b) {
 }
 // a: the start expression
 // b: the end expression
-function solve(a, b) {
-  if (a.equals(b))
-    return null;
-  var head = Node(hesuristicEval(a, b), null, null, a, 0);
-  var nodeArray = [];
-  var expanded = [];
-  nodeArray.push(head);
-  var currentNodeIndex;
-  var currentNode = head;
-  var optimalNode = null;
-  //while (nodeArray.length != 0){
-  if (currentNode.currentExpression.equals(b)) {
-    optimalNode = currentNode;
-    break;
-  }
-  else {
-    if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length == 0)
-      expand(currentNode, nodeArray/*, expanded*/);
-    nodeArray.splice(currentNodeIndex, 1);
-  }
-  if (nodeArray.length != 0) {
-    var lowestHeurAndSteps = nodeArray[0].numberOfMoves + nodeArray[0].heuristic;
-    currentNode = nodeArray[0];
-    currentNodeIndex = 0;
-    for (var i = 0; i < nodeArray.length; i++) {
-      if ((nodeArray[i].heuristic + nodeArray[i].numberOfMoves) < lowestHeurAndSteps) {
-        lowestHeurAndSteps = nodeArray[i].heuristic + nodeArray[i].numberOfMoves;
-        currentNode = nodeArray[i];
-        currentNodeIndex = i;
-      }
-    }
-  }
-  //}
+// function solve(a, b) {
+//   if (a.equals(b))
+//     return null;
+//   var head = Node(hesuristicEval(a, b), null, null, a, 0);
+//   var nodeArray = [];
+//   var expanded = [];
+//   nodeArray.push(head);
+//   var currentNodeIndex;
+//   var currentNode = head;
+//   var optimalNode = null;
+//   //while (nodeArray.length != 0){
+//   if (currentNode.currentExpression.equals(b)) {
+//     optimalNode = currentNode;
+//     break;
+//   }
+//   else {
+//     if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length == 0)
+//       expand(currentNode, nodeArray/*, expanded*/);
+//     nodeArray.splice(currentNodeIndex, 1);
+//   }
+//   if (nodeArray.length != 0) {
+//     var lowestHeurAndSteps = nodeArray[0].numberOfMoves + nodeArray[0].heuristic;
+//     currentNode = nodeArray[0];
+//     currentNodeIndex = 0;
+//     for (var i = 0; i < nodeArray.length; i++) {
+//       if ((nodeArray[i].heuristic + nodeArray[i].numberOfMoves) < lowestHeurAndSteps) {
+//         lowestHeurAndSteps = nodeArray[i].heuristic + nodeArray[i].numberOfMoves;
+//         currentNode = nodeArray[i];
+//         currentNodeIndex = i;
+//       }
+//     }
+//   }
+//   //}
 
-  /*if (optimalNode == null)
-    return null;
+//   /*if (optimalNode == null)
+//     return null;
 
-  while (!currentNode.previousNode.currentExpression.equals(a)){
-    currentNode = currentNode.previousNode;
-  }
-  */
-  optimalNode = nodeArray[0];
+//   while (!currentNode.previousNode.currentExpression.equals(a)){
+//     currentNode = currentNode.previousNode;
+//   }
+//   */
+//   optimalNode = nodeArray[0];
 
-  for (var i = 0; i < nodeArray.length; i++) {
-    if (nodeArray[i].heuristic < optimalNode.heuristic)
-      optimalNode = nodeArray[i];
-  }
-  return optimalNode.previousAction; //currentNode.previousAction;
-}
+//   for (var i = 0; i < nodeArray.length; i++) {
+//     if (nodeArray[i].heuristic < optimalNode.heuristic)
+//       optimalNode = nodeArray[i];
+//   }
+//   return optimalNode.previousAction; //currentNode.previousAction;
+// }
 
 /*
 function addToNodeArray(nodeToAdd, nodeArray, expanded) {
@@ -134,6 +134,11 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
   }
 }
 */
+
+export function solve(current, goal) {
+  let list = expand(current, []);
+  console.log(list)
+}
 
 function expand(expTree, nodeArray) {
   // expandAssociativeIntro(nodeToExpand, nodeArray);
@@ -159,20 +164,21 @@ function pushAllChildren(root, childArray, location, locationArr) {
   //pushing child and location into respecktive arrays 
   childArray.push(root);
   locationArr.push(location);
+  console.log('added');
 
   //if child was a tag, then call pushAllChildren on its children
-  if (child instanceof Tag) {
+  if (root instanceof Tag) {
     for (let i = 0; i < root.NW.length; i++) {
-      let newLoca = new Int8Array(location.length+1);
+      let newLoca = new Uint8Array(location.length+1);
       newLoca.set(location);
-      newLoca.set(i<<1, location.length);
-      pushAllChildren(child, childArray, newLoca, locationArr);
+      newLoca.set([i<<1], location.length);
+      pushAllChildren(root.NW[i], childArray, newLoca, locationArr);
     }
     for (let i = 0; i < root.SE.length; i++) {
-      let newLoca = new Int8Array(location.length+1);
+      let newLoca = new Uint8Array(location.length+1);
       newLoca.set(location);
-      newLoca.set((i<<1) + 1, location);
-      pushAllChildren(child, childArray, newLoca, locationArr);
+      newLoca.set([(i<<1) + 1], location.length);
+      pushAllChildren(root.SE[i], childArray, newLoca, locationArr);
     }
   }
 }
@@ -196,7 +202,7 @@ function dumbExpand(expTree, nodeArray) {
   //create array with all children and its quadrants
   let childArr = [];
   let locationArr = [];
-  pushAllChildren(expTree, childArr, new Int8Array(), locationArr);
+  pushAllChildren(expTree, childArr, new Uint8Array(), locationArr);
   
   for (let i = 0; i < childArr.length; i++) {
     
@@ -209,9 +215,12 @@ function dumbExpand(expTree, nodeArray) {
     for (let j = 0; j < childArr.length; j++) {
   
       let child2 = childArr[j]; 
-      let location2 = locatoinArr[j];
+      let location2 = locationArr[j];
 
       expandAssociativeMerge(child1, child2, location1, location2, nodeArray);
+      expandAssociativeExtract(child1, child2, location1, location2, nodeArray);
+      expandAssociativeInsert(child1, child2, location1, location2, nodeArray);
+      expandCommutativeSwap(child1, child2, location1, location2, nodeArray);
       
     }
   }
@@ -279,8 +288,12 @@ function expandCommutativeSwap(child1, child2, location1, location2, nodeArray) 
   }
 }
 
-function expandCancel(nodeToExpand, nodeArray){
+function expandCancel(child1, child2, location1, location2, nodeArray){
 
+  let cutOff = location1.length - 1;
+  if (Cancel.verify(child1, child2, getQuad(location1), getQuad(location2))) {
+
+  }
 }
 
 function expandCombineFrac(nodeToExpand, nodeArray){

@@ -17,10 +17,20 @@ export const explorer_vue=new Vue({
   </div>
   `, data(){
     return {
-      problemsToDisplayCount: 1, problemsToDisplay: null,
+      display:false, problemsToDisplayCount: 1, problemsToDisplay: null,
     };
+  }, computed: {
+    displayPage: function(){
+      if(this.display===true){
+        return true;
+      }
+      return false;
+    }
   }, mounted(){
-    get_problems_from_db(this.problemsToDisplayCount, res=>this.problemsToDisplay=res);
+    get_problems_from_db(this.problemsToDisplayCount, res=>{
+      this.problemsToDisplay=res;
+      this.display=true;
+    });
   }, components: {
     ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder,
   },

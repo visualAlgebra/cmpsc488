@@ -1,9 +1,10 @@
-import {drawCanvas, historyAction, restart} from "../manipulator";
-import {globals} from "../gui";
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
+import { solve } from "../solver";
+import { Deserialize } from "../expression_tree";
+import {histAction} from "../history_nav";
 
 export default {
-  name: "ManipulatorNavigationButtons", template: `
+  name: "ManipulatorNavigationButtons", props:["dataFunc"], template: `
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col" v-on:click="hint()">
@@ -26,7 +27,7 @@ export default {
           <i class="material-icons left">redo</i>
           Redo
       </a>
-      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" v-on:click="drawCanvas()">
+      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
       </a>
@@ -34,26 +35,24 @@ export default {
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
       </a>
-      <HistoryNavigationPopout></HistoryNavigationPopout>
+      <HistoryNavigationPopout v-bind:dataFunc="dataFunc"></HistoryNavigationPopout>
     </div>
   </div>  
   `, methods: {
     hint(){
-      Alert("hi");
+      let problems = this.dataFunc();
+      solve(Deserialize(problems[0]), Deserialize(problems[1]));
     }, share(){
-      Alert("tehehehe");
+      console.log("tehehehe");
     }, restart(){
-      restart();
+      console.log("u tried to restart but u cant, so reload plz")
     }, undo(){
-      historyAction(true);
+      histAction(false);
     }, redo(){
-      historyAction(true);
-    }, historyTree(){
-      drawCanvas();
+      histAction(true);
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
-      console.log("Current tree: "+document.getElementById("canvasContainer").dataset.str);
-      console.log(globals.workingExpressionTree);
+      console.log(this.dataFunc());
       console.log('_DEBUG_FINISHED');
     },
   },
