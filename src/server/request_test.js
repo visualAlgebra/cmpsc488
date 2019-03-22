@@ -259,8 +259,8 @@ function executeFirebaseTesting() {
 }
 
 function executeTesting() {
-  executeNormalTesting();
-  //executeFirebaseTesting();
+  //executeNormalTesting();
+  executeFirebaseTesting();
 }
 
 function executeNormalTesting() {

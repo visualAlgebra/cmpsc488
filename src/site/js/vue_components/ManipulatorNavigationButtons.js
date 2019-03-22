@@ -1,8 +1,7 @@
-import {drawCanvas, historyAction, restart} from "../manipulator";
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
-import ExpressionTree from "./ExpressionTree";
 import { solve } from "../solver";
 import { Deserialize } from "../expression_tree";
+import {histAction} from "../history_nav";
 
 export default {
   name: "ManipulatorNavigationButtons", props:["dataFunc"], template: `
@@ -28,7 +27,7 @@ export default {
           <i class="material-icons left">redo</i>
           Redo
       </a>
-      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" v-on:click="historyTree()">
+      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
       </a>
@@ -36,7 +35,7 @@ export default {
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
       </a>
-      <HistoryNavigationPopout></HistoryNavigationPopout>
+      <HistoryNavigationPopout v-bind:dataFunc="dataFunc"></HistoryNavigationPopout>
     </div>
   </div>  
   `, methods: {
@@ -46,12 +45,11 @@ export default {
     }, share(){
       console.log("tehehehe");
     }, restart(){
-      restart();
+      console.log("u tried to restart but u cant, so reload plz")
     }, undo(){
-      historyAction(true);
+      histAction(false);
     }, redo(){
-      historyAction(true);
-    }, historyTree(){
+      histAction(true);
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());

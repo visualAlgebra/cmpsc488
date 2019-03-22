@@ -21,11 +21,18 @@ export function setGoalTree(goalTree){
 }
 
 export function histAction(bool){
+  console.log("testing"+bool);
+  let temp=null;
   if(bool){
-    return histControl.forward();
+    console.log("again");
+    temp=histControl.forward();
+    console.log("here: "+histControl.loc[histControl.loc.index]);
   }else{
-    return histControl.backward();
+    console.log("again");
+    temp=histControl.backward();
+    console.log("here: "+histControl.loc[histControl.loc.index]);
   }
+  return temp;
 }
 
 function getHistArray(){
@@ -35,6 +42,10 @@ function getHistArray(){
   histControl.widthControl=0;
   _getHistArray(histArray, currentLine);
   return histArray;
+}
+
+export function getHistoryController(){
+  return histControl;
 }
 
 function _getHistArray(arr, lineToEval){
@@ -49,38 +60,6 @@ function _getHistArray(arr, lineToEval){
         histControl.widthControl++;
         _getHistArray(arr, lineToEval.line[xk].refs[yk]);
       }
-    }
-  }
-}
-
-export function renderHist(canvas_id, curTree){
-  let histArr=getHistArray();
-  let canvas=document.getElementById(canvas_id);
-  const ctx=canvas.getContext('2d');
-  const ctxx=canvas.context;
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  canvas.width=60+histArr.length*40;
-  for(let x=0; x<histArr.length; x++){
-    if(canvas.height<60+40*histArr[x].length+histArr[x][0]*40){
-      canvas.height=60+40*histArr[x].length+histArr[x][0]*40;
-    }
-    for(let y=1; y<histArr[x].length; y++){
-      let xc=60+x*40;
-      let yc=60+y*40+histArr[x][0]*40;
-      let radius=15;
-      if(histArr[x][y].data===curTree){
-        ctx.beginPath();
-        ctx.fillStyle='#d42a00';
-        if(histControl.loc.line[histControl.loc.index].id===histArr[x][y].id){
-          ctx.fillStyle='#2ad400';
-        }
-        ctx.fillRect((xc-radius)-3, (yc-radius)-3, (radius*2)+6, (radius*2)+6);
-        ctx.fill();
-      }
-      ctx.beginPath();
-      ctx.arc(xc, yc, radius, 0, 2*Math.PI);
-      ctx.fillStyle='blue';
-      ctx.fill();
     }
   }
 }

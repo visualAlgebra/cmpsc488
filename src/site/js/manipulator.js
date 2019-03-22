@@ -22,7 +22,6 @@ function restart(){
   displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str, 'canvasContainer', res=>{
     alert("Restarted");
     clearHist();
-    addHistoryEntry(document.getElementById("canvasContainer").dataset.str);
   });
 }
 
@@ -38,10 +37,8 @@ function touchHistCanvas(x,y){
 function onDisplay(res, containerId){
   if(containerId==="canvasContainer"){
     globals.workingExpressionTree=res;
-    addHistoryEntry(res);
   }else if(containerId==="goalContainer"){
     let temp=document.getElementById("goalContainer").dataset.str;
-    setGoalTree(temp);
   }
 }
 

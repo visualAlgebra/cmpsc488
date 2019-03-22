@@ -1,8 +1,9 @@
 import * as M from "materialize-css";
 import HistoryNavigationHistoryLine from "./HistoryNavigationHistoryLine";
+import {addHistoryEntry, getHistoryController, setGoalTree} from "../history_nav";
 
 export default {
-  name: "HistoryNavigationPopout", template: `
+  name: "HistoryNavigationPopout", props:["dataFunc"], template: `
   <div>
     <ul id="histNav" class="sidenav">
       <li>
@@ -10,14 +11,14 @@ export default {
       </li>
       <li v-if="displayPage">
         <div class="tree">
-          <HistoryNavigationHistoryLine v-if="displayPage&&mainLine" v-bind:historyLine="mainLine"></HistoryNavigationHistoryLine>
+          <HistoryNavigationHistoryLine v-if="displayPage&&historyController" v-bind:historyLine="historyController.mainLine"></HistoryNavigationHistoryLine>
         </div>
       </li>
     </ul>
   </div>  
   `,data(){
     return {
-      display:false, mainLine:null,
+      display:false, historyController:null,
     }
   }, computed: {
     displayPage: function(){
@@ -28,6 +29,11 @@ export default {
     }
   },  mounted() {
     M.AutoInit();
+    let data=this.dataFunc();
+    addHistoryEntry(data[0]);
+    setGoalTree(data[1]);
+    this.historyController=getHistoryController();
+    this.display=true;
   }, components:{
     HistoryNavigationHistoryLine,
   },
