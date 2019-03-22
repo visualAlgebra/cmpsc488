@@ -283,7 +283,7 @@ export function array_delete(arr, ref) {
   }
 }
 
-function Deserialize(text) {
+export function Deserialize(text) {
   if (text.substr(0, 2) === "{l") {
     return new Literal(parseInt(text.substr(2, text.length - 3)));
   }
@@ -311,9 +311,9 @@ function Deserialize(text) {
         if (counter === 0) {
           if (tempstr.substr(tempstr.length - 2) !== "{}") {
             if (inNW) {
-              retval.addNorthWest(_Deserialize(tempstr));
+              retval.addNorthWest(Deserialize(tempstr));
             } else {
-              retval.addSouthEast(_Deserialize(tempstr));
+              retval.addSouthEast(Deserialize(tempstr));
             }
           }
           tempstr = "";
