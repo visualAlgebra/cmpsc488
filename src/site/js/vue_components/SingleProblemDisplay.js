@@ -9,20 +9,16 @@ export default {
     </a>
     <div class="row">
       <div class="col">Start:
-        <svg height="300px" width="500px">
-          <foreignObject height="300px" width="500px">
-            <div class="myBox">
-              <SingleExpressionDisplay v-bind:tree="this.start"></SingleExpressionDisplay>
-            </div>
+        <svg height="100%" width="100%">
+          <foreignObject height="100%" width="100%" style="overflow:auto">
+            <SingleExpressionDisplay v-bind:tree="this.start"></SingleExpressionDisplay>
           </foreignObject>
         </svg>
       </div>
       <div class="col">Goal:
-        <svg height="300px" width="500px">
-          <foreignObject height="300px" width="500px">
-            <div class="myBox">
-              <SingleExpressionDisplay v-bind:tree="this.goal"></SingleExpressionDisplay>
-            </div>
+        <svg height="100%" width="100%">
+          <foreignObject height="100%" width="100%" style="overflow:auto">
+            <SingleExpressionDisplay v-bind:tree="this.goal"></SingleExpressionDisplay>
           </foreignObject>
         </svg>
       </div>
