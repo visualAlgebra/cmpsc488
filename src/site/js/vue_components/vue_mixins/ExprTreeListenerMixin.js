@@ -36,27 +36,31 @@ export default {
   },
 
   methods: {
-    onclick() {
+    onclick(e) {
+      e.stopPropagation();
       if (mouse.state !== MouseState.IdleAfterDrag) {
         mouse.eventSource = this.guiObj;
         mouse.clickDetected();
       }
     },
 
-    startDrag() {
+    startDrag(e) {
+      e.stopPropagation();
       if (mouse.state === MouseState.Idle) {
         mouse.state = MouseState.MaybeDragging;
         mouse.eventSource = this.guiObj;
       }
     },
 
-    doDrag() {
+    doDrag(e) {
+      e.stopPropagation();
       if (mouse.state === MouseState.MaybeDragging) {
         mouse.state = MouseState.Dragging;
       }
     },
 
-    endDrag() {
+    endDrag(e) {
+      e.stopPropagation();
       if (mouse.state === MouseState.Dragging) {
         mouse.state = MouseState.IdleAfterDrag;
         mouse.eventDest = this.guiObj;
