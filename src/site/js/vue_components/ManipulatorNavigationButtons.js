@@ -55,8 +55,9 @@ export default {
       console.log("Current tree: "+document.getElementById("canvasContainer").dataset.str);
       console.log(globals.workingExpressionTree);
       console.log('_DEBUG_FINISHED');
-    },components:{
-      HistoryNavigationPopout,
-    }
-  }
+    },
+  },
+  components:{
+    HistoryNavigationPopout,
+  },
 };

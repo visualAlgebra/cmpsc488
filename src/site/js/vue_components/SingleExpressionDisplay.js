@@ -3,11 +3,17 @@ import {Deserialize} from "../expression_tree";
 import ExpressionTree from "./ExpressionTree";
 
 export default {
-  name: "SingleExpressionDisplay", props: ["tree", "hoverable"], template: `
+  name: "SingleExpressionDisplay",
+  props: {
+    tree: Array,
+    interactive: Boolean
+  },
+  template: `
   <div>
-    <ExpressionTree v-if="displayPage"
-    :tree="workingExpressionTree"
-    :hoverable="false"></ExpressionTree>
+    <ExpressionTree
+      v-if="displayPage"
+      :tree="workingExpressionTree"
+    ></ExpressionTree>
   </div>  
   `, data(){
     return {

@@ -1,30 +1,36 @@
-import {Orientation, Quadrant} from "../expression_tree";
+import {Orientation, Quadrant, ExpressionTree as jsExpressionTree} from "../expression_tree";
 import ExprTreeTagButton from "./ExprTreeTagButton";
 import ExprTreeTagQuadrant from "./ExprTreeTagQuadrant";
 
 export default {
   name: "ExprTreeTag",
 
-  props: ["tree", "hoverable"],
+  props: {
+    tree: jsExpressionTree,
+    interactive: Boolean,
+  },
 
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml" :class="classes">
     
     <ExprTreeTagQuadrant
+      :tree="tree"
       :quadrant="Quadrant.NW"
       :values="tree.NW"
-      :hoverable="hoverable"
+      :interactive="interactive"
     >
     </ExprTreeTagQuadrant>
     
     <ExprTreeTagButton
-      :hoverable="hoverable"
+      :tree="tree"
+      :interactive="interactive"
     ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
-      quadrant="Quadrant.SE"
+      :tree="tree"
+      :quadrant="Quadrant.SE"
       :values="tree.SE"
-      :hoverable="hoverable"
+      :interactive="interactive"
     >
     </ExprTreeTagQuadrant>
     
@@ -38,7 +44,7 @@ export default {
 
   data() {
     return {
-      Quadrant: Quadrant
+      Quadrant: Quadrant,
     };
   },
 

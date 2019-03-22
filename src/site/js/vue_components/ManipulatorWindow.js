@@ -10,7 +10,7 @@ export default {
     <ExpressionTree
       v-if="tree"
       :tree="tree"
-      hoverable="true"
+      interactive
     ></ExpressionTree>
   </div>
   `,

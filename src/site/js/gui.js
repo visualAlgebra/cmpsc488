@@ -28,7 +28,7 @@ export const MouseMode = {
   Distribution: "Distribution"
 };
 
-const TreeComponentKind = {
+export const TreeComponentKind = {
   Tag: "Tag",
   TagQuadrant: "TagQuadrant",
   TagButton: "TagButton",
@@ -229,7 +229,7 @@ export const mouse = {
   }
 };
 
-const MouseState = {
+export const MouseState = {
   IdleAfterDrag: "idle after drag",
   Idle: "idle",
   MaybeDragging: "dragging?",

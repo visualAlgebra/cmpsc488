@@ -1,7 +1,12 @@
+import {TreeComponentKind} from "../gui";
+import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
+
 export default {
   name: "ExprTreeTagButton",
 
-  props: ["hoverable"],
+  props: ["tree"],
+
+  mixins: [ExprTreeListenerMixin],
 
   template: `
   <div
@@ -12,11 +17,20 @@ export default {
   </div>
   `,
 
+  data() {
+    return {
+      guiObj: {
+        kind: TreeComponentKind.TagButton,
+        tree: this.tree,
+      },
+    };
+  },
+
   computed: {
     classes() {
       return [
           "tag-button",
-          this.hoverable ? "hoverable" : "",
+          this.interactive ? "hoverable" : "",
       ]
     },
   },
