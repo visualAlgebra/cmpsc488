@@ -71,6 +71,32 @@ export function displayProblemFromDB(
     displayProblemFromDBStruct(res, container_id_working, container_id_goal, callback);
   });
 }
+////////////////////////////////////   Singles
+
+export function getProblemFromDBStructVue(
+  problem,
+  callback
+) {
+  if (container_id_working !== null) {
+
+  }
+}
+
+export function getProblemFromDBVue(
+  problem_id,
+  callback
+) {
+  get_problem_from_db(problem_id, res => {
+    decompress_string_js(res.expression_start, decomp => {
+      callback(decomp, 2);
+    });
+    decompress_string_js(res.expression_goal, decomp => {
+      callback(decomp, 3);
+    });
+    callback(res, 1);
+  });
+}
+////////////////////////////////////
 
 
 /*

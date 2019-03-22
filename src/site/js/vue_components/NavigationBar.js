@@ -51,13 +51,7 @@ export default {
       </li>
     </ul>
   </div>  
-  `,
-  data() {
-    return {
-
-    };
-  },
-  mounted(){
+  `, mounted(){
     M.AutoInit();
   }
 };

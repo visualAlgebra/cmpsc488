@@ -5,25 +5,23 @@ import ExpressionTree from "./ExpressionTree";
 export default {
   name: "SingleExpressionDisplay", props: ["tree", "hoverable"], template: `
   <div>
-    <ExpressionTree v-if="updatedWorkingExpressionTree"
+    <ExpressionTree v-if="displayPage"
     :tree="workingExpressionTree"
     :hoverable="false"></ExpressionTree>
   </div>  
   `, data(){
     return {
       workingExpressionTree:null,
-      loaded:false,
+      display:false,
     };
   },mounted(){
     singleExpressionDecompression(this.tree, res=>{
-      console.log(res);
       this.workingExpressionTree=Deserialize(res);
-      this.loaded=true;
+      this.display=true;
     });
   }, computed:{
-    updatedWorkingExpressionTree: function() {
-      if(this.loaded === true){
-        console.log("Loaded: "+this.workingExpressionTree.toString());
+    displayPage: function() {
+      if(this.display === true){
         return true;
       }
       return false;

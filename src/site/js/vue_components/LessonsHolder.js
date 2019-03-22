@@ -8,7 +8,7 @@ export default {
       <li class="collection-header blue-grey darken-1 white-text">
         <h4 id="lessonsSavedAmountField">Lessons: {{lessons.length}}</h4>
       </li>
-      <SingleLessonDisplay v-if="lessons.length>0" v-bind:lessons="lessons"></SingleLessonDisplay>=
+      <SingleLessonDisplay v-if="lessons.length>0" v-bind:lessons="lessons"></SingleLessonDisplay>
     </ul>
   </div>  
   `, mounted(){

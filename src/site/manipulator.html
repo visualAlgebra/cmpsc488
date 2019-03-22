@@ -1,146 +1,33 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Manipulator</title>
-    <link href="http://localhost:8080/src/site/css/expression_tree.css" rel="stylesheet">
-    <link href="http://localhost:8080/src/site/css/materialize.css" rel="stylesheet">
-    <link href="http://localhost:8080/src/site/css/manipulator.css" rel="stylesheet">
-    <link href="http://localhost:8080/src/site/css/svg_style.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>Manipulator</title>
+  <link href="http://localhost:8080/src/site/css/expression_tree.css" rel="stylesheet">
+  <link href="http://localhost:8080/src/site/css/materialize.css" rel="stylesheet">
+  <link href="http://localhost:8080/src/site/css/manipulator.css" rel="stylesheet">
+  <link href="http://localhost:8080/src/site/css/svg_style.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="grey darken-3 white-text">
 <div id="vue-app"></div>
-<div class="row">
-    <a class="tab waves-effect waves-light btn col">
-        <i class="material-icons left">compare_arrows</i>
-        Hint
-    </a>
-    <a class="tab waves-effect waves-light btn col">
-        <i class="material-icons left">share</i>
-        Share
-    </a>
-    <a class="tab waves-effect waves-light btn col" id="restartButton">
-        <i class="material-icons left">rotate_left</i>
-        Restart
-    </a>
-    <a class="tab waves-effect waves-light btn col" id="backwardHistButton">
-        <i class="material-icons left">undo</i>
-        Undo
-    </a>
-    <a class="tab waves-effect waves-light btn col" id="forwardHistButton">
-        <i class="material-icons left">redo</i>
-        Redo
-    </a>
-    <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" id="histCanvasOpener">
-        <i class="material-icons left">subdirectory_arrow_right</i>
-        History tree
-    </a>
-    <a class="tab waves-effect waves-light btn col" id="_DEBUG_INSTANCES">
-        <i class="material-icons left">bug_report</i>
-        DEBUG INSTANCES
-    </a>
-</div>
+
 <ul class="sidenav" id="histNav">
-    <canvas id="histCanvas">
-    </canvas>
+  <canvas id="histCanvas">
+  </canvas>
 </ul>
 <section class="container">
-    <section class="row">
-        <h1>Manipulator</h1>
-    </section>
-    <section>
-        <form action="#">
-            <div class="row">
-                <label class="col m3">
-                    <input checked name="manipulators" type="radio"/>
-                    <span id="manipGenMan">General Manipulation</span>
-                </label>
-                <label class="col m3">
-                    <input name="manipulators" type="radio"/>
-                    <span id="manipMerLit">Merging Literals</span>
-                </label>
-                <label class="col m3">
-                    <input name="manipulators" type="radio"/>
-                    <span id="manipDistri">Distribution</span>
-                </label>
-                <label class="col m3">
-                    <input name="manipulators" type="radio"/>
-                    <span id="manipInsert">Insert</span>
-                </label>
-            </div>
-        </form>
-    </section>
-    <section id="manipulatorsSubPanel" style="display:none">
-        <div class="card-panel">
-            <div class="row">
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    East-West
-                </button>
-            </div>
-            <div class="row">
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    North-South
-                </button>
-            </div>
-            <div class="row">
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    0
-                </button>
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    1
-                </button>
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    2
-                </button>
-            </div>
-            <div class="row">
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    x1
-                </button>
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    x2
-                </button>
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    x3
-                </button>
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    x4
-                </button>
-                <button class="btn waves-effect waves-light">
-                    <i class="material-icons left">add</i>
-                    x5
-                </button>
-            </div>
+
+  <section class="row">
+    <section class="col m9">
+      <div class="row">
+        <h2>Vue Start Expression</h2>
+        <div id="vueCanvasContainer">
+          {{ message }}
         </div>
+      </div>
     </section>
-    <section class="row">
-        <section class="col m9">
-            <section class="row">
-                <h2>Start Expression</h2>
-                <div id="canvasContainer"></div>
-            </section>
-            <div class="row">
-                <h2>Vue Start Expression</h2>
-                <div id="vueCanvasContainer">
-                    {{ message }}
-                </div>
-            </div>
-            <div class="row">
-                <h2>Goal Expression</h2>
-                <div id="goalContainer"></div>
-            </div>
-        </section>
-    </section>
+  </section>
 </section>
 <script src="http://localhost:8080/src/site/dist/manipulator.bundle.js" type="application/javascript"></script>
 </body>

@@ -1,28 +1,13 @@
 import Vue from "vue";
-import ExpressionTree from "./vue_components/ExpressionTree";
-import {Variable} from "./expression_tree";
-import ToolBar from "./vue_components/NavigationBar";
+import NavigationBar from "./vue_components/NavigationBar";
 
-export const creator_vue = new Vue({
-  name: "Root",
-
-  el: "#vue-app",
-
-  template: `
-  <div xmlns="http://www.w3.org/1999/xhtml">
-    <ToolBar></ToolBar>
-    <ExpressionTree v-if="workingExpressionTree" :tree="workingExpressionTree"></ExpressionTree>
+export const creator_vue=new Vue({
+  name: "Root", el: "#vue-app", template: `
+  <div>
+    <NavigationBar></NavigationBar>
+    <p>Welcome from vue</p>
   </div>
-  `,
-
-  data() {
-    return {
-      workingExpressionTree: new Variable(6),
-    };
-  },
-
-  components: {
-    ExpressionTree,
-    ToolBar,
+  `, components: {
+    NavigationBar,
   },
 });

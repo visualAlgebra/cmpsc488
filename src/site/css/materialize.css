@@ -2585,7 +2585,9 @@ html {
 
 *, *:before, *:after {
   -webkit-box-sizing: inherit;
-          box-sizing: inherit;
+  box-sizi;
+  box-sizing: inherit;
+  rit;
 }
 
 button,

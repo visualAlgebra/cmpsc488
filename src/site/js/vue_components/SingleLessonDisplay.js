@@ -3,7 +3,7 @@ import * as M from "materialize-css";
 export default {
   name: "SingleLessonDisplay", props: ["lessons"], template: `
   <div>
-    <ul class="collapsible">
+    <ul class="collapsible" style="overflow:auto; height:280px;">
       <li v-for="(lesson, index) in lessons">
         <div class="collapsible-header blue-grey darken-1 white-text">
           <i class="material-icons white-text left">folder</i>
