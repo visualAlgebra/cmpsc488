@@ -16,9 +16,9 @@ export const manipulator_vue=new Vue({
     <ManipulatorNavigationButtons v-if="displayPage"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="displayPage"></ManipulatorSpecificActionButtons>
     <ExpressionTree v-if="workTree&&displayPage" :tree="workTree" hoverable="true"></ExpressionTree>
-    <!--<SingleExpressionDisplay v-if="displayPage&&goalTree" v-bind:tree="goalTree" v-bind:hoverable="false"></SingleExpressionDisplay>--> <!--TODO CAUSING RECURSIVE DEFINITION SIMILAR TO "ExprTreeTagQuadrant.js"-->
+    <SingleExpressionDisplay v-if="displayPage&&goalTree" v-bind:tree="goalTree" v-bind:hoverable="false"></SingleExpressionDisplay> 
   </div>
-  `, data(){
+  `, data(){//TODO SINGLEEXPRESSIONDISPLAY CAUSING RECURSIVE DEFINITION SIMILAR TO "ExprTreeTagQuadrant.js"
     return {
       display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"",
     };
@@ -42,7 +42,7 @@ export const manipulator_vue=new Vue({
       }else if(code===2){//start
         this.workTree=Deserialize(res);
       }else if(code===3){//goal
-        this.goalTree=Deserialize(res);
+        this.goalTree=res;
       }
       if(++this.dbInfo===3){
         this.display=true;
