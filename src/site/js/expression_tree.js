@@ -2,6 +2,7 @@ import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
 import {AssociativeIntro, AssociativeMerge, CommutativeSwap} from './algebraic_actions.js';
+import Vue from "vue";
 
 export const Orientation = {
   EW: "eastwest",
@@ -46,7 +47,7 @@ export class ProblemInfo {
   constructor(problemID, treestart, treegoal, description, timeCreated) {
     this.problemID = problemID;
     this.expression_start = treestart;
-    this.expression_goal = treegoal
+    this.expression_goal = treegoal;
     this.description = description;
     this.timeCreated = timeCreated;
   }
@@ -165,7 +166,7 @@ export class Tag extends ExpressionTree {
 
   replace(oldVal, newVal, quadrantLabel) {
     newVal.parent = oldVal.parent;
-    this[quadrantLabel][this.find(oldVal, quadrantLabel)] = newVal;
+    Vue.set(this[quadrantLabel], this.find(oldVal, quadrantLabel), newVal);
     this.updateParentTreeCount(newVal.treeCount - oldVal.treeCount);
   }
 
