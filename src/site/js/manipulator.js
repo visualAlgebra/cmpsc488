@@ -2,7 +2,6 @@ import {globals, mouse} from './gui';
 import {displayProblemFromDB, displayTreeFromDBStruct, displayProblemFromDBStruct} from './display_feature';
 import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
 import {Deserialize} from "./expression_tree";
-import {manipulatorWindow} from "./manipulator_window";
 import {createDummyProblem} from "./random_expression_creator";
 import {manipulatorVue} from "./manipulator_vue";
 
@@ -42,7 +41,6 @@ function touchHistCanvas(x,y){
 function onDisplay(res, containerId){
   if(containerId==="canvasContainer"){
     globals.workingExpressionTree=res;
-    manipulatorWindow.workingExpressionTree = res;
     addHistoryEntry(res);
   }else if(containerId==="goalContainer"){
     let temp=document.getElementById("goalContainer").dataset.str;

@@ -7,6 +7,7 @@ import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import ExpressionTree from "./vue_components/ExpressionTree";
 import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
+import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 
 export const manipulator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -15,10 +16,10 @@ export const manipulator_vue=new Vue({
     <InvalidPage v-if="!displayPage"></InvalidPage>
     <ManipulatorNavigationButtons v-if="displayPage"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="displayPage"></ManipulatorSpecificActionButtons>
-    <ExpressionTree v-if="workTree&&displayPage" :tree="workTree" hoverable="true"></ExpressionTree>
+    <ManipulatorWindow></ManipulatorWindow>
     <SingleExpressionDisplay v-if="displayPage&&goalTree" v-bind:tree="goalTree" v-bind:hoverable="false"></SingleExpressionDisplay> 
   </div>
-  `, data(){//TODO SINGLEEXPRESSIONDISPLAY CAUSING RECURSIVE DEFINITION SIMILAR TO "ExprTreeTagQuadrant.js"
+  `, data(){
     return {
       display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"",
     };
@@ -56,6 +57,6 @@ export const manipulator_vue=new Vue({
       return false;
     }
   }, components: {
-    NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay,
+    NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay, ManipulatorWindow
   },
 });

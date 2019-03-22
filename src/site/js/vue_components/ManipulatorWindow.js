@@ -1,10 +1,7 @@
-import Vue from "vue";
-import ExpressionTree from "./vue_components/ExpressionTree";
+import ExpressionTree from "./ExpressionTree";
 
-export const manipulatorWindow = new Vue({
-  name: "Root",
-
-  el: "#vueCanvasContainer",
+export default {
+  name: "ManipulatorWindow",
 
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml">
@@ -25,4 +22,4 @@ export const manipulatorWindow = new Vue({
   components: {
     ExpressionTree,
   },
-});
+}
