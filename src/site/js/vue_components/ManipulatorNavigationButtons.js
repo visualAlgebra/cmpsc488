@@ -1,5 +1,4 @@
 import {drawCanvas, historyAction, restart} from "../manipulator";
-import {globals} from "../gui";
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import ExpressionTree from "./ExpressionTree";
 import { solve } from "../solver";
@@ -29,7 +28,7 @@ export default {
           <i class="material-icons left">redo</i>
           Redo
       </a>
-      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" v-on:click="drawCanvas()">
+      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav" v-on:click="historyTree()">
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
       </a>
@@ -37,7 +36,7 @@ export default {
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
       </a>
-      <!--<HistoryNavigationPopout></HistoryNavigationPopout>-->
+      <HistoryNavigationPopout></HistoryNavigationPopout>
     </div>
   </div>  
   `, methods: {
@@ -53,11 +52,12 @@ export default {
     }, redo(){
       historyAction(true);
     }, historyTree(){
-      drawCanvas();
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
       console.log('_DEBUG_FINISHED');
     },
-  }
+  }, components:{
+    HistoryNavigationPopout,
+  },
 };
