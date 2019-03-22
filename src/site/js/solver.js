@@ -1,4 +1,11 @@
-import { AssociativeExtract, AssociativeInsert, CommutativeSwap } from "./algebraic_actions";
+import {
+  AssociativeExtract,
+  AssociativeInsert, AssociativeIntro,
+  AssociativeMerge, Cancel, CombineFrac,
+  CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
+  QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
+} from "./algebraic_actions";
+import { ExpressionTree } from "./expression_tree";
 
 class Node {
   constructor(heuristic, previousNode, previousAction, currentExpression, numberOfMoves) {
@@ -101,7 +108,7 @@ function solve(a, b) {
 
   /*if (optimalNode == null)
     return null;
-    
+
   while (!currentNode.previousNode.currentExpression.equals(a)){
     currentNode = currentNode.previousNode;
   }
@@ -128,120 +135,147 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
 }
 */
 
-function expand(nodeToExpand, nodeArray) {
-  expandAssociativeIntro(nodeToExpand, nodeArray);
-  expandAssociativeMerge(nodeToExpand, nodeArray);
-  expandAssociativeExtract(nodeToExpand, nodeArray);
-  expandAssociativeInsert(nodeToExpand, nodeArray);
-  expandCommutativeSwap(nodeToExpand, nodeArray);
-  expandLiteralMerge(nodeToExpand, nodeArray);
-  expandLiteralConversion(nodeToExpand, nodeArray);
-  expandIdentityMerge(nodeToExpand, nodeArray);
-  expandZeroMerge(nodeToExpand, nodeArray);
-  expandCancel(nodeToExpand, nodeArray);
-  expandQuadrantFlip(nodeToExpand, nodeArray);
-  expandCombineFrac(nodeToExpand, nodeArray);
-  expnadSplitFrac(nodeToExpand, nodeArray);
-  expandFactor(nodeToExpand, nodeArray);
-  expandDistribute(nodeToExpand, nodeArray);
-  expandIdentityBalence(nodeToExpand, nodeArray);
+function expand(expTree, nodeArray) {
+  // expandAssociativeIntro(nodeToExpand, nodeArray);
+  // expandAssociativeMerge(nodeToExpand, nodeArray);
+  // expandAssociativeExtract(nodeToExpand, nodeArray);
+  // expandAssociativeInsert(nodeToExpand, nodeArray);
+  // expandCommutativeSwap(nodeToExpand, nodeArray);
+  // expandLiteralMerge(nodeToExpand, nodeArray);
+  // expandLiteralConversion(nodeToExpand, nodeArray);
+  // expandIdentityMerge(nodeToExpand, nodeArray);
+  // expandZeroMerge(nodeToExpand, nodeArray);
+  // expandCancel(nodeToExpand, nodeArray);
+  // expandQuadrantFlip(nodeToExpand, nodeArray);
+  // expandCombineFrac(nodeToExpand, nodeArray);
+  // expnadSplitFrac(nodeToExpand, nodeArray);
+  // expandFactor(nodeToExpand, nodeArray);
+  // expandDistribute(nodeToExpand, nodeArray);
+  // expandIdentityBalence(nodeToExpand, nodeArray);
+  dumbExpand(expTree, nodeArray);
 }
 
-function expandAssociativeIntro(nodeToExpand, nodeArray) {
-  var action;
-  if (AssociativeIntro.verify(nodeToExpand.currentExpression)) {
-    var currrentClone = nodeToExpand.currentExpression.clone();
-    action = new AssociativeIntro(currrentClone);
+function pushAllChildren(root, childArray, location, locationArr) {
+  //pushing child and location into respecktive arrays 
+  childArray.push(root);
+  locationArr.push(location);
+
+  //if child was a tag, then call pushAllChildren on its children
+  if (child instanceof Tag) {
+    for (let i = 0; i < root.NW.length; i++) {
+      let newLoca = new Int8Array(location.length+1);
+      newLoca.set(location);
+      newLoca.set(i<<1, location.length);
+      pushAllChildren(child, childArray, newLoca, locationArr);
+    }
+    for (let i = 0; i < root.SE.length; i++) {
+      let newLoca = new Int8Array(location.length+1);
+      newLoca.set(location);
+      newLoca.set((i<<1) + 1, location);
+      pushAllChildren(child, childArray, newLoca, locationArr);
+    }
+  }
+}
+
+function getChild(expTree, location) {
+  // if (location === []) {
+  //   return expTree;
+  // }
+  for (let current of location.slice(1)) {
+    expTree = expTree[getQuad(current)][current>>1];
+  }
+  return expTree;
+}
+
+function getQuad(location) {
+  if (location.length < 1) return null;
+  return ((location & 1) === 1) ? Quadrant.NW : Quadrant.SE;
+}
+
+function dumbExpand(expTree, nodeArray) {
+  //create array with all children and its quadrants
+  let childArr = [];
+  let locationArr = [];
+  pushAllChildren(expTree, childArr, new Int8Array(), locationArr);
+  
+  for (let i = 0; i < childArr.length; i++) {
+    
+    let child1 = childArr[i];
+    let location1 = locationArr[i];
+    //actions that involve only one child
+    expandAssociativeIntro(child1, nodeArray);
+    
+    //actions that involve two children
+    for (let j = 0; j < childArr.length; j++) {
+  
+      let child2 = childArr[j]; 
+      let location2 = locatoinArr[j];
+
+      expandAssociativeMerge(child1, child2, location1, location2, nodeArray);
+      
+    }
+  }
+}
+
+function expandAssociativeIntro(child1, nodeArray) {
+  
+  if (AssociativeIntro.verify(child1)) {
+    let child = child1.clone();
+    let action = new AssociativeIntro(child);
     action.apply();
     //addToNodeArray(currrentClone, nodeArray, expanded);
-    nodeArray.push(currrentClone);
+    nodeArray.push(child);
   }
 }
 
-function expandAssociativeMerge(nodeToExpand, nodeArray) {
+function expandAssociativeMerge(child1, child2, location1, location2, nodeArray) {
+
+  let parQuad = getQuad(location1);
+  let cutOff = location2.length; 
+  if (AssociativeMerge.verify(child1, child2, parQuad)) {
+    let parent = child2.clone();
+    let sibling = getChild(parent, location2.slice(cutOff))
+    let action = new AssociativeMerge(sibling, parent, parQuad);
+    action.apply();
+    //addToNodeArray(currrentClone, nodeArray, expanded);
+    nodeArray.push(parent);
+  }
+}
+
+function expandAssociativeExtract(child1, child2, location1, location2, nodeArray) {
+
+  let cutOff = location1.length;
+  if (AssociativeExtract.verify(child1, child2)) {
+    let grandParent = child2.clone();
+    let grandChild = getChild(grandParent, location2.slice(cutOff));
+    action = new AssociativeExtract(grandChild, getQuad(location1));
+    action.apply();
+    nodeArray.push(grandParent);
+  }
+}
+
+function expandAssociativeInsert(child1, child2, location1, location2, nodeArray) {
   
-  if (nodeToExpand.currentExpression instanceof Tag) {
-    //AssociativeMerge verifying NW
-    for (var i = 0; i < nodeToExpand.currentExpression.NW.length; i++) {
-      if (AssociativeMerge.verify(nodeToExpand.currentExpression.NW[i], nodeToExpand.currentExpression, Quadrant.NW)) {
-        var currrentClone = nodeToExpand.currentExpression.clone();
-        action = new AssociativeMerge(currentClone.NW[i], currrentClone, Quadrant.NW);
-        action.apply();
-        //addToNodeArray(currrentClone, nodeArray, expanded);
-        nodeArray.push(currrentClone);
-      }
-    }
-    //AssociativeMerge verifying SE
-    for (let child of nodeToExpand.currentExpression.SE) {
-      if (AssociativeMerge.verify(child, nodeToExpand.currentExpression, Quadrant.SE)) {
-        var currrentClone = nodeToExpand.currentExpression.clone();
-        action = new AssociativeMerge(child, currrentClone, Quadrant.SE);
-        action.apply();
-        //addToNodeArray(currrentClone, nodeArray, expanded);
-        nodeArray.push(currrentClone);
-      }
-    }
+  let cutOff = location1.length;
+  if (AssociativeInsert.verify(child1, child2)) {
+    let insertionTag = child2.clone();
+    let sibling = getChild(insertionTag, location2.slice(cutOff));
+    action = new AssociativeInsert(sibling, insertionTag);
+    action.apply();
+    nodeArray.push(insertionTag);
   }
 }
 
-function expandAssociativeExtract(nodeToExpand, nodeArray) {
+function expandCommutativeSwap(child1, child2, location1, location2, nodeArray) {
   
-  if (nodeToExpand.currentExpression instanceof Tag) {
-    //AssociativeExtract verifying 
-    //Iterating throught the children of node's current expression
-    for (let child of nodeToExpand.currentExpression.NW.concat(nodeToExpand.currentExpression.SE)) {
-    
-      if (child instanceof Tag) {
-        //if child is a Tag, then look into it's grandchildren to extract
-        for (let grandChild of child.NW) {
-          if (AssociativeExtract.verify(grandChild, nodeToExpand.currentExpression)) {
-            let currentClone = nodeToExpand.currentExpression.clone();
-            action = new AssociativeExtract(grandChild, Quadrant.NW);
-            action.apply();
-            nodeArray.push(currentClone);
-          }
-        }
-        for (let grandChild of child.SE) {
-          if (AssociativeExtract.verify(grandChild, nodeToExpand.currentExpression)) {
-            let currentClone = nodeToExpand.currentExpression.clone();
-            action = new AssociativeExtract(grandChild, Quadrant.SE);
-            action.apply();
-            nodeArray.push(currentClone);
-          }
-        }
-      }
-    }
-  }
-}
-
-function expandAssociativeInsert(nodeToExpand, nodeArray, expanded) {
-  if (nodeToExpand.currentExpression instanceof Tag) {
-    //AssociativeInsert Verifying 
-    for (let child of nodeToExpand.currentExpression.NW.concat(nodeToExpand.currentExpression.SE)) {
-      for (let tag of nodeToExpand.currentExpression.NW.concat(nodeToExpand.currentExpression.SE)) {
-        if (tag instanceof Tag && AssociativeInsert.verify(child, tag, findQuadrant(child), findQuadrant(tag))){        
-          let currentClone = nodeToExpand.currentExpression.clone();
-          action = new AssociativeInsert(child, tag);
-          action.apply();
-          nodeArray.push(currentClone);
-        }  
-      }
-    }
-  }
-}
-
-function expandCommutativeSwap(nodeToExpand, nodeArray) {
-  for (let child1 of nodeToExpand.currentExpression.NW.concat(nodeToExpand.currentExpression.SE)) {
-    for (let child2 of nodeToExpand.currentExpression.NW.concat(nodeToExpand.currentExpression.SE)) {
-      let quad1 = findQuadrant(child1);
-      let quad2 = findQuadrant(child2);
-      if (CommutativeSwap.verify(child1, child2, quad1, quad2)) {
-        let currentClone = nodeToExpand.currentExpression.clone();
-        action = new CommutativeSwap(child1, child2, quad1, quad2);
-        action.apply();
-        nodeArray.push(currentClone);
-      }
-    }
+  let cutOff = location1.length-1;
+  if (CommutativeSwap.verify(child1, child2, getQuad(location1), getQuad(location2))) {
+    let parent = child1.parent.clone();
+    let sibling1 = getChild(parent, location1.slice(cutOff));
+    let sibling2 = getChild(parent, location2.slice(cutOff));    
+    action = new CommutativeSwap(sibling1, sibling2);
+    action.apply();
+    nodeArray.push(parent);
   }
 }
 
@@ -289,11 +323,3 @@ function expandZeroMerge(nodeToExpand, nodeArray){
   
 }
 
-
-function findQuadrant(x) {
-  if (x.parent) {
-    return x.parent.NW.some(e => Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;
-  } else {
-    return null;
-  }
-}
