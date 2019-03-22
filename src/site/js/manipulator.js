@@ -1,8 +1,6 @@
-import {globals, mouse} from './gui';
-import {displayProblemFromDB, displayTreeFromDBStruct, displayProblemFromDBStruct} from './display_feature';
-import {addHistoryEntry, histAction, clearHist, renderHist, setGoalTree} from "./history_nav";
-import {Deserialize} from "./expression_tree";
-import {createDummyProblem} from "./random_expression_creator";
+import {globals} from './gui';
+import {displayProblemFromDB, displayTreeFromDBStruct} from './display_feature';
+import {addHistoryEntry, clearHist, renderHist, setGoalTree} from "./history_nav";
 import {manipulatorVue} from "./manipulator_vue";
 
 var problem_to_load=getProblemFromURL();
@@ -19,7 +17,6 @@ window.onpopstate=(e)=>{
     displayProblemFromDB(e.state);
   }
 };
-
 
 function restart(){
   displayTreeFromDBStruct(document.getElementById("restartButton").dataset.str, 'canvasContainer', res=>{
