@@ -1,12 +1,7 @@
-import { LZMA } from './lzma_worker.js';
-import { LiteralGui, TagGui, VariableGui } from "./gui";
-import { createRandomExpression } from './random_expression_creator.js';
-import { CommutativeSwap, AssociativeMerge, AssociativeIntro } from './algebraic_actions.js';
-import {singleExpressionDecompression} from "./display_feature";
-// console.log("@@@@@@@@@@");
-// const my_lzma = require("lzma");
-// console.log(my_lzma);
-// console.log("@@@@@@@@@@");
+import {LZMA} from './lzma_worker.js';
+import {LiteralGui, TagGui, VariableGui} from "./gui";
+import {createRandomExpression} from './random_expression_creator.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap} from './algebraic_actions.js';
 
 export const Orientation = {
   EW: "eastwest",
@@ -41,7 +36,6 @@ export class LessonInfo {
 export function parseMultiProblem(multi) {
   let ret = [];
   for (let x in multi.queryResults) {
-    x = parseInt(x);
     let k = multi.queryResults[x];
     ret[x] = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
   }
@@ -75,7 +69,7 @@ export class ExpressionTree {
   }
 
   clone() {
-    return _Deserialize(this.toString());
+    return Deserialize(this.toString());
   }
 } // end ExpressionTree class
 
@@ -104,47 +98,41 @@ export class Tag extends ExpressionTree {
       this.parent.updateParentTreeCount(count);
     }
   }
-  //
+
   addSouthEast(child) {
     this.SE.push(child);
     child.parent = this;
-    const delta = child.treeCount;
-    this.updateParentTreeCount(delta);
+    this.updateParentTreeCount(child.treeCount);
   }
 
   prependSouthEast(child) {
     this.SE.splice(0, 0, child);
     child.parent = this;
-    const delta = child.treeCount;
-    this.updateParentTreeCount(delta);
+    this.updateParentTreeCount(child.treeCount);
   }
 
   prependNorthWest(child) {
     this.NW.splice(0, 0, child);
     child.parent = this;
-    const delta = child.treeCount;
-    this.updateParentTreeCount(delta);
+    this.updateParentTreeCount(child.treeCount);
   }
 
   addNorthWest(child) {
     this.NW.push(child);
     child.parent = this;
-    const delta = child.treeCount;
-    this.updateParentTreeCount(delta);
+    this.updateParentTreeCount(child.treeCount);
   }
 
   removeSouthEast(child) {
     this.SE = this.SE.filter(x => !Object.is(x, child));
-    const delta = child.treeCount;
     child.parent = null;
-    this.updateParentTreeCount(-delta);
+    this.updateParentTreeCount(-child.treeCount);
   }
 
   removeNorthWest(child) {
     this.NW = this.NW.filter(x => !Object.is(x, child));
-    const delta = child.treeCount;
     child.parent = null;
-    this.updateParentTreeCount(-delta);
+    this.updateParentTreeCount(-child.treeCount);
   }
 
   emptyNorthWest() {
@@ -176,18 +164,15 @@ export class Tag extends ExpressionTree {
   }
 
   replace(oldVal, newVal, quadrantLabel) {
-    const delta = newVal.treeCount - oldVal.treeCount;
-    const idx = this.find(oldVal, quadrantLabel);
     newVal.parent = oldVal.parent;
-    this[quadrantLabel][idx] = newVal;
-    this.updateParentTreeCount(delta);
+    this[quadrantLabel][this.find(oldVal, quadrantLabel)] = newVal;
+    this.updateParentTreeCount(newVal.treeCount - oldVal.treeCount);
   }
 
   insert(child, index, quadrantLabel) {
     this[quadrantLabel].splice(index, 0, child);
     child.parent = this;
-    const delta = child.treeCount;
-    this.updateParentTreeCount(delta);
+    this.updateParentTreeCount(child.treeCount);
   }
 
   equals(that) {
@@ -199,19 +184,15 @@ export class Tag extends ExpressionTree {
       ) {
         return false;
       }
-
       for (let i = 0; i < this.NW.length; i++) {
         if (!this.NW[i].equals(that.NW[i])) return false;
       }
-
       for (let i = 0; i < this.SE.length; i++) {
         if (!this.SE[i].equals(that.SE[i])) return false;
       }
-
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   delete(ref) {
@@ -243,11 +224,6 @@ export class Tag extends ExpressionTree {
     }
     return retval + "}}}";
   }
-  compress() {
-    compress_string_js(this.toString(), res => {
-      console.log(JSON.stringify(res));
-    });
-  }
 } // end Tag class
 
 export class Variable extends ExpressionTree {
@@ -270,12 +246,6 @@ export class Variable extends ExpressionTree {
 
   toString() {
     return "{v" + this.value + "}";
-  }
-
-  compress() {
-    compress_string_js(this.toString(), res => {
-      console.log(JSON.stringify(res));
-    });
   }
 } // end Variable class
 
@@ -300,16 +270,7 @@ export class Literal extends ExpressionTree {
   toString() {
     return "{l" + this.value + "}";
   }
-
-  compress() {
-    compress_string_js(this.toString(), res => {
-      console.log(JSON.stringify(res));
-    });
-  }
 } // end Literal class
-
-// end of classes, start of functions
-
 export function array_delete(arr, ref) {
   for (let i = 0; i < arr.length; i++) {
     if (Object.is(ref, arr[i])) {
@@ -318,19 +279,7 @@ export function array_delete(arr, ref) {
   }
 }
 
-var nodecount = 0;
 export function Deserialize(text) {
-  let now = Date.now();
-  let retval = _Deserialize(text);
-  let time = (Date.now() - now) / 1000;
-  if (time > 0.5) {
-    console.log('time: ' + time + ' secs from: ' + nodecount + ' nodes.');
-  }
-  nodecount = 0;
-  return retval;
-}
-function _Deserialize(text) {
-  nodecount++;
   if (text.substr(0, 2) === "{l") {
     return new Literal(parseInt(text.substr(2, text.length - 3)));
   }
@@ -347,8 +296,7 @@ function _Deserialize(text) {
       if (text.charAt(i) === "{") {
         counter++;
       } else if (text.charAt(i) === "}") {
-        counter--;
-        if (counter === -1) {
+        if (--counter === -1) {
           inNW = false;
           i++;
           tempstr = "";
@@ -358,9 +306,9 @@ function _Deserialize(text) {
         if (counter === 0) {
           if (tempstr.substr(tempstr.length - 2) !== "{}") {
             if (inNW) {
-              retval.addNorthWest(_Deserialize(tempstr));
+              retval.addNorthWest(Deserialize(tempstr));
             } else {
-              retval.addSouthEast(_Deserialize(tempstr));
+              retval.addSouthEast(Deserialize(tempstr));
             }
           }
           tempstr = "";
@@ -573,49 +521,9 @@ export function compress_string_js(text, callback) {
   if (arr) {
     text = arr;
   }
-  // LZMA("http://localhost:8080/src/site/node_modules/lzma/src/lzma_worker.min.js").compress(text, 9, callback);
   LZMA.compress(text, 9, callback);
 }
 
 export function decompress_string_js(byte_arr, callback) {
-  // LZMA("http://localhost:8080/src/site/node_modules/lzma/src/lzma_worker.min.js").decompress(byte_arr, callback);
   LZMA.decompress(byte_arr, callback);
 }
-
-
-
-/// /////////////////////////////////////////////////////////////////////////////
-/// //////////////////        Unused Functions   ////////////////////////////////
-
-//x=createRandomExpression(6).toString(); helper(x.substr(5,x.length-7));
-function helper(text) {
-  let rettext = "";
-  let temp = 0;
-  let zeroamt = 0;
-  let i = 0;
-  for (i = 0; i < text.length; i++) {
-    if (text.charAt(i) === "{") {
-      if (temp === 0) {
-        rettext += "*";
-      } else {
-        rettext += temp;
-      }
-      temp++;
-    } else if (text.charAt(i) === "}") {
-      temp--;
-      if (temp === 0) {
-        rettext += "*";
-      } else {
-        rettext += temp;
-      }
-      if (temp === 0) {
-        zeroamt++;
-      }
-    } else {
-      rettext = rettext + " ";
-    }
-  }
-  console.log(text);
-  console.log(rettext + "  :  Valid? " + (temp === 0) + "  :  " + zeroamt);
-}
-/// /////////////////////////////////////////////////////////////////////////////
