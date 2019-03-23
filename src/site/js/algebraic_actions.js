@@ -35,12 +35,13 @@ export class CommutativeSwap {
   //verifys if the arguments are valid by checking
   //if the Siblings are in the same quadrant, then return true
   static verify(sibling1, sibling2, quadrant1, quadrant2) {
-    const quadrant = sibling1.parent[quadrant1];
-    return !Object.is(sibling1, sibling2)
+    return sibling1.parent !== null
+      && sibling2.parent !== null 
+      && quadrant1 !== null
+      && quadrant2 !== null
+      && !Object.is(sibling1, sibling2)
       && quadrant1 === quadrant2
-      && Object.is(sibling1.parent, sibling2.parent)
-      && quadrant.some(x => Object.is(x, sibling2))
-      && quadrant.some(x => Object.is(x, sibling1));
+      && Object.is(sibling1.parent, sibling2.parent);
   }
 
   //
@@ -138,19 +139,24 @@ export class AssociativeIntro {
       newTag.addNorthWest(this.expr);
     } else {
 
-      const copyNW = this.expr.NW;
-      const copySE = this.expr.SE;
-
-      //clear out expr
-      this.expr.emptyNorthWest();
-      this.expr.emptySouthEast();
-
-      //if expr is a root tag,
-      //make a copy of expr, newTag
-      const newTag = new Tag(this.expr.orientation, copyNW, copySE);
-
-      //add newTag into expr
-      this.expr.addNorthWest(newTag);
+      if (this.expr instanceof Tag) {
+        const copyNW = this.expr.NW;
+        const copySE = this.expr.SE;
+  
+        //clear out expr
+        this.expr.emptyNorthWest();
+        this.expr.emptySouthEast();
+  
+        //if expr is a root tag,
+        //make a copy of expr, newTag
+        const newTag = new Tag(this.expr.orientation, copyNW, copySE);
+  
+        //add newTag into expr
+        this.expr.addNorthWest(newTag);
+      } else {
+        let newTag = new Tag(Orientation.NS);
+        newTag.insert(this.expr, 0, Quadrant.NW);
+      }    
 
     }
 

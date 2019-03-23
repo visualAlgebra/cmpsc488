@@ -5,7 +5,7 @@ import {
   CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
-import { ExpressionTree, Tag } from "./expression_tree";
+import { ExpressionTree, Literal, Variable, Tag, Quadrant } from "./expression_tree";
 
 class Node {
   constructor(heuristic, previousNode, previousAction, currentExpression, numberOfMoves) {
@@ -69,6 +69,10 @@ function heuristicEval(a, b) {
   }
 
   return numDiff;
+}
+
+function max(x, y) {
+  return (x > y) ? x : y; 
 }
 // a: the start expression
 // b: the end expression
@@ -136,8 +140,19 @@ function addToNodeArray(nodeToAdd, nodeArray, expanded) {
 */
 
 export function solve(current, goal) {
-  let list = expand(current, []);
-  console.log(list)
+  let nodeArray = [];
+  let maxHeuristic = 0; 
+  let maxIdx = -1;
+  expand(current, nodeArray);
+  for (let i = 0; i < nodeArray.length; i++) {
+    console.log(nodeArray[i]);
+    let heuristic = heuristicEval(nodeArray[i], goal);
+    if (heuristic > maxHeuristic) {
+      maxHeuristic = heuristic;
+      maxIdx = i;
+    }
+  }
+  console.log(nodeArray[maxIdx], maxHeuristic);
 }
 
 function expand(expTree, nodeArray) {
@@ -164,7 +179,6 @@ function pushAllChildren(root, childArray, location, locationArr) {
   //pushing child and location into respecktive arrays 
   childArray.push(root);
   locationArr.push(location);
-  console.log('added');
 
   //if child was a tag, then call pushAllChildren on its children
   if (root instanceof Tag) {
@@ -194,8 +208,8 @@ function getChild(expTree, location) {
 }
 
 function getQuad(location) {
-  if (location.length < 1) return null;
-  return ((location & 1) === 1) ? Quadrant.NW : Quadrant.SE;
+  // if (location.length < 1) return null;
+  return ((location[location.length-1] & 1) === 1) ? Quadrant.NW : Quadrant.SE;
 }
 
 function dumbExpand(expTree, nodeArray) {
@@ -204,6 +218,10 @@ function dumbExpand(expTree, nodeArray) {
   let locationArr = [];
   pushAllChildren(expTree, childArr, new Uint8Array(), locationArr);
   
+  // for(let child of childArr) {
+  //   console.log(child);
+  // }
+
   for (let i = 0; i < childArr.length; i++) {
     
     let child1 = childArr[i];
@@ -220,7 +238,7 @@ function dumbExpand(expTree, nodeArray) {
       expandAssociativeMerge(child1, child2, location1, location2, nodeArray);
       expandAssociativeExtract(child1, child2, location1, location2, nodeArray);
       expandAssociativeInsert(child1, child2, location1, location2, nodeArray);
-      expandCommutativeSwap(child1, child2, location1, location2, nodeArray);
+      // expandCommutativeSwap(child1, child2, location1, location2, nodeArray);
       
     }
   }
@@ -257,7 +275,7 @@ function expandAssociativeExtract(child1, child2, location1, location2, nodeArra
   if (AssociativeExtract.verify(child1, child2)) {
     let grandParent = child2.clone();
     let grandChild = getChild(grandParent, location2.slice(cutOff));
-    action = new AssociativeExtract(grandChild, getQuad(location1));
+    let action = new AssociativeExtract(grandChild, getQuad(location1));
     action.apply();
     nodeArray.push(grandParent);
   }
@@ -269,7 +287,7 @@ function expandAssociativeInsert(child1, child2, location1, location2, nodeArray
   if (AssociativeInsert.verify(child1, child2)) {
     let insertionTag = child2.clone();
     let sibling = getChild(insertionTag, location2.slice(cutOff));
-    action = new AssociativeInsert(sibling, insertionTag);
+    let action = new AssociativeInsert(sibling, insertionTag);
     action.apply();
     nodeArray.push(insertionTag);
   }
@@ -277,12 +295,12 @@ function expandAssociativeInsert(child1, child2, location1, location2, nodeArray
 
 function expandCommutativeSwap(child1, child2, location1, location2, nodeArray) {
   
-  let cutOff = location1.length-1;
+  let cutOff = location1.length;
   if (CommutativeSwap.verify(child1, child2, getQuad(location1), getQuad(location2))) {
     let parent = child1.parent.clone();
     let sibling1 = getChild(parent, location1.slice(cutOff));
     let sibling2 = getChild(parent, location2.slice(cutOff));    
-    action = new CommutativeSwap(sibling1, sibling2);
+    let action = new CommutativeSwap(sibling1, sibling2);
     action.apply();
     nodeArray.push(parent);
   }
