@@ -41,14 +41,28 @@ class FakeServer {
   }
 }
 
-class emptyServer {
-  respondWithData(response, statusCode, mediaType, data) {
 
+//used to fake a server class for loading data into database before using it
+class LoadingServer {
+  constructor(docsToLoad, callback) {
+    this.loadedDocuments = 0;
+    this.documentsToLoad = docsToLoad;
+    this.callback = callback;
+  }
+  respondWithData(response, statusCode, mediaType, data) {
+    this.loadedDocuments++;
+    if(this.loadedDocuments === this.documentsToLoad) {
+      this.callback(data, null);
+    }
   }
   respondWithError(response, errorCode, errorMessage) {
-
+    console.log("Failed to load needed documents to database.");
+    console.log("Reason: " + errorMessage);
   }
 }
+
+
+
 
 function failedTest(testCase, errorMessage) {
   console.log("TEST " + testCase + ": FAILED");
@@ -69,7 +83,7 @@ function noCheck (data, testComparison) {
 
 
 function saveName (data, testComparison) {
-  return false;
+  savedIDs.append(data);
 }
 
 function checkProblemExpressions(data, testComparison) {
@@ -84,6 +98,8 @@ function checkProblemExpressions(data, testComparison) {
 
 
 function runTests() {
+  let loadServer = new LoadingServer(3);
+  database.postProblem(loadServer, {}, undefined, problems[0], "");
   let server = new FakeServer();
   database.getProblem(server, new FakeResponse(200, 0, "TEST_PROBLEM_1 is retrieved from database", noCheck, null), "TEST_PROBLEM_1");
   database.getLesson(server, new FakeResponse(200, 1, "TEST_USER_0/TEST_LESSON_0 is retrieved from database", noCheck, null), "TEST_USER_0/TEST_LESSON_0");
@@ -96,9 +112,6 @@ function runTests() {
 }
 
 
-function cleanUp() {
-  let server = new emptyServer();
-  
-}
+
 
 runTests();
