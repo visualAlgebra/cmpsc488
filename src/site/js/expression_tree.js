@@ -333,9 +333,9 @@ export class Problem {
 export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
   const start = createRandomExpression(numNodes);
   var end = start.clone();
+  var actionApplied;
+  var action;
   do {
-    var actionApplied;
-    var action;
     for (var i = 0; i < numActions; i++) {
       actionApplied = false;
       // the while makes sure that at least one action is applied before continuing
