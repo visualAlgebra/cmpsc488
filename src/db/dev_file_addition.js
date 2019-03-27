@@ -3,7 +3,7 @@ const serviceAccount = require("./vatest-83fa4-firebase-adminsdk-kvm0g-7c0191ca5
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://vatest-83fa4.firebaseio.com'
-});
+}, 'dev-app');
 const database = admin.firestore();
 const domainName = "http://localhost:8080";
 
@@ -28,6 +28,17 @@ function saveProblemWithoutAccount(problem, enteredName) {
     console.log("failed to save file");
   })
 }
+
+function deleteFile(collection, file) {
+  database.collection(collection).doc(file).delete()
+  .then(value => {return;})
+  .catch(error => {
+    console.log("failed to delete " + collection + "/" + file);
+    return;
+  })
+}
+
+module.exports = deleteFile;
 
 
 

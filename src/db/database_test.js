@@ -6,6 +6,42 @@ var savedIDs = [];
 var savedIDforDeleteTest;
 const DB = require("./firestore_database.js");
 const database = new DB();
+const totalTests = 17;
+const deleteFiles = ["accounts/account-0", "accounts/account-1", "accounts/account-2", "accounts/account-5", "accounts/account-6", "accounts/account-7",
+"accounts/account-8", "accounts/account-9", "accounts/account-10", "problems/account-5\\problem-1", "problems/account-6\\problem-2", "problems/account-7\\problem-3",
+"problems/account-8\\problem-3", "problems/account-10\\problem-5", "lessons/account-10\\lesson-1", "lessons/account-10\\lesson-3", "lessons/account-10\\lesson-4"];
+
+
+
+class TestTracker {
+  constructor(totalTests, toDelete) {
+    this.totalTests = totalTests;
+    this.testsCompleted = 0;
+    this.toDelete = toDelete
+  }
+  testCompleted() {
+    this.testsCompleted++;
+    //console.log("Tests Completed: " + this.testsCompleted);
+    if(this.testsCompleted >= this.totalTests) {
+      this.cleanup();
+    }
+  }
+  cleanup() {
+    this.toDelete.forEach(file => {
+      let slashIndex = file.indexOf('/');
+      database.deleteFile(file.substring(0,slashIndex), file.substring(slashIndex+1));
+    });
+    savedIDs.forEach(file => {
+      //console.log("deleting: " + file);
+      database.deleteFile("problems", file);
+    })
+    database.deleteFile("problems", savedIDforDeleteTest);
+    console.log("finished cleanup");
+  }
+
+}
+
+
 
 
 class FakeResponse {
@@ -19,6 +55,9 @@ class FakeResponse {
 }
 
 class FakeServer {
+  constructor(totalTests, toDelete) {
+    this.testTracker = new TestTracker(totalTests, toDelete)
+  }
   
   respondWithData(response, statusCode, mediaType, data) {
     if(response.expectedCode !== 200 && response.expectedCode !== 201) {
@@ -27,6 +66,7 @@ class FakeServer {
       let checkReturn = response.checkFunction(data, response.testComparison);
       if(!checkReturn) {
         successfulTest(response.testCase);
+        this.testTracker.testCompleted();
       } else {
         failedTest(response.testCase, "Expected: " + response.expectedResult + "\n Instead " + checkReturn);
       }
@@ -38,6 +78,7 @@ class FakeServer {
       failedTest(response.testCase, response.expectedResult + "\nInstead: returned with error code " + errorCode + "\nMessage: " + errorMessage);
     } else {
       successfulTest(response.testCase);
+      this.testTracker.testCompleted();
     }
   }
 }
@@ -95,18 +136,18 @@ function noCheck (data, testComparison) {
 //for specific test case to store random name
 function specialSaveName(data, testComparison) {
   savedIDforDeleteTest = data.substring(48);
-  console.log(savedIDforDeleteTest);
+  //console.log(savedIDforDeleteTest);
   return false;
 }
 
 
 function saveName (data, testComparison) {
-  savedIDs.push(data);
+  savedIDs.push(data.substring(48));
   return false;
 }
 
 function testName (data, testComparison) {
-  savedIDs.push(data);
+  savedIDs.push(data.substring(48));
   if(data === testComparison) {
     return false;
   } else {
@@ -135,7 +176,7 @@ function checkOwnerLesson(data, testComparison) {
 
 
 function runTests() {
-  let server = new FakeServer();
+  let server = new FakeServer(totalTests, deleteFiles);
 
 
 
@@ -224,7 +265,7 @@ function runTests() {
   //the creator can delete problem
   let loadServer12 = new LoadingServer(1, function() {
     let loadServer13 = new LoadingServer(1, function() {
-      database.deleteProblem(server, new FakeResponse(200, 10, "problem-4 can be deleted by creator", noCheck, null), "account-9", "account-9/problem-4");
+      database.deleteProblem(server, new FakeResponse(200, 11, "problem-4 can be deleted by creator", noCheck, null), "account-9", "account-9/problem-4");
     });
     database.saveProblem(loadServer13, new EmptyResponse(noCheck), "account-9", problems[0], "problem-4");
   });
@@ -244,29 +285,29 @@ function runTests() {
     let loadServer15 = new LoadingServer(1, function() {
 
       //can post lesson w/account
-      database.saveLesson(server, new FakeResponse(201, 11, "lesson is saved in database with name account-10\\lesson-1", noTest, "Lesson Saved at http://localhost:8080/lessons/account-10\\lesson-1"), "account-10", lessons[0], "lesson-1");
+      database.saveLesson(server, new FakeResponse(201, 12, "lesson is saved in database with name account-10\\lesson-1", noCheck, "Lesson Saved at http://localhost:8080/lessons/account-10\\lesson-1"), "account-10", lessons[0], "lesson-1");
 
       //cannot post lesson w/out account
-      database.saveLesson(server, new FakeResponse(403, 12, "lesson cannot be saved without account", noTest, null), null, lessons[0], "lesson-2");
+      database.saveLesson(server, new FakeResponse(401, 13, "lesson cannot be saved without account", noCheck, null), null, lessons[0], "lesson-2");
 
       //can get lesson
       let loadServer16 = new LoadingServer(1, function() {
-        database.getLesson(server, new FakeResponse(200, 13, "lesson is received from database", noTest, null), "account-10\\lesson-3");
+        database.getLesson(server, new FakeResponse(200, 14, "lesson is received from database", noCheck, null), "account-10\\lesson-3");
       });
-      database.saveLesson(loadServer16, new EmptyResponse(noTest), null, lessons[0], "lesson-3");
+      database.saveLesson(loadServer16, new EmptyResponse(noCheck), "account-10", lessons[0], "lesson-3");
 
       //cannot repost lesson && cannot delete other's lesson
       let loadServer17 = new LoadingServer(1, function() {
-        database.saveLesson(server, new FakeResponse(400, 14, "lesson cannot be overwritten", noTest, null), null, lessons[0], "lesson-4");
-        database.deleteLesson(server, new FakeResponse(403, 15, "lesson cannot be deleted by non-creator", noTest, null), "not-correct-account", "account-10\\lesson-4");
+        database.saveLesson(server, new FakeResponse(400, 15, "lesson cannot be overwritten", noCheck, null), "account-10", lessons[0], "lesson-4");
+        database.deleteLesson(server, new FakeResponse(403, 16, "lesson cannot be deleted by non-creator", noCheck, null), "not-correct-account", "account-10\\lesson-4");
       });
-      database.saveLesson(loadServer17, new EmptyResponse(noTest), null, lessons[0], "lesson-4");
+      database.saveLesson(loadServer17, new EmptyResponse(noCheck), "account-10", lessons[0], "lesson-4");
 
       //creator deletes owned lesson
       let loadServer18 = new LoadingServer(1, function() {
-        database.deleteLesson(server, new FakeResponse(200, 16, "lesson is deleted by creator", noTest, null), "account-10", "account-10\\lesson-5");
+        database.deleteLesson(server, new FakeResponse(200, 17, "lesson is deleted by creator", noCheck, null), "account-10", "account-10\\lesson-5");
       });
-      database.saveLesson(loadServer18, new EmptyResponse(noTest), null, lessons[0], "lesson-5");
+      database.saveLesson(loadServer18, new EmptyResponse(noCheck), "account-10", lessons[0], "lesson-5");
 
 
 
