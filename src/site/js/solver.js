@@ -74,82 +74,19 @@ function heuristicEval(a, b) {
 function max(x, y) {
   return (x > y) ? x : y; 
 }
-// a: the start expression
-// b: the end expression
-// function solve(a, b) {
-//   if (a.equals(b))
-//     return null;
-//   var head = Node(hesuristicEval(a, b), null, null, a, 0);
-//   var nodeArray = [];
-//   var expanded = [];
-//   nodeArray.push(head);
-//   var currentNodeIndex;
-//   var currentNode = head;
-//   var optimalNode = null;
-//   //while (nodeArray.length != 0){
-//   if (currentNode.currentExpression.equals(b)) {
-//     optimalNode = currentNode;
-//     break;
-//   }
-//   else {
-//     if (expanded.filter(x => (x.currentExpression.equals(currentNode.currentExpression))).length == 0)
-//       expand(currentNode, nodeArray/*, expanded*/);
-//     nodeArray.splice(currentNodeIndex, 1);
-//   }
-//   if (nodeArray.length != 0) {
-//     var lowestHeurAndSteps = nodeArray[0].numberOfMoves + nodeArray[0].heuristic;
-//     currentNode = nodeArray[0];
-//     currentNodeIndex = 0;
-//     for (var i = 0; i < nodeArray.length; i++) {
-//       if ((nodeArray[i].heuristic + nodeArray[i].numberOfMoves) < lowestHeurAndSteps) {
-//         lowestHeurAndSteps = nodeArray[i].heuristic + nodeArray[i].numberOfMoves;
-//         currentNode = nodeArray[i];
-//         currentNodeIndex = i;
-//       }
-//     }
-//   }
-//   //}
 
-//   /*if (optimalNode == null)
-//     return null;
-
-//   while (!currentNode.previousNode.currentExpression.equals(a)){
-//     currentNode = currentNode.previousNode;
-//   }
-//   */
-//   optimalNode = nodeArray[0];
-
-//   for (var i = 0; i < nodeArray.length; i++) {
-//     if (nodeArray[i].heuristic < optimalNode.heuristic)
-//       optimalNode = nodeArray[i];
-//   }
-//   return optimalNode.previousAction; //currentNode.previousAction;
-// }
-
-/*
-function addToNodeArray(nodeToAdd, nodeArray, expanded) {
-  if (expanded.filter(x => (x.currentExpression.equals(nodeToAdd.currentExpression))).length == 0)
-    nodeArray.push(nodeToAdd);
-  else {
-    var dup = expanded.filter(x => (x.currentExpression.equals(nodeToAdd.currentExpression)))[0];
-    if ((dup.heuristic + dup.numberOfMoves) > (nodeToAdd.heuristic + nodeToAdd.numberOfMoves)) {
-      dup = nodeToAdd;
-    }
-  }
-}
-*/
 
 export function solve(current, goal) {
   let nodeArray = [];
-  let maxHeuristic = 0; 
-  let maxIdx = -1;
+  let minHeuristic = Integer.max; 
+  let minIdx = -1;
   expand(current, nodeArray);
   for (let i = 0; i < nodeArray.length; i++) {
     console.log(nodeArray[i]);
     let heuristic = heuristicEval(nodeArray[i], goal);
-    if (heuristic > maxHeuristic) {
-      maxHeuristic = heuristic;
-      maxIdx = i;
+    if (heuristic < minHeuristic) {
+      minHeuristic = heuristic;
+      minIdx = i;
     }
   }
   console.log(nodeArray[maxIdx], maxHeuristic);

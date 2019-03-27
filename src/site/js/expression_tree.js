@@ -1,7 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap} from './algebraic_actions.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor} from './algebraic_actions.js';
 import Vue from "vue";
 
 export const Orientation = {
@@ -454,15 +454,34 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
             break;
 
             case 4: // AssociativeInsert
-
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            var sib2 = Math.floor(Math.random() * end.NW.length);
+            if(AssociativeInsert.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)){
+              action = new AssociativeInsert(end.NW[sib1], end.NW[sib2]);
+              action.apply();
+              actionApplied = true;
+            }
             break;
 
             case 5: // Distribute
-
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            var sib2 = Math.floor(Math.random() * end.NW.length);
+            if(Distribute.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)){
+              action = new Distribute(end.NW[sib1], end.NW[sib2]);
+              action.apply();
+              actionApplied = true;
+            }
             break;
 
             case 6: // Factor
-
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            if (end.NW[sib1] instanceof Tag){
+              if (Factor.verify(end.NW[sib1].NW[0], end.NW[sib1])){
+                action = new Factor(end.NW[sib1].NW[0], end.NW[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
             break;
 
             case 7: // SplitFrac
