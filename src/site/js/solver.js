@@ -25,7 +25,7 @@ function heuristicEval(a, b) {
   if ((a instanceof Tag)) {
     if (b instanceof Tag) {
       var numDiff = 0;
-      var lengthAdjustment = max(a.NW.length - b.NW.length, 0);
+      var lengthAdjustment = Math.max(a.NW.length - b.NW.length, 0);
       for (var i = 0; i < a.NW.length - lengthAdjustment; i++) {
         if ((b.NW[i] instanceof Tag) && !(a.NW[i] instanceof Tag)) {
           numDiff += 1 + heuristicEval(a.NW[i].NW[0], b.NW[i]);
@@ -71,25 +71,20 @@ function heuristicEval(a, b) {
   return numDiff;
 }
 
-function max(x, y) {
-  return (x > y) ? x : y; 
-}
-
-
 export function solve(current, goal) {
   let nodeArray = [];
-  let minHeuristic = Integer.max; 
+  let minHeuristic = Number.MAX_SAFE_INTEGER;
   let minIdx = -1;
   expand(current, nodeArray);
   for (let i = 0; i < nodeArray.length; i++) {
-    console.log(nodeArray[i]);
+    console.log(i, nodeArray[i]);
     let heuristic = heuristicEval(nodeArray[i], goal);
     if (heuristic < minHeuristic) {
       minHeuristic = heuristic;
       minIdx = i;
     }
   }
-  console.log(nodeArray[maxIdx], maxHeuristic);
+  console.log(nodeArray[minIdx], minHeuristic);
 }
 
 function expand(expTree, nodeArray) {
@@ -138,25 +133,35 @@ function getChild(expTree, location) {
   // if (location === []) {
   //   return expTree;
   // }
-  for (let current of location.slice(1)) {
-    expTree = expTree[getQuad(current)][current>>1];
+  // for(let i of location) {
+  //   console.log(i)
+  // }
+  // console.log("\n", location);
+  for (let current of location) {
+    (current & 1 === 1) ? expTree = expTree.SE[current>>1] : expTree = expTree.NW[current>>1]
+    // console.log(current)
+    // console.log(expTree)
   }
   return expTree;
 }
 
 function getQuad(location) {
-  // if (location.length < 1) return null;
-  return ((location[location.length-1] & 1) === 1) ? Quadrant.NW : Quadrant.SE;
+  if (location.length < 1) return null;
+  return ((location[location.length-1] & 1) === 1) ? Quadrant.SE : Quadrant.NW;
 }
 
-function dumbExpand(expTree, nodeArray) {
+function dumbExpand(root, nodeArray) {
   //create array with all children and its quadrants
   let childArr = [];
   let locationArr = [];
-  pushAllChildren(expTree, childArr, new Uint8Array(), locationArr);
+  pushAllChildren(root, childArr, new Uint8Array(), locationArr);
   
   // for(let child of childArr) {
   //   console.log(child);
+  // }
+
+  // for(let location of locationArr) {
+  //   console.log(getChild(root, location));
   // }
 
   for (let i = 0; i < childArr.length; i++) {
@@ -172,10 +177,10 @@ function dumbExpand(expTree, nodeArray) {
       let child2 = childArr[j]; 
       let location2 = locationArr[j];
 
-      expandAssociativeMerge(child1, child2, location1, location2, nodeArray);
-      expandAssociativeExtract(child1, child2, location1, location2, nodeArray);
-      expandAssociativeInsert(child1, child2, location1, location2, nodeArray);
-      // expandCommutativeSwap(child1, child2, location1, location2, nodeArray);
+      expandAssociativeMerge(child1, child2, location1, location2, root, nodeArray);
+      expandAssociativeExtract(child1, child2, location1, location2, root, nodeArray);
+      expandAssociativeInsert(child1, child2, location1, location2, root, nodeArray);
+      expandCommutativeSwap(child1, child2, location1, location2, root, nodeArray);
       
     }
   }
@@ -192,54 +197,60 @@ function expandAssociativeIntro(child1, nodeArray) {
   }
 }
 
-function expandAssociativeMerge(child1, child2, location1, location2, nodeArray) {
+function expandAssociativeMerge(child1, child2, location1, location2, root, nodeArray) {
 
   let parQuad = getQuad(location1);
-  let cutOff = location2.length; 
+  // let cutOff = location2.length; 
   if (AssociativeMerge.verify(child1, child2, parQuad)) {
-    let parent = child2.clone();
-    let sibling = getChild(parent, location2.slice(cutOff))
+    let rootClone = root.clone();
+    let sibling = getChild(rootClone, location1);
+    let parent = getChild(rootClone, location2);
     let action = new AssociativeMerge(sibling, parent, parQuad);
     action.apply();
     //addToNodeArray(currrentClone, nodeArray, expanded);
-    nodeArray.push(parent);
+    nodeArray.push(rootClone);
   }
 }
 
-function expandAssociativeExtract(child1, child2, location1, location2, nodeArray) {
+function expandAssociativeExtract(child1, child2, location1, location2, root, nodeArray) {
 
-  let cutOff = location1.length;
+  // let cutOff = location1.length;
   if (AssociativeExtract.verify(child1, child2)) {
-    let grandParent = child2.clone();
-    let grandChild = getChild(grandParent, location2.slice(cutOff));
+    let rootClone = root.clone();
+    let grandChild = getChild(rootClone, location1);
+    // let grandParent = getChild(rootClone, location2);
     let action = new AssociativeExtract(grandChild, getQuad(location1));
     action.apply();
-    nodeArray.push(grandParent);
+    nodeArray.push(rootClone);
   }
 }
 
-function expandAssociativeInsert(child1, child2, location1, location2, nodeArray) {
+function expandAssociativeInsert(child1, child2, location1, location2, root, nodeArray) {
   
-  let cutOff = location1.length;
+  // let cutOff = location1.length;
   if (AssociativeInsert.verify(child1, child2)) {
-    let insertionTag = child2.clone();
-    let sibling = getChild(insertionTag, location2.slice(cutOff));
+    let rootClone = root.clone();
+    let sibling = getChild(rootClone, location1);
+    let insertionTag = getChild(rootClone, location2);
     let action = new AssociativeInsert(sibling, insertionTag);
     action.apply();
-    nodeArray.push(insertionTag);
+    nodeArray.push(rootClone);
   }
 }
 
-function expandCommutativeSwap(child1, child2, location1, location2, nodeArray) {
+function expandCommutativeSwap(child1, child2, location1, location2, root, nodeArray) {
   
-  let cutOff = location1.length;
+  // console.log("\nc1:", child1, "\nc2:", child2);
+  // console.log("l1:", location1, "\nl2:", location2);
+  // console.log("c1:", getChild(child1.parent, location1));
+  // console.log("c2:", getChild(child2.parent, location2));
   if (CommutativeSwap.verify(child1, child2, getQuad(location1), getQuad(location2))) {
-    let parent = child1.parent.clone();
-    let sibling1 = getChild(parent, location1.slice(cutOff));
-    let sibling2 = getChild(parent, location2.slice(cutOff));    
-    let action = new CommutativeSwap(sibling1, sibling2);
+    let rootClone = root.clone();
+    let sibling1 = getChild(rootClone, location1);
+    let sibling2 = getChild(rootClone, location2);    ;
+    let action = new CommutativeSwap(sibling1, sibling2, getQuad(location1));
     action.apply();
-    nodeArray.push(parent);
+    nodeArray.push(rootClone);
   }
 }
 
