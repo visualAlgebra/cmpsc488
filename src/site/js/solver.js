@@ -181,6 +181,9 @@ function dumbExpand(root, nodeArray) {
       expandAssociativeExtract(child1, child2, location1, location2, root, nodeArray);
       expandAssociativeInsert(child1, child2, location1, location2, root, nodeArray);
       expandCommutativeSwap(child1, child2, location1, location2, root, nodeArray);
+      expandCancel(child1, child2, location1, location2, root, nodeArray);
+      expandCombineFrac(child1, child2, location1, location2, root, nodeArray);
+      expandDistribute(child1, child2, location1, location2, root, nodeArray);
       
     }
   }
@@ -210,6 +213,7 @@ function expandAssociativeMerge(child1, child2, location1, location2, root, node
     //addToNodeArray(currrentClone, nodeArray, expanded);
     nodeArray.push(rootClone);
   }
+
 }
 
 function expandAssociativeExtract(child1, child2, location1, location2, root, nodeArray) {
@@ -223,6 +227,7 @@ function expandAssociativeExtract(child1, child2, location1, location2, root, no
     action.apply();
     nodeArray.push(rootClone);
   }
+
 }
 
 function expandAssociativeInsert(child1, child2, location1, location2, root, nodeArray) {
@@ -236,37 +241,65 @@ function expandAssociativeInsert(child1, child2, location1, location2, root, nod
     action.apply();
     nodeArray.push(rootClone);
   }
+
 }
 
 function expandCommutativeSwap(child1, child2, location1, location2, root, nodeArray) {
   
-  // console.log("\nc1:", child1, "\nc2:", child2);
-  // console.log("l1:", location1, "\nl2:", location2);
-  // console.log("c1:", getChild(child1.parent, location1));
-  // console.log("c2:", getChild(child2.parent, location2));
-  if (CommutativeSwap.verify(child1, child2, getQuad(location1), getQuad(location2))) {
+  /*console.log("\nc1:", child1, "\nc2:", child2);
+  console.log("l1:", location1, "\nl2:", location2);
+  console.log("c1:", getChild(child1.parent, location1));
+  console.log("c2:", getChild(child2.parent, location2));*/
+  let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2);
+  if (CommutativeSwap.verify(child1, child2, quad1, quad2)) {
     let rootClone = root.clone();
     let sibling1 = getChild(rootClone, location1);
     let sibling2 = getChild(rootClone, location2);    ;
-    let action = new CommutativeSwap(sibling1, sibling2, getQuad(location1));
+    let action = new CommutativeSwap(sibling1, sibling2, quad1);
     action.apply();
     nodeArray.push(rootClone);
   }
+
 }
 
-function expandCancel(child1, child2, location1, location2, nodeArray){
+function expandCancel(child1, child2, location1, location2, root, nodeArray) {
 
-  let cutOff = location1.length - 1;
   if (Cancel.verify(child1, child2, getQuad(location1), getQuad(location2))) {
-
+    let rootClone = root.clone();
+    let sibling1 = getChild(rootClone, location1);
+    let sibling2 = getChild(rootClone, location2);
+    let action = new Cancel(sibling1, sibling2);
+    action.apply();
+    nodeArray.push(rootClone);
   }
-}
-
-function expandCombineFrac(nodeToExpand, nodeArray){
 
 }
 
-function expandDistribute(nodeToExpand, nodeArray){
+function expandCombineFrac(child1, child2, location1, location2, root, nodeArray) {
+
+  if (CombineFrac.verify(child1, child2)) {
+    let rootClone = root.clone();
+    let tag = getChild(rootClone, location1);
+    let action = new CombineFrac(tag);
+    action.apply();
+    nodeArray.push(rootClone);
+  }
+
+}
+
+function expandDistribute(child1, child2, location1, location2, root, nodeArray) {
+  
+  let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2);
+  if (Distribute.verify(child1, child2, quad1, quad2)) {
+    let rootClone = root.clone();
+    let value = getChild(rootClone, location1);
+    let tagToDistributeOver = getChild(rootClone, location2);
+    let action = new Distribute(value, tagToDistributeOver);
+    action.apply();
+    nodeArray.push(rootClone);
+  }
 
 }
 

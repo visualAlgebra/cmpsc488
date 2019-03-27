@@ -480,25 +480,39 @@ export class CombineFrac {
     this.tag = tag;
   }
 
-  static verify(tag, divisor) {
-    if (!(tag instanceof Tag && divisor instanceof Tag)) {
+  static verify(tag, tagChild) {
+    if(tag === null || tagChild === null) {
+      return false;
+    }
+    if (!(tag instanceof Tag && tagChild instanceof Tag)) {
       return false; 
     }
     if (tag.orientation !== Orientation.EW) {
       return false;
     }
+    if (Object.is(tag, tagChild)) {
+      return false;
+    }
 
+    let divisor = tagChild.SE;
     for (let frac of tag.NW.concat(tag.SE)) {
-      // if (child.SE !== divisor) {
-      //   return false;
-      // }
-      if (divisor instanceof Tag) {
-        for (let i = 0; i < tag.length; i++) {
+      
+      if (!(frac instanceof Tag)) {
+        return false;
+      }
+
+      if (divisor.length !== frac.SE.length) {
+        return false;
+      } 
+
+      if (tagChild instanceof Tag) {
+        for (let i = 0; i < divisor.length; i++) {
           if (!(frac.SE[i].equals(divisor[i]))) {
             return false;
           }
         }
       }
+
     }
     return true;
   }
@@ -532,19 +546,20 @@ export class CombineFrac {
       }
     }
     let dividend = new Tag(Orientation.EW, newNW, newSE);
+    
+    // console.log(this.tag);
+    // //Swapping orientation
+    // this.tag.orientation = Orientation.NS;
 
-    //Swapping orientation
-    this.tag.orientation = Orientation.NS;
+    // //Adding the dividend
+    // this.tag.emptyNorthWest();
+    // this.tag.insert(dividend, 0, Quadrant.NW);
 
-    //Adding the dividend
-    this.tag.emptyNorthWest();
-    this.tag.insert(dividend, 0, Quadrant.NW);
-
-    //Adding divisor
-    this.tag.emptySouthEast();
-    for (let child of divisor) {
-      this.tag.insert(child, this.tag.SE.length, Quadrant.SE);
-    }
+    // //Adding divisor
+    // this.tag.emptySouthEast();
+    // for (let child of divisor) {
+    //   this.tag.insert(child, this.tag.SE.length, Quadrant.SE);
+    // }
   }
 }
 
