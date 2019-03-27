@@ -340,15 +340,15 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
       actionApplied = false;
       // the while makes sure that at least one action is applied before continuing
       while (!actionApplied) {
-        var actionIndx = Math.round(Math.random() * (validActionsArr.length-1))
+        var actionIndx = Math.floor(Math.random() * (validActionsArr.length))
         if (validActionsArr[actionIndx]) {
           // case ordering appears in the same order as the actions appear in algebraic_actions.js
           switch (actionIndx) {
             case 0:
               var quadToApply = Math.round(Math.random());
               if (quadToApply == 0) {
-                var sib1 = Math.round(Math.random() * (end.NW.length-1));
-                var sib2 = Math.round(Math.random() * (end.NW.length-1));
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                var sib2 = Math.floor(Math.random() * (end.NW.length));
                 if (CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)) {
                   action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
                   action.apply();
@@ -356,8 +356,8 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 }
               }
               else {
-                var sib1 = Math.round(Math.random() * (end.SE.length-1));
-                var sib2 = Math.round(Math.random() * (end.SE.length-1));
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                var sib2 = Math.floor(Math.random() * (end.SE.length));
                 if (CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)) {
                   action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
                   action.apply();
@@ -369,7 +369,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
             case 1:
               var quadToApply = Math.round(Math.random() * 1);
               if (quadToApply == 0) {
-                var sib1 = Math.round(Math.random() * (end.NW.length-1));
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
                 if (AssociativeMerge.verify(end.NW[sib1], end)) {
                   action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
                   action.apply();
@@ -377,7 +377,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 }
               }
               else {
-                var sib1 = Math.round(Math.random() * (end.SE.length-1));
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
                 if (AssociativeMerge.verify(end.SE[sib1], end)) {
                   action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
                   action.apply();
@@ -389,7 +389,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
             case 2:
               var quadToApply = Math.round(Math.random() * 1);
               if (quadToApply == 0) {
-                var sib1 = Math.round(Math.random() * (end.NW.length-1));
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
                 if (AssociativeIntro.verify(end.NW[sib1])) {
                   action = new AssociativeIntro(end.NW[sib1]);
                   action.apply();
@@ -397,7 +397,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 }
               }
               else {
-                var sib1 = Math.round(Math.random() * (end.SE.length-1));
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
                 if (AssociativeIntro.verify(end.SE[sib1])) {
                   action = new AssociativeIntro(end.SE[sib1]);
                   action.apply();
@@ -407,13 +407,13 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 3:
-              var quadToApply = Math.round(Math.random() * 1);
+              var quadToApply = Math.round(Math.random());
               if (quadToApply == 0) {
-                var sib1 = Math.round(Math.random() * (end.NW.length-1));
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
                 if (end.NW[sib1] instanceof Tag) {
                   var quadToApply2 = Math.round(Math.random() * 1);
                   if (quadToApply2 == 0) {
-                    var sib2 = Math.round(Math.random() * (end.NW[sib1].NW.length-1));
+                    var sib2 = Math.floor(Math.random() * (end.NW[sib1].NW.length));
                     if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
                       action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
                       action.apply();
@@ -421,7 +421,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                     }
                   }
                   else {
-                    var sib2 = Math.round(Math.random() * (end.NW[sib1].SE.length-1));
+                    var sib2 = Math.floor(Math.random() * (end.NW[sib1].SE.length));
                     if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
                       action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
                       action.apply();
@@ -431,11 +431,11 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 }
               }
               else {
-                var sib1 = Math.round(Math.random() * (end.SE.length-1));
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
                 if (end.SE[sib1] instanceof Tag) {
                   var quadToApply2 = Math.round(Math.random() * 1);
                   if (quadToApply2 == 0) {
-                    var sib2 = Math.round(Math.random() * (end.SE[sib1].NW.length-1))
+                    var sib2 = Math.floor(Math.random() * (end.SE[sib1].NW.length))
                     if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
                       action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
                       action.apply();
@@ -443,7 +443,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                     }
                   }
                   else {
-                    var sib2 = Math.round(Math.random() * (end.SE[sib1].SE.length-1))
+                    var sib2 = Math.floor(Math.random() * (end.SE[sib1].SE.length))
                     if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
                       action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
                       action.apply();
