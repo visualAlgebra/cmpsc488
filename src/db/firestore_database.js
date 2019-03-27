@@ -616,10 +616,14 @@ class FirestoreDatabase extends Database {
         return server.respondWithError(response, 404, "Error 404: Problem not found");
       }
 
+      let problem = doc.data();
+      if(problem.creatorAccountID !== accountID) {
+        return server.respondWithError(response, 403, "Error 403: Invalid Authorization to delete problem")
+      }
+
       //make deletes atomic
       let batch = self.session.batch();
       //remove problem from lessons that it exists in
-      let problem = doc.data();
       problem.ownerLessons.forEach(lessonID => {
         let lessonReference = self.session.collection("lessons").doc(lessonID);
         batch.update(lessonReference, {
@@ -740,7 +744,7 @@ class FirestoreDatabase extends Database {
       }
       let lesson = doc.data()
       if(accountID !== lesson.creatorAccountID) {
-        return server.respondWithError(response, 401, "Error 401: User does not have permission to delete file");
+        return server.respondWithError(response, 403, "Error 403: User does not have permission to delete file");
       }
 
       //make deletes atomic

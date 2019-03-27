@@ -3,6 +3,7 @@ const problems = [{"startExpression":[93,0,0,0,2,41,0,0,0,0,0,0,0,0,61,-99,5,-48
 const lessons = [];
 const accounts = [{"bio":"a bio"}];
 var savedIDs = [];
+var savedIDforDeleteTest;
 const DB = require("./firestore_database.js");
 const database = new DB();
 
@@ -21,7 +22,7 @@ class FakeServer {
   
   respondWithData(response, statusCode, mediaType, data) {
     if(response.expectedCode !== 200 && response.expectedCode !== 201) {
-      failedTest(response.testCase, "Expected: " + response.expectedResult + "\nInstead: file was written to database @ " + data);
+      failedTest(response.testCase, "Expected: " + response.expectedResult + "\nInstead: database file " + data);
     } else {
       let checkReturn = response.checkFunction(data, response.testComparison);
       if(!checkReturn) {
@@ -91,9 +92,26 @@ function noCheck (data, testComparison) {
 }
 
 
-function saveName (data, testComparison) {
-  savedIDs.append(data);
+//for specific test case to store random name
+function specialSaveName(data, testComparison) {
+  savedIDforDeleteTest = data.substring(48);
+  console.log(savedIDforDeleteTest);
   return false;
+}
+
+
+function saveName (data, testComparison) {
+  savedIDs.push(data);
+  return false;
+}
+
+function testName (data, testComparison) {
+  savedIDs.push(data);
+  if(data === testComparison) {
+    return false;
+  } else {
+    return "problem does not have expected name. Returned: " + data;
+  }
 }
 
 function checkProblemExpressions(data, testComparison) {
@@ -109,7 +127,13 @@ function checkProblemExpressions(data, testComparison) {
 
 function runTests() {
   let server = new FakeServer();
-  //account testing
+
+
+
+
+  //=============
+  //ACCOUNT tests
+  //=============
 
   //account can be posted
   database.addAccount(server, new FakeResponse(201,0, "account-0 is saved in database", noCheck, null), accounts[0], "account-0");
@@ -126,11 +150,11 @@ function runTests() {
   });
   database.addAccount(loadServer1, new EmptyResponse(noCheck), accounts[0], "account-2");
 
-  //account cannot be deleted by other user
-  let loadServer2 = new LoadingServer(1, function() {
-    database.deleteAccount(server, new FakeResponse(400, 3, "account-3 cannot be deleted ", noCheck, null), "not-correct-account");
-  });
-  database.addAccount(loadServer2, new EmptyResponse(noCheck), accounts[0], "account-3");
+  // //account cannot be deleted by other user
+  // let loadServer2 = new LoadingServer(1, function() {
+  //   database.deleteAccount(server, new FakeResponse(400, 3, "account-3 cannot be deleted by non-creator", noCheck, null), "not-correct-account");
+  // });
+  // database.addAccount(loadServer2, new EmptyResponse(noCheck), accounts[0], "account-3");
 
   //account can be deleted by creator of account
   let loadServer3 = new LoadingServer(1, function() {
@@ -141,6 +165,61 @@ function runTests() {
 
 
 
+  //=============
+  //PROBLEM tests
+  //=============
+
+  //problem is saved with random name when no account provided
+  database.saveProblem(server, new FakeResponse(201, 5, "problem-0 is saved in database under random name", saveName, null), undefined, problems[0], "problem-0");
+
+  //problem is saved with name when account provided
+  let loadServer4 = new LoadingServer(1, function() {
+    database.saveProblem(server, new FakeResponse(201, 6, "problem-1 is saved in database with name account-5\\problem-1", testName, "Problem Saved at http://localhost:8080/problems/account-5\\problem-1"), "account-5", problems[0], "problem-1");
+  });
+  database.addAccount(loadServer4, new EmptyResponse(noCheck), accounts[0], "account-5");
+
+  //cannot repost problem when account used
+  let loadServer5 = new LoadingServer(1, function() {
+    let loadServer6 = new LoadingServer(1, function() {
+      database.saveProblem(server, new FakeResponse(400, 7, "problem-2 cannot be overwritten", testName, null), "account-6", problems[0], "problem-2");
+    });
+    database.saveProblem(loadServer6, new EmptyResponse(noCheck), "account-6", problems[0], "problem-2");
+  });
+  database.addAccount(loadServer5, new EmptyResponse(noCheck), accounts[0], "account-6");
+
+  //recieve problem from database
+  let loadServer7 = new LoadingServer(1, function() {
+    let loadServer8 = new LoadingServer(1, function() {
+      database.getProblem(server, new FakeResponse(200, 8, "account-7\\problem-3 provided", noCheck, null), "account-7/problem-3");
+    });
+    database.saveProblem(loadServer8, new EmptyResponse(noCheck), "account-7", problems[0], "problem-3");
+  });
+  database.addAccount(loadServer7, new EmptyResponse(noCheck), accounts[0], "account-7");
+
+  //cannot delete non-user problem
+  let loadServer9 = new LoadingServer(1, function() {
+      database.deleteProblem(server, new FakeResponse(403, 9, "problem without account creator cannot be deleted", noCheck, null), "account-6", savedIDforDeleteTest);
+  });
+  database.saveProblem(loadServer9, new EmptyResponse(specialSaveName), undefined, problems[0], "");
+  
+
+  //cannot delete other user's problem
+  let loadServer10 = new LoadingServer(1, function() {
+    let loadServer11 = new LoadingServer(1, function() {
+      database.deleteProblem(server, new FakeResponse(403, 10, "problem-3 cannot be deleted by non-creator", noCheck, null), "not-correct-account", "account-8/problem-3");
+    });
+    database.saveProblem(loadServer11, new EmptyResponse(noCheck), "account-8", problems[0], "problem-3");
+  });
+  database.addAccount(loadServer10, new EmptyResponse(noCheck), accounts[0], "account-8");
+
+  //the creator can delete problem
+  let loadServer12 = new LoadingServer(1, function() {
+    let loadServer13 = new LoadingServer(1, function() {
+      database.deleteProblem(server, new FakeResponse(200, 10, "problem-4 can be deleted by creator", noCheck, null), "account-9", "account-9/problem-4");
+    });
+    database.saveProblem(loadServer13, new EmptyResponse(noCheck), "account-9", problems[0], "problem-4");
+  });
+  database.addAccount(loadServer12, new EmptyResponse(noCheck), accounts[0], "account-9");
 
 
 
@@ -148,30 +227,9 @@ function runTests() {
 
 
 
-  // database.saveProblem(server, new FakeResponse(201, 0, "problem-1 is saved in database", noCheck, null), accountID, problems[0], "problem-1");
 
 
-
-  // let loadServer1 = new LoadingServer(1, function () {
-  //   let loadServer2 = new LoadingServer(1, function () {
-
-  //   });
-  //   database.postProblem(loadServer2,new EmptyResponse(noCheck), "A", problems[0], "Problem-1");
-
-  // });
-  // database.addAccount(loadServer1,new EmptyResponse(noCheck), "A", "A");
-
-
-  // database.postProblem(loadServer,new EmptyResponse(saveName), undefined, problems[0], "");
-  // database.postProblem(loadServer,new EmptyResponse(noCheck), undefined, problems[0], "");
-
-
-
-  // database.getProblem(server, new FakeResponse(200, 0, "TEST_PROBLEM_1 is retrieved from database", noCheck, null), "TEST_PROBLEM_1");
-  // database.getLesson(server, new FakeResponse(200, 1, "TEST_USER_0/TEST_LESSON_0 is retrieved from database", noCheck, null), "TEST_USER_0/TEST_LESSON_0");
-  // database.getAccount(server, new FakeResponse(200, 2, "TEST_USER_0 is retrieved from database", noCheck, null), "TEST_USER_0");
-
-  // database.saveProblem(server, new FakeResponse(200, 3, "Problem is successfully posted to database", noCheck, null), undefined, problems[0], "");
+  
 
   
 }
