@@ -1,6 +1,6 @@
 const problems = [{"startExpression":[93,0,0,0,2,41,0,0,0,0,0,0,0,0,61,-99,5,-48,-24,113,28,-33,-104,50,-61,-46,98,25,-116,-61,56,-36,39,117,103,-35,-68,-31,70,-97,-1,-16,118,112,0],"goalExpression":[93,0,0,0,2,35,0,0,0,0,0,0,0,0,61,-99,5,-48,-24,113,90,8,-110,32,12,94,-49,111,-58,106,-38,104,-40,-112,-101,10,-123,-32,-87,-85,75,62,52,-103,-93,-89,89,-70,-1,-13,105,-22,0]},
 {}];
-const lessons = [];
+const lessons = [{"creations":["problems/account-10\\problem-5"]}];
 const accounts = [{"bio":"a bio"}];
 var savedIDs = [];
 var savedIDforDeleteTest;
@@ -122,6 +122,15 @@ function checkProblemExpressions(data, testComparison) {
   }
 }
 
+function checkOwnerLesson(data, testComparison) {
+  for(let i = 0; i < data.length; i++) {
+    if(data[i] === testComparison) {
+      return false;
+    }
+  }
+  return "ownerLessons does not contain " + testComparison;
+}
+
 
 
 
@@ -222,7 +231,52 @@ function runTests() {
   database.addAccount(loadServer12, new EmptyResponse(noCheck), accounts[0], "account-9");
 
 
+  
 
+
+
+  //============
+  //LESSON tests
+  //============
+
+  
+  let loadServer14 = new LoadingServer(1, function() {
+    let loadServer15 = new LoadingServer(1, function() {
+
+      //can post lesson w/account
+      database.saveLesson(server, new FakeResponse(201, 11, "lesson is saved in database with name account-10\\lesson-1", noTest, "Lesson Saved at http://localhost:8080/lessons/account-10\\lesson-1"), "account-10", lessons[0], "lesson-1");
+
+      //cannot post lesson w/out account
+      database.saveLesson(server, new FakeResponse(403, 12, "lesson cannot be saved without account", noTest, null), null, lessons[0], "lesson-2");
+
+      //can get lesson
+      let loadServer16 = new LoadingServer(1, function() {
+        database.getLesson(server, new FakeResponse(200, 13, "lesson is received from database", noTest, null), "account-10\\lesson-3");
+      });
+      database.saveLesson(loadServer16, new EmptyResponse(noTest), null, lessons[0], "lesson-3");
+
+      //cannot repost lesson && cannot delete other's lesson
+      let loadServer17 = new LoadingServer(1, function() {
+        database.saveLesson(server, new FakeResponse(400, 14, "lesson cannot be overwritten", noTest, null), null, lessons[0], "lesson-4");
+        database.deleteLesson(server, new FakeResponse(403, 15, "lesson cannot be deleted by non-creator", noTest, null), "not-correct-account", "account-10\\lesson-4");
+      });
+      database.saveLesson(loadServer17, new EmptyResponse(noTest), null, lessons[0], "lesson-4");
+
+      //creator deletes owned lesson
+      let loadServer18 = new LoadingServer(1, function() {
+        database.deleteLesson(server, new FakeResponse(200, 16, "lesson is deleted by creator", noTest, null), "account-10", "account-10\\lesson-5");
+      });
+      database.saveLesson(loadServer18, new EmptyResponse(noTest), null, lessons[0], "lesson-5");
+
+
+
+
+
+
+    });
+    database.saveProblem(loadServer15, new EmptyResponse(noCheck), "account-10", problems[0], "problem-5");
+  });
+  database.addAccount(loadServer14, new EmptyResponse(noCheck), accounts[0], "account-10");
 
 
 
