@@ -21,11 +21,6 @@ export default {
     return {
       url: "http://localhost:8080/manipulator/problems/"+this.problemID,
     };
-  }, methods: {
-    registerSvgPanZoom(svgpanzoom) {
-      this.svgpanzoom = svgpanzoom;
-    },
-  }, mounted(){
   }, components: {
     ExpressionTree, SingleExpressionDisplay,
   },

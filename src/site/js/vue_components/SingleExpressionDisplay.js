@@ -6,9 +6,9 @@ import SvgPanZoom from "vue-svg-pan-zoom";
 export default {
   name: "SingleExpressionDisplay", props: ["tree"], template: `
   <div>
-    <SvgPanZoom :maxZoom="3" :minZoom="0.5" :zoomScaleSensitivity="0.1" :dblClickZoomEnabled="false" @svgpanzoom="registerSvgPanZoom">
-      <svg width="100%" style="border-style:solid; border-color: white; border-width:1px">
-        <foreignObject height="500" width="500">
+    <SvgPanZoom :zoomScaleSensitivity="0.1" @svgpanzoom="registerSvgPanZoom">
+      <svg height="100%" width="100%" style="border-style:solid; border-color: white; border-width:1px">
+        <foreignObject height="500" width="2000">
           <ExpressionTree v-if="displayPage" v-bind:tree="workingExpressionTree">
           </ExpressionTree>
         </foreignObject>
@@ -19,10 +19,15 @@ export default {
     return {
       workingExpressionTree: null, display: false,
     };
+  }, methods: {
+    registerSvgPanZoom(svgpanzoom) {
+      this.svgpanzoom = svgpanzoom;
+    },
   }, mounted() {
     singleExpressionDecompression(this.tree, res => {
       this.workingExpressionTree = Deserialize(res);
       this.display = true;
+
     });
   }, computed: {
     displayPage: function () {
@@ -32,6 +37,6 @@ export default {
       return false;
     },
   }, components: {
-    ExpressionTree,SvgPanZoom,
+    ExpressionTree, SvgPanZoom,
   },
 };
