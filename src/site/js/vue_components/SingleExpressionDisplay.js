@@ -9,14 +9,8 @@ export default {
     interactive: Boolean
   },
   template: `
-  <div
-    xmlns="http://www.w3.org/1999/xhtml"
-  >
-    <ExpressionTree
-      v-if="displayPage"
-      :tree="workingExpressionTree"
-    ></ExpressionTree>
-  </div>  
+  <ExpressionTree v-if="displayPage" :tree="workingExpressionTree">
+  </ExpressionTree>
   `, data(){
     return {
       workingExpressionTree: null, display: false,
