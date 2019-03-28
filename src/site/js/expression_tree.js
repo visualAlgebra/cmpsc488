@@ -1,7 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap} from './algebraic_actions.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion} from './algebraic_actions.js';
 import Vue from "vue";
 
 export const Orientation = {
@@ -320,7 +320,7 @@ export function Deserialize(text) {
   }
 }
 
-export class Problem {
+export class StartGoalCombo {
   constructor(start, goal) {
     this.start = start;
     this.goal = goal;
@@ -335,180 +335,224 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
   var end = start.clone();
   var actionApplied;
   var action;
-  for (var i = 0; i < numActions; i++) {
-    actionApplied = false;
-    // the while makes sure that at least one action is applied before continuing
-    while (!actionApplied) {
-      var actionIndx = Integer(Math.floor(Math.random() * validActionsArr.length))
-      if (validActionsArr[actionIndx]) {
-        // case ordering appears in the same order as the actions appear in algebraic_actions.js
-        switch (actionIndx) {
-          case 0:
-            var quadToApply = Math.floor(Math.random() * 2);
-            if (Integer(quadToApply) == 0) {
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              var sib2 = Math.floor(Math.random() * end.NW.length);
-              if (CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)) {
-                action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
-                action.apply();
-                actionApplied = true;
+  do {
+    for (var i = 0; i < numActions; i++) {
+      actionApplied = false;
+      // the while makes sure that at least one action is applied before continuing
+      while (!actionApplied) {
+        var actionIndx = Math.floor(Math.random() * (validActionsArr.length))
+        if (validActionsArr[actionIndx]) {
+          // case ordering appears in the same order as the actions appear in algebraic_actions.js
+          switch (actionIndx) {
+            case 0:
+              var quadToApply = Math.round(Math.random());
+              if (quadToApply == 0) {
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                var sib2 = Math.floor(Math.random() * (end.NW.length));
+                if (CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)) {
+                  action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            else {
-              var sib1 = Math.floor(Math.random() * end.SE.length);
-              var sib2 = Math.floor(Math.random() * end.SE.length);
-              if (CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)) {
-                action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
-                action.apply();
-                actionApplied = true;
+              else {
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                var sib2 = Math.floor(Math.random() * (end.SE.length));
+                if (CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)) {
+                  action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            break;
+              break;
 
-          case 1:
-            var quadToApply = Math.floor(Math.random() * 2);
-            if (Integer(quadToApply) == 0) {
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              if (AssociativeMerge.verify(end.NW[sib1], end)) {
-                action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
-                action.apply();
-                actionApplied = true;
+            case 1:
+              var quadToApply = Math.round(Math.random() * 1);
+              if (quadToApply == 0) {
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                if (AssociativeMerge.verify(end.NW[sib1], end)) {
+                  action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            else {
-              var sib1 = Math.floor(Math.random() * end.SE.length);
-              if (AssociativeMerge.verify(end.SE[sib1], end)) {
-                action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
-                action.apply();
-                actionApplied = true;
+              else {
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                if (AssociativeMerge.verify(end.SE[sib1], end)) {
+                  action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            break;
+              break;
 
-          case 2:
-            var quadToApply = Math.floor(Math.random() * 2);
-            if (Integer(quadToApply) == 0) {
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              if (AssociativeIntro.verify(end.NW[sib1])) {
-                action = new AssociativeIntro(end.NW[sib1]);
-                action.apply();
-                actionApplied = true;
+            case 2:
+              var quadToApply = Math.round(Math.random() * 1);
+              if (quadToApply == 0) {
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                if (AssociativeIntro.verify(end.NW[sib1])) {
+                  action = new AssociativeIntro(end.NW[sib1]);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            else {
-              var sib1 = Math.floor(Math.random() * end.SE.length);
-              if (AssociativeIntro.verify(end.SE[sib1])) {
-                action = new AssociativeIntro(end.SE[sib1]);
-                action.apply();
-                actionApplied = true;
+              else {
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                if (AssociativeIntro.verify(end.SE[sib1])) {
+                  action = new AssociativeIntro(end.SE[sib1]);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            break;
+              break;
 
-          case 3:
-            var quadToApply = Math.floor(Math.random() * 2);
-            if (Integer(quadToApply) == 0) {
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              if (end.NW[sib1] instanceof Tag) {
-                var quadToApply2 = Math.floor(Math.random() * 2);
-                if (Integer(quadToApply2) == 0) {
-                  var sib2 = Math.floor(Math.random() * end.NW[sib1].NW.length)
-                  if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
-                    action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
-                    action.apply();
-                    actionApplied = true;
+            case 3:
+              var quadToApply = Math.round(Math.random());
+              if (quadToApply == 0) {
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                if (end.NW[sib1] instanceof Tag) {
+                  var quadToApply2 = Math.round(Math.random() * 1);
+                  if (quadToApply2 == 0) {
+                    var sib2 = Math.floor(Math.random() * (end.NW[sib1].NW.length));
+                    if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
+                      action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
+                      action.apply();
+                      actionApplied = true;
+                    }
                   }
-                }
-                else {
-                  var sib2 = Math.floor(Math.random() * end.NW[sib1].SE.length)
-                  if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
-                    action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
-                    action.apply();
-                    actionApplied = true;
-                  }
-                }
-              }
-            }
-            else {
-              var sib1 = Math.floor(Math.random() * end.SE.length);
-              if (end.SE[sib1] instanceof Tag) {
-                var quadToApply2 = Math.floor(Math.random() * 2);
-                if (Integer(quadToApply2) == 0) {
-                  var sib2 = Math.floor(Math.random() * end.SE[sib1].NW.length)
-                  if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
-                    action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
-                    action.apply();
-                    actionApplied = true;
-                  }
-                }
-                else {
-                  var sib2 = Math.floor(Math.random() * end.SE[sib1].SE.length)
-                  if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
-                    action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
-                    action.apply();
-                    actionApplied = true;
+                  else {
+                    var sib2 = Math.floor(Math.random() * (end.NW[sib1].SE.length));
+                    if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
+                      action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
+                      action.apply();
+                      actionApplied = true;
+                    }
                   }
                 }
               }
-            }
-            break;
+              else {
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                if (end.SE[sib1] instanceof Tag) {
+                  var quadToApply2 = Math.round(Math.random() * 1);
+                  if (quadToApply2 == 0) {
+                    var sib2 = Math.floor(Math.random() * (end.SE[sib1].NW.length))
+                    if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
+                      action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
+                      action.apply();
+                      actionApplied = true;
+                    }
+                  }
+                  else {
+                    var sib2 = Math.floor(Math.random() * (end.SE[sib1].SE.length))
+                    if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
+                      action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
+                      action.apply();
+                      actionApplied = true;
+                    }
+                  }
+                }
+              }
+              break;
 
             case 4: // AssociativeInsert
-
-            break;
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              var sib2 = Math.floor(Math.random() * end.NW.length);
+              if (AssociativeInsert.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+                action = new AssociativeInsert(end.NW[sib1], end.NW[sib2]);
+                action.apply();
+                actionApplied = true;
+              }
+              break;
 
             case 5: // Distribute
-
-            break;
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              var sib2 = Math.floor(Math.random() * end.NW.length);
+              if (Distribute.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+                action = new Distribute(end.NW[sib1], end.NW[sib2]);
+                action.apply();
+                actionApplied = true;
+              }
+              break;
 
             case 6: // Factor
-
-            break;
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              if (end.NW[sib1] instanceof Tag) {
+                if (Factor.verify(end.NW[sib1].NW[0], end.NW[sib1])) {
+                  action = new Factor(end.NW[sib1].NW[0], end.NW[sib1]);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
+              break;
 
             case 7: // SplitFrac
-
-            break;
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              if (end.NW[sib1] instanceof Tag) {
+                if (SplitFrac.verify(end.NW[sib1].NW[0], end.NW[sib1])) {
+                  action = new SplitFrac(end.NW[sib1]);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
+              break;
 
             case 8: // CombineFrac
 
-            break;
+              break;
 
             case 9: // Quadrant Flip
 
-            break;
+              break;
 
             case 10: // Cancel
 
-            break;
+              break;
 
             case 11: // Identity Balence
 
-            break;
+              break;
 
             case 12: // Literal Merge
 
-            break;
+              break;
 
             case 13: // Zero Merge
 
-            break;
+              break;
 
             case 14: // Identity Merge
 
-            break;
+              break;
 
             case 15: // Literal Conversion
-
-            break;
+              var choice = Math.random();
+              if (choice >= 0.5) {
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                if (LiteralConversion.verify(end.NW[sib1])){
+                  action = new LiteralConversion(end.NW[sib1], Quadrant.NW);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
+              else {
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                if (LiteralConversion.verify(end.SE[sib1])){
+                  action = new LiteralConversion(end.SE[sib1], Quadrant.NW);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
+              break;
 
             default:
-            console.log("ERROR: INVALID ACTION INDEX IN GENERATOR")
-            break;
+              console.log("ERROR: INVALID ACTION INDEX IN GENERATOR")
+              break;
+          }
         }
       }
     }
-  }
-  return new Problem(start, end);
+  } while (start.equals(end));
+  return new StartGoalCombo(start, end);
 }
 
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
