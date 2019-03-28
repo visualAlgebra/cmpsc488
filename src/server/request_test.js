@@ -239,6 +239,10 @@ function executeFirebaseTesting() {
 
             setTimeout(function() {
               deleteFileTest("accounts/TEST_USER_1", 8, "TEST_USER_1", 200);
+              
+              setTimeout(function() {
+                console.log("testing complete");
+              }, 3000);
             }, 3000);
           }, 3000);
         }, 3000);
@@ -251,8 +255,8 @@ function executeFirebaseTesting() {
 }
 
 function executeTesting() {
-  executeNormalTesting();
-  //executeFirebaseTesting();
+  //executeNormalTesting();
+  executeFirebaseTesting();
 }
 
 function executeNormalTesting() {
