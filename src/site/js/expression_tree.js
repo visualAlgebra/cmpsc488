@@ -36,8 +36,8 @@ export class LessonInfo {
 
 export function parseMultiProblem(multi) {
   let ret = [];
-  for (let x in multi.queryResults) {
-    let k = multi.queryResults[x];
+  for (let x in multi.results) {
+    let k = multi.results[x];
     ret[x] = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
   }
   return ret;
