@@ -1,7 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge} from './algebraic_actions.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance} from './algebraic_actions.js';
 import Vue from "vue";
 
 export const Orientation = {
@@ -519,39 +519,67 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 11: // Identity Balence
-
+              var identityTag = createRandomExpression(Math.floor(Math.random()*10) + 1);
+              if (IdentityBalance.verify(identityTag, end)){
+                action = new IdentityBalance(identityTag, end);
+                action.apply();
+                actionApplied = true;
+              }
               break;
 
             case 12: // Literal Merge
+              var choice = Math.round(Math.random());
+              if (choice == 0)
+                var sib1 = end.NW[Math.floor(Math.random() * end.NW.length)];
+              else
+                var sib1 = end.SE[Math.floor(Math.random() * end.SE.length)];
+
+              choice = Math.round(Math.random());
+              if (choice == 0)
+                var sib2 = end.NW[Math.floor(Math.random() * end.NW.length)];
+              else
+                var sib2 = end.NW[Math.floor(Math.random() * end.SE.length)];
+              if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))){
+                action = new LiteralMerge(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2));
+                action.apply();
+                actionApplied = true;
+              }
 
               break;
 
             case 13: // Zero Merge
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              var sib2 = Math.floor(Math.random() * (end.NW.length));
+              if (ZeroMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+                action = new ZeroMerge(end.NW[sib1], end.NW[sib2]);
+                action.apply();
+                actionApplied = true;
+              }
 
               break;
 
             case 14: // Identity Merge
-              var choice = Math.random();
-              if (choice >= 0.5) {
-                var sib1 = Math.floor(Math.random() * (end.NW.length));
-                var sib2 = Math.floor(Math.random() * (end.NW.length));
-                  if (IdentityMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
-                    action = new IdentityMerge(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW);
-                    action.apply();
-                    actionApplied = true;
-                  }
-                }
-              
-              else {
-                var sib1 = Math.floor(Math.random() * (end.SE.length));
-                var sib2 = Math.floor(Math.random() * end.SE.length);
-                if (IdentityMerge.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE)) {
-                  action = new IdentityMerge(end.SE[sib1], end.SE[sib2],  Quadrant.SE, Quadrant.SE);
+            var choice = Math.random();
+            if (choice >= 0.5) {
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              var sib2 = Math.floor(Math.random() * (end.NW.length));
+                if (IdentityMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+                  action = new IdentityMerge(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW);
                   action.apply();
                   actionApplied = true;
                 }
               }
-              break;
+            
+            else {
+              var sib1 = Math.floor(Math.random() * (end.SE.length));
+              var sib2 = Math.floor(Math.random() * end.SE.length);
+              if (IdentityMerge.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE)) {
+                action = new IdentityMerge(end.SE[sib1], end.SE[sib2],  Quadrant.SE, Quadrant.SE);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
 
             case 15: // Literal Conversion
               var choice = Math.random();
