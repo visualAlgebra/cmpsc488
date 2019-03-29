@@ -25,7 +25,8 @@ export function findQuadrant(x) {
 export const MouseMode = {
   Manipulation: "General Manipulation",
   MergingLiterals: "Merging Literals",
-  Distribution: "Distribution"
+  Distribution: "Distribution",
+  Insertion: "Insertion",
 };
 
 export const TreeComponentKind = {

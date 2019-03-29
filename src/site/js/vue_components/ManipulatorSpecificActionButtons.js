@@ -87,6 +87,7 @@ export default {
     }, distribution(){
       this.changeMouseMode(2);
     }, insert(){
+      mouse.mode = "Insertion";
       this.insertMenu(true);
     }, changeMouseMode(num){
       this.insertMenu(false);
