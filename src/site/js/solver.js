@@ -8,7 +8,7 @@ import {
 import { ExpressionTree, Literal, Variable, Tag, Quadrant } from "./expression_tree";
 
 class Node {
-  constructor(heuristic, previousNode, previousAction, currentExpression, numberOfMoves) {
+  constructor(action, expression) {
     this.action = action;
     this.expression = expression;
   }
@@ -19,28 +19,17 @@ class Node {
 function heuristicEval(a, b) {
   if (a.equals(b))
     return 0;
-  if ((a instanceof Tag)) {
+  if (a instanceof Tag) {
     if (b instanceof Tag) {
-      var numDiff = 0;
-      var lengthAdjustment = Math.max(a.NW.length - b.NW.length, 0);
-      for (var i = 0; i < a.NW.length - lengthAdjustment; i++) {
-        if ((b.NW[i] instanceof Tag) && !(a.NW[i] instanceof Tag)) {
-          numDiff += 1 + heuristicEval(a.NW[i].NW[0], b.NW[i]);
-        }
-        else if ((a.NW[i] instanceof Tag) && !(b.NW[i] instanceof Tag)) {
-          numDiff += a.NW[i].treeCount;
-        }
-        else if ((a.NW[i] instanceof Tag) && (b.NW[i] instanceof Tag)) {
-          numDiff += heuristicEval(a.NW[i], b.NW[i]);
-        }
-        else if (a.NW[i].value != b.NW[i].value)
-          numDiff += 1;
+      for (var i = 0; i < a.length; i++) {
 
       }
     }
     else
       return a.treeCount;
   }
+
+
   if (a instanceof Literal) {
     if (b instanceof Literal) {
       if (b.value == a.value)
