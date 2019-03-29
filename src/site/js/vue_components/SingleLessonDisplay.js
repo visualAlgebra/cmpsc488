@@ -7,8 +7,8 @@ export default {
       <li v-for="(lesson, index) in lessons">
         <div class="collapsible-header blue-grey darken-1 white-text">
           <i class="material-icons white-text left">folder</i>
-          {{lesson.lessonID}}
-          <a href="http://localhost:8080/lesson-view/UPDATED_TEST_LESSON_1" class="secondary-content">
+          {{getLessonID(lesson.lessonID)}}
+          <a href="'http://localhost:8080/lesson-view/'+getLessonID(lesson.lessonID)" class="secondary-content">
             <i class="material-icons">send</i>
           </a>
         </div>
@@ -27,6 +27,8 @@ export default {
   `, methods: {
     getURL(creatorAccId){
       return "http://localhost:8080/profile/accounts/"+creatorAccId;
+    }, getLessonID(id){
+      return id.substr(id.indexOf('/')+1);
     }
   }, mounted(){
     M.AutoInit();

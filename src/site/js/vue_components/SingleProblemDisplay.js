@@ -5,6 +5,9 @@ import SvgPanZoom from "vue-svg-pan-zoom";
 export default {
   name: "SingleProblemDisplay", props: ["problemID", "start", "goal"], template: `
   <div class="container" style="border-style: solid;border-color: black;">Problem: {{problemID}}
+    <a :href="this.edit" class="secondary-content">
+      <i class="material-icons">rotate_left</i>
+    </a>
     <a :href="this.url" class="secondary-content">
       <i class="material-icons">send</i>
     </a>
@@ -20,6 +23,7 @@ export default {
   `, data(){
     return {
       url: "http://localhost:8080/manipulator/problems/"+this.problemID,
+      edit: "http://localhost:8080/creator/"+this.problemID,
     };
   }, components: {
     ExpressionTree, SingleExpressionDisplay,

@@ -41,7 +41,7 @@ export const manipulator_vue=new Vue({
         return null;
       }
       this.problemID=problem.substring(problem.indexOf('/manipulator')+'/manipulator/problems/'.length, problem.length);
-      return this.lessonID;
+      return this.problemID;
     }, distribute(res, code){
       if(code===1){
         this.desc=res.description;
