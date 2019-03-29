@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const serviceAccount = require("./vatest-83fa4-firebase-adminsdk-kvm0g-7c0191ca53.json");
+const fs = require("fs");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://vatest-83fa4.firebaseio.com'
@@ -27,6 +28,24 @@ function saveProblemWithoutAccount(problem, enteredName) {
   .catch(error => {
     console.log("failed to save file");
   })
+}
+
+//dev function to insert a doc into database from file
+function insertFile(fileName, collection, name) {
+  fs.readFile(fileName, function (error, data) {
+    if (data) {
+      database.collection(collection).doc(name).set(JSON.stringify(data))
+      .then( result => {
+        console.log("file written to database successfully");
+      })
+      .catch( error => {
+        console.log("error writing file to database");
+      });
+    }
+    if (error) {
+      console.log("error reading file");
+    }
+  });
 }
 
 function deleteFile(collection, file) {

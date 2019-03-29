@@ -370,6 +370,9 @@ class FirestoreDatabase extends Database {
         let ownerAccountReference = this.session.collection("accounts").doc(accountID);
 
         ownerAccountReference.get().then(doc => {
+          if(!doc.exists) {
+            return server.respondWithError(response, 400, "Error 400: Account does not exist in database");
+          }
           let ownerAccount = doc.data();
           let creationCount = ownerAccount.lessons.length + ownerAccount.problems.length;
           if (creationCount >= self.ACCOUNT_CREATION_LIMIT) {
@@ -433,6 +436,7 @@ class FirestoreDatabase extends Database {
     let self = this;
     problemReference = this.session.collection("problems").doc();
     databaseProblem.problemID = problemReference.id;
+    databaseProblem.creatorAccountID = null;
     //console.log(problemReference.id);
     problemReference.set(databaseProblem)
       .then(function () {
@@ -528,7 +532,24 @@ class FirestoreDatabase extends Database {
         if(doc.exists) {
           return server.respondWithError(response, 400, "lesson wtih that name already exists");
         } else {
-          return self.saveLessonBatchWrite(server, response, databaseLesson);
+          //first determine if account has too many saved items
+          let ownerAccountReference = this.session.collection("accounts").doc(accountID);
+          ownerAccountReference.get().then(doc => {
+            let ownerAccount = doc.data();
+            let creationCount = ownerAccount.lessons.length + ownerAccount.problems.length;
+            if (creationCount >= self.ACCOUNT_CREATION_LIMIT) {
+              return server.respondWithError(response, 400, "Account already has limit of " + self.ACCOUNT_CREATION_LIMIT + " creations. Delete an old creation to save a new one.")
+            } else {
+              return self.saveLessonBatchWrite(server, response, databaseLesson);
+            }
+          })
+          .catch( error => {
+            console.log("============ Error =============");
+            console.log("Error with getting creator's account in SaveLesson()");
+            console.log(error);
+            console.log("==========End of Error =========");
+            return server.respondWithError(response, 500, "Error 500: Error getting account of user");
+          });
         }
       })
       .catch(error => {

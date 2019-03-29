@@ -1,7 +1,8 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import { solve } from "../solver";
-import { Deserialize, randomProblemGenerator } from "../expression_tree";
+import { Deserialize, randomProblemGenerator, compress_string_js, ProblemInfo } from "../expression_tree";
 import {histAction} from "../history_nav";
+import { post_problem_from_site } from "../database_management";
 
 export default {
   name: "ManipulatorNavigationButtons", props:["dataFunc"], template: `
@@ -56,8 +57,21 @@ export default {
       var actionsArr = [];
       for(var i = 0; i<16; i++)
         actionsArr.push(true);
-      var test = randomProblemGenerator(15, actionsArr, 10);
-      console.log(test.start, test.goal);
+      actionsArr[3] = false;
+      actionsArr[6] = false;
+      actionsArr[4] = false;
+      var test = randomProblemGenerator(10, actionsArr, 15);
+      var retval=new ProblemInfo('RAND_PROBLEM_1');
+      compress_string_js(test.start.toString(), res=>{
+        retval.expression_start=res;
+        compress_string_js(test.goal.toString(), res2=>{
+          retval.expression_goal=res2;
+          retval.description="lul";
+          post_problem_from_site(retval);
+        });
+      });
+     
+      
       console.log('_DEBUG_FINISHED');
     },
   },
