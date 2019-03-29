@@ -539,8 +539,8 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 var sib2 = end.NW[Math.floor(Math.random() * end.NW.length)];
               else
                 var sib2 = end.NW[Math.floor(Math.random() * end.SE.length)];
-              if (LiteralMerge.verify(sib1, sib2, childQuadrant(sib1), childQuadrant(sib2))){
-                action = new LiteralMerge(sib1, sib2, childQuadrant(sib1), childQuadrant(sib2));
+              if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))){
+                action = new LiteralMerge(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2));
                 action.apply();
                 actionApplied = true;
               }
