@@ -1,7 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge} from './algebraic_actions.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance} from './algebraic_actions.js';
 import Vue from "vue";
 
 export const Orientation = {
@@ -519,7 +519,12 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 11: // Identity Balence
-
+              var identityTag = createRandomExpression(Math.floor(Math.random()*10) + 1);
+              if (IdentityBalance.verify(identityTag, end)){
+                action = new IdentityBalance(identityTag, end);
+                action.apply();
+                actionApplied = true;
+              }
               break;
 
             case 12: // Literal Merge
@@ -534,8 +539,8 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 var sib2 = end.NW[Math.floor(Math.random() * end.NW.length)];
               else
                 var sib2 = end.NW[Math.floor(Math.random() * end.SE.length)];
-              if (LiteralMerge.verify(sib1, sib2, getQuad(sib1), getQuad(sib2))){
-                action = new LiteralMerge(sib1, sib2, getQuad(sib1), getQuad(sib2));
+              if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))){
+                action = new LiteralMerge(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2));
                 action.apply();
                 actionApplied = true;
               }
