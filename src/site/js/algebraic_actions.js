@@ -24,6 +24,7 @@
 // If the siblings and quadrant are valid, then the siblings will be swapped.
 import { Literal, Orientation, Quadrant, Tag, Variable } from "./expression_tree";
 
+//TODO: Refactor to use remove, insert, and replace 
 export class CommutativeSwap {
 
   constructor(sibling1, sibling2, quadrantLabel) {
@@ -89,19 +90,18 @@ export class AssociativeMerge {
     if (this.quadrantLabel === Quadrant.NW) {
       newNW = this.sibling.NW;
       newSE = this.sibling.SE;
-      this.parent.removeNorthWest(this.sibling);
     } else {
       newNW = this.sibling.SE;
       newSE = this.sibling.NW;
-      this.parent.removeSouthEast(this.sibling);
     }
+    this.parent.remove(this.sibling, this.quadrantLabel);
 
     //adding sibling's children into parent
     for (let child of newNW) {
-      this.parent.addNorthWest(child);
+      this.parent.insert(child, Quadrant.NW);
     }
     for (let child of newSE) {
-      this.parent.addSouthEast(child);
+      this.parent.insert(child, Quadrant.SE);
     }
   }
 }
@@ -136,7 +136,8 @@ export class AssociativeIntro {
       }
 
       //add expr into new Tag
-      newTag.addNorthWest(this.expr);
+      newTag.insert(this.expr, Quadrant.NW);
+
     } else {
 
       if (this.expr instanceof Tag) {
@@ -152,10 +153,13 @@ export class AssociativeIntro {
         const newTag = new Tag(this.expr.orientation, copyNW, copySE);
   
         //add newTag into expr
-        this.expr.addNorthWest(newTag);
+        this.expr.insert(newTag, Quadrant.NW);
+
       } else {
+        
         let newTag = new Tag(Orientation.NS);
-        newTag.insert(this.expr, 0, Quadrant.NW);
+        newTag.insert(this.expr, Quadrant.NW);
+
       }    
 
     }
@@ -189,15 +193,8 @@ export class AssociativeExtract {
     const index = grandparent.find(parent, this.quadrantLabel);
 
     //removing grandchild from grandparent and prepending into parent
-    if (this.quadrantLabel === Quadrant.NW) {
-      parent.removeNorthWest(this.grandchild);
-      grandparent.insert(this.grandchild, index, grandparent.childQuadrant(parent));
-    } else {
-      let insertQuad = (grandparent.childQuadrant(parent) === Quadrant.NW) ? Quadrant.SE : Quadrant.NW;
-      parent.removeSouthEast(this.grandchild);
-      grandparent.insert(this.grandchild, grandparent.NW.length, insertQuad);
-    }
-
+    parent.remove(this.grandchild, this.quadrantLabel);
+    grandparent.insert(this.grandchild, grandparent.childQuadrant(parent), index);
 
   }
 }
@@ -230,14 +227,10 @@ export class AssociativeInsert {
     const parent = this.sibling.parent;
 
     //removing pointer to sibling in parent
-    if (parent.NW.some(thing => Object.is(thing, this.sibling))) {
-      parent.removeNorthWest(this.sibling);
-    } else {
-      parent.removeSouthEast(this.sibling);
-    }
+    parent.remove(this.sibilng, parent.childQuadrant(this.sibilng));
 
     //inserting sibling into intersion tag
-    this.insertionTag.insert(this.sibling, 0, Quadrant.NW);
+    this.insertionTag.insert(this.sibling, Quadrant.NW, 0);
   }
 }
 
@@ -296,21 +289,21 @@ export class Distribute {
       //clearing out the NW quadrant and adding in the new tags
       parent.emptyNorthWest();
       for (let child of newNW) {
-        parent.insert(child, parent.NW.length, Quadrant.NW);
+        parent.insert(child, Quadrant.NW);
       }
 
       //clearing out the SE quadrant and adding in the new tags
       parent.emptySouthEast();
       for (let child of newSE) {
-        parent.insert(child, parent.SE.length, Quadrant.SE);
+        parent.insert(child, Quadrant.SE);
       }
     } else {
       let quad = parent.childQuadrant(this.value);
       let index = parent.find(this.value, quad);
-      parent.removeNorthWest(this.value);
-      parent.removeNorthWest(this.tagToDistributeOver);
+      parent.remove(this.value, Quadrant.NW);
+      parent.remove(this.tagToDistributeOver, Quadrant.NW);
       let newTag = new Tag(Orientation.EW, newNW, newSE);
-      parent.insert(newTag, index, quad);
+      parent.insert(newTag, quad, index);
     }
 
   }
@@ -464,11 +457,11 @@ export class SplitFrac {
     this.tag.orientation = Orientation.EW;
     this.tag.emptyNorthWest();
     for (let child of newNW) {
-      this.tag.insert(child, this.tag.NW.length, Quadrant.NW);
+      this.tag.insert(child, Quadrant.NW);
     }
     this.tag.emptySouthEast();
     for (let child of newSE) {
-      this.tag.insert(child, this.tag.SE.length, Quadrant.SE);
+      this.tag.insert(child, Quadrant.SE);
     }
   }
 }
@@ -476,90 +469,26 @@ export class SplitFrac {
 //Combine an EW tag of NS tags that have a common S quadrant
 export class CombineFrac {
   //Where sibligns is the list of
-  constructor(tag) {
-    this.tag = tag;
+  constructor(sibling1, sibling2, quadrantLabel) {
+    this.sibling1 = sibling1;
+    this.sibling2 = sibling2;
+    this.quadrantLabel = quadrantLabel
   }
 
-  static verify(tag, tagChild) {
-    if(tag === null || tagChild === null) {
-      return false;
-    }
-    if (!(tag instanceof Tag && tagChild instanceof Tag)) {
-      return false; 
-    }
-    if (tag.orientation !== Orientation.EW) {
-      return false;
-    }
-    if (Object.is(tag, tagChild)) {
-      return false;
-    }
+  static verify() {
 
-    let divisor = tagChild.SE;
-    for (let frac of tag.NW.concat(tag.SE)) {
-      
-      if (!(frac instanceof Tag)) {
-        return false;
-      }
-
-      if (divisor.length !== frac.SE.length) {
-        return false;
-      } 
-
-      if (tagChild instanceof Tag) {
-        for (let i = 0; i < divisor.length; i++) {
-          if (!(frac.SE[i].equals(divisor[i]))) {
-            return false;
-          }
-        }
-      }
-
-    }
-    return true;
   }
 
   apply() {
 
-    //Creating new NW and SE quadrants
-    let newNW = [];
-    let newSE = [];
-
-    //Creating divisor
-    let divisor;
-
-    //creating the dividend
-    for (let child of this.tag.NW) {
-      if (child.NW.length > 1) {
-        let newTag = new Tag(Orientation.NS, child.NW);
-        newNW.push(newTag);
-      } else {
-        newNW = newNW.concat(child.NW);
-        divisor = child.SE;
-      }
-    }
-    for (let child of this.tag.SE) {
-      if (child.NW.length > 1) {
-        let newTag = new Tag(Orientation.NS, child.NW);
-        newSE.push(newTag);
-      } else {
-        newSE = newSE.concat(child.NW);
-        divisor = child.SE;
-      }
-    }
-    let dividend = new Tag(Orientation.EW, newNW, newSE);
+    let parent = this.sibling1.parent;
+    let dividend = this.sibilng1.NW.concat(this.sibling2.NW);
+    let divisor = this.sibling1.SE;
     
-    // console.log(this.tag);
-    // //Swapping orientation
-    // this.tag.orientation = Orientation.NS;
+    let newFrac = new Tag(Orientation.NS, dividend, divisor);
+    parent.replace(this.sibling2, newFrac, this.quadrantLabel);
+    parent.remove(this.sibling1, this.quadrantLabel);
 
-    // //Adding the dividend
-    // this.tag.emptyNorthWest();
-    // this.tag.insert(dividend, 0, Quadrant.NW);
-
-    // //Adding divisor
-    // this.tag.emptySouthEast();
-    // for (let child of divisor) {
-    //   this.tag.insert(child, this.tag.SE.length, Quadrant.SE);
-    // }
   }
 }
 
@@ -594,13 +523,9 @@ export class QuadrantFlip {
     this.tag.SE = temp;
 
     //Adding the tag into it's opposite quadrant;
-    if (this.quadrantLabel === Quadrant.NW) {
-      parent.removeNorthWest(this.tag);
-      parent.insert(this.tag, parent.SE.length, Quadrant.SE);
-    } else {
-      parent.removeSouthEast(this.tag);
-      parent.insert(this.tag, parent.NW.length, Quadrant.NW);
-    }
+    parent.remove(this.tag, this.quadrantLabel);
+    let oppositeQuad = (this.quadrantLabel === Quadrant.NW) ? Quadrant.SE : Quadrant.NW;
+    parent.insert(this.tag, oppositeQuad);
 
   }
 }
@@ -625,8 +550,8 @@ export class Cancel {
     const parent = this.sibling2.parent;
 
     //removing the siblings
-    parent.removeNorthWest(this.sibling1);
-    parent.removeSouthEast(this.sibling2);
+    parent.remove(this.sibling1, Quadrant.NW);
+    parent.remove(this.sibling2, Quadrant.SE);
   }
 }
 
@@ -656,8 +581,8 @@ export class IdentityBalance {
     let copy = this.newChild.clone();
 
     //adding a children in both quadrants
-    this.tag.insert(this.newChild, 0, Quadrant.NW);
-    this.tag.insert(copy, 0, Quadrant.SE);
+    this.tag.insert(this.newChild, Quadrant.NW);
+    this.tag.insert(copy, Quadrant.SE);
   }
 }
 

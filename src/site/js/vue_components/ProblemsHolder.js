@@ -9,7 +9,7 @@ export default {
       v-bind:start="problems[index].expression_start"
       v-bind:goal="problems[index].expression_goal">
     </SingleProblemDisplay>
-  </div>  
+  </div>
   `, components: {
     SingleProblemDisplay,
   }
