@@ -9,11 +9,8 @@ import { ExpressionTree, Literal, Variable, Tag, Quadrant } from "./expression_t
 
 class Node {
   constructor(heuristic, previousNode, previousAction, currentExpression, numberOfMoves) {
-    this.heuristic = heuristic;
-    this.previousNode = previousNode;
-    this.action = previousAction;
-    this.currentExpression = currentExpression;
-    this.numberOfMoves = numberOfMoves;
+    this.action = action;
+    this.expression = expression;
   }
 
 
