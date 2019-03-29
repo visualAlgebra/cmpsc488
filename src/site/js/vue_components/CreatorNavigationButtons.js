@@ -1,5 +1,10 @@
 export default {
-  name: "CreatorNavigationButtons", template: `
+  name: "CreatorNavigationButtons",
+  props: [
+    "goToNextStage",
+    "stage",
+  ],
+  template: `
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col" v-on:click="save()" v-if="stage==='build'">
@@ -30,18 +35,15 @@ export default {
           <i class="material-icons left">subdirectory_arrow_right</i>
           Generate expression
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="stageChange()">
+      <a class="tab waves-effect waves-light btn col" v-on:click="goToNextStage()">
           <i class="material-icons left">subdirectory_arrow_right</i>
           Build goal
       </a>
     </div>
   </div>  
-  `, data(){
-    return {
-    };
-  }, methods: {
-    save(){
-      console.log('blah')
-    }
+  `,
+  data: () => ({
+  }),
+  methods: {
   },
 };

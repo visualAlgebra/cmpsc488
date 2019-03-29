@@ -5,28 +5,48 @@ import ManipulatorSpecificActionButtons from "./vue_components/ManipulatorSpecif
 import CreatorSpecificActionButtons from "./vue_components/CreatorSpecificActionButtons";
 import CreatorNavigationButtons from "./vue_components/CreatorNavigationButtons";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
+import * as M from "materialize-css";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar v-if="displayPage"></NavigationBar>
-    <CreatorNavigationButtons v-if="displayPage"></CreatorNavigationButtons>
+    <CreatorNavigationButtons
+      v-if="displayPage"
+      :goToNextStage="goToNextStage"
+      :stage="stage"
+    ></CreatorNavigationButtons>
     <CreatorSpecificActionButtons v-if="displayPage"></CreatorSpecificActionButtons>
     <ManipulatorWindow v-if="displayPage&&workTree" :tree="workTree"></ManipulatorWindow>
-    <p>Welcome from vue</p>
   </div>
-  `, data(){
-    return {
-      display: false, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null,
-    };
-  }, computed: {
+  `,
+  data: () => ({
+    stage: "build",
+    display: false,
+    workTree: null,
+    startTree: null,
+    dbInfo:0,
+    problemID: "",
+    desc:"",
+    time:"",
+    goalTreeStr: null,
+  }),
+  mounted() {
+    M.AutoInit();
+    this.display = true;
+  },
+  methods: {
+    goToNextStage() {
+      this.stage = "manip";
+      this.startTree = this.workTree.toString();
+    },
+  },
+  computed: {
     displayPage: function(){
-      if(this.display===true){
-        return true;
-      }
-      return false;
+      return this.display;
     }
-  }, components: {
-    NavigationBar, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, CreatorSpecificActionButtons, CreatorNavigationButtons, ManipulatorWindow,
+  },
+  components: {
+    NavigationBar, CreatorSpecificActionButtons, CreatorNavigationButtons, ManipulatorWindow,
   },
 });

@@ -27,20 +27,20 @@ export default {
       </form>
     </section>
     <section id="manipulatorsSubPanel" style="display:none">
-      <div class="card-panel">
-        <div class="row">
+      <div class="card-panel row">
+        <div class="col">
           <button class="btn waves-effect waves-light">
             <i class="material-icons left">add</i>
             East-West
           </button>
         </div>
-        <div class="row">
+        <div class="col">
           <button class="btn waves-effect waves-light">
             <i class="material-icons left">add</i>
             North-South
           </button>
         </div>
-        <div class="row">
+        <div class="col">
           <button class="btn waves-effect waves-light">
             <i class="material-icons left">add</i>
             0
@@ -54,7 +54,7 @@ export default {
             2
           </button>
         </div>
-        <div class="row">
+        <div class="col">
           <button class="btn waves-effect waves-light">
             <i class="material-icons left">add</i>
             x1
