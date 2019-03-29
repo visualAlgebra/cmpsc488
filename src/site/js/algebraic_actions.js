@@ -328,7 +328,7 @@ export class Factor {
           return false;
       }
       else {
-        if (!tagToFactor.NW[i].value.equals(valueToFactor))
+        if (!tagToFactor.NW[i].equals(valueToFactor))
           return false;
       }
     }
@@ -339,7 +339,7 @@ export class Factor {
           return false;
       }
       else {
-        if (!tagToFactor.SE[i].value.equals(valueToFactor))
+        if (!tagToFactor.SE[i].equals(valueToFactor))
           return false;
       }
     }

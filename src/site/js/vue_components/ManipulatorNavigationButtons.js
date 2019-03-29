@@ -1,6 +1,6 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import { solve } from "../solver";
-import { Deserialize } from "../expression_tree";
+import { Deserialize, randomProblemGenerator } from "../expression_tree";
 import {histAction} from "../history_nav";
 
 export default {
@@ -53,6 +53,11 @@ export default {
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
+      var actionsArr = [];
+      for(var i = 0; i<16; i++)
+        actionsArr.push(true);
+      var test = randomProblemGenerator(15, actionsArr, 10);
+      console.log(test.start, test.goal);
       console.log('_DEBUG_FINISHED');
     },
   },
