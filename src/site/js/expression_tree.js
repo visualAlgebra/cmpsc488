@@ -36,8 +36,8 @@ export class LessonInfo {
 
 export function parseMultiProblem(multi) {
   let ret = [];
-  for (let x in multi.queryResults) {
-    let k = multi.queryResults[x];
+  for (let x in multi.results) {
+    let k = multi.results[x];
     ret[x] = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
   }
   return ret;
@@ -170,10 +170,20 @@ export class Tag extends ExpressionTree {
     this.updateParentTreeCount(newVal.treeCount - oldVal.treeCount);
   }
 
-  insert(child, index, quadrantLabel) {
-    this[quadrantLabel].splice(index, 0, child);
+  insert(child, quadrantLabel, index) {
+    if (index === undefined) {
+      this[quadrantLabel].push(child);
+    } else {
+      this[quadrantLabel].splice(index, 0, child);
+    }
     child.parent = this;
     this.updateParentTreeCount(child.treeCount);
+  }
+
+  remove(child, quadrantLabel) {
+    this[quadrantLabel] = this[quadrantLabel].filter(x => !Object.is(x, child));
+    child.parent = null;
+    this.updateParentTreeCount(-child.treeCount);
   }
 
   equals(that) {

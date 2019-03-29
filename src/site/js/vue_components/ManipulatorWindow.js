@@ -50,7 +50,7 @@ export default {
     center() {
       this.svgpanzoom.center();
       this.svgpanzoom.resetZoom();
-      this.svgpanzoom.pan({x:300, y:200});
+      this.svgpanzoom.pan({x: 300, y: 200});
       console.log(this.svgpanzoom);
     },
   },

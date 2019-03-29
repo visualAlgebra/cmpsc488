@@ -1,5 +1,6 @@
 import ExpressionTree from "./ExpressionTree";
 import SingleExpressionDisplay from "./SingleExpressionDisplay";
+import SvgPanZoom from "vue-svg-pan-zoom";
 
 export default {
   name: "SingleProblemDisplay", props: ["problemID", "start", "goal"], template: `
@@ -9,18 +10,10 @@ export default {
     </a>
     <div class="row">
       <div class="col">Start:
-        <svg height="100%" width="100%">
-          <foreignObject height="100%" width="100%" style="overflow:auto">
-            <SingleExpressionDisplay v-bind:tree="this.start"></SingleExpressionDisplay>
-          </foreignObject>
-        </svg>
+        <SingleExpressionDisplay v-bind:tree="this.start"></SingleExpressionDisplay>
       </div>
       <div class="col">Goal:
-        <svg height="100%" width="100%">
-          <foreignObject height="100%" width="100%" style="overflow:auto">
-            <SingleExpressionDisplay v-bind:tree="this.goal"></SingleExpressionDisplay>
-          </foreignObject>
-        </svg>
+        <SingleExpressionDisplay v-bind:tree="this.goal"></SingleExpressionDisplay>
       </div>
     </div>
   </div>  

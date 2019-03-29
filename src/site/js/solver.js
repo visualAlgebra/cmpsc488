@@ -165,8 +165,10 @@ function dumbExpand(root, nodeArray) {
     
     let child1 = childArr[i];
     let location1 = locationArr[i];
+
     //actions that involve only one child
-    expandAssociativeIntro(child1, nodeArray);
+    expandAssociativeIntro(child1, location1, root, nodeArray);
+    expandLiteralConversion(child1, location1, root, nodeArray);
     
     //actions that involve two children
     for (let j = 0; j < childArr.length; j++) {
@@ -186,14 +188,15 @@ function dumbExpand(root, nodeArray) {
   }
 }
 
-function expandAssociativeIntro(child1, nodeArray) {
+function expandAssociativeIntro(child, location, root, nodeArray) {
   
-  if (AssociativeIntro.verify(child1)) {
-    let child = child1.clone();
-    let action = new AssociativeIntro(child);
+  if (AssociativeIntro.verify(child)) {
+    let rootClone = root.clone();
+    let expTree = getChild(rootClone, location);
+    let action = new AssociativeIntro(expTree);
     action.apply();
     //addToNodeArray(currrentClone, nodeArray, expanded);
-    nodeArray.push(child);
+    nodeArray.push(new Node(rootClone, action));
   }
 }
 
@@ -208,7 +211,7 @@ function expandAssociativeMerge(child1, child2, location1, location2, root, node
     let action = new AssociativeMerge(sibling, parent, parQuad);
     action.apply();
     //addToNodeArray(currrentClone, nodeArray, expanded);
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
@@ -222,7 +225,7 @@ function expandAssociativeExtract(child1, child2, location1, location2, root, no
     // let grandParent = getChild(rootClone, location2);
     let action = new AssociativeExtract(grandChild, getQuad(location1));
     action.apply();
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
@@ -236,7 +239,7 @@ function expandAssociativeInsert(child1, child2, location1, location2, root, nod
     let insertionTag = getChild(rootClone, location2);
     let action = new AssociativeInsert(sibling, insertionTag);
     action.apply();
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
@@ -255,7 +258,7 @@ function expandCommutativeSwap(child1, child2, location1, location2, root, nodeA
     let sibling2 = getChild(rootClone, location2);    ;
     let action = new CommutativeSwap(sibling1, sibling2, quad1);
     action.apply();
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
@@ -268,7 +271,7 @@ function expandCancel(child1, child2, location1, location2, root, nodeArray) {
     let sibling2 = getChild(rootClone, location2);
     let action = new Cancel(sibling1, sibling2);
     action.apply();
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
@@ -280,7 +283,7 @@ function expandCombineFrac(child1, child2, location1, location2, root, nodeArray
     let tag = getChild(rootClone, location1);
     let action = new CombineFrac(tag);
     action.apply();
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
@@ -295,25 +298,52 @@ function expandDistribute(child1, child2, location1, location2, root, nodeArray)
     let tagToDistributeOver = getChild(rootClone, location2);
     let action = new Distribute(value, tagToDistributeOver);
     action.apply();
-    nodeArray.push(rootClone);
+    nodeArray.push(new Node(rootClone, action));
   }
 
 }
 
-function expandFactor(nodeToExpand, nodeArray){
+function expandFactor(child1, child2, location1, location2, root, nodeArray) {
   
+  if (Factor.verify(child1, child2)) {
+    let rootClone = root.clone();
+    let valueToFactor = getChild(rootClone, location1);
+    let tagToFactor = getChild(rootClone, location2);
+    let action = new Factor(valueToFactor, tagToFactor);
+    action.apply();
+    nodeArray.push(new Node(rootClone, action));
+  }
+
 }
 
+//skip for now?
 function expandIdentityBalence(nodeToExpand, nodeArray){
   
 }
 
-function expandIdentityMerge(nodeToExpand, nodeArray){
+function expandIdentityMerge(child1, child2, location1, location2, root, nodeArray) {
   
+  let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2);
+  if (IdentityMerge.verify(child1, child2, quad1, quad2)) {
+    let rootClone = root.clone();
+    let sibling1 = getChild(rootClone, location1);
+    let sibling2 = getChild(rootClone, location2);
+    let action = new IdentityMerge(sibling1, sibling2, quad1, quad2);
+    action.apply();
+    nodeArray.push(new Node(rootClone, action));
+  }
 }
 
-function expandLiteralConversion(nodeToExpand, nodeArray){
+function expandLiteralConversion(child, location, root, nodeArray){
   
+  if (LiteralConversion.verify(child)) {
+    let rootClone = root.clone();
+    let lit = getChild(rootClone, location);
+    let action = new LiteralConversion(lit, getQuad(location));
+    action.apply();
+    nodeArray.push(new Node(rootClone, action));
+  }
 }
 
 function expandLiteralMerge(nodeToExpand, nodeArray){
