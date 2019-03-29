@@ -61,11 +61,11 @@ export default {
       actionsArr[6] = false;
       actionsArr[4] = false;
       var test = randomProblemGenerator(10, actionsArr, 15);
-      let retval=new ProblemInfo('RAND_PROBLEM_1');
+      var retval=new ProblemInfo('RAND_PROBLEM_1');
       compress_string_js(test.start.toString(), res=>{
         retval.expression_start=res;
       });
-      compress_string_js(test.end.toString(), res=>{
+      compress_string_js(test.goal.toString(), res=>{
         retval.expression_goal=res;
       });
       retval.description="lul";
