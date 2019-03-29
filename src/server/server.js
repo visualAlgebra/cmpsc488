@@ -275,10 +275,16 @@ class Server {
   }
 
   queryProblems(query, response) {
+    if(Object.keys(query).length == 0) {
+      return this.database.getAllProblemIDs(server, response);
+    }
     return this.database.queryProblems(server, response, query);
   }
 
   queryLessons(query, response) {
+    if(Object.keys(query).length == 0) {
+      return this.database.getAllLessonIDs(server, response);
+    }
     return this.database.queryLessons(server, response, query);
   }
 

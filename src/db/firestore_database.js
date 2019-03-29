@@ -256,6 +256,44 @@ class FirestoreDatabase extends Database {
       });
     }
   }
+  
+  getAllLessonIDs(server, response) {
+    let lessonIDs = [];
+    let lessonCollectionReference = this.session.collection("lessons");
+    lessonCollectionReference.listDocuments()
+      .then(docReferences => {
+        docReferences.forEach(docRef => {
+          lessonIDs.push(docRef.id);
+        })
+        server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': lessonIDs }));
+      })
+      .catch(error => {
+        console.log("============ Error =============");
+        console.log("Error with getting all lesson ids");
+        console.log(error);
+        console.log("==========End of Error =========");
+        server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Database Error");
+      });
+  }
+
+  getAllProblemIDs(server, response) {
+    let problemIDs = [];
+    let problemCollectionReference = this.session.collection("problems");
+    problemCollectionReference.listDocuments()
+      .then(docReferences => {
+        docReferences.forEach(docRef => {
+          problemIDs.push(docRef.id);
+        })
+        server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': problemIDs }));
+      })
+      .catch(error => {
+        console.log("============ Error =============");
+        console.log("Error with getting all problem ids");
+        console.log(error);
+        console.log("==========End of Error =========");
+        server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Database Error");
+      });
+  }
 
 
 // ==========================================================
