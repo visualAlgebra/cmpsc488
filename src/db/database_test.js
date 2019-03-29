@@ -39,6 +39,13 @@ class TestTracker {
     console.log("finished cleanup");
   }
 
+  quickCleanup() {
+    this.toDelete.forEach(file => {
+      let slashIndex = file.indexOf('/');
+      database.deleteFile(file.substring(0,slashIndex), file.substring(slashIndex+1));
+    });
+  }
+
 }
 
 
@@ -61,7 +68,7 @@ class FakeServer {
   
   respondWithData(response, statusCode, mediaType, data) {
     if(response.expectedCode !== 200 && response.expectedCode !== 201) {
-      failedTest(response.testCase, "Expected: " + response.expectedResult + "\nInstead: database file " + data);
+      failedTest(response.testCase, "Expected: " + response.expectedResult + "\nInstead: database file " + data + " saved");
     } else {
       let checkReturn = response.checkFunction(data, response.testComparison);
       if(!checkReturn) {
@@ -331,3 +338,5 @@ function runTests() {
 
 
 runTests();
+// let thing = new TestTracker(0, deleteFiles);
+// thing.quickCleanup();
