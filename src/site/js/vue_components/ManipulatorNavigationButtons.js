@@ -64,12 +64,14 @@ export default {
       var retval=new ProblemInfo('RAND_PROBLEM_1');
       compress_string_js(test.start.toString(), res=>{
         retval.expression_start=res;
+        compress_string_js(test.goal.toString(), res2=>{
+          retval.expression_goal=res2;
+          retval.description="lul";
+          post_problem_from_site(retval);
+        });
       });
-      compress_string_js(test.goal.toString(), res=>{
-        retval.expression_goal=res;
-      });
-      retval.description="lul";
-      post_problem_from_site(retval);
+     
+      
       console.log('_DEBUG_FINISHED');
     },
   },
