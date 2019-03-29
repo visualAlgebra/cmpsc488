@@ -27,7 +27,7 @@ export function post_problem_from_site(problem) {
     let http = new XMLHttpRequest();
     http.open("POST", "http://localhost:8080/problems/" + problem.problemID, true);
     http.setRequestHeader("Content-type", "application/json");
-    let user = "Fractalyst, ofcourse, why would any other user be here?";
+    let user = "TEST_USER_0";
     http.setRequestHeader("Account", user);
     let str = '{ "problemName": "' + problem.problemID + '\",'+
       ' "startExpression": [' + problem.expression_start + '],'+

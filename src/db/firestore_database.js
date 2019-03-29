@@ -370,6 +370,9 @@ class FirestoreDatabase extends Database {
         let ownerAccountReference = this.session.collection("accounts").doc(accountID);
 
         ownerAccountReference.get().then(doc => {
+          if(!doc.exists) {
+            return server.respondWithError(response, 400, "Error 400: Account does not exist in database");
+          }
           let ownerAccount = doc.data();
           let creationCount = ownerAccount.lessons.length + ownerAccount.problems.length;
           if (creationCount >= self.ACCOUNT_CREATION_LIMIT) {
