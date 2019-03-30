@@ -172,6 +172,11 @@ function dumbExpand(root, nodeArray) {
       expandCancel(child1, child2, location1, location2, root, nodeArray);
       expandCombineFrac(child1, child2, location1, location2, root, nodeArray);
       expandDistribute(child1, child2, location1, location2, root, nodeArray);
+      expandIdentityMerge(child1, child2, location1, location2, root, nodeArray);
+      expandLiteralMerge(child1, child2, location1, location2, root, nodeArray);
+      expandQuadrantFlip(child1, child2, location1, location2, root, nodeArray);
+      expnadSplitFrac(child1, child2, location1, location2, root, nodeArray);
+      expandZeroMerge(child1, child2, location1, location2, root, nodeArray);
       
     }
   }
@@ -185,7 +190,7 @@ function expandAssociativeIntro(child, location, root, nodeArray) {
     let action = new AssociativeIntro(expTree);
     action.apply();
     //addToNodeArray(currrentClone, nodeArray, expanded);
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 }
 
@@ -200,7 +205,7 @@ function expandAssociativeMerge(child1, child2, location1, location2, root, node
     let action = new AssociativeMerge(sibling, parent, parQuad);
     action.apply();
     //addToNodeArray(currrentClone, nodeArray, expanded);
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
@@ -214,7 +219,7 @@ function expandAssociativeExtract(child1, child2, location1, location2, root, no
     // let grandParent = getChild(rootClone, location2);
     let action = new AssociativeExtract(grandChild, getQuad(location1));
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
@@ -228,7 +233,7 @@ function expandAssociativeInsert(child1, child2, location1, location2, root, nod
     let insertionTag = getChild(rootClone, location2);
     let action = new AssociativeInsert(sibling, insertionTag);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
@@ -247,7 +252,7 @@ function expandCommutativeSwap(child1, child2, location1, location2, root, nodeA
     let sibling2 = getChild(rootClone, location2);    ;
     let action = new CommutativeSwap(sibling1, sibling2, quad1);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
@@ -260,22 +265,25 @@ function expandCancel(child1, child2, location1, location2, root, nodeArray) {
     let sibling2 = getChild(rootClone, location2);
     let action = new Cancel(sibling1, sibling2);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
 
 function expandCombineFrac(child1, child2, location1, location2, root, nodeArray) {
 
-  if (CombineFrac.verify(child1, child2)) {
+  let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2);
+  if (CombineFrac.verify(child1, child2, quad1, quad2)) {
     let rootClone = root.clone();
-    let tag = getChild(rootClone, location1);
-    let action = new CombineFrac(tag);
+    let sibling1 = getChild(rootClone, location1);
+    let sibling2 = getChild(rootClone, location2);
+    let action = new CombineFrac(sibling1, sibling2, quad1);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
-  }
+ Combin
+ Combin
 
-}
+}Combin
 
 function expandDistribute(child1, child2, location1, location2, root, nodeArray) {
   
@@ -287,7 +295,7 @@ function expandDistribute(child1, child2, location1, location2, root, nodeArray)
     let tagToDistributeOver = getChild(rootClone, location2);
     let action = new Distribute(value, tagToDistributeOver);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
@@ -300,7 +308,7 @@ function expandFactor(child1, child2, location1, location2, root, nodeArray) {
     let tagToFactor = getChild(rootClone, location2);
     let action = new Factor(valueToFactor, tagToFactor);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 
 }
@@ -320,34 +328,71 @@ function expandIdentityMerge(child1, child2, location1, location2, root, nodeArr
     let sibling2 = getChild(rootClone, location2);
     let action = new IdentityMerge(sibling1, sibling2, quad1, quad2);
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 }
 
-function expandLiteralConversion(child, location, root, nodeArray){
+function expandLiteralConversion(child, location, root, nodeArray) {
   
   if (LiteralConversion.verify(child)) {
     let rootClone = root.clone();
     let lit = getChild(rootClone, location);
     let action = new LiteralConversion(lit, getQuad(location));
     action.apply();
-    nodeArray.push(new Node(rootClone, action));
+    nodeArray.push(new Node(action, rootClone));
   }
 }
 
-function expandLiteralMerge(nodeToExpand, nodeArray){
+function expandLiteralMerge(child1, child2, location1, location2, root, nodeArray) {
+  
+  let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2);
+  if (LiteralMerge.verify(child1, child2, quad1, quad2)) {
+    let rootClone = root.clone();
+    let sibling1 = getChild(rootClone, location1);
+    let sibling2 = getChild(rootClone, location2);
+    let action = new LiteralMerge(sibling1, sibling2, quad1, quad2);
+    action.apply();
+    nodeArray.push(new Node(action, rootClone));
+  }
+}
+
+function expandQuadrantFlip(child1, child2, location1, location2, root, nodeArray) {
+  
+  let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2); 
+  if (QuadrantFlip.verify(child1, child2, quad1, quad2)) {
+    let rootClone = root.clone();
+    let tag = getChild(rootClone, location1);
+    let action = new QuadrantFlip(tag, quad1);
+    action.apply();
+    nodeArray.push(new Node(action, rootClone));
+  }
+
+}
+
+function expnadSplitFrac(child1, child2, location1, location2, root, nodeArray) {
+
+  if (SplitFrac.verify(child1, child2)) {
+    let rootClone = root.clone();
+    let tag = getChild(rootClone, location1);
+    let action = new QuadrantFlip(tag); 
+    action.apply();
+    nodeArray.push(new Node(action, rootClone));
+  }
   
 }
 
-function expandQuadrantFlip(nodeToExpand, nodeArray){
-  
-}
+function expandZeroMerge(child1, child2, location1, location2, root, nodeArray) {
 
-function expnadSplitFrac(nodeToExpand, nodeArray){
-  
-}
-
-function expandZeroMerge(nodeToExpand, nodeArray){
+  if (ZeroMerge.verify(child1, child2, getQuad(location1), getQuad(location2))) {
+    let rootClone = root.clone()
+    let sibling1 = getChild(rootClone, location1);
+    let sibling2 = getChild(rootClone, location2);
+    let action = new ZeroMerge(sibling1, sibling2);
+    action.apply();
+    nodeArray.push(new Node(action, rootClone));
+  }
   
 }
 
