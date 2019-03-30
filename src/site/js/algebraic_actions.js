@@ -475,7 +475,28 @@ export class CombineFrac {
     this.quadrantLabel = quadrantLabel
   }
 
-  static verify() {
+  static verify(sibling1, sibling2) {
+
+    if (Object.is(sibling1, sibling2)) {
+      return false;
+    }
+
+    if (Object.is(sibling1.parent, sibling2.parent)) {
+      return false; 
+    }
+
+    let divisor1 = sibling1.SE;
+    let divisor2 = sibling2.SE;
+    
+    if (divisor1.length !== divisor2.length) {
+      return false;
+    }
+
+    for(let i = 0; i < divisor1.length; i++) {
+      if (!divisor1[i].equals(divisor2[i])) {
+        return false;
+      }
+    }
 
   }
 

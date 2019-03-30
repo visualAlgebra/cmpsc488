@@ -172,6 +172,7 @@ function dumbExpand(root, nodeArray) {
       expandCancel(child1, child2, location1, location2, root, nodeArray);
       expandCombineFrac(child1, child2, location1, location2, root, nodeArray);
       expandDistribute(child1, child2, location1, location2, root, nodeArray);
+      expandFactor(child1, child2, location1, location2, root, nodeArray);
       expandIdentityMerge(child1, child2, location1, location2, root, nodeArray);
       expandLiteralMerge(child1, child2, location1, location2, root, nodeArray);
       expandQuadrantFlip(child1, child2, location1, location2, root, nodeArray);
@@ -273,17 +274,15 @@ function expandCancel(child1, child2, location1, location2, root, nodeArray) {
 function expandCombineFrac(child1, child2, location1, location2, root, nodeArray) {
 
   let quad1 = getQuad(location1);
-  let quad2 = getQuad(location2);
-  if (CombineFrac.verify(child1, child2, quad1, quad2)) {
+  if (CombineFrac.verify(child1, child2)) {
     let rootClone = root.clone();
     let sibling1 = getChild(rootClone, location1);
     let sibling2 = getChild(rootClone, location2);
     let action = new CombineFrac(sibling1, sibling2, quad1);
     action.apply();
- Combin
- Combin
-
-}Combin
+    nodeArray.push(new Node(action, rootClone));
+  }
+}
 
 function expandDistribute(child1, child2, location1, location2, root, nodeArray) {
   
@@ -393,6 +392,6 @@ function expandZeroMerge(child1, child2, location1, location2, root, nodeArray) 
     action.apply();
     nodeArray.push(new Node(action, rootClone));
   }
-  
+
 }
 
