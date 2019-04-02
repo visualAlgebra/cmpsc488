@@ -38,7 +38,6 @@ export const TreeComponentKind = {
 };
 
 export const MouseState = {
-  IdleAfterDrag: "idle after drag",
   Idle: "idle",
   MaybeDragging: "dragging?",
   Dragging: "dragging",
@@ -432,57 +431,47 @@ export class GuiBase {
     this.kind = kind;
   }
 
-  onclick() {
-    if (mouse.state !== MouseState.IdleAfterDrag) {
-      mouse.eventSource = this;
-      mouse.clickDetected();
-    }
-  }
-
-  mousedown() {
+  mousedown(e) {
+    e.stopPropagation();
     if (mouse.state === MouseState.Idle) {
       mouse.state = MouseState.MaybeDragging;
       mouse.eventSource = this;
     }
   }
 
-  // noinspection JSMethodCanBeStatic
-  mousemove() {
+  mousemove(e) {
+    e.stopPropagation();
     if (mouse.state === MouseState.MaybeDragging) {
       mouse.state = MouseState.Dragging;
     }
   }
 
-  mouseup() {
-    if (mouse.state === MouseState.Dragging) {
-      mouse.state = MouseState.IdleAfterDrag;
+  mouseup(e) {
+    e.stopPropagation();
+    if (mouse.state === MouseState.MaybeDragging
+        || this.tree.is(mouse.eventSource.tree)
+    ) {
+      mouse.clickDetected();
+    } else if (mouse.state === MouseState.Dragging) {
+      mouse.state = MouseState.Idle;
       mouse.eventDest = this;
       mouse.dragDetected();
     }
   }
 
   attachEventHandlers(dom) {
-    dom.on("click", e => {
-      e.stopPropagation();
-      this.onclick();
-    }
-    );
-
     dom.on("mousedown", e => {
-      e.stopPropagation();
-      this.mousedown();
+      this.mousedown(e);
     }
     );
 
     dom.on("mousemove", e => {
-      e.stopPropagation();
-      this.mousemove();
+      this.mousemove(e);
     }
     );
 
     dom.on("mouseup", e => {
-      e.stopPropagation();
-      this.mouseup();
+      this.mouseup(e);
     }
     );
   }

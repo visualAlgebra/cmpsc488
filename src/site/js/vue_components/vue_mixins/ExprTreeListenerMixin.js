@@ -14,10 +14,9 @@ export default {
     listeners() {
       if (this.interactive) {
         return {
-          click: this.onclick,
-          mousedown: this.startDrag,
-          mousemove: this.doDrag,
-          mouseup: this.endDrag,
+          mousedown: this.mouseDown,
+          mousemove: this.mouseMove,
+          mouseup: this.mouseUp,
         };
       } else {
         // See https://jsfiddle.net/c0Le92xe/ for example
@@ -37,15 +36,7 @@ export default {
   },
 
   methods: {
-    onclick(e) {
-      e.stopPropagation();
-      if (this.mouse.state !== MouseState.IdleAfterDrag) {
-        this.mouse.eventSource = this.guiObj;
-        this.mouse.clickDetected();
-      }
-    },
-
-    startDrag(e) {
+    mouseDown(e) {
       e.stopPropagation();
       if (this.mouse.state === MouseState.Idle) {
         this.mouse.state = MouseState.MaybeDragging;
@@ -53,17 +44,21 @@ export default {
       }
     },
 
-    doDrag(e) {
+    mouseMove(e) {
       e.stopPropagation();
       if (this.mouse.state === MouseState.MaybeDragging) {
         this.mouse.state = MouseState.Dragging;
       }
     },
 
-    endDrag(e) {
+    mouseUp(e) {
       e.stopPropagation();
-      if (this.mouse.state === MouseState.Dragging) {
-        this.mouse.state = MouseState.IdleAfterDrag;
+      if (this.mouse.state === MouseState.MaybeDragging
+          || this.guiObj.tree.is(this.mouse.eventSource.tree)
+      ) {
+        this.mouse.clickDetected();
+      } else if (this.mouse.state === MouseState.Dragging) {
+        this.mouse.state = MouseState.Idle;
         this.mouse.eventDest = this.guiObj;
         this.mouse.dragDetected();
       }
