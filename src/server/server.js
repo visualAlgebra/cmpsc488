@@ -17,7 +17,7 @@ class Server {
     // this.eventEmitter.addListener("database file recieved", this.sendDatabaseFile);
 
     this.accessibleFolders = ["/src/site/assets/", "/src/site/dist/", "/src/site/node_modules/", "/src/site/css/", "/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
-    this.accessibleHTMLFiles = ["/index.html", "/explorer.html", "/creator.html", "/lesson-view.html", "/manipulator.html", "/profile.html"];
+    this.accessibleHTMLFiles = ["/index.html", "/explorer.html", "/creator.html", "/lesson-view.html", "/manipulator.html", "/profile.html", "/sign-in-test.html"];
     this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
   }
 
@@ -65,7 +65,16 @@ class Server {
   getSentAccountID(request) {
     return request.headers.account;
   }
+  getSentToken(request) {
+    return request.headers.oauth_token;
+  }
+  authenticatedUserFromToken(response, token) {
+    this.database.getAccountIDFromToken(this, response, token, function (accountID) {
+      console.log(accountID);
+    });
+  }
 
+  
   removeExtraPaths(pathname) { //deprecated
     let newName = pathname;
     let srcIndex = pathname.indexOf('/src/');
@@ -225,6 +234,8 @@ class Server {
       filename = pageName.substr(1);
     } else if (this.isAccessibleHTMLFile(pageName)) {
       filename = "src/site" + pageName;
+    } else if (pageName === "/favicon.ico") {
+      filename = "src/site/assets/example_image.png";
     } else {
       let htmlFile = this.mapToHTMLFile(pageName);
       if (htmlFile === null) {

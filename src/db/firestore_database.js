@@ -15,6 +15,20 @@ class FirestoreDatabase extends Database {
     this.domainName = "http://localhost:8080";
   }
 
+  getAccountIDFromToken(server, response, idToken, callback) {
+    this.admin.auth().verifyIdToken(idToken)
+      .then(function(decodedToken) {
+        let email = decodedToken.email;
+        let atIndex = email.indexOf('@');
+        let userName = email.substring(0,atIndex);
+        callback(userName);
+   
+      }).catch(function(error) {
+        server.respondWithError(response, 403, "Error 403: oauth token not accepted");
+      });
+  }
+
+
 
   //firestore call to get problem in collection "problems" of document "link"
   getProblem(server, serverResponse, link) {
