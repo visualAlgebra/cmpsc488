@@ -6,6 +6,7 @@
 //   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 // } from "./algebraic_actions";
 import { compress_string_js, ExpressionTree, Literal, Variable, Tag, Quadrant, Orientation, ProblemInfo } from "./expression_tree";
+import { networkInterfaces } from "os";
 
 let i = 1;
 
@@ -25,7 +26,7 @@ function vari(val) {
   return new Variable(val);
 }
 
-function prob2Start() {
+function start2() {
   return NSTag(
     [
       NSTag(      
@@ -40,7 +41,7 @@ function prob2Start() {
   )
 }
 
-function prob2Goal() {
+function goal2() {
   return NSTag(
     [
       NSTag(
@@ -60,7 +61,7 @@ function prob2Goal() {
   )
 }
 
-function prob3Start() {
+function start3() {
   return EWTag(
     [
       NSTag(
@@ -75,7 +76,109 @@ function prob3Start() {
       )
     ],
     [
+      vari(1)
+    ]
+  )
+}
+
+function goal3() {
+  return EWTag(
+    [
       NSTag(
+        [
+          vari(1),
+          EWTag(
+            [
+              lit(2), 
+              NSTag(
+                [
+                  lit(2), vari(3)
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    ],
+    [
+      vari(1)
+    ]
+  )
+}
+
+function start4() {
+  return NSTag(
+    [
+      EWTag(
+        [
+          vari(1), vari(2), lit(2)
+        ],
+        [
+          vari(3)
+        ]  
+      )
+    ],
+    [
+      lit(1), vari(4)
+    ]
+  )
+}
+
+function goal4() {
+  return EWTag(
+    [
+      NSTag(
+        [
+          EWTag(
+            [
+              vari(1), vari(2)
+            ]
+          )
+        ],
+        [
+          lit(1), vari(4)
+        ]
+      ),
+      NSTag(
+        [
+          lit(2)
+        ],
+        [
+          lit(1), vari(4)
+        ]
+      )
+    ],
+    [
+      NSTag(
+        [
+          vari(3)
+        ],
+        [
+          lit(1), vari(4)
+        ]
+      )
+    ]
+  )
+}
+
+function start5() {
+  return NSTag(
+    [
+      vari(1)
+    ],
+    [
+      NSTag(
+        [
+          vari(1), vari(3)
+        ],
+        [
+          vari(2)
+        ]
+      ),
+      NSTag(
+        [
+          vari(2)
+        ],
         [
           vari(1)
         ]
@@ -84,38 +187,45 @@ function prob3Start() {
   )
 }
 
-function prob3Goal() {
+function goal5() {
   return NSTag(
     [
-      vari(1),
-      EWTag(
-        [
-          lit(2), 
-          NSTag(
-            [
-              lit(2), vari(3)
-            ]
-          )
-        ],
-        [
-          lit(1)
-        ]
-      )
+      vari(1)
+    ],
+    [
+      vari(3)
     ]
   )
+}
+
+function start6() {
+
 }
 
 let startArr = [];
 let goalArr = [];
 
+//Commutative 
 startArr.push(new Tag(Orientation.EW, [new Literal(1), new Variable(1)], [new Variable(2), new Literal(2)]));
 goalArr.push(new Tag(Orientation.EW, [new Variable(1), new Literal(1)], [new Literal(2), new Variable(2)]));
 
-startArr.push(prob2Start());
-goalArr.push(prob3Goal());
+//Associative
+startArr.push(start2());
+goalArr.push(goal2());
 
-startArr.push(prob3Start());
-goalArr.push(prob3Goal());
+//Distributive
+startArr.push(start3());
+goalArr.push(goal3());
+
+//Fractions
+startArr.push(start4());
+goalArr.push(goal4());
+
+//Cancel
+startArr.push(start5());
+goalArr.push(goal5());
+
+//Literals
 
 function createProblem(s, g, des) {
   let retval=new ProblemInfo('tut_'+i);
