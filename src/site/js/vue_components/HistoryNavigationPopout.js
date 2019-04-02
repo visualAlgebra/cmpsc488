@@ -11,7 +11,9 @@ export default {
       </li>
       <li v-if="display">
         <div class="tree">
-          <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine"></HistoryNavigationHistoryLine>
+          <ul>
+            <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine" v-bind:index="0"></HistoryNavigationHistoryLine>
+          </ul>
         </div>
       </li>
     </ul>
@@ -23,7 +25,7 @@ export default {
   }, mounted() {
     M.AutoInit();
     let data=this.dataFunc();
-    addHistoryEntry(data[0]);
+    addHistoryEntry(data[0], "herro");
     setGoalTree(data[1]);
     this.historyController=getHistoryController();
     this.display=true;

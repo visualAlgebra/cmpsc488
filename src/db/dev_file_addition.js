@@ -4,7 +4,7 @@ const fs = require("fs");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://vatest-83fa4.firebaseio.com'
-}, 'dev-app');
+});
 const database = admin.firestore();
 const domainName = "http://localhost:8080";
 
@@ -34,7 +34,7 @@ function saveProblemWithoutAccount(problem, enteredName) {
 function insertFile(fileName, collection, name) {
   fs.readFile(fileName, function (error, data) {
     if (data) {
-      database.collection(collection).doc(name).set(JSON.stringify(data))
+      database.collection(collection).doc(name).set(JSON.parse(data))
       .then( result => {
         console.log("file written to database successfully");
       })
@@ -44,6 +44,7 @@ function insertFile(fileName, collection, name) {
     }
     if (error) {
       console.log("error reading file");
+      console.log(error);
     }
   });
 }
@@ -57,6 +58,7 @@ function deleteFile(collection, file) {
   })
 }
 
+insertFile('src/db/UPDATED_TEST_PROBLEM_1.json', "problems", 'tp1');
 module.exports = deleteFile;
 
 
