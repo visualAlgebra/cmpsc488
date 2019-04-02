@@ -12,15 +12,15 @@ export const profile_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar></NavigationBar>
-    <InvalidPage v-if="!displayPage"></InvalidPage>
-    <ProfilePageTop v-if="displayPage"
+    <InvalidPage v-if="!display"></InvalidPage>
+    <ProfilePageTop v-if="display"
     v-bind:bio="bio"
     v-bind:time="time"
     v-bind:problemCount="problems.length">
     </ProfilePageTop>
-    <LessonsHolder v-if="displayPage" v-bind:lessons="lessons"></LessonsHolder>
+    <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
-    <ProblemsHolder v-if="displayPage" v-bind:problems="problems"></ProblemsHolder>
+    <ProblemsHolder v-if="display" v-bind:problems="problems"></ProblemsHolder>
   </div>
   `, data(){
     return {
@@ -58,13 +58,6 @@ export const profile_vue=new Vue({
     url!==null?get_account_from_db(url, res=>{
       this.distribute(res);
     }):null;
-  }, computed: {
-    displayPage: function(){
-      if(this.display===true){
-        return true;
-      }
-      return false;
-    }
   }, components: {
     NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder,
   },

@@ -11,7 +11,7 @@ export const explorer_vue=new Vue({
     <NavigationBar></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
     <ProblemsHolder
-      v-if="problemsToDisplay"
+      v-if="display&&problemsToDisplay"
       :problems="problemsToDisplay"
       ></ProblemsHolder>
   </div>
@@ -19,13 +19,6 @@ export const explorer_vue=new Vue({
     return {
       display:false, problemsToDisplayCount: 1, problemsToDisplay: null,
     };
-  }, computed: {
-    displayPage: function(){
-      if(this.display===true){
-        return true;
-      }
-      return false;
-    }
   }, mounted(){
     get_problems_from_db(this.problemsToDisplayCount, res=>{
       this.problemsToDisplay=res;

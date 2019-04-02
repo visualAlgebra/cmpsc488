@@ -15,12 +15,12 @@ export const manipulator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar></NavigationBar>
-    <InvalidPage v-if="!displayPage"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="displayPage&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData"></ManipulatorNavigationButtons>
-    <ManipulatorSpecificActionButtons v-if="displayPage"></ManipulatorSpecificActionButtons>
-    <ManipulatorWindow v-if="displayPage&&workTree" :tree="workTree"></ManipulatorWindow>
+    <InvalidPage v-if="!display"></InvalidPage>
+    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData"></ManipulatorNavigationButtons>
+    <ManipulatorSpecificActionButtons v-if="display"></ManipulatorSpecificActionButtons>
+    <ManipulatorWindow v-if="display&&workTree" :tree="workTree"></ManipulatorWindow>
     <GoalExpression
-      v-if="displayPage && goalTree"
+      v-if="display&&goalTree"
       :tree="goalTree"
     ></GoalExpression>
   </div>
@@ -59,13 +59,6 @@ export const manipulator_vue=new Vue({
       }
     }, getTreeData(){
       return [this.workTree.toString(), this.goalTreeStr.toString()];
-    }
-  }, computed: {
-    displayPage: function(){
-      if(this.display===true){
-        return true;
-      }
-      return false;
     }
   }, components: {
     NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay, ManipulatorWindow, GoalExpression
