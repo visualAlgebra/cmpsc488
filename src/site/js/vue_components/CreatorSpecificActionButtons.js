@@ -1,9 +1,13 @@
 import * as M from "materialize-css";
-import {mouse, MouseMode} from "../gui";
+import {Mouse, MouseMode} from "../gui";
 import InsertButtons from "./InsertButtons";
 
 export default {
   name: "CreatorSpecificActionButtons",
+
+  props: {
+    mouse: Mouse,
+  },
 
   template: `
 <div>
@@ -46,26 +50,26 @@ export default {
 
   methods: {
     generalManipulation(){
-      mouse.mode = MouseMode.Manipulation;
+      this.mouse.mode = MouseMode.Manipulation;
       this.mouseMode = MouseMode.Manipulation;
     },
     mergeLiterals(){
-      mouse.mode = MouseMode.MergingLiterals;
+      this.mouse.mode = MouseMode.MergingLiterals;
       this.mouseMode = MouseMode.MergingLiterals;
     },
     distribution(){
-      mouse.mode = MouseMode.Distribution;
+      this.mouse.mode = MouseMode.Distribution;
       this.mouseMode = MouseMode.Distribution;
     },
     insert(){
-      mouse.mode = MouseMode.Insertion;
+      this.mouse.mode = MouseMode.Insertion;
       this.mouseMode = MouseMode.Insertion;
     },
   },
 
   mounted(){
     M.AutoInit();
-    mouse.mode = MouseMode.Manipulation;
+    this.mouse.mode = MouseMode.Manipulation;
   },
 
   components: {

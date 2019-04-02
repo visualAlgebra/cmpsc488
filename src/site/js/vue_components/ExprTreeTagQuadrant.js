@@ -28,6 +28,7 @@ export default {
       <ExpressionTree
         :tree="subtree"
         :interactive="interactive"
+        :mouse="mouse"
       ></ExpressionTree>
     </div>
   </div>

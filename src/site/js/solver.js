@@ -74,27 +74,11 @@ export function solve(current, goal) {
 }
 
 function expand(expTree, nodeArray) {
-  // expandAssociativeIntro(nodeToExpand, nodeArray);
-  // expandAssociativeMerge(nodeToExpand, nodeArray);
-  // expandAssociativeExtract(nodeToExpand, nodeArray);
-  // expandAssociativeInsert(nodeToExpand, nodeArray);
-  // expandCommutativeSwap(nodeToExpand, nodeArray);
-  // expandLiteralMerge(nodeToExpand, nodeArray);
-  // expandLiteralConversion(nodeToExpand, nodeArray);
-  // expandIdentityMerge(nodeToExpand, nodeArray);
-  // expandZeroMerge(nodeToExpand, nodeArray);
-  // expandCancel(nodeToExpand, nodeArray);
-  // expandQuadrantFlip(nodeToExpand, nodeArray);
-  // expandCombineFrac(nodeToExpand, nodeArray);
-  // expnadSplitFrac(nodeToExpand, nodeArray);
-  // expandFactor(nodeToExpand, nodeArray);
-  // expandDistribute(nodeToExpand, nodeArray);
-  // expandIdentityBalence(nodeToExpand, nodeArray);
   dumbExpand(expTree, nodeArray);
 }
 
 function pushAllChildren(root, childArray, location, locationArr) {
-  //pushing child and location into respecktive arrays 
+  //pushing child and location into respective arrays 
   childArray.push(root);
   locationArr.push(location);
 
@@ -116,17 +100,9 @@ function pushAllChildren(root, childArray, location, locationArr) {
 }
 
 function getChild(expTree, location) {
-  // if (location === []) {
-  //   return expTree;
-  // }
-  // for(let i of location) {
-  //   console.log(i)
-  // }
-  // console.log("\n", location);
+
   for (let current of location) {
     (current & 1 === 1) ? expTree = expTree.SE[current>>1] : expTree = expTree.NW[current>>1]
-    // console.log(current)
-    // console.log(expTree)
   }
   return expTree;
 }
@@ -190,7 +166,6 @@ function expandAssociativeIntro(child, location, root, nodeArray) {
     let expTree = getChild(rootClone, location);
     let action = new AssociativeIntro(expTree);
     action.apply();
-    //addToNodeArray(currrentClone, nodeArray, expanded);
     nodeArray.push(new Node(action, rootClone));
   }
 }
@@ -205,7 +180,6 @@ function expandAssociativeMerge(child1, child2, location1, location2, root, node
     let parent = getChild(rootClone, location2);
     let action = new AssociativeMerge(sibling, parent, parQuad);
     action.apply();
-    //addToNodeArray(currrentClone, nodeArray, expanded);
     nodeArray.push(new Node(action, rootClone));
   }
 
@@ -213,11 +187,9 @@ function expandAssociativeMerge(child1, child2, location1, location2, root, node
 
 function expandAssociativeExtract(child1, child2, location1, location2, root, nodeArray) {
 
-  // let cutOff = location1.length;
   if (AssociativeExtract.verify(child1, child2)) {
     let rootClone = root.clone();
     let grandChild = getChild(rootClone, location1);
-    // let grandParent = getChild(rootClone, location2);
     let action = new AssociativeExtract(grandChild, getQuad(location1));
     action.apply();
     nodeArray.push(new Node(action, rootClone));
@@ -226,8 +198,7 @@ function expandAssociativeExtract(child1, child2, location1, location2, root, no
 }
 
 function expandAssociativeInsert(child1, child2, location1, location2, root, nodeArray) {
-  
-  // let cutOff = location1.length;
+
   if (AssociativeInsert.verify(child1, child2)) {
     let rootClone = root.clone();
     let sibling = getChild(rootClone, location1);
@@ -240,11 +211,7 @@ function expandAssociativeInsert(child1, child2, location1, location2, root, nod
 }
 
 function expandCommutativeSwap(child1, child2, location1, location2, root, nodeArray) {
-  
-  /*console.log("\nc1:", child1, "\nc2:", child2);
-  console.log("l1:", location1, "\nl2:", location2);
-  console.log("c1:", getChild(child1.parent, location1));
-  console.log("c2:", getChild(child2.parent, location2));*/
+ 
   let quad1 = getQuad(location1);
   let quad2 = getQuad(location2);
   if (CommutativeSwap.verify(child1, child2, quad1, quad2)) {
@@ -258,7 +225,7 @@ function expandCommutativeSwap(child1, child2, location1, location2, root, nodeA
 
 }
 
-function expandCancel(child1, child2, location1, location2, root, nodeArray) {
+function expandCancel(child1, child2, location1, location2, root, nodeArray) { 
 
   if (Cancel.verify(child1, child2, getQuad(location1), getQuad(location2))) {
     let rootClone = root.clone();

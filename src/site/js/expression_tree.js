@@ -59,10 +59,18 @@ export class ProblemInfo {
 
 // Abstract Class
 export class ExpressionTree {
-  constructor(kind) {
+  constructor(kind, id = undefined) {
     this.kind = kind;
     this.treeCount = 1;
     this.parent = null;
+
+    // A unique identifier to use INSTEAD of `Object.is`.
+    this.id = id || Math.random();
+  }
+
+  // Use this instead of `Object.is`!
+  is(other) {
+    return this.id === other.id;
   }
 
   toString() {
@@ -125,13 +133,13 @@ export class Tag extends ExpressionTree {
   }
 
   removeSouthEast(child) {
-    this.SE = this.SE.filter(x => !Object.is(x, child));
+    this.SE = this.SE.filter(x => !x.is(child));
     child.parent = null;
     this.updateParentTreeCount(-child.treeCount);
   }
 
   removeNorthWest(child) {
-    this.NW = this.NW.filter(x => !Object.is(x, child));
+    this.NW = this.NW.filter(x => !x.is(child));
     child.parent = null;
     this.updateParentTreeCount(-child.treeCount);
   }
@@ -157,11 +165,11 @@ export class Tag extends ExpressionTree {
   }
 
   childQuadrant(child) {
-    return this.NW.some(x => Object.is(x, child)) ? Quadrant.NW : Quadrant.SE;
+    return this.NW.some(x => x.is(child)) ? Quadrant.NW : Quadrant.SE;
   }
 
   find(child, quadrantLabel) {
-    return this[quadrantLabel].findIndex(x => Object.is(x, child));
+    return this[quadrantLabel].findIndex(x => x.is(child));
   }
 
   replace(oldVal, newVal, quadrantLabel) {
@@ -181,7 +189,7 @@ export class Tag extends ExpressionTree {
   }
 
   remove(child, quadrantLabel) {
-    this[quadrantLabel] = this[quadrantLabel].filter(x => !Object.is(x, child));
+    this[quadrantLabel] = this[quadrantLabel].filter(x => !x.is(child));
     child.parent = null;
     this.updateParentTreeCount(-child.treeCount);
   }
@@ -284,7 +292,7 @@ export class Literal extends ExpressionTree {
 } // end Literal class
 export function array_delete(arr, ref) {
   for (let i = 0; i < arr.length; i++) {
-    if (Object.is(ref, arr[i])) {
+    if (ref.is(arr[i])) {
       arr.splice(i, 1);
     }
   }
