@@ -4,10 +4,10 @@ export default {
   name: "HistoryNavigationHistoryLine", props: ["historyLine"], template: `
   <ul v-if="historyLine!==null">
     <li v-for="(block, index) in historyLine.line">
-      <div v-if="displayPage">
+      <div v-if="display">
         <a v-if="setData(historyLine.line[index].data)">{{(historyLine.line[index].id===1?"Start":historyLine.line[index].id)}}</a>
       </div>
-      <HistoryNavigationHistoryLine v-if="displayPage" v-bind:historyLine="historyLine.line[index].refs"></HistoryNavigationHistoryLine>
+      <HistoryNavigationHistoryLine v-if="display" v-bind:historyLine="historyLine.line[index].refs"></HistoryNavigationHistoryLine>
     </li>
   </ul>  
   `, data() {
@@ -18,13 +18,6 @@ export default {
     setData(data) {
       this.data = data;
       return true;
-    }
-  }, computed: {
-    displayPage: function () {
-      if (this.display === true) {
-        return true;
-      }
-      return false;
     }
   }, mounted() {
     M.AutoInit();

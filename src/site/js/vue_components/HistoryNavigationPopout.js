@@ -9,9 +9,9 @@ export default {
       <li>
         <a class="subheader">History Tree</a>
       </li>
-      <li v-if="displayPage">
+      <li v-if="display">
         <div class="tree">
-          <HistoryNavigationHistoryLine v-if="displayPage&&historyController" v-bind:historyLine="historyController.mainLine"></HistoryNavigationHistoryLine>
+          <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine"></HistoryNavigationHistoryLine>
         </div>
       </li>
     </ul>
@@ -20,14 +20,7 @@ export default {
     return {
       display:false, historyController:null,
     }
-  }, computed: {
-    displayPage: function(){
-      if(this.display===true){
-        return true;
-      }
-      return false;
-    }
-  },  mounted() {
+  }, mounted() {
     M.AutoInit();
     let data=this.dataFunc();
     addHistoryEntry(data[0]);

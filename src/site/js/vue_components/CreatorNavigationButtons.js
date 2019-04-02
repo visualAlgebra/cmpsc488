@@ -47,9 +47,17 @@ export default {
     url:"http://localhost:8080/profile/accounts/"+"TEST_USER_0",
   }),
   methods: {
-    clear(){
+    save(){
+
+    },load(){
+
+    }, clear(){
       this.clearTree();
-    }, load(){
+    }, undo(){
+
+    }, redo(){
+
+    }, generate(){
 
     }
   },

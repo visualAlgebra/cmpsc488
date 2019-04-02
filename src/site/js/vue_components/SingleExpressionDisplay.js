@@ -9,7 +9,7 @@ export default {
     <SvgPanZoom :zoomScaleSensitivity="0.1" @svgpanzoom="registerSvgPanZoom">
       <svg height="100%" width="100%" style="border-style:solid; border-color: white; border-width:1px">
         <foreignObject height="500" width="2000">
-          <ExpressionTree v-if="displayPage" v-bind:tree="workingExpressionTree">
+          <ExpressionTree v-if="display" v-bind:tree="workingExpressionTree">
           </ExpressionTree>
         </foreignObject>
       </svg>
@@ -27,15 +27,7 @@ export default {
     singleExpressionDecompression(this.tree, res => {
       this.workingExpressionTree = Deserialize(res);
       this.display = true;
-
     });
-  }, computed: {
-    displayPage: function () {
-      if (this.display === true) {
-        return true;
-      }
-      return false;
-    },
   }, components: {
     ExpressionTree, SvgPanZoom,
   },

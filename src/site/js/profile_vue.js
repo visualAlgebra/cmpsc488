@@ -54,9 +54,10 @@ export const profile_vue=new Vue({
       this.display=true;
     },
   }, mounted(){
-    get_account_from_db(this.getAccountFromURL(), res=>{
+    let url=this.getAccountFromURL();
+    url!==null?get_account_from_db(url, res=>{
       this.distribute(res);
-    });
+    }):null;
   }, computed: {
     displayPage: function(){
       if(this.display===true){
