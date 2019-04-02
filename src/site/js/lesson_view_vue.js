@@ -52,13 +52,6 @@ export const lesson_view_vue=new Vue({
     },
   }, mounted(){
     get_lesson_from_db(this.getAccountFromURL(), res=>this.distribute(res));
-  }, computed: {
-    displayPage: function(){
-      if(this.display===true){
-        return true;
-      }
-      return false;
-    }
   }, components: {
     NavigationBar, LessonsHolder, ProblemsHolder, LessonViewPageTop, InvalidPage,
   },
