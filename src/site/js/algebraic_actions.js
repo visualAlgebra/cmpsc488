@@ -485,9 +485,13 @@ export class CombineFrac {
       return false; 
     }
 
+    if (!(sibling1 instanceof Tag && sibling2 instanceof Tag)) {
+      return false; 
+    }
+
     let divisor1 = sibling1.SE;
     let divisor2 = sibling2.SE;
-    
+
     if (divisor1.length !== divisor2.length) {
       return false;
     }
@@ -505,6 +509,8 @@ export class CombineFrac {
     let parent = this.sibling1.parent;
     let dividend = this.sibilng1.NW.concat(this.sibling2.NW);
     let divisor = this.sibling1.SE;
+
+
     
     let newFrac = new Tag(Orientation.NS, dividend, divisor);
     parent.replace(this.sibling2, newFrac, this.quadrantLabel);
