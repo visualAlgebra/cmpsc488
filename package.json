@@ -4,7 +4,9 @@
   "description": "A graphical, interactive, educational algebra system.",
   "main": "index.js",
   "scripts": {
-    "dev": "gnome-terminal -e 'node src/server/server.js' && cd src/site ; npm install && cd src/site/ ; npm run watch"
+    "dev": "gnome-terminal -e 'node src/server/server.js' && cd src/site ; npm install && cd src/site/ ; npm run watch",
+    "dev1": "gnome-terminal -e 'node src/server/server.js'",
+    "dev2": "cd src/site ; npm install && cd src/site/ ; npm run watch"
   },
   "repository": {
     "type": "git",
