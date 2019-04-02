@@ -1,14 +1,14 @@
 var histControl=undefined;
 
-export function addHistoryEntry(tree){
+export function addHistoryEntry(tree, msg){
   tree=tree.toString();
   if(histControl===null||histControl===undefined){
     histControl=new historyController();
-    let temp=histControl.init(tree);
-    //console.log(histControl);
+    let temp=histControl.init(tree, msg);
+    console.log(histControl);
     return temp;
   }else{
-    return histControl.add(tree);
+    return histControl.add(tree, msg);
   }
 }
 
@@ -21,47 +21,18 @@ export function setGoalTree(goalTree){
 }
 
 export function histAction(bool){
-  console.log("testing"+bool);
   let temp=null;
   if(bool){
-    console.log("again");
     temp=histControl.forward();
-    console.log("here: "+histControl.loc[histControl.loc.index]);
   }else{
-    console.log("again");
     temp=histControl.backward();
-    console.log("here: "+histControl.loc[histControl.loc.index]);
   }
+  console.log(temp);
   return temp;
-}
-
-function getHistArray(){
-  let histArray=[[0]];
-  //console.log(histArray);
-  let currentLine=histControl.mainLine;
-  histControl.widthControl=0;
-  _getHistArray(histArray, currentLine);
-  return histArray;
 }
 
 export function getHistoryController(){
   return histControl;
-}
-
-function _getHistArray(arr, lineToEval){
-  for(let xk=0; xk<lineToEval.line.length; xk++){
-    arr[histControl.widthControl].push(lineToEval.line[xk]);
-  }
-  let temp=histControl.widthControl;
-  for(let xk=lineToEval.line.length-1; xk>=0; xk--){
-    if(lineToEval.line[xk].refs.length!==0){
-      for(let yk in lineToEval.line[xk].refs){
-        arr.push([xk+arr[temp][0]+1]);
-        histControl.widthControl++;
-        _getHistArray(arr, lineToEval.line[xk].refs[yk]);
-      }
-    }
-  }
 }
 
 class historyController{
@@ -73,13 +44,13 @@ class historyController{
     this.goalTree="";
   }
 
-  init(initialTree){
-    this.mainLine=new historyLine(initialTree, this);
+  init(initialTree, msg){
+    this.mainLine=new historyLine(initialTree, this, msg);
     this.updateLoc(this.mainLine);
   }
 
-  add(tree){
-    this.loc.addBlock(tree);
+  add(tree, msg){
+    this.loc.addBlock(tree, msg);
     return tree===this.goalTree;
   }
 
@@ -105,16 +76,16 @@ class historyController{
 }
 
 class historyLine{
-  constructor(initialTree, rootHandle){
+  constructor(initialTree, rootHandle, msg){
     this.id=histControl.getID();
     this.parent=rootHandle;
-    this.line=[new lineBlock(initialTree, this)];
+    this.line=[new lineBlock(initialTree, this, msg)];
     this.index=0;
   }
 
-  addBlock(tree){
+  addBlock(tree, msg){
     if(this.index+1===this.line.length){//if at the end of the line
-      this.line.push(new lineBlock(tree, this));
+      this.line.push(new lineBlock(tree, this, msg));
       this.index++;
     }else{//if in the middle of line
       let newTree=new historyLine(tree, this.line[this.index]);
@@ -159,8 +130,9 @@ class historyLine{
 }
 
 class lineBlock{
-  constructor(tree, parent){
+  constructor(tree, parent, msg){
     this.id=histControl.getID();
+    this.msg=msg;
     this.parent=parent;
     this.data=tree;
     this.refs=[];

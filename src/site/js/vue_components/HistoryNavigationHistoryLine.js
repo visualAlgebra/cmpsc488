@@ -1,28 +1,23 @@
 import * as M from "materialize-css";
+import {displayExpressionTree} from "../display_feature";
 
 export default {
-  name: "HistoryNavigationHistoryLine", props: ["historyLine"], template: `
-  <ul v-if="historyLine!==null">
-    <li v-for="(block, index) in historyLine.line">
-      <div v-if="display">
-        <a v-if="setData(historyLine.line[index].data)">{{(historyLine.line[index].id===1?"Start":historyLine.line[index].id)}}</a>
-      </div>
-      <HistoryNavigationHistoryLine v-if="display" v-bind:historyLine="historyLine.line[index].refs"></HistoryNavigationHistoryLine>
-    </li>
-  </ul>  
-  `, data() {
-    return {
-      display: false, data: "",
-    }
-  }, methods: {
-    setData(data) {
-      this.data = data;
-      return true;
+  name: "HistoryNavigationHistoryLine", props: ["historyLine", "index"], template: `
+  <li v-if="historyLine.line[index]!==undefined">
+    <div v-on:click="redisplay">
+      {{(historyLine.line[index].msg)}}
+    </div>
+    <ul>
+      <HistoryNavigationHistoryLine v-bind:historyLine="historyLine" v-bind:index="index+1"></HistoryNavigationHistoryLine>
+      <HistoryNavigationHistoryLine v-for="(line, index) in historyLine.line[index].refs" v-bind:key="index" v-bind:historyLine="line" v-bind:index="0"></HistoryNavigationHistoryLine>
+    </ul>
+  </li>
+  `, methods: {
+    redisplay() {
+      displayExpressionTree(this.data, "canvasContainer");
+      console.log("hi");
     }
   }, mounted() {
     M.AutoInit();
-    if (this.historyLine !== null) {
-      this.display = true;
-    }
   },
 };
