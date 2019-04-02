@@ -1,10 +1,11 @@
 import ExpressionTree from "./ExpressionTree";
 import SvgPanZoom from "vue-svg-pan-zoom";
+import {Mouse} from "../gui";
 
 export default {
   name: "ManipulatorWindow",
 
-  props: ["tree"],
+  props: ["tree", "mouse"],
 
   template: `
 <div
@@ -27,6 +28,7 @@ export default {
           v-if="tree"
           :tree="tree"
           interactive
+          :mouse="mouse"
         ></ExpressionTree>
       </foreignObject>
     </svg>

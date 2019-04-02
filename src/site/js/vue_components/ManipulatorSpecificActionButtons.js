@@ -1,8 +1,14 @@
 import * as M from "materialize-css";
-import {mouse} from "../gui";
+import {Mouse, MouseMode} from "../gui";
 
 export default {
-  name: "ManipulatorSpecificActionButtons", template: `
+  name: "ManipulatorSpecificActionButtons",
+
+  props: {
+    mouse: Mouse,
+  },
+
+  template: `
   <div>
     <section>
       <form action="#">
@@ -87,16 +93,16 @@ export default {
     }, distribution(){
       this.changeMouseMode(2);
     }, insert(){
-      mouse.mode = "Insertion";
+      this.mouse.mode = MouseMode.Insertion;
       this.insertMenu(true);
     }, changeMouseMode(num){
       this.insertMenu(false);
       if(num===0){
-        mouse.mode="General Manipulation";
+        this.mouse.mode = MouseMode.Manipulation;
       }else if(num===1){
-        mouse.mode="Merging Literals";
+        this.mouse.mode = MouseMode.MergingLiterals;
       }else if(num===2){
-        mouse.mode="Distribution";
+        this.mouse.mode = MouseMode.Distribution;
       }
     }, insertMenu(type){
       if(type){

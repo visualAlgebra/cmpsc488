@@ -1,6 +1,7 @@
 import {Orientation, Quadrant, ExpressionTree as jsExpressionTree} from "../expression_tree";
 import ExprTreeTagButton from "./ExprTreeTagButton";
 import ExprTreeTagQuadrant from "./ExprTreeTagQuadrant";
+import {Mouse} from "../gui";
 
 export default {
   name: "ExprTreeTag",
@@ -8,6 +9,7 @@ export default {
   props: {
     tree: jsExpressionTree,
     interactive: Boolean,
+    mouse: Mouse,
   },
 
   template: `
@@ -18,12 +20,14 @@ export default {
       :quadrant="Quadrant.NW"
       :values="tree.NW"
       :interactive="interactive"
+      :mouse="mouse"
     >
     </ExprTreeTagQuadrant>
     
     <ExprTreeTagButton
       :tree="tree"
       :interactive="interactive"
+      :mouse="mouse"
     ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
@@ -31,6 +35,7 @@ export default {
       :quadrant="Quadrant.SE"
       :values="tree.SE"
       :interactive="interactive"
+      :mouse="mouse"
     >
     </ExprTreeTagQuadrant>
     
