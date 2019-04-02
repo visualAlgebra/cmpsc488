@@ -1,11 +1,12 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import { solve } from "../solver";
 import { Deserialize, randomProblemGenerator, compress_string_js, ProblemInfo } from "../expression_tree";
-import {histAction} from "../history_nav";
+import {clearHist, histAction} from "../history_nav";
 import { post_problem_from_site } from "../database_management";
+import {displayExpressionTree, displayTreeFromDBStruct} from "../display_feature";
 
 export default {
-  name: "ManipulatorNavigationButtons", props:["dataFunc"], template: `
+  name: "ManipulatorNavigationButtons", props:["dataFunc", "setTreeFunc", "restart"], template: `
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col" v-on:click="hint()">
@@ -16,7 +17,7 @@ export default {
           <i class="material-icons left">share</i>
           Share
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="restart()">
+      <a class="tab waves-effect waves-light btn col" v-on:click="restartClear()">
           <i class="material-icons left">rotate_left</i>
           Restart
       </a>
@@ -45,12 +46,13 @@ export default {
       solve(Deserialize(problems[0]), Deserialize(problems[1]));
     }, share(){
       console.log("tehehehe");
-    }, restart(){
+    }, restartClear(){
+      this.restart();
       console.log("u tried to restart but u cant, so reload plz")
     }, undo(){
-      histAction(false);
+      this.setTreeFunc(histAction(false));
     }, redo(){
-      histAction(true);
+      this.setTreeFunc(histAction(true));
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
@@ -70,8 +72,8 @@ export default {
           post_problem_from_site(retval);
         });
       });
-     
-      
+
+
       console.log('_DEBUG_FINISHED');
     },
   },

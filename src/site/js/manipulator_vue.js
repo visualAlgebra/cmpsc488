@@ -10,15 +10,17 @@ import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 import GoalExpression from "./vue_components/GoalExpression";
 import * as M from "materialize-css";
+import {clearHist} from "./history_nav";
+import {Mouse} from "./gui";
 
 export const manipulator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData"></ManipulatorNavigationButtons>
-    <ManipulatorSpecificActionButtons v-if="display"></ManipulatorSpecificActionButtons>
-    <ManipulatorWindow v-if="display&&workTree" :tree="workTree"></ManipulatorWindow>
+    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:setTreeFunc="setWorkTree" v-bind:restart="restart"></ManipulatorNavigationButtons>
+    <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
+    <ManipulatorWindow v-if="display&&workTree" :tree="workTree" :mouse="mouse"></ManipulatorWindow>
     <GoalExpression
       v-if="display&&goalTree"
       :tree="goalTree"
@@ -26,7 +28,7 @@ export const manipulator_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null,
+      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this),
     };
   }, mounted(){
     M.AutoInit();
@@ -48,6 +50,7 @@ export const manipulator_vue=new Vue({
         this.time=res.timeCreated;
       }else if(code===2){//start
         this.workTree=Deserialize(res);
+        this.workTreeData=res;
       }else if(code===3){//goal
         this.goalTree=res;
         singleExpressionDecompression(this.goalTree, res=>{
@@ -59,8 +62,22 @@ export const manipulator_vue=new Vue({
       }
     }, getTreeData(){
       return [this.workTree.toString(), this.goalTreeStr.toString()];
+    }, setWorkTree(tree){
+      if(tree!==null) {
+        this.workTree = Deserialize(tree);
+      }
+    }, restart(){
+      this.workTree=Deserialize(this.workTreeData);
+      clearHist();
     }
   }, components: {
-    NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay, ManipulatorWindow, GoalExpression
+    NavigationBar,
+    InvalidPage,
+    ManipulatorNavigationButtons,
+    ManipulatorSpecificActionButtons,
+    ExpressionTree,
+    SingleExpressionDisplay,
+    ManipulatorWindow,
+    GoalExpression,
   },
 });
