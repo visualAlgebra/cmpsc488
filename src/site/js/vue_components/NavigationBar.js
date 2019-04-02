@@ -25,6 +25,13 @@ export default {
           <li>
             <a href="http://localhost:8080/profile.html">User Profile</a>
           </li>
+          <li>
+            <a href="">Login</a>
+          </li>
+          <li>
+            <a href="">Logout</a>
+          </li>
+          
         </ul>
       </div>
     </nav>
@@ -49,6 +56,12 @@ export default {
       <li>
         <a href="http://localhost:8080/profile.html">User Profile</a>
       </li>
+      <li>
+        <a href="">Login</a>
+      </li>
+      <li>
+        <a href="">Logout</a>
+      </li>      
     </ul>
   </div>  
   `, mounted(){

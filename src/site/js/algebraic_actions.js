@@ -40,9 +40,9 @@ export class CommutativeSwap {
       && sibling2.parent !== null 
       && quadrant1 !== null
       && quadrant2 !== null
-      && !Object.is(sibling1, sibling2)
+      && !sibling1.is(sibling2)
       && quadrant1 === quadrant2
-      && Object.is(sibling1.parent, sibling2.parent);
+      && sibling1.parent.is(sibling2.parent);
   }
 
   //
@@ -76,7 +76,7 @@ export class AssociativeMerge {
   static verify(sibling, parent) {
     return sibling instanceof Tag
       && parent instanceof Tag
-      && Object.is(sibling.parent, parent)
+      && sibling.parent.is(parent)
       && (parent.orientation === sibling.orientation
         || (sibling.NW.length === 1 && sibling.SE.length === 0));
   }
@@ -129,7 +129,7 @@ export class AssociativeIntro {
       const newTag = new Tag(parent.orientation);
 
       //replace expr with newTag
-      if (parent.NW.some(thing => Object.is(thing, this.expr))) {
+      if (parent.NW.some(thing => thing.is(this.expr))) {
         parent.replace(this.expr, newTag, Quadrant.NW);
       } else {
         parent.replace(this.expr, newTag, Quadrant.SE);
@@ -181,7 +181,7 @@ export class AssociativeExtract {
     return grandparent instanceof Tag
       && grandparent !== null
       && grandchild.parent !== null
-      && Object.is(grandchild.parent.parent, grandparent)
+      && grandparent.is(grandchild.parent.parent)
       && grandchild.parent.orientation === grandparent.orientation;
   }
 
@@ -216,8 +216,8 @@ export class AssociativeInsert {
     return insertionTag instanceof Tag
       && sibling.parent !== null
       && sibling.parent.orientation === insertionTag.orientation
-      && Object.is(sibling.parent, insertionTag.parent)
-      && !Object.is(sibling, insertionTag)
+      && sibling.parent.is(insertionTag.parent)
+      && !sibling.is(insertionTag)
       && xQuad === yQuad;
   }
 
@@ -250,7 +250,7 @@ export class Distribute {
     if (value.parent !== tagToDistributeOver.parent)
       return false;
 
-    if (Object.is(value, tagToDistributeOver))
+    if (value.is(tagToDistributeOver))
       return false;
 
     if (!tagToDistributeOver instanceof Tag)
@@ -421,7 +421,7 @@ export class SplitFrac {
       && frac instanceof Tag
       && frac.orientation === Orientation.NS
       && dividend.orientation === Orientation.EW
-      && Object.is(dividend.parent, frac)
+      && frac.is(dividend.parent)
       && (dividend.NW.length + dividend.SE.length > 1)
       && frac.SE.length >= 1;
   }
@@ -477,17 +477,21 @@ export class CombineFrac {
 
   static verify(sibling1, sibling2) {
 
-    if (Object.is(sibling1, sibling2)) {
+    if (sibling1.is(sibling2)) {
       return false;
     }
 
-    if (Object.is(sibling1.parent, sibling2.parent)) {
+    if (sibling1.parent.is(sibling2.parent)) {
+      return false; 
+    }
+
+    if (!(sibling1 instanceof Tag && sibling2 instanceof Tag)) {
       return false; 
     }
 
     let divisor1 = sibling1.SE;
     let divisor2 = sibling2.SE;
-    
+
     if (divisor1.length !== divisor2.length) {
       return false;
     }
@@ -505,6 +509,8 @@ export class CombineFrac {
     let parent = this.sibling1.parent;
     let dividend = this.sibilng1.NW.concat(this.sibling2.NW);
     let divisor = this.sibling1.SE;
+
+
     
     let newFrac = new Tag(Orientation.NS, dividend, divisor);
     parent.replace(this.sibling2, newFrac, this.quadrantLabel);
@@ -528,7 +534,7 @@ export class QuadrantFlip {
   static verify(tag, parent, xQuad, yQuad) {
     return tag instanceof Tag
       && parent !== null
-      && Object.is(tag.parent, parent)
+      && parent.is(tag.parent)
       && xQuad !== yQuad
       && tag.orientation === parent.orientation;
   }
@@ -560,8 +566,8 @@ export class Cancel {
 
   static verify(x, y, xQuad, yQuad) {
     return x.equals(y)
-      && !Object.is(x, y)
-      && Object.is(x.parent, y.parent)
+      && !x.is(y)
+      && x.parent.is(y.parent)
       && xQuad !== yQuad;
   }
 
@@ -620,7 +626,7 @@ export class LiteralMerge {
       return false;
     if (!(literalA instanceof Literal && literalB instanceof Literal))
       return false;
-    if (Object.is(literalA, literalB))
+    if (literalA.is(literalB))
       return false;
     if (literalA.parent.orientation == Orientation.EW)
       return true;
@@ -668,7 +674,7 @@ export class ZeroMerge {
 
   static verify(sibling1, sibling2, quad1, quad2) {
     
-    if (Object.is(sibling1, sibling2)) {
+    if (sibling1.is(sibling2)) {
       return false;
     }
 
@@ -711,7 +717,7 @@ export class IdentityMerge {
 
   static verify(sibling1, sibling2, quadrant1, quadrant2) {
 
-    if (Object.is(sibling1, sibling2))
+    if (sibling1.is(sibling2))
       return false;
 
     if (!(sibling1 instanceof Literal) && !(sibling2 instanceof Literal)) {

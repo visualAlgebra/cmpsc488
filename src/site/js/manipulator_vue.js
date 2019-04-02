@@ -10,15 +10,26 @@ import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 import GoalExpression from "./vue_components/GoalExpression";
 import * as M from "materialize-css";
+import {Mouse} from "./gui";
 
 export const manipulator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData"></ManipulatorNavigationButtons>
-    <ManipulatorSpecificActionButtons v-if="display"></ManipulatorSpecificActionButtons>
-    <ManipulatorWindow v-if="display&&workTree" :tree="workTree"></ManipulatorWindow>
+    <ManipulatorNavigationButtons
+      v-if="display&&workTree&&goalTreeStr"
+      v-bind:dataFunc="getTreeData"
+    ></ManipulatorNavigationButtons>
+    <ManipulatorSpecificActionButtons
+      v-if="display"
+      :mouse="mouse"
+    ></ManipulatorSpecificActionButtons>
+    <ManipulatorWindow
+      v-if="display && workTree"
+      :tree="workTree"
+      :mouse="mouse"
+    ></ManipulatorWindow>
     <GoalExpression
       v-if="display&&goalTree"
       :tree="goalTree"
@@ -26,7 +37,15 @@ export const manipulator_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null,
+      display: false,
+      goalTree: null,
+      workTree:null,
+      dbInfo:0,
+      problemID: "",
+      desc:"",
+      time:"",
+      goalTreeStr: null,
+      mouse: new Mouse(this),
     };
   }, mounted(){
     M.AutoInit();
@@ -61,6 +80,13 @@ export const manipulator_vue=new Vue({
       return [this.workTree.toString(), this.goalTreeStr.toString()];
     }
   }, components: {
-    NavigationBar, InvalidPage, ManipulatorNavigationButtons, ManipulatorSpecificActionButtons, ExpressionTree, SingleExpressionDisplay, ManipulatorWindow, GoalExpression
+    NavigationBar,
+    InvalidPage,
+    ManipulatorNavigationButtons,
+    ManipulatorSpecificActionButtons,
+    ExpressionTree,
+    SingleExpressionDisplay,
+    ManipulatorWindow,
+    GoalExpression,
   },
 });

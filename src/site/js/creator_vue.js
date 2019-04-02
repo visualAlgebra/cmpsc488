@@ -39,7 +39,6 @@ export const creator_vue=new Vue({
       this.display = true;
       return;
     }
-    this.problemID=url.substr(url.indexOf('/')+1);
     getProblemFromDBVue(this.problemID,this.distribute);
   },
   methods: {

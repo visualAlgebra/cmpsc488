@@ -1,4 +1,4 @@
-import {mouse, MouseState} from "../../gui";
+import {Mouse, MouseState} from "../../gui";
 
 export default {
 
@@ -7,6 +7,7 @@ export default {
     //   <MyComponent interactive></MyComponent> --> interactive == true
     //   <MyComponent></MyComponent>             --> interactive == false
     interactive: Boolean,
+    mouse: Mouse,
   },
 
   computed: {
@@ -38,33 +39,33 @@ export default {
   methods: {
     onclick(e) {
       e.stopPropagation();
-      if (mouse.state !== MouseState.IdleAfterDrag) {
-        mouse.eventSource = this.guiObj;
-        mouse.clickDetected();
+      if (this.mouse.state !== MouseState.IdleAfterDrag) {
+        this.mouse.eventSource = this.guiObj;
+        this.mouse.clickDetected();
       }
     },
 
     startDrag(e) {
       e.stopPropagation();
-      if (mouse.state === MouseState.Idle) {
-        mouse.state = MouseState.MaybeDragging;
-        mouse.eventSource = this.guiObj;
+      if (this.mouse.state === MouseState.Idle) {
+        this.mouse.state = MouseState.MaybeDragging;
+        this.mouse.eventSource = this.guiObj;
       }
     },
 
     doDrag(e) {
       e.stopPropagation();
-      if (mouse.state === MouseState.MaybeDragging) {
-        mouse.state = MouseState.Dragging;
+      if (this.mouse.state === MouseState.MaybeDragging) {
+        this.mouse.state = MouseState.Dragging;
       }
     },
 
     endDrag(e) {
       e.stopPropagation();
-      if (mouse.state === MouseState.Dragging) {
-        mouse.state = MouseState.IdleAfterDrag;
-        mouse.eventDest = this.guiObj;
-        mouse.dragDetected();
+      if (this.mouse.state === MouseState.Dragging) {
+        this.mouse.state = MouseState.IdleAfterDrag;
+        this.mouse.eventDest = this.guiObj;
+        this.mouse.dragDetected();
       }
     },
   },
