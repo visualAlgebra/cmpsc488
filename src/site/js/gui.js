@@ -16,7 +16,7 @@ export const globals = {
 
 export function findQuadrant(x) {
   if (x.parent) {
-    return x.parent.NW.some(e => Object.is(e, x)) ? Quadrant.NW : Quadrant.SE;
+    return x.parent.NW.some(e => e.is(x)) ? Quadrant.NW : Quadrant.SE;
   } else {
     return null;
   }
