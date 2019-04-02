@@ -61,7 +61,7 @@ export class Mouse {
 
   redisplayExpressionTree() {
     displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => {
-      let temp = addHistoryEntry(res);
+      let temp = addHistoryEntry(res, "hi");
       if (temp) {
         alert("Win");
       }
