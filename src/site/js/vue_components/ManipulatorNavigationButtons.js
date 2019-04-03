@@ -2,7 +2,7 @@ import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import { solve } from "../solver";
 import { Deserialize, randomProblemGenerator, compress_string_js, ProblemInfo } from "../expression_tree";
 import {clearHist, histAction} from "../history_nav";
-import { post_problem_from_site } from "../database_management";
+import { post_problem_from_site, delete_problem_from_db } from "../database_management";
 import {displayExpressionTree, displayTreeFromDBStruct} from "../display_feature";
 
 export default {
@@ -70,6 +70,7 @@ export default {
       actionsArr[0] = false;
       actionsArr[14] = false;
       actionsArr[2] = false;
+      delete_problem_from_db('RAND_PROBLEM_1', 'TEST_USER_0');
       var test = randomProblemGenerator(10, actionsArr, 15);
       var retval=new ProblemInfo('RAND_PROBLEM_1');
       compress_string_js(test.start.toString(), res=>{
