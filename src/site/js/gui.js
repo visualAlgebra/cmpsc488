@@ -8,10 +8,6 @@ import {
   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
 
-export const globals = {
-  workingExpressionTree: null
-};
-
 export function findQuadrant(x) {
   if (x.parent) {
     return x.parent.NW.some(e => e.is(x)) ? Quadrant.NW : Quadrant.SE;
