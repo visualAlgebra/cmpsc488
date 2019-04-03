@@ -62,6 +62,14 @@ export default {
       actionsArr[3] = false;
       actionsArr[6] = false;
       actionsArr[4] = false;
+      actionsArr[11] = false;
+      actionsArr[12] = false;
+      actionsArr[8] = false;
+      actionsArr[13] = false;
+      actionsArr[5] = false;
+      actionsArr[0] = false;
+      actionsArr[14] = false;
+      actionsArr[2] = false;
       var test = randomProblemGenerator(10, actionsArr, 15);
       var retval=new ProblemInfo('RAND_PROBLEM_1');
       compress_string_js(test.start.toString(), res=>{
