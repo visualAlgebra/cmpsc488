@@ -1,7 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance} from './algebraic_actions.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance, Cancel, QuadrantFlip, CombineFrac} from './algebraic_actions.js';
 import Vue from "vue";
 
 export const Orientation = {
@@ -515,15 +515,49 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 8: // CombineFrac
-
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              var sib2 = Math.floor(Math.random() * end.NW.length);
+              if (CombineFrac.verify(end.NW[sib1], end.NW[sib2])){
+                action = new CombineFrac(end.NW[sib1], end.NW[sib2], Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
               break;
 
             case 9: // Quadrant Flip
+              if (Math.round(Math.random()) == 0) {
+                var sib1 = Math.floor(Math.random() * end.NW.length);
+                if (end.NW[sib1] instanceof Tag) {
+                  if (QuadrantFlip.verify(end.NW[sib1], end, Quadrant.NW, Quadrant.SE)) {
+                    action = new QuadrantFlip(end.NW[sib1], Quadrant.NW);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
+              else{
+                var sib1 = Math.floor(Math.random() * end.SE.length);
+                if (end.SE[sib1] instanceof Tag) {
+                  if (QuadrantFlip.verify(end.SE[sib1], end, Quadrant.NW, Quadrant.SE)) {
+                    action = new QuadrantFlip(end.SE[sib1], Quadrant.NW);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
 
               break;
 
             case 10: // Cancel
-
+              if (end.NW.length !== 0 && end.SE.length !== 0) {
+                var sib1 = Math.floor(Math.random() * end.NW.length);
+                var sib2 = Math.floor(Math.random() * end.SE.length);
+                if (Cancel.verify(end.NW[sib1], end.SE[sib2], Quadrant.NW, Quadrant.SE)) {
+                  action = new Cancel(end.NW[sib1], end.SE[sib2]);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
               break;
 
             case 11: // Identity Balence
