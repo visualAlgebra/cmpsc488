@@ -388,308 +388,306 @@ export class StartGoalCombo {
 // numNodes: The number of nodes that the user wants originally
 // numActions: the number of actions that the user wants to be applied to get to the goal
 export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
-  const start = createRandomExpression(numNodes);
+  const start = createRandomExpression(numNodes).removeEmptyTags();
   var end = start.clone();
   var actionApplied;
   var action;
-  do {
-    for (var i = 0; i < numActions; i++) {
-      actionApplied = false;
-      // the while makes sure that at least one action is applied before continuing
-      while (!actionApplied) {
-        var actionIndx = Math.floor(Math.random() * (validActionsArr.length))
-        if (validActionsArr[actionIndx]) {
-          // case ordering appears in the same order as the actions appear in algebraic_actions.js
-          switch (actionIndx) {
-            case 0:
-              var quadToApply = Math.round(Math.random());
-              if (quadToApply == 0) {
-                var sib1 = Math.floor(Math.random() * (end.NW.length));
-                var sib2 = Math.floor(Math.random() * (end.NW.length));
-                if (CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)) {
-                  action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              else {
-                var sib1 = Math.floor(Math.random() * (end.SE.length));
-                var sib2 = Math.floor(Math.random() * (end.SE.length));
-                if (CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)) {
-                  action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              break;
-
-            case 1:
-              var quadToApply = Math.round(Math.random() * 1);
-              if (quadToApply == 0) {
-                var sib1 = Math.floor(Math.random() * (end.NW.length));
-                if (AssociativeMerge.verify(end.NW[sib1], end)) {
-                  action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              else {
-                var sib1 = Math.floor(Math.random() * (end.SE.length));
-                if (AssociativeMerge.verify(end.SE[sib1], end)) {
-                  action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              break;
-
-            case 2:
-              var quadToApply = Math.round(Math.random() * 1);
-              if (quadToApply == 0) {
-                var sib1 = Math.floor(Math.random() * (end.NW.length));
-                if (AssociativeIntro.verify(end.NW[sib1])) {
-                  action = new AssociativeIntro(end.NW[sib1]);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              else {
-                var sib1 = Math.floor(Math.random() * (end.SE.length));
-                if (AssociativeIntro.verify(end.SE[sib1])) {
-                  action = new AssociativeIntro(end.SE[sib1]);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              break;
-
-            case 3:
-              var quadToApply = Math.round(Math.random());
-              if (quadToApply == 0) {
-                var sib1 = Math.floor(Math.random() * (end.NW.length));
-                if (end.NW[sib1] instanceof Tag) {
-                  var quadToApply2 = Math.round(Math.random() * 1);
-                  if (quadToApply2 == 0) {
-                    var sib2 = Math.floor(Math.random() * (end.NW[sib1].NW.length));
-                    if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
-                      action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
-                      action.apply();
-                      actionApplied = true;
-                    }
-                  }
-                  else {
-                    var sib2 = Math.floor(Math.random() * (end.NW[sib1].SE.length));
-                    if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
-                      action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
-                      action.apply();
-                      actionApplied = true;
-                    }
-                  }
-                }
-              }
-              else {
-                var sib1 = Math.floor(Math.random() * (end.SE.length));
-                if (end.SE[sib1] instanceof Tag) {
-                  var quadToApply2 = Math.round(Math.random() * 1);
-                  if (quadToApply2 == 0) {
-                    var sib2 = Math.floor(Math.random() * (end.SE[sib1].NW.length))
-                    if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
-                      action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
-                      action.apply();
-                      actionApplied = true;
-                    }
-                  }
-                  else {
-                    var sib2 = Math.floor(Math.random() * (end.SE[sib1].SE.length))
-                    if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
-                      action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
-                      action.apply();
-                      actionApplied = true;
-                    }
-                  }
-                }
-              }
-              break;
-
-            case 4: // AssociativeInsert
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              var sib2 = Math.floor(Math.random() * end.NW.length);
-              if (AssociativeInsert.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
-                action = new AssociativeInsert(end.NW[sib1], end.NW[sib2]);
-                action.apply();
-                actionApplied = true;
-              }
-              break;
-
-            case 5: // Distribute
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              var sib2 = Math.floor(Math.random() * end.NW.length);
-              if (Distribute.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
-                action = new Distribute(end.NW[sib1], end.NW[sib2]);
-                action.apply();
-                actionApplied = true;
-              }
-              break;
-
-            case 6: // Factor
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              if (end.NW[sib1] instanceof Tag) {
-                if (Factor.verify(end.NW[sib1].NW[0], end.NW[sib1])) {
-                  action = new Factor(end.NW[sib1].NW[0], end.NW[sib1]);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              break;
-
-            case 7: // SplitFrac
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              if (end.NW[sib1] instanceof Tag) {
-                if (SplitFrac.verify(end.NW[sib1].NW[0], end.NW[sib1])) {
-                  action = new SplitFrac(end.NW[sib1]);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              break;
-
-            case 8: // CombineFrac
-              var sib1 = Math.floor(Math.random() * end.NW.length);
-              var sib2 = Math.floor(Math.random() * end.NW.length);
-              if (CombineFrac.verify(end.NW[sib1], end.NW[sib2])){
-                action = new CombineFrac(end.NW[sib1], end.NW[sib2], Quadrant.NW);
-                action.apply();
-                actionApplied = true;
-              }
-              break;
-
-            case 9: // Quadrant Flip
-              if (Math.round(Math.random()) == 0) {
-                var sib1 = Math.floor(Math.random() * end.NW.length);
-                if (end.NW[sib1] instanceof Tag) {
-                  if (QuadrantFlip.verify(end.NW[sib1], end, Quadrant.NW, Quadrant.SE)) {
-                    action = new QuadrantFlip(end.NW[sib1], Quadrant.NW);
-                    action.apply();
-                    actionApplied = true;
-                  }
-                }
-              }
-              else{
-                var sib1 = Math.floor(Math.random() * end.SE.length);
-                if (end.SE[sib1] instanceof Tag) {
-                  if (QuadrantFlip.verify(end.SE[sib1], end, Quadrant.NW, Quadrant.SE)) {
-                    action = new QuadrantFlip(end.SE[sib1], Quadrant.NW);
-                    action.apply();
-                    actionApplied = true;
-                  }
-                }
-              }
-
-              break;
-
-            case 10: // Cancel
-              if (end.NW.length !== 0 && end.SE.length !== 0) {
-                var sib1 = Math.floor(Math.random() * end.NW.length);
-                var sib2 = Math.floor(Math.random() * end.SE.length);
-                if (Cancel.verify(end.NW[sib1], end.SE[sib2], Quadrant.NW, Quadrant.SE)) {
-                  action = new Cancel(end.NW[sib1], end.SE[sib2]);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-              break;
-
-            case 11: // Identity Balence
-              var identityTag = createRandomExpression(Math.floor(Math.random()*10) + 1);
-              if (IdentityBalance.verify(identityTag, end)){
-                action = new IdentityBalance(identityTag, end);
-                action.apply();
-                actionApplied = true;
-              }
-              break;
-
-            case 12: // Literal Merge
-              var choice = Math.round(Math.random());
-              if (choice == 0)
-                var sib1 = end.NW[Math.floor(Math.random() * end.NW.length)];
-              else
-                var sib1 = end.SE[Math.floor(Math.random() * end.SE.length)];
-
-              choice = Math.round(Math.random());
-              if (choice == 0)
-                var sib2 = end.NW[Math.floor(Math.random() * end.NW.length)];
-              else
-                var sib2 = end.NW[Math.floor(Math.random() * end.SE.length)];
-              if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))){
-                action = new LiteralMerge(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2));
-                action.apply();
-                actionApplied = true;
-              }
-
-              break;
-
-            case 13: // Zero Merge
+  for (var i = 0; i < numActions; i++) {
+    actionApplied = false;
+    // the while makes sure that at least one action is applied before continuing
+    while (!actionApplied) {
+      var actionIndx = Math.floor(Math.random() * (validActionsArr.length))
+      if (validActionsArr[actionIndx]) {
+        // case ordering appears in the same order as the actions appear in algebraic_actions.js
+        switch (actionIndx) {
+          case 0:
+            var quadToApply = Math.round(Math.random());
+            if (quadToApply == 0) {
               var sib1 = Math.floor(Math.random() * (end.NW.length));
               var sib2 = Math.floor(Math.random() * (end.NW.length));
-              if (ZeroMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
-                action = new ZeroMerge(end.NW[sib1], end.NW[sib2]);
+              if (CommutativeSwap.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW)) {
+                action = new CommutativeSwap(end.NW[sib1], end.NW[sib2], Quadrant.NW);
                 action.apply();
                 actionApplied = true;
               }
-
-              break;
-
-            case 14: // Identity Merge
-            var choice = Math.random();
-            if (choice >= 0.5) {
-              var sib1 = Math.floor(Math.random() * (end.NW.length));
-              var sib2 = Math.floor(Math.random() * (end.NW.length));
-                if (IdentityMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
-                  action = new IdentityMerge(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW);
-                  action.apply();
-                  actionApplied = true;
-                }
-              }
-            
+            }
             else {
               var sib1 = Math.floor(Math.random() * (end.SE.length));
-              var sib2 = Math.floor(Math.random() * end.SE.length);
-              if (IdentityMerge.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE)) {
-                action = new IdentityMerge(end.SE[sib1], end.SE[sib2],  Quadrant.SE, Quadrant.SE);
+              var sib2 = Math.floor(Math.random() * (end.SE.length));
+              if (CommutativeSwap.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE)) {
+                action = new CommutativeSwap(end.SE[sib1], end.SE[sib2], Quadrant.SE);
                 action.apply();
                 actionApplied = true;
               }
             }
             break;
 
-            case 15: // Literal Conversion
-              var choice = Math.random();
-              if (choice >= 0.5) {
-                var sib1 = Math.floor(Math.random() * (end.NW.length));
-                if (LiteralConversion.verify(end.NW[sib1])){
-                  action = new LiteralConversion(end.NW[sib1], Quadrant.NW);
-                  action.apply();
-                  actionApplied = true;
-                }
+          case 1:
+            var quadToApply = Math.round(Math.random() * 1);
+            if (quadToApply == 0) {
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              if (AssociativeMerge.verify(end.NW[sib1], end)) {
+                action = new AssociativeMerge(end.NW[sib1], end, Quadrant.NW);
+                action.apply();
+                actionApplied = true;
               }
-              else {
-                var sib1 = Math.floor(Math.random() * (end.SE.length));
-                if (LiteralConversion.verify(end.SE[sib1])){
-                  action = new LiteralConversion(end.SE[sib1], Quadrant.NW);
-                  action.apply();
-                  actionApplied = true;
-                }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * (end.SE.length));
+              if (AssociativeMerge.verify(end.SE[sib1], end)) {
+                action = new AssociativeMerge(end.SE[sib1], end, Quadrant.SE);
+                action.apply();
+                actionApplied = true;
               }
-              break;
+            }
+            break;
 
-            default:
-              console.log("ERROR: INVALID ACTION INDEX IN GENERATOR")
-              break;
-          }
+          case 2:
+            var quadToApply = Math.round(Math.random() * 1);
+            if (quadToApply == 0) {
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              if (AssociativeIntro.verify(end.NW[sib1])) {
+                action = new AssociativeIntro(end.NW[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * (end.SE.length));
+              if (AssociativeIntro.verify(end.SE[sib1])) {
+                action = new AssociativeIntro(end.SE[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 3:
+            var quadToApply = Math.round(Math.random());
+            if (quadToApply == 0) {
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              if (end.NW[sib1] instanceof Tag) {
+                var quadToApply2 = Math.round(Math.random() * 1);
+                if (quadToApply2 == 0) {
+                  var sib2 = Math.floor(Math.random() * (end.NW[sib1].NW.length));
+                  if (AssociativeExtract.verify(end.NW[sib1].NW[sib2], end)) {
+                    action = new AssociativeExtract(end.NW[sib1].NW[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+                else {
+                  var sib2 = Math.floor(Math.random() * (end.NW[sib1].SE.length));
+                  if (AssociativeExtract.verify(end.NW[sib1].SE[sib2], end)) {
+                    action = new AssociativeExtract(end.NW[sib1].SE[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * (end.SE.length));
+              if (end.SE[sib1] instanceof Tag) {
+                var quadToApply2 = Math.round(Math.random() * 1);
+                if (quadToApply2 == 0) {
+                  var sib2 = Math.floor(Math.random() * (end.SE[sib1].NW.length))
+                  if (AssociativeExtract.verify(end.SE[sib1].NW[sib2], end)) {
+                    action = new AssociativeExtract(end.SE[sib1].NW[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+                else {
+                  var sib2 = Math.floor(Math.random() * (end.SE[sib1].SE.length))
+                  if (AssociativeExtract.verify(end.SE[sib1].SE[sib2], end)) {
+                    action = new AssociativeExtract(end.SE[sib1].SE[sib2], end);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
+            }
+            break;
+
+          case 4: // AssociativeInsert
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            var sib2 = Math.floor(Math.random() * end.NW.length);
+            if (AssociativeInsert.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+              action = new AssociativeInsert(end.NW[sib1], end.NW[sib2]);
+              action.apply();
+              actionApplied = true;
+            }
+            break;
+
+          case 5: // Distribute
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            var sib2 = Math.floor(Math.random() * end.NW.length);
+            if (Distribute.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+              action = new Distribute(end.NW[sib1], end.NW[sib2]);
+              action.apply();
+              actionApplied = true;
+            }
+            break;
+
+          case 6: // Factor
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            if (end.NW[sib1] instanceof Tag) {
+              if (Factor.verify(end.NW[sib1].NW[0], end.NW[sib1])) {
+                action = new Factor(end.NW[sib1].NW[0], end.NW[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 7: // SplitFrac
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            if (end.NW[sib1] instanceof Tag) {
+              if (SplitFrac.verify(end.NW[sib1].NW[0], end.NW[sib1])) {
+                action = new SplitFrac(end.NW[sib1]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 8: // CombineFrac
+            var sib1 = Math.floor(Math.random() * end.NW.length);
+            var sib2 = Math.floor(Math.random() * end.NW.length);
+            if (CombineFrac.verify(end.NW[sib1], end.NW[sib2])) {
+              action = new CombineFrac(end.NW[sib1], end.NW[sib2], Quadrant.NW);
+              action.apply();
+              actionApplied = true;
+            }
+            break;
+
+          case 9: // Quadrant Flip
+            if (Math.round(Math.random()) == 0) {
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              if (end.NW[sib1] instanceof Tag) {
+                if (QuadrantFlip.verify(end.NW[sib1], end, Quadrant.NW, Quadrant.SE)) {
+                  action = new QuadrantFlip(end.NW[sib1], Quadrant.NW);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * end.SE.length);
+              if (end.SE[sib1] instanceof Tag) {
+                if (QuadrantFlip.verify(end.SE[sib1], end, Quadrant.NW, Quadrant.SE)) {
+                  action = new QuadrantFlip(end.SE[sib1], Quadrant.NW);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
+            }
+
+            break;
+
+          case 10: // Cancel
+            if (end.NW.length !== 0 && end.SE.length !== 0) {
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              var sib2 = Math.floor(Math.random() * end.SE.length);
+              if (Cancel.verify(end.NW[sib1], end.SE[sib2], Quadrant.NW, Quadrant.SE)) {
+                action = new Cancel(end.NW[sib1], end.SE[sib2]);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 11: // Identity Balence
+            var identityTag = createRandomExpression(Math.floor(Math.random() * 10) + 1);
+            if (IdentityBalance.verify(identityTag, end)) {
+              action = new IdentityBalance(identityTag, end);
+              action.apply();
+              actionApplied = true;
+            }
+            break;
+
+          case 12: // Literal Merge
+            var choice = Math.round(Math.random());
+            if (choice == 0)
+              var sib1 = end.NW[Math.floor(Math.random() * end.NW.length)];
+            else
+              var sib1 = end.SE[Math.floor(Math.random() * end.SE.length)];
+
+            choice = Math.round(Math.random());
+            if (choice == 0)
+              var sib2 = end.NW[Math.floor(Math.random() * end.NW.length)];
+            else
+              var sib2 = end.NW[Math.floor(Math.random() * end.SE.length)];
+            if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))) {
+              action = new LiteralMerge(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2));
+              action.apply();
+              actionApplied = true;
+            }
+
+            break;
+
+          case 13: // Zero Merge
+            var sib1 = Math.floor(Math.random() * (end.NW.length));
+            var sib2 = Math.floor(Math.random() * (end.NW.length));
+            if (ZeroMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+              action = new ZeroMerge(end.NW[sib1], end.NW[sib2]);
+              action.apply();
+              actionApplied = true;
+            }
+
+            break;
+
+          case 14: // Identity Merge
+            var choice = Math.random();
+            if (choice >= 0.5) {
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              var sib2 = Math.floor(Math.random() * (end.NW.length));
+              if (IdentityMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
+                action = new IdentityMerge(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+
+            else {
+              var sib1 = Math.floor(Math.random() * (end.SE.length));
+              var sib2 = Math.floor(Math.random() * end.SE.length);
+              if (IdentityMerge.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE)) {
+                action = new IdentityMerge(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          case 15: // Literal Conversion
+            var choice = Math.random();
+            if (choice >= 0.5) {
+              var sib1 = Math.floor(Math.random() * (end.NW.length));
+              if (LiteralConversion.verify(end.NW[sib1])) {
+                action = new LiteralConversion(end.NW[sib1], Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            else {
+              var sib1 = Math.floor(Math.random() * (end.SE.length));
+              if (LiteralConversion.verify(end.SE[sib1])) {
+                action = new LiteralConversion(end.SE[sib1], Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
+            }
+            break;
+
+          default:
+            console.log("ERROR: INVALID ACTION INDEX IN GENERATOR")
+            break;
         }
       }
     }
-  } while (start.equals(end));
+  }
   return new StartGoalCombo(start, end);
 }
 
