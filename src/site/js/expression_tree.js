@@ -188,6 +188,45 @@ export class Tag extends ExpressionTree {
     this.updateParentTreeCount(child.treeCount);
   }
 
+  hasEmpty(){
+    if (this.SE.length == 0 && this.NW.length == 0){
+      return true;
+    }
+    for (var i = 0; i < this.NW.length; i++){
+      if (this.NW[i] instanceof Tag && this.NW[i].hasEmpty())
+        return true;
+    }
+    for (var i = 0; i < this.SE.length; i++){
+      if (this.SE[i] instanceof Tag && this.SE[i].hasEmpty())
+        return true;
+    }
+    return false;
+  }
+
+  removeEmptyTags(){
+    if (this.SE.length == 0 && this.NW.length == 0 && this.parent !== null){
+      this.parent.remove(this, this.parent.childQuadrant(this));
+    }
+    else{
+      while (this.hasEmpty() && this.parent !== null){
+        var i = 0;
+        while (i<this.NW.length){
+          if (this.NW[i] instanceof Tag){
+            this.NW[i].removeEmptyTags();
+          }
+          i+=1;
+        }
+        i = 0;
+        while (i<this.SE.length){
+          if (this.SE[i] instanceof Tag){
+            this.SE[i].removeEmptyTags();
+          }
+          i+=1;
+        }
+      }
+    }
+  }
+
   remove(child, quadrantLabel) {
     this[quadrantLabel] = this[quadrantLabel].filter(x => !x.is(child));
     child.parent = null;
