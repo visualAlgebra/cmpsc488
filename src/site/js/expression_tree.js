@@ -219,14 +219,6 @@ export class Tag extends ExpressionTree {
     array_delete(this.NW, ref);
   }
 
-
-  // Creates dom elements for the tag, returns dom node without putting
-  // it on the page.
-  render() {
-    const gui = new TagGui(this);
-    return gui.dom;
-  }
-
   toString() {
     var retval =
       "{t" +
@@ -256,13 +248,6 @@ export class Variable extends ExpressionTree {
     return this.value === that.value;
   }
 
-  // Creates dom elements for the tag, returns dom node without putting
-  // it on the page.
-  render() {
-    const gui = new VariableGui(this);
-    return gui.dom;
-  }
-
   toString() {
     return "{v" + this.value + "}";
   }
@@ -277,13 +262,6 @@ export class Literal extends ExpressionTree {
   equals(that) {
     if (that.kind !== "literal") return false;
     return this.value === that.value;
-  }
-
-  // Creates dom elements for the tag, returns dom node without putting
-  // it on the page.
-  render() {
-    const gui = new LiteralGui(this);
-    return gui.dom;
   }
 
   toString() {

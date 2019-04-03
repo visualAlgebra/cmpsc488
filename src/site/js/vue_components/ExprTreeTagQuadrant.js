@@ -26,6 +26,7 @@ export default {
       class="tag-element-container"
     >
       <ExpressionTree
+        :key="subtree.id"
         :tree="subtree"
         :interactive="interactive"
         :mouse="mouse"

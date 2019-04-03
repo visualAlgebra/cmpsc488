@@ -6,6 +6,7 @@ import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 import * as M from "materialize-css";
 import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
+import {Mouse} from "./gui";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -17,7 +18,10 @@ export const creator_vue=new Vue({
       :stage="stage"
       v-bind:clearTree="clearTree"
     ></CreatorNavigationButtons>
-    <CreatorSpecificActionButtons v-if="display"></CreatorSpecificActionButtons>
+    <CreatorSpecificActionButtons
+      v-if="display"
+      :mouse="mouse"
+    ></CreatorSpecificActionButtons>
     <ManipulatorWindow v-if="display&&workTree" :tree="workTree"></ManipulatorWindow>
   </div>
   `,
@@ -31,6 +35,7 @@ export const creator_vue=new Vue({
     desc:"",
     time:"",
     goalTreeStr: null,
+    mouse: new Mouse(),
   }),
   mounted() {
     M.AutoInit();
