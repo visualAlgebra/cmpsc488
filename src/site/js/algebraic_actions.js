@@ -654,7 +654,7 @@ export class LiteralMerge {
         this.literalB.parent.removeSouthEast(this.literalA);
       }
       else {
-        this.literalA.value = Math.abs(-3 + (-1 * (this.literalA.value + this.literalB.value)) % 3);
+        this.literalA.value = Math.abs((-3 + (-1 * (this.literalA.value + this.literalB.value))) % 3);
         this.literalA.parent.removeSouthEast(this.literalB);
       }
     }

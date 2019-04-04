@@ -19,10 +19,14 @@ class Node {
 function heuristicEval(a, b) {
   if (a.equals(b))
     return 0;
+  var numDiff = 0;
   if (a instanceof Tag) {
     if (b instanceof Tag) {
-      for (var i = 0; i < a.length; i++) {
+      for (var i = 0; i < a.NW.length; i++) {
+        if(a.NW[i] instanceof Tag && !(b.NW[i] instanceof Tag)){
+          numDiff += 1+heuristicEval(a.NW[i], b);
 
+        }
       }
     }
     else
