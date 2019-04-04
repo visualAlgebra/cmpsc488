@@ -6,9 +6,8 @@
 //   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 // } from "./algebraic_actions";
 import { compress_string_js, ExpressionTree, Literal, Variable, Tag, Quadrant, Orientation, ProblemInfo } from "./expression_tree";
-import { networkInterfaces } from "os";
 
-let i = 1;
+let i = 0;
 
 function NSTag(NW, SE) {
   return new Tag(Orientation.NS, NW, SE);
@@ -199,7 +198,23 @@ function goal5() {
 }
 
 function start6() {
+  return EWTag(
+    [
+      lit(2), lit(1), lit(0), 
+      NSTag(
+        [
+          lit(2), lit(1), lit(0)
+        ]
+      )
+    ],
+    [
+      lit(1), lit(2), lit(0)
+    ]
+  )
+}
 
+function goal6() {
+  return EWTag([lit(0)],[])
 }
 
 let startArr = [];
@@ -226,9 +241,11 @@ startArr.push(start5());
 goalArr.push(goal5());
 
 //Literals
+startArr.push(start6());
+goalArr.push(goal6());
 
 function createProblem(s, g, des) {
-  let retval=new ProblemInfo('tut_'+i);
+  let retval=new ProblemInfo('tut_'+(i+1));
   compress_string_js(s.toString(), res=>{
     retval.expression_start=res;
   });
@@ -242,6 +259,6 @@ function createProblem(s, g, des) {
 
 export function createAll() {
   for( ; i<startArr.length; i++) {
-    console.log(createProblem(startArr[i], goalArr[i], "Tutorial Problem " + i));
+    console.log(createProblem(startArr[i], goalArr[i], "Tutorial Problem " + (i+1)));    
   }
 }
