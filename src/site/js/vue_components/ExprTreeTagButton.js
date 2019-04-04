@@ -1,16 +1,21 @@
 import {TreeComponentKind} from "../gui";
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
+import {ExpressionTree} from "../expression_tree";
 
 export default {
   name: "ExprTreeTagButton",
 
-  props: ["tree"],
+  props: {
+    tree: ExpressionTree,
+    path: Array,
+  },
 
   mixins: [ExprTreeListenerMixin],
 
   template: `
   <div
     xmlns="http://www.w3.org/1999/xhtml"
+    v-on="listeners"
     class="tag-button-column"
    >
     <div xmlns="http://www.w3.org/1999/xhtml" :class="classes"></div>
@@ -22,6 +27,7 @@ export default {
       guiObj: {
         kind: TreeComponentKind.TagButton,
         tree: this.tree,
+        path: this.path,
       },
     };
   },

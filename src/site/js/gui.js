@@ -1,5 +1,5 @@
 import {addHistoryEntry} from "./history_nav";
-import {Quadrant} from "./expression_tree";
+import {ExprTreeKind, Quadrant} from "./expression_tree";
 import {
   AssociativeExtract,
   AssociativeInsert, AssociativeIntro,
@@ -7,6 +7,32 @@ import {
   CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
+
+
+// Given a Tag instance, it will return the `n`th "child" of that tag where the
+// "nth child" is defined like so:
+//
+//    [A B C]><[D E F]
+//     ^ ^ ^    ^ ^ ^
+//     0 1 2    3 4 5
+//
+function getNthChild(tag, n) {
+  if (n < tag.NW.length) return tag.NW[n];
+  n -= tag.NW.length;
+  if (n < tag.SE.length) return tag.SE[n];
+  throw "Bad index passed to `getNthChild`: fell off end of array!";
+}
+
+export function findDescendent(root, path) {
+  for (const index of path) {
+    if (root.kind === ExprTreeKind.Tag) {
+      root = getNthChild(root, index);
+    } else {
+      throw "Bad path passed to `findDescendent`: path had Variable or Literal before end!";
+    }
+  }
+  return root;
+}
 
 export function findQuadrant(x) {
   if (x.parent) {
@@ -54,6 +80,7 @@ export class Mouse {
 
   redisplayExpressionTree() {
     const treeRoot = this.vueComponent.workTree;
+    this.vueComponent.workTree = treeRoot.clone();
     let temp = addHistoryEntry(treeRoot, "hi");
     if (temp) {
       alert("Win");
@@ -63,8 +90,9 @@ export class Mouse {
   dragDetected() {
     console.log("-----------------------------------------------------");
     console.log("Dragged from", this.eventSource, "to", this.eventDest);
-    const x = this.eventSource.tree;
-    const y = this.eventDest.tree;
+
+    const x = findDescendent(this.vueComponent.workTree, this.eventSource.path);
+    const y = findDescendent(this.vueComponent.workTree, this.eventDest.path);
 
     const xQuad = findQuadrant(x);
     const yQuad = findQuadrant(y);
@@ -200,11 +228,13 @@ export class Mouse {
     console.log("-----------------------------------------------------");
     console.log("Mouse clicked on", this.eventSource);
 
+    const tree = findDescendent(this.vueComponent.workTree, this.eventSource.path);
+
     try {
-      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(this.eventSource.tree)) {
-        const action = new AssociativeIntro(this.eventSource.tree);
+      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(tree)) {
+        const action = new AssociativeIntro(tree);
         action.apply();
-        console.log("Enclosing ", this.eventSource.tree);
+        console.log("Enclosing ", tree);
 
         this.redisplayExpressionTree();
       }
@@ -212,10 +242,10 @@ export class Mouse {
       console.error("An invalid action has occurred")
     }
 
-    if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(this.eventSource.tree)){
-      const action = new LiteralConversion(this.eventSource.tree, findQuadrant(this.eventSource.tree));
+    if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(tree)){
+      const action = new LiteralConversion(tree, findQuadrant(tree));
       action.apply();
-      console.log("Converting ", this.eventSource.tree);
+      console.log("Converting ", tree);
 
       this.redisplayExpressionTree();
     }
