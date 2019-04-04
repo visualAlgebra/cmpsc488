@@ -88,7 +88,7 @@ class historyLine{
       this.line.push(new lineBlock(tree, this, msg));
       this.index++;
     }else{//if in the middle of line
-      let newTree=new historyLine(tree, this.line[this.index]);
+      let newTree=new historyLine(tree, this.line[this.index], msg);
       let ref=this.line[this.index].addRef(newTree);
       histControl.updateLoc(ref);
       return ref.line[0].data;
@@ -136,7 +136,7 @@ class lineBlock{
     this.parent=parent;
     this.data=tree;
     this.refs=[];
-    //console.log("added ["+this.parent.id+"]: "+this.data);
+    // console.log("added ["+this.id+"]: "+this.data);
   }
 
   addRef(line){

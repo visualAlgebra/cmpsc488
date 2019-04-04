@@ -1,7 +1,7 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance} from './algebraic_actions.js';
+import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance, Cancel, QuadrantFlip, CombineFrac} from './algebraic_actions.js';
 import Vue from "vue";
 
 export const Orientation = {
@@ -194,6 +194,45 @@ export class Tag extends ExpressionTree {
     this.updateParentTreeCount(child.treeCount);
   }
 
+  hasEmpty(){
+    if (this.SE.length == 0 && this.NW.length == 0){
+      return true;
+    }
+    for (var i = 0; i < this.NW.length; i++){
+      if (this.NW[i] instanceof Tag && this.NW[i].hasEmpty())
+        return true;
+    }
+    for (var i = 0; i < this.SE.length; i++){
+      if (this.SE[i] instanceof Tag && this.SE[i].hasEmpty())
+        return true;
+    }
+    return false;
+  }
+
+  removeEmptyTags(){
+    if (this.SE.length == 0 && this.NW.length == 0 && this.parent !== null){
+      this.parent.remove(this, this.parent.childQuadrant(this));
+    }
+    else{
+      while (this.hasEmpty() && (this.NW.length !== 0 || this.SE.length !== 0)){
+        var i = 0;
+        while (i<this.NW.length){
+          if (this.NW[i] instanceof Tag){
+            this.NW[i].removeEmptyTags();
+          }
+          i+=1;
+        }
+        i = 0;
+        while (i<this.SE.length){
+          if (this.SE[i] instanceof Tag){
+            this.SE[i].removeEmptyTags();
+          }
+          i+=1;
+        }
+      }
+    }
+  }
+
   remove(child, quadrantLabel) {
     this[quadrantLabel] = this[quadrantLabel].filter(x => !x.is(child));
     child.parent = null;
@@ -333,7 +372,8 @@ export class StartGoalCombo {
 // numNodes: The number of nodes that the user wants originally
 // numActions: the number of actions that the user wants to be applied to get to the goal
 export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
-  const start = createRandomExpression(numNodes);
+  var start = createRandomExpression(numNodes);
+  start.removeEmptyTags();
   var end = start.clone();
   var actionApplied;
   var action;
@@ -499,20 +539,54 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 8: // CombineFrac
-
+              var sib1 = Math.floor(Math.random() * end.NW.length);
+              var sib2 = Math.floor(Math.random() * end.NW.length);
+              if (CombineFrac.verify(end.NW[sib1], end.NW[sib2])) {
+                action = new CombineFrac(end.NW[sib1], end.NW[sib2], Quadrant.NW);
+                action.apply();
+                actionApplied = true;
+              }
               break;
 
             case 9: // Quadrant Flip
+              if (Math.round(Math.random()) == 0) {
+                var sib1 = Math.floor(Math.random() * end.NW.length);
+                if (end.NW[sib1] instanceof Tag) {
+                  if (QuadrantFlip.verify(end.NW[sib1], end, Quadrant.NW, Quadrant.SE)) {
+                    action = new QuadrantFlip(end.NW[sib1], Quadrant.NW);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
+              else {
+                var sib1 = Math.floor(Math.random() * end.SE.length);
+                if (end.SE[sib1] instanceof Tag) {
+                  if (QuadrantFlip.verify(end.SE[sib1], end, Quadrant.NW, Quadrant.SE)) {
+                    action = new QuadrantFlip(end.SE[sib1], Quadrant.NW);
+                    action.apply();
+                    actionApplied = true;
+                  }
+                }
+              }
 
               break;
 
             case 10: // Cancel
-
+              if (end.NW.length !== 0 && end.SE.length !== 0) {
+                var sib1 = Math.floor(Math.random() * end.NW.length);
+                var sib2 = Math.floor(Math.random() * end.SE.length);
+                if (Cancel.verify(end.NW[sib1], end.SE[sib2], Quadrant.NW, Quadrant.SE)) {
+                  action = new Cancel(end.NW[sib1], end.SE[sib2]);
+                  action.apply();
+                  actionApplied = true;
+                }
+              }
               break;
 
             case 11: // Identity Balence
-              var identityTag = createRandomExpression(Math.floor(Math.random()*10) + 1);
-              if (IdentityBalance.verify(identityTag, end)){
+              var identityTag = createRandomExpression(Math.floor(Math.random() * 10) + 1);
+              if (IdentityBalance.verify(identityTag, end)) {
                 action = new IdentityBalance(identityTag, end);
                 action.apply();
                 actionApplied = true;
@@ -531,7 +605,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
                 var sib2 = end.NW[Math.floor(Math.random() * end.NW.length)];
               else
                 var sib2 = end.NW[Math.floor(Math.random() * end.SE.length)];
-              if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))){
+              if (LiteralMerge.verify(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2))) {
                 action = new LiteralMerge(sib1, sib2, end.childQuadrant(sib1), end.childQuadrant(sib2));
                 action.apply();
                 actionApplied = true;
@@ -551,33 +625,33 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 14: // Identity Merge
-            var choice = Math.random();
-            if (choice >= 0.5) {
-              var sib1 = Math.floor(Math.random() * (end.NW.length));
-              var sib2 = Math.floor(Math.random() * (end.NW.length));
+              var choice = Math.random();
+              if (choice >= 0.5) {
+                var sib1 = Math.floor(Math.random() * (end.NW.length));
+                var sib2 = Math.floor(Math.random() * (end.NW.length));
                 if (IdentityMerge.verify(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW)) {
                   action = new IdentityMerge(end.NW[sib1], end.NW[sib2], Quadrant.NW, Quadrant.NW);
                   action.apply();
                   actionApplied = true;
                 }
               }
-            
-            else {
-              var sib1 = Math.floor(Math.random() * (end.SE.length));
-              var sib2 = Math.floor(Math.random() * end.SE.length);
-              if (IdentityMerge.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE)) {
-                action = new IdentityMerge(end.SE[sib1], end.SE[sib2],  Quadrant.SE, Quadrant.SE);
-                action.apply();
-                actionApplied = true;
+
+              else {
+                var sib1 = Math.floor(Math.random() * (end.SE.length));
+                var sib2 = Math.floor(Math.random() * end.SE.length);
+                if (IdentityMerge.verify(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE)) {
+                  action = new IdentityMerge(end.SE[sib1], end.SE[sib2], Quadrant.SE, Quadrant.SE);
+                  action.apply();
+                  actionApplied = true;
+                }
               }
-            }
-            break;
+              break;
 
             case 15: // Literal Conversion
               var choice = Math.random();
               if (choice >= 0.5) {
                 var sib1 = Math.floor(Math.random() * (end.NW.length));
-                if (LiteralConversion.verify(end.NW[sib1])){
+                if (LiteralConversion.verify(end.NW[sib1])) {
                   action = new LiteralConversion(end.NW[sib1], Quadrant.NW);
                   action.apply();
                   actionApplied = true;
@@ -585,7 +659,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               }
               else {
                 var sib1 = Math.floor(Math.random() * (end.SE.length));
-                if (LiteralConversion.verify(end.SE[sib1])){
+                if (LiteralConversion.verify(end.SE[sib1])) {
                   action = new LiteralConversion(end.SE[sib1], Quadrant.NW);
                   action.apply();
                   actionApplied = true;
