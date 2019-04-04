@@ -371,9 +371,13 @@ export class StartGoalCombo {
 // validActionsArr: is an array of boolean values corresponding to what actions the user wants available
 // numNodes: The number of nodes that the user wants originally
 // numActions: the number of actions that the user wants to be applied to get to the goal
-export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
-  var start = createRandomExpression(numNodes);
-  start.removeEmptyTags();
+export function randomStartGenerator(numNodes){
+  var ret = createRandomExpression(numNodes);
+  ret.removeEmptyTags;
+  return ret;
+}
+
+export function randomGoalGenerator(start, validActionsArr, numActions) {
   var end = start.clone();
   var actionApplied;
   var action;
@@ -676,9 +680,14 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
       }
     }
   } while (start.equals(end) && numActions>0);
-  return new StartGoalCombo(start, end);
+  return end;
 }
 
+export function randomProblemGenerator(numNodes, validActionsArr, numActions){
+  const start = randomStartGenerator(numNodes);
+  const end = randomGoalGenerator(start, validActionsArr, numActions);
+  return new StartGoalCombo(start, end);
+}
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
 export function compress_string_js(text, callback) {
   var arr;
