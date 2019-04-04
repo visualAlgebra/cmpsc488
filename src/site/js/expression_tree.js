@@ -392,7 +392,7 @@ export const actionsArr = [
 // numActions: the number of actions that the user wants to be applied to get to the goal
 export function randomStartGenerator(numNodes){
   var ret = createRandomExpression(numNodes);
-  ret.removeEmptyTags;
+  ret.removeEmptyTags();
   return ret;
 }
 

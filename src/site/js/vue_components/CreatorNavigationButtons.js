@@ -1,5 +1,5 @@
 import {createRandomExpression} from "../random_expression_creator";
-import {actionsArr, randomProblemGenerator} from "../expression_tree";
+import {actionsArr, randomProblemGenerator, randomStartGenerator} from "../expression_tree";
 
 export default {
   name: "CreatorNavigationButtons",
@@ -63,7 +63,7 @@ export default {
 
     }, generate(){
       const numNodes = 15;
-      const res = createRandomExpression(numNodes);
+      const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
       this.setWorkTree(res);
     }
   },
