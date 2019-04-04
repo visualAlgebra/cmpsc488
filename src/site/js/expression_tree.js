@@ -675,7 +675,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
         }
       }
     }
-  } while (start.equals(end));
+  } while (start.equals(end) && numActions>0);
   return new StartGoalCombo(start, end);
 }
 
