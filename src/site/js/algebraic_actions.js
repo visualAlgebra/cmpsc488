@@ -173,9 +173,10 @@ export class AssociativeIntro {
 export class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
-  constructor(grandchild, quadrantLabel) {
+  constructor(grandchild, grandchildQuad, parentQuad) {
     this.grandchild = grandchild;
-    this.quadrantLabel = quadrantLabel;
+    this.grandChildQuad = grandchildQuad;
+    this.parentQuad = parentQuad;
   }
 
   static verify(grandchild, grandparent) {
@@ -190,12 +191,16 @@ export class AssociativeExtract {
   apply() {
 
     //setting pointers to parent and grandparent
-    const parent = this.grandchild.parent;
+    let parent = this.grandchild.parent;
     const grandparent = parent.parent;
-    const index = grandparent.find(parent, this.quadrantLabel);
+    const index = grandparent.find(parent, this.grandChildQuad);
 
     //removing grandchild from grandparent and prepending into parent
-    parent.remove(this.grandchild, this.quadrantLabel);
+    parent.remove(this.grandchild, this.grandChildQuad);
+    // console.log(parent);
+    if (parent.treeCount === 1) {
+      grandparent.remove(parent, this.parentQuad);
+    }
     grandparent.insert(this.grandchild, grandparent.childQuadrant(parent), index);
 
   }
@@ -205,7 +210,6 @@ export class AssociativeExtract {
 // =>
 // [ [ x y >< z ] ><]
 //Inserting a sibling into a sibling tag that has the same orientation as its parent
-//TODO: make sure this preserves order
 export class AssociativeInsert {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
