@@ -1,5 +1,7 @@
 # cmpsc488
 
+![A picture of an expression tree](https://github.com/visualAlgebra/cmpsc488/blob/master/src/site/assets/ExpressionTreeExample.png)
+
 ## Build Instructions
 
 ### QUICK START
