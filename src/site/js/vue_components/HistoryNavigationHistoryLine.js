@@ -2,7 +2,7 @@ import * as M from "materialize-css";
 import {displayExpressionTree} from "../display_feature";
 
 export default {
-  name: "HistoryNavigationHistoryLine", props: ["historyLine", "index"], template: `
+  name: "HistoryNavigationHistoryLine", props: ["historyLine", "index", "setWorkTree"], template: `
   <li v-if="historyLine.line[index]!==undefined">
     <div v-on:click="redisplay">
       {{(historyLine.line[index].msg)}}
@@ -14,7 +14,7 @@ export default {
   </li>
   `, methods: {
     redisplay() {
-      displayExpressionTree(this.data, "canvasContainer");
+      this.setWorkTree(historyList.line[index].data);
       console.log("hi");
     }
   }, mounted() {
