@@ -16,6 +16,7 @@ export const creator_vue=new Vue({
       v-if="display"
       :goToNextStage="goToNextStage"
       :stage="stage"
+      :setWorkTree="setWorkTree"
       v-bind:clearTree="clearTree"
     ></CreatorNavigationButtons>
     <CreatorSpecificActionButtons
@@ -64,6 +65,9 @@ export const creator_vue=new Vue({
         this.workTree = Deserialize(res);
         this.display = true;
       }
+    },
+    setWorkTree(tree) {
+      this.workTree = tree;
     },
   },
   components: {

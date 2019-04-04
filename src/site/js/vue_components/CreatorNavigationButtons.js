@@ -1,9 +1,13 @@
+import {createRandomExpression} from "../random_expression_creator";
+import {actionsArr, randomProblemGenerator} from "../expression_tree";
+
 export default {
   name: "CreatorNavigationButtons",
   props: [
     "goToNextStage",
     "stage",
     "clearTree",
+    "setWorkTree",
   ],
   template: `
   <div>
@@ -58,7 +62,9 @@ export default {
     }, redo(){
 
     }, generate(){
-
+      const numNodes = 15;
+      const res = createRandomExpression(numNodes);
+      this.setWorkTree(res);
     }
   },
 };
