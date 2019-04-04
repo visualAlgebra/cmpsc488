@@ -109,7 +109,7 @@ export class Mouse {
       }
       else if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
 
-        const action = new AssociativeExtract(x, xQuad);
+        const action = new AssociativeExtract(x, xQuad, yQuad);
         action.apply();
 
         console.log("Extracting", x, "from", x.parent);

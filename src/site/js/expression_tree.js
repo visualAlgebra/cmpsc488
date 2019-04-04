@@ -368,6 +368,25 @@ export class StartGoalCombo {
   }
 }
 
+export const actionsArr = [
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  true
+];
+
 // validActionsArr: is an array of boolean values corresponding to what actions the user wants available
 // numNodes: The number of nodes that the user wants originally
 // numActions: the number of actions that the user wants to be applied to get to the goal
