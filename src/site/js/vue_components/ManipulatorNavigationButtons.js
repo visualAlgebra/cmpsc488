@@ -70,9 +70,8 @@ export default {
       actionsArr[0] = false;
       actionsArr[14] = false;
       actionsArr[2] = false;
-      delete_problem_from_db('RAND_PROBLEM_1', 'TEST_USER_0');
       var test = randomProblemGenerator(10, actionsArr, 15);
-      var retval=new ProblemInfo('RAND_PROBLEM_1');
+      var retval=new ProblemInfo('RAND_PROBLEM_3');
       compress_string_js(test.start.toString(), res=>{
         retval.expression_start=res;
         compress_string_js(test.goal.toString(), res2=>{
