@@ -26,7 +26,8 @@ export default {
       <foreignObject width="2000" height="1000">
         <ExpressionTree
           v-if="tree"
-          :tree="tree"
+          :tree="tree.clone()"
+          :path="[]"
           interactive
           :mouse="mouse"
         ></ExpressionTree>

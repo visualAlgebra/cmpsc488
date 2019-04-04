@@ -1,10 +1,14 @@
 import {TreeComponentKind} from "../gui";
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
+import {ExpressionTree} from "../expression_tree";
 
 export default {
   name: "ExprTreeVariable",
 
-  props: ["tree"],
+  props: {
+    tree: ExpressionTree,
+    path: Array,
+  },
 
   mixins: [ExprTreeListenerMixin],
 
@@ -23,6 +27,7 @@ export default {
       guiObj: {
         kind: TreeComponentKind.Variable,
         tree: this.tree,
+        path: this.path,
       }
     };
   },

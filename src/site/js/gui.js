@@ -1,7 +1,5 @@
-import $ from "jquery";
-import {displayExpressionTree} from "./display_feature";
 import {addHistoryEntry} from "./history_nav";
-import {Orientation, Quadrant} from "./expression_tree";
+import {ExprTreeKind, Quadrant} from "./expression_tree";
 import {
   AssociativeExtract,
   AssociativeInsert, AssociativeIntro,
@@ -10,9 +8,31 @@ import {
   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
 
-export const globals = {
-  workingExpressionTree: null
-};
+
+// Given a Tag instance, it will return the `n`th "child" of that tag where the
+// "nth child" is defined like so:
+//
+//    [A B C]><[D E F]
+//     ^ ^ ^    ^ ^ ^
+//     0 1 2    3 4 5
+//
+function getNthChild(tag, n) {
+  if (n < tag.NW.length) return tag.NW[n];
+  n -= tag.NW.length;
+  if (n < tag.SE.length) return tag.SE[n];
+  throw "Bad index passed to `getNthChild`: fell off end of array!";
+}
+
+export function findDescendent(root, path) {
+  for (const index of path) {
+    if (root.kind === ExprTreeKind.Tag) {
+      root = getNthChild(root, index);
+    } else {
+      throw "Bad path passed to `findDescendent`: path had Variable or Literal before end!";
+    }
+  }
+  return root;
+}
 
 export function findQuadrant(x) {
   if (x.parent) {
@@ -59,25 +79,23 @@ export class Mouse {
   }
 
   redisplayExpressionTree() {
-    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => {
-      let temp = addHistoryEntry(res, "hi");
-      if (temp) {
-        alert("Win");
-      }
-    });
+    const treeRoot = this.vueComponent.workTree;
+    this.vueComponent.workTree = treeRoot.clone();
+    let temp = addHistoryEntry(treeRoot, "hi");
+    if (temp) {
+      alert("Win");
+    }
   }
 
   dragDetected() {
+    console.log("-----------------------------------------------------");
     console.log("Dragged from", this.eventSource, "to", this.eventDest);
-    const x = this.eventSource.tree;
-    const y = this.eventDest.tree;
+
+    const x = findDescendent(this.vueComponent.workTree, this.eventSource.path);
+    const y = findDescendent(this.vueComponent.workTree, this.eventDest.path);
 
     const xQuad = findQuadrant(x);
-    // noinspection JSSuspiciousNameCombination
     const yQuad = findQuadrant(y);
-    console.log('x:', x);
-    console.log('y:', y);
-    console.log('xQuad:', xQuad, '\nyQuad:', yQuad);
 
     try {
       if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeInsert.verify(x, y)) {
@@ -207,13 +225,16 @@ export class Mouse {
   }
 
   clickDetected() {
+    console.log("-----------------------------------------------------");
     console.log("Mouse clicked on", this.eventSource);
 
+    const tree = findDescendent(this.vueComponent.workTree, this.eventSource.path);
+
     try {
-      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(this.eventSource.tree)) {
-        const action = new AssociativeIntro(this.eventSource.tree);
+      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(tree)) {
+        const action = new AssociativeIntro(tree);
         action.apply();
-        console.log("Enclosing ", this.eventSource.tree);
+        console.log("Enclosing ", tree);
 
         this.redisplayExpressionTree();
       }
@@ -221,10 +242,10 @@ export class Mouse {
       console.error("An invalid action has occurred")
     }
 
-    if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(this.eventSource.tree)){
-      const action = new LiteralConversion(this.eventSource.tree, findQuadrant(this.eventSource.tree));
+    if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(tree)){
+      const action = new LiteralConversion(tree, findQuadrant(tree));
       action.apply();
-      console.log("Converting ", this.eventSource.tree);
+      console.log("Converting ", tree);
 
       this.redisplayExpressionTree();
     }
@@ -233,368 +254,3 @@ export class Mouse {
   }
 }
 
-export const mouse = {
-  state: MouseState.Idle,
-  eventSource: null,
-  eventDest: null,
-  mode: MouseMode.Manipulation,
-
-  reset: function () {
-    this.state = MouseState.Idle;
-    this.eventSource = null;
-    this.eventDest = null;
-  },
-
-  redisplayExpressionTree: function () {
-    displayExpressionTree(globals.workingExpressionTree, "canvasContainer", res => {
-      let temp=addHistoryEntry(res, "hi");
-      if(temp){
-        alert("Win");
-      }
-      });
-  },
-
-  dragDetected: function () {
-    console.log("Dragged from", this.eventSource, "to", this.eventDest);
-    const x = this.eventSource.tree;
-    const y = this.eventDest.tree;
-
-    const xQuad = findQuadrant(x);
-    // noinspection JSSuspiciousNameCombination
-    const yQuad = findQuadrant(y);
-    console.log('x:', x);
-    console.log('y:', y);
-    console.log('xQuad:', xQuad, '\nyQuad:', yQuad);
-
-    // Associative Insert IF
-    //    Trees have same parent
-    //    Trees are not same object
-    //    eventDest is a quadrant <--
-    //    ...
-    try {
-      if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeInsert.verify(x, y)) {
-  
-        const action = new AssociativeInsert(x, y);
-        action.apply();
-  
-        console.log("Inserting", x, "to tag", y);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new AssociativeExtract(x, xQuad);
-        action.apply();
-  
-        console.log("Extracting", x, "from", x.parent);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.Manipulation && CommutativeSwap.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new CommutativeSwap(x, y, xQuad);
-        action.apply();
-  
-        console.log("Swapping siblings", x, "and", y);
-  
-        this.redisplayExpressionTree()
-      }
-      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagButton && AssociativeMerge.verify(x, y)) {
-  
-        const action = new AssociativeMerge(x, y, xQuad);
-        action.apply();
-  
-        console.log("Merging", x, "into", y);
-  
-        this.redisplayExpressionTree()
-      }
-      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagQuadrant && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new QuadrantFlip(x, xQuad);
-        action.apply();
-  
-        console.log("Flipping", x);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.Manipulation && Cancel.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new Cancel(x, y);
-        action.apply();
-  
-        console.log("Cancelling", x, "and", y);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new LiteralMerge(x, y, xQuad, yQuad);
-        action.apply();
-  
-        console.log("Merging Literals", x, "and", y);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.MergingLiterals && IdentityMerge.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new IdentityMerge(x, y, xQuad, yQuad);
-        action.apply();
-  
-        console.log("Identity Merging", x, "and", y);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new ZeroMerge(x, y);
-        action.apply();
-  
-        console.log("Zero Merging", x, "and", y);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === TreeComponentKind.TagButton && Distribute.verify(x, y, xQuad, yQuad)) {
-  
-        const action = new Distribute(x, y);
-        action.apply();
-  
-        console.log("Distributing", x, "over", y);
-  
-        this.redisplayExpressionTree();
-      }
-      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagButton && SplitFrac.verify(x, y)) {
-  
-        const action = new SplitFrac(y);
-        action.apply();
-  
-        console.log("Splitting Fraction", y);
-  
-        this.redisplayExpressionTree();
-      }
-      // TODO: fix verfiy for Factor
-      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === TreeComponentKind.TagQuadrant && Factor.verify(x, y)) {
-  
-        const action = new Factor(x, y);
-        action.apply();
-  
-        console.log("Factoring", x, "from", y);
-  
-        this.redisplayExpressionTree();
-      }
-  
-      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === TreeComponentKind.TagQuadrant && this.eventDest.kind === TreeComponentKind.TagButton && CombineFrac.verify(y, x)) {
-  
-        const action = new CombineFrac(y);
-        action.apply();
-  
-        console.log("Splitting", y);
-  
-        this.redisplayExpressionTree();
-      }
-    } catch (error) {
-      console.error("An invalid action has occured\n", error);
-    }
-
-    this.reset();
-  },
-
-  clickDetected: function () {
-    console.log("Mouse clicked on", this.eventSource);
-
-    try {
-      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(this.eventSource.tree)) {
-        const action = new AssociativeIntro(this.eventSource.tree);
-        action.apply();
-        console.log("Enclosing ", this.eventSource.tree);
-  
-        this.redisplayExpressionTree();
-      }
-    } catch (error) {
-      console.error("An invalid action has occured")
-    }
-
-    if (this.mode === MouseMode.MergingLiterals && LiteralConversion.verify(this.eventSource.tree)){
-      const action = new LiteralConversion(this.eventSource.tree, findQuadrant(this.eventSource.tree));
-      action.apply();
-      console.log("Converting ", this.eventSource.tree);
-
-      this.redisplayExpressionTree();
-    }
-
-
-    this.reset();
-  }
-};
-
-export class GuiBase {
-  constructor(kind) {
-    this.kind = kind;
-  }
-
-  mousedown(e) {
-    e.stopPropagation();
-    if (mouse.state === MouseState.Idle) {
-      mouse.state = MouseState.MaybeDragging;
-      mouse.eventSource = this;
-    }
-  }
-
-  mousemove(e) {
-    e.stopPropagation();
-    if (mouse.state === MouseState.MaybeDragging) {
-      mouse.state = MouseState.Dragging;
-    }
-  }
-
-  mouseup(e) {
-    e.stopPropagation();
-    if (mouse.state === MouseState.MaybeDragging
-        || this.tree.is(mouse.eventSource.tree)
-    ) {
-      mouse.clickDetected();
-    } else if (mouse.state === MouseState.Dragging) {
-      mouse.state = MouseState.Idle;
-      mouse.eventDest = this;
-      mouse.dragDetected();
-    }
-  }
-
-  attachEventHandlers(dom) {
-    dom.on("mousedown", e => {
-      this.mousedown(e);
-    }
-    );
-
-    dom.on("mousemove", e => {
-      this.mousemove(e);
-    }
-    );
-
-    dom.on("mouseup", e => {
-      this.mouseup(e);
-    }
-    );
-  }
-}
-
-export class TagGui extends GuiBase {
-  constructor(tag) {
-    super(TreeComponentKind.Tag);
-    this.tree = tag;
-    // Save the expression tree.
-    this.dom = this.buildDom();
-  }
-
-  buildDom() {
-    const div = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-
-    div.addClass(this.tree.orientation === Orientation.NS ? "north-south" : "east-west");
-
-    div.addClass("tag");
-    div.data("expressionTree", this.tree);
-
-    const nw = new TagQuadrantGui(this.tree, Quadrant.NW);
-    const button = new TagButtonGui(this.tree);
-    const se = new TagQuadrantGui(this.tree, Quadrant.SE);
-
-    div.append(nw.dom);
-    div.append(button.dom);
-    div.append(se.dom);
-    return div;
-  }
-}
-
-class TagButtonGui extends GuiBase {
-  constructor(tag) {
-    super(TreeComponentKind.TagButton);
-    this.tree = tag;
-    this.dom = this.buildDom();
-  }
-
-  buildDom() {
-    const button = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-    button.addClass("tag-button");
-    button.addClass("hoverable");
-
-    this.attachEventHandlers(button);
-
-    const buttonColumn = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-    buttonColumn.addClass("tag-button-column");
-    buttonColumn.append(button);
-    return buttonColumn;
-  }
-}
-
-class TagQuadrantGui extends GuiBase {
-  constructor(tag, quadrantLabel) {
-    super(TreeComponentKind.TagQuadrant);
-    this.tree = tag;
-    this.quadrantLabel = quadrantLabel;
-    this.dom = this.buildDom();
-  }
-
-  buildDom() {
-    const quadrant = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-    const quadrantClass = (this.quadrantLabel === Quadrant.NW) ? "north-west" : "south-east";
-
-    quadrant.addClass(quadrantClass);
-    quadrant.addClass("hoverable");
-
-    this.attachEventHandlers(quadrant);
-
-    this.tree[this.quadrantLabel].forEach(child => {
-      if (child.kind === "tag") {
-        quadrant.append(child.render());
-      } else {
-        const container = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-        container.addClass("tag-element-container");
-        container.append(child.render());
-        quadrant.append(container);
-      }
-    }
-    );
-
-    return quadrant;
-  }
-
-}
-
-export class VariableGui extends GuiBase {
-  constructor(variable) {
-    super(TreeComponentKind.Variable);
-    this.tree = variable;
-    this.dom = this.buildDom();
-  }
-
-  buildDom() {
-    const div = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-    div.text(`x${this.tree.value}`);
-
-    this.attachEventHandlers(div);
-
-    div.addClass("variable");
-    div.addClass("hoverable");
-    div.data("expressionTree", this.tree);
-    return div;
-  }
-}
-
-export class LiteralGui extends GuiBase {
-  constructor(literal) {
-    super(TreeComponentKind.Literal);
-    this.tree = literal;
-    this.dom = this.buildDom();
-  }
-
-  buildDom() {
-    const div = $(document.createElementNS("http://www.w3.org/1999/xhtml", "div"));
-    div.text(this.tree.value);
-
-    this.attachEventHandlers(div);
-
-    div.addClass("literal");
-    div.addClass("hoverable");
-    div.data("expressionTree", this.tree);
-    return div;
-  }
-}

@@ -8,6 +8,7 @@ export default {
 
   props: {
     tree: jsExpressionTree,
+    path: Array,
     interactive: Boolean,
     mouse: Mouse,
   },
@@ -16,7 +17,9 @@ export default {
   <div xmlns="http://www.w3.org/1999/xhtml" :class="classes">
     
     <ExprTreeTagQuadrant
-      :tree="tree"
+      :tree="tree.clone()"
+      :path="path"
+      :pathOffset="0"
       :quadrant="Quadrant.NW"
       :values="tree.NW"
       :interactive="interactive"
@@ -25,13 +28,16 @@ export default {
     </ExprTreeTagQuadrant>
     
     <ExprTreeTagButton
-      :tree="tree"
+      :tree="tree.clone()"
+      :path="path"
       :interactive="interactive"
       :mouse="mouse"
     ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
-      :tree="tree"
+      :tree="tree.clone()"
+      :path="path"
+      :pathOffset="tree.NW.length"
       :quadrant="Quadrant.SE"
       :values="tree.SE"
       :interactive="interactive"

@@ -7,6 +7,8 @@ export default {
 
   props: {
     tree: jsExpressionTree,
+    path: Array,
+    pathOffset: Number,
     quadrant: String,
     values: Array,
     interactive: Boolean,
@@ -22,11 +24,13 @@ export default {
   >
     <div
       xmlns="http://www.w3.org/1999/xhtml"
-      v-for="subtree in values"
+      v-for="(subtree, index) in values"
       class="tag-element-container"
     >
       <ExpressionTree
-        :tree="subtree"
+        :key="subtree.id"
+        :tree="subtree.clone()"
+        :path="extendPath(index)"
         :interactive="interactive"
         :mouse="mouse"
       ></ExpressionTree>
@@ -39,6 +43,7 @@ export default {
       guiObj: {
         kind: TreeComponentKind.TagQuadrant,
         tree: this.tree,
+        path: this.path,
       },
     };
   },
@@ -49,6 +54,12 @@ export default {
         this.quadrant === Quadrant.NW ? "north-west" : "south-east",
         this.interactive ? "hoverable" : "",
       ];
+    },
+  },
+
+  methods: {
+    extendPath(index) {
+      return [...this.path, this.pathOffset + index];
     },
   },
 
