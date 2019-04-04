@@ -1,7 +1,7 @@
 import {globals} from './gui';
 import {displayProblemFromDB} from './display_feature';
 import {renderHist} from "./history_nav";
-import {manipulatorVue} from "./manipulator_vue";
+import {manipulatorVue} from "./manipulator_vue";//keep
 
 var problem_to_load = getProblemFromURL();
 window.onload = () => {
