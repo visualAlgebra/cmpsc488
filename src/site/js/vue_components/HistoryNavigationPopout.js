@@ -3,7 +3,7 @@ import HistoryNavigationHistoryLine from "./HistoryNavigationHistoryLine";
 import {addHistoryEntry, getHistoryController, setGoalTree} from "../history_nav";
 
 export default {
-  name: "HistoryNavigationPopout", props:["dataFunc"], template: `
+  name: "HistoryNavigationPopout", props:["dataFunc", "setWorkTree"], template: `
   <div>
     <ul id="histNav" class="sidenav">
       <li>
@@ -12,7 +12,7 @@ export default {
       <li v-if="display">
         <div class="tree">
           <ul>
-            <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine" v-bind:index="0"></HistoryNavigationHistoryLine>
+            <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine" v-bind:index="0" v-bind:setWorkTree="setWorkTree"></HistoryNavigationHistoryLine>
           </ul>
         </div>
       </li>

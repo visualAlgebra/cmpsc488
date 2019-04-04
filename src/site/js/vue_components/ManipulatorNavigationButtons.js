@@ -7,7 +7,7 @@ import {displayExpressionTree, displayTreeFromDBStruct} from "../display_feature
 import {CommutativeSwap} from "../algebraic_actions";
 
 export default {
-  name: "ManipulatorNavigationButtons", props:["dataFunc", "setTreeFunc", "restart"], template: `
+  name: "ManipulatorNavigationButtons", props:["dataFunc", "setTreeFunc", "restart", "setWorkTree"], template: `
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col" v-on:click="hint()">
@@ -38,7 +38,7 @@ export default {
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
       </a>
-      <HistoryNavigationPopout v-bind:dataFunc="dataFunc"></HistoryNavigationPopout>
+      <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
     </div>
   </div>  
   `, methods: {

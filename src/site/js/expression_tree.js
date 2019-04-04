@@ -604,7 +604,8 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
               break;
 
             case 11: // Identity Balence
-              var identityTag = createRandomExpression(Math.floor(Math.random() * 10) + 1);
+              var identityTag = createRandomExpression(Math.floor(Math.random() * 10) + 5);
+              identityTag.removeEmptyTags();
               if (IdentityBalance.verify(identityTag, end)) {
                 action = new IdentityBalance(identityTag, end);
                 action.apply();
@@ -693,7 +694,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions) {
         }
       }
     }
-  } while (start.equals(end));
+  } while (start.equals(end) && numActions>0);
   return new StartGoalCombo(start, end);
 }
 

@@ -76,6 +76,7 @@ export class AssociativeMerge {
   static verify(sibling, parent) {
     return sibling instanceof Tag
       && parent instanceof Tag
+      && sibling.parent !== null 
       && sibling.parent.is(parent)
       && (parent.orientation === sibling.orientation
         || (sibling.NW.length === 1 && sibling.SE.length === 0));
@@ -172,15 +173,17 @@ export class AssociativeIntro {
 export class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
-  constructor(grandchild, quadrantLabel) {
+  constructor(grandchild, grandchildQuad, parentQuad) {
     this.grandchild = grandchild;
-    this.quadrantLabel = quadrantLabel;
+    this.grandChildQuad = grandchildQuad;
+    this.parentQuad = parentQuad;
   }
 
   static verify(grandchild, grandparent) {
     return grandparent instanceof Tag
       && grandparent !== null
       && grandchild.parent !== null
+      && grandchild.parent.parent !== null
       && grandparent.is(grandchild.parent.parent)
       && grandchild.parent.orientation === grandparent.orientation;
   }
@@ -188,12 +191,16 @@ export class AssociativeExtract {
   apply() {
 
     //setting pointers to parent and grandparent
-    const parent = this.grandchild.parent;
+    let parent = this.grandchild.parent;
     const grandparent = parent.parent;
-    const index = grandparent.find(parent, this.quadrantLabel);
+    const index = grandparent.find(parent, this.grandChildQuad);
 
     //removing grandchild from grandparent and prepending into parent
-    parent.remove(this.grandchild, this.quadrantLabel);
+    parent.remove(this.grandchild, this.grandChildQuad);
+    // console.log(parent);
+    if (parent.treeCount === 1) {
+      grandparent.remove(parent, this.parentQuad);
+    }
     grandparent.insert(this.grandchild, grandparent.childQuadrant(parent), index);
 
   }
@@ -203,7 +210,6 @@ export class AssociativeExtract {
 // =>
 // [ [ x y >< z ] ><]
 //Inserting a sibling into a sibling tag that has the same orientation as its parent
-//TODO: make sure this preserves order
 export class AssociativeInsert {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
@@ -216,6 +222,7 @@ export class AssociativeInsert {
     return insertionTag instanceof Tag
       && sibling.parent !== null
       && sibling.parent.orientation === insertionTag.orientation
+      && insertionTag.parent !== null
       && sibling.parent.is(insertionTag.parent)
       && !sibling.is(insertionTag)
       && xQuad === yQuad;
@@ -421,6 +428,7 @@ export class SplitFrac {
       && frac instanceof Tag
       && frac.orientation === Orientation.NS
       && dividend.orientation === Orientation.EW
+      && dividend.parent !== null
       && frac.is(dividend.parent)
       && (dividend.NW.length + dividend.SE.length > 1)
       && frac.SE.length >= 1;
@@ -481,6 +489,10 @@ export class CombineFrac {
       return false;
     }
 
+    if (!(sibling1.parent !== null && sibling2.parent !== null)) {
+      return false;
+    }
+
     if (sibling1.parent.is(sibling2.parent)) {
       return false; 
     }
@@ -534,6 +546,7 @@ export class QuadrantFlip {
   static verify(tag, parent, xQuad, yQuad) {
     return tag instanceof Tag
       && parent !== null
+      && tag.parent !== null
       && parent.is(tag.parent)
       && xQuad !== yQuad
       && tag.orientation === parent.orientation;
