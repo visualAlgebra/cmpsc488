@@ -67,8 +67,8 @@ export function solve(current, goal) {
   let minIdx = -1;
   expand(current, nodeArray);
   for (let i = 0; i < nodeArray.length; i++) {
-    console.log(i, nodeArray[i]);
-    let heuristic = heuristicEval(nodeArray[i], goal);
+    // console.log(i, nodeArray[i]);
+    let heuristic = heuristicEval(nodeArray[i].expression, goal);
     if (heuristic < minHeuristic) {
       minHeuristic = heuristic;
       minIdx = i;
