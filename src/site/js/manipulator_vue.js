@@ -13,7 +13,7 @@ import * as M from "materialize-css";
 import {clearHist} from "./history_nav";
 import {Mouse} from "./gui";
 
-export const manipulator_vue=new Vue({
+export const manipulator_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar></NavigationBar>

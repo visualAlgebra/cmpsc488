@@ -57,6 +57,12 @@ export class ProblemInfo {
   }
 }
 
+export const ExprTreeKind = {
+  Tag: "tag",
+  Var: "variable",
+  Lit: "literal",
+};
+
 // Abstract Class
 export class ExpressionTree {
   constructor(kind, id = undefined) {
@@ -84,7 +90,7 @@ export class ExpressionTree {
 
 export class Tag extends ExpressionTree {
   constructor(orientation, nw, se) {
-    super("tag");
+    super(ExprTreeKind.Tag);
     this.orientation = orientation;
     this.NW = nw || [];
     this.SE = se || [];
@@ -258,14 +264,6 @@ export class Tag extends ExpressionTree {
     array_delete(this.NW, ref);
   }
 
-
-  // Creates dom elements for the tag, returns dom node without putting
-  // it on the page.
-  render() {
-    const gui = new TagGui(this);
-    return gui.dom;
-  }
-
   toString() {
     var retval =
       "{t" +
@@ -286,20 +284,13 @@ export class Tag extends ExpressionTree {
 
 export class Variable extends ExpressionTree {
   constructor(value) {
-    super("variable");
+    super(ExprTreeKind.Var);
     this.value = value;
   }
 
   equals(that) {
-    if (that.kind !== "variable") return false;
+    if (that.kind !== ExprTreeKind.Var) return false;
     return this.value === that.value;
-  }
-
-  // Creates dom elements for the tag, returns dom node without putting
-  // it on the page.
-  render() {
-    const gui = new VariableGui(this);
-    return gui.dom;
   }
 
   toString() {
@@ -309,20 +300,13 @@ export class Variable extends ExpressionTree {
 
 export class Literal extends ExpressionTree {
   constructor(value) {
-    super("literal");
+    super(ExprTreeKind.Lit);
     this.value = value;
   }
 
   equals(that) {
-    if (that.kind !== "literal") return false;
+    if (that.kind !== ExprTreeKind.Lit) return false;
     return this.value === that.value;
-  }
-
-  // Creates dom elements for the tag, returns dom node without putting
-  // it on the page.
-  render() {
-    const gui = new LiteralGui(this);
-    return gui.dom;
   }
 
   toString() {

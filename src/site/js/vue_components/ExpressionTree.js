@@ -9,6 +9,10 @@ export default {
 
   props: {
     tree: ExpressionTree,
+    path: {
+      type: Array,
+      default: () => [],
+    },
     interactive: Boolean,
     mouse: Mouse,
   },
@@ -17,21 +21,24 @@ export default {
   <div xmlns="http://www.w3.org/1999/xhtml">
     <ExprTreeTag
       v-if="tree.kind === 'tag'"
-      :tree="tree"
+      :tree="tree.clone()"
+      :path="path"
       :interactive="interactive"
       :mouse="mouse"
     >
     </ExprTreeTag>
     <ExprTreeVariable
       v-else-if="tree.kind === 'variable'"
-      :tree="tree"
+      :tree="tree.clone()"
+      :path="path"
       :interactive="interactive"
       :mouse="mouse"
     >
     </ExprTreeVariable>
     <ExprTreeLiteral
       v-else-if="tree.kind === 'literal'"
-      :tree="tree"
+      :tree="tree.clone()"
+      :path="path"
       :interactive="interactive"
       :mouse="mouse"
     >
