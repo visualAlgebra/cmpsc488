@@ -16,7 +16,8 @@ export const profile_vue=new Vue({
     <ProfilePageTop v-if="display"
     v-bind:bio="bio"
     v-bind:time="time"
-    v-bind:problemCount="problems.length">
+    v-bind:problemCount="problems.length"
+    v-bind:accountID="accountID">
     </ProfilePageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
