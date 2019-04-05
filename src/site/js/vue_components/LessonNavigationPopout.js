@@ -16,13 +16,15 @@ export default {
             <i class="material-icons left">details</i>
             Problems
           </a>
-           <a class="tab waves-effect waves-light btn col" v-on:click="lessons()">
+          <a class="tab waves-effect waves-light btn col" v-on:click="lessons()">
             <i class="material-icons left">folder</i>
             Lessons
           </a>
         </div>
-        <ProblemsHolder v-if="dataProblems.length!==0&&displayProblems" v-bind:problems="dataProblems"></ProblemsHolder>
-        <LessonsHolder v-if="dataLessons.length!==0&&displayLessons" v-bind:lessons="dataLessons"></LessonsHolder>
+      </li>
+      <li>
+        <li><ProblemsHolder v-if="dataProblems.length!==0&&displayProblems" v-bind:problems="dataProblems"></ProblemsHolder></li>
+        <li><LessonsHolder v-if="dataLessons.length!==0&&displayLessons" v-bind:lessons="dataLessons"></LessonsHolder></li>
       </li>
     </ul>
   </div>  
@@ -41,9 +43,7 @@ export default {
     }
   }, mounted() {
     M.AutoInit();
-    console.log("called");
     if(this.lesson!==null) {
-      console.log("called");
       for (let creation in this.lesson.creations) {
         let k = this.lesson.creations[creation];
         if (this.lesson.creations[creation].lessonID === undefined) {

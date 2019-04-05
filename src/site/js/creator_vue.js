@@ -7,6 +7,7 @@ import * as M from "materialize-css";
 import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";
+import InvalidPage from "./vue_components/InvalidPage";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -77,6 +78,6 @@ export const creator_vue=new Vue({
     },
   },
   components: {
-    NavigationBar, CreatorSpecificActionButtons, CreatorNavigationButtons, ManipulatorWindow,
+    NavigationBar, CreatorSpecificActionButtons, CreatorNavigationButtons, ManipulatorWindow, InvalidPage
   },
 });

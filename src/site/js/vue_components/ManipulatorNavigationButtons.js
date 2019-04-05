@@ -64,7 +64,6 @@ export default {
       console.log("tehehehe");
     }, restartClear() {
       this.restart();
-      console.log("u tried to restart but u cant, so reload plz")
     }, undo() {
       this.setTreeFunc(histAction(false));
     }, redo() {
