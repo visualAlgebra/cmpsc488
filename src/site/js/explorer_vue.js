@@ -4,11 +4,12 @@ import NavigationBar from "./vue_components/NavigationBar";
 import ExplorerPageTop from "./vue_components/ExplorerPageTop";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
 import {get_problems_from_db} from "./database_management";
+import {addListenerForUser} from "./user_system";
 
 export const explorer_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
     <ProblemsHolder
       v-if="display&&problemsToDisplay"
@@ -17,13 +18,19 @@ export const explorer_vue=new Vue({
   </div>
   `, data(){
     return {
-      display:false, problemsToDisplayCount: 1, problemsToDisplay: null,
+      display:false, problemsToDisplayCount: 1, problemsToDisplay: null, userStruct:null,
     };
   }, mounted(){
+    addListenerForUser(this.oauth_user_getter);
     get_problems_from_db(this.problemsToDisplayCount, res=>{
       this.problemsToDisplay=res;
       this.display=true;
     });
+  },
+  methods: {
+    oauth_user_getter(user) {
+      this.userStruct = user;
+    },
   }, components: {
     ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder,
   },
