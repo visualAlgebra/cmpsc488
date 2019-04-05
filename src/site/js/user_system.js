@@ -1,4 +1,4 @@
-import Firebase from "firebase";
+import firebase from "firebase";
 
 class User {
   constructor(accountID, token) {
@@ -8,7 +8,7 @@ class User {
 }
 
 //called to sign in user via google 
-function signIn(callback) {
+export function signIn(callback) {
   firebase.auth().signInWithPopup(provider).then(function (result) {
     var token = result.credential.accessToken;
     var user = result.user;
@@ -16,6 +16,7 @@ function signIn(callback) {
     let atIndex = email.indexOf('@');
     let userName = email.substring(0,atIndex);
     let currentUser = new User(userName, token);
+    checkIfAccountExists(currentUser.accountID, function () {return;})
     callback(currentUser);
 
   }).catch(function (error) {
@@ -26,7 +27,7 @@ function signIn(callback) {
 
 }
 
-function signOut(callback) {
+export function signOut(callback) {
   firebase.auth().signOut().then(function() {
     callback()
   }).catch(function(error) {
@@ -37,7 +38,7 @@ function signOut(callback) {
 
 
 //user is User class. callback is called on success of deleting account from database & authorization
-function deleteCurrentUser(user, callback) {
+export function deleteCurrentUser(user, callback) {
   deleteFromDatabase(user, function () {
     firebase.auth().currentUser.delete().then(function () {
       callback();
@@ -99,19 +100,19 @@ function addNewAccount(bio, callback) {
 }
 
 //needs to be called on load of every page that has user (every page)
-function addListenerForUser() {
+export function addListenerForUser() {
   var config = {
     apiKey: " AIzaSyCDFM-e3QGmKcxarHC9KFeAv_HzwFq3w3M ",
     authDomain: "vatest-83fa4.firebaseapp.com",
     databaseURL: "https://vatest-83fa4.firebaseio.com",
     projectId: "vatest-83fa4"
   };
-  Firebase.initializeApp(config);
+  firebase.initializeApp(config);
   
-  var provider = new Firebase.auth.GoogleAuthProvider();
-  Firebase.auth().onAuthStateChanged(function(user) {
+  var provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().onAuthStateChanged(function(user) {
     if(user) {
-      let token = user.getIdToken()
+      user.getIdToken()
       .then(token => {
         let email = user.email;
         let atIndex = email.indexOf('@');
