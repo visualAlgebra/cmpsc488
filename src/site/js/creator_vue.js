@@ -42,7 +42,7 @@ export const creator_vue=new Vue({
     desc:"",
     time:"",
     goalTreeStr: null,
-    mouse: new Mouse(this),
+    mouse: new Mouse(null),
     lessonID: null,
   }),
   mounted() {
@@ -50,6 +50,7 @@ export const creator_vue=new Vue({
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }
+    this.mouse = new Mouse(this);
   },
   methods: {
     getURL(){
