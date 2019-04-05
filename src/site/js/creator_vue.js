@@ -26,7 +26,11 @@ export const creator_vue=new Vue({
       v-if="display"
       :mouse="mouse"
     ></CreatorSpecificActionButtons>
-    <ManipulatorWindow v-if="display&&workTree" :tree="workTree"></ManipulatorWindow>
+    <ManipulatorWindow
+      v-if="display&&workTree"
+      :tree="workTree"
+      :mouse="mouse"
+    ></ManipulatorWindow>
   </div>
   `,
   data: () => ({
