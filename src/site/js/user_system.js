@@ -26,8 +26,13 @@ function signIn(callback) {
 
 }
 
-function signOut() {
-
+function signOut(callback) {
+  firebase.auth().signOut().then(function() {
+    callback()
+  }).catch(function(error) {
+    console.log("Error: could not sign out user");
+    console.log(error);
+  });
 }
 
 
@@ -103,13 +108,16 @@ function addListenerForUser() {
   };
   Firebase.initializeApp(config);
   
-
   var provider = new Firebase.auth.GoogleAuthProvider();
   Firebase.auth().onAuthStateChanged(function(user) {
     if(user) {
       let token = user.getIdToken()
       .then(token => {
-        
+        let email = user.email;
+        let atIndex = email.indexOf('@');
+        let userName = email.substring(0,atIndex);
+        let currentUser = new User(userName, token);
+        callback(currentUser);
       })
       .catch(error => {
         console.log(error);
