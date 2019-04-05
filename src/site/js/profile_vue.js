@@ -56,8 +56,9 @@ export const profile_vue=new Vue({
     },oauth_user_getter(user) {
       this.userStruct = user;
     },
-  }, mounted(){
+  }, created(){
     addListenerForUser(this.oauth_user_getter);
+  }, mounted(){
     let url=this.getAccountFromURL();
     url!==null?get_account_from_db(url, res=>{
       this.distribute(res);

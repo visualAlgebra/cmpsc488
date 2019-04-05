@@ -68,7 +68,7 @@ export default {
   </div>  
   `,data: () => ({
     logged:false,
-  }), mounted(){
+  }), mounted() {
     M.AutoInit();
   },
   methods: {

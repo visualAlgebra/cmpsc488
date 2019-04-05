@@ -53,8 +53,9 @@ export const lesson_view_vue=new Vue({
     }, oauth_user_getter(user) {
         this.userStruct = user;
       },
-  }, mounted(){
+  }, created(){
     addListenerForUser(this.oauth_user_getter);
+  }, mounted(){
     get_lesson_from_db(this.getAccountFromURL(), res=>this.distribute(res));
   }, components: {
     NavigationBar, LessonsHolder, ProblemsHolder, LessonViewPageTop, InvalidPage,

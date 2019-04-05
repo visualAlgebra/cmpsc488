@@ -39,10 +39,10 @@ export const creator_vue=new Vue({
     goalTreeStr: null,
     mouse: new Mouse(),
     userStruct:null,
-  }),
-  mounted() {
-    M.AutoInit();
+  }), created(){
     addListenerForUser(this.oauth_user_getter);
+  }, mounted() {
+    M.AutoInit();
     let url=this.getURL();
     if(url===null||this.problemID===null){
       this.display = true;

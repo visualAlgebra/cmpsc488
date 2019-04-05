@@ -20,8 +20,9 @@ export const explorer_vue=new Vue({
     return {
       display:false, problemsToDisplayCount: 1, problemsToDisplay: null, userStruct:null,
     };
-  }, mounted(){
+  }, created(){
     addListenerForUser(this.oauth_user_getter);
+  }, mounted(){
     get_problems_from_db(this.problemsToDisplayCount, res=>{
       this.problemsToDisplay=res;
       this.display=true;
