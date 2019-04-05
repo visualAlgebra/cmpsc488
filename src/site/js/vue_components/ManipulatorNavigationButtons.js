@@ -5,10 +5,11 @@ import {histAction} from "../history_nav";
 import {testAll} from "../solver.test";
 import LessonNavigationPopout from "./LessonNavigationPopout";
 import {get_lesson_from_db} from "../database_management";
+import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
 export default {
   name: "ManipulatorNavigationButtons",
-  props: ["dataFunc", "setTreeFunc", "restart", "setWorkTree", "lessonID"],
+  props: ["dataFunc", "restart", "setWorkTree", "lessonID"],
   template: `
   <div>
     <div class="row">
@@ -36,6 +37,10 @@ export default {
           <i class="material-icons left">folder</i>
           {{lessonID}}
       </a>
+      <a class="tab waves-effect waves-light btn col modal-trigger" data-target="algebraicModal">
+          <i class="material-icons left">bug_report</i>
+          Algebraic descriptions
+      </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
@@ -45,7 +50,8 @@ export default {
           DEBUG INSTANCES
       </a>
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
-      <LessonNavigationPopout v-if="lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
+      <LessonNavigationPopout v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
+      <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     </div>
   </div>  
   `,
@@ -54,7 +60,9 @@ export default {
       lesson:null,
     };
   }, mounted(){
-    get_lesson_from_db(this.lessonID, this.initLessonDropdown);
+    if(this.lessonID!==null){
+      get_lesson_from_db(this.lessonID, this.initLessonDropdown);
+    }
   },
   methods: {
     hint() {
@@ -65,9 +73,9 @@ export default {
     }, restartClear() {
       this.restart();
     }, undo() {
-      this.setTreeFunc(histAction(false));
+      this.setWorkTree(histAction(false));
     }, redo() {
-      this.setTreeFunc(histAction(true));
+      this.setWorkTree(histAction(true));
     }, initLessonDropdown(res){
       this.lesson=res;
     }, DEBUG_INSTANCES() {
@@ -94,6 +102,6 @@ export default {
     },
   },
   components: {
-    HistoryNavigationPopout, LessonNavigationPopout,
+    HistoryNavigationPopout, LessonNavigationPopout, AlgebraicActionsModalPopup,
   },
 };

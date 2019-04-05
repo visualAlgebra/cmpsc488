@@ -79,9 +79,9 @@ export class Mouse {
     this.eventDest = null;
   }
 
-  redisplayExpressionTree() {
+  redisplayExpressionTree(actionType) {
     const treeRoot = this.vueComponent.workTree;
-    const temp = addHistoryEntry(treeRoot, "hi");
+    const temp = addHistoryEntry(treeRoot, actionType);
     if (temp) {
       window.setTimeout(() => alert("Win"), 100);
     }
@@ -105,7 +105,7 @@ export class Mouse {
 
         console.log("Inserting", x, "to tag", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Associative Insert');
       }
       else if (this.mode === MouseMode.Manipulation && this.eventDest.kind === ClickTargetKind.TagQuadrant && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
 
@@ -114,7 +114,7 @@ export class Mouse {
 
         console.log("Extracting", x, "from", x.parent);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Associative Extract');
       }
       else if (this.mode === MouseMode.Manipulation && CommutativeSwap.verify(x, y, xQuad, yQuad)) {
 
@@ -123,7 +123,7 @@ export class Mouse {
 
         console.log("Swapping siblings", x, "and", y);
 
-        this.redisplayExpressionTree()
+        this.redisplayExpressionTree('Commutative Swap')
       }
       else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagButton && AssociativeMerge.verify(x, y)) {
 
@@ -132,7 +132,7 @@ export class Mouse {
 
         console.log("Merging", x, "into", y);
 
-        this.redisplayExpressionTree()
+        this.redisplayExpressionTree('Associative Merge')
       }
       else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagQuadrant && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
 
@@ -141,7 +141,7 @@ export class Mouse {
 
         console.log("Flipping", x);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Flipped quadrants');
       }
       else if (this.mode === MouseMode.Manipulation && Cancel.verify(x, y, xQuad, yQuad)) {
 
@@ -150,7 +150,7 @@ export class Mouse {
 
         console.log("Cancelling", x, "and", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Cancelation');
       }
       else if (this.mode === MouseMode.MergingLiterals && LiteralMerge.verify(x, y, xQuad, yQuad)) {
 
@@ -159,7 +159,7 @@ export class Mouse {
 
         console.log("Merging Literals", x, "and", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Merging Literals');
       }
       else if (this.mode === MouseMode.MergingLiterals && IdentityMerge.verify(x, y, xQuad, yQuad)) {
 
@@ -168,7 +168,7 @@ export class Mouse {
 
         console.log("Identity Merging", x, "and", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Merging Identities');
       }
       else if (this.mode === MouseMode.MergingLiterals && ZeroMerge.verify(x, y, xQuad, yQuad)) {
 
@@ -177,7 +177,7 @@ export class Mouse {
 
         console.log("Zero Merging", x, "and", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Cancel Zeros');
       }
       else if (this.mode === MouseMode.Distribution && this.eventDest.kind === ClickTargetKind.TagButton && Distribute.verify(x, y, xQuad, yQuad)) {
 
@@ -186,7 +186,7 @@ export class Mouse {
 
         console.log("Distributing", x, "over", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Distribution');
       }
       else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagButton && SplitFrac.verify(x, y)) {
 
@@ -195,7 +195,7 @@ export class Mouse {
 
         console.log("Splitting Fraction", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Split a Fraction');
       }
       // TODO: fix verfiy for Factor
       else if (this.mode === MouseMode.Distribution && this.eventDest.kind === ClickTargetKind.TagQuadrant && Factor.verify(x, y)) {
@@ -205,7 +205,7 @@ export class Mouse {
 
         console.log("Factoring", x, "from", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Extract Factor');
       }
 
       else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagQuadrant && this.eventDest.kind === ClickTargetKind.TagButton && CombineFrac.verify(y, x)) {
@@ -215,7 +215,7 @@ export class Mouse {
 
         console.log("Splitting", y);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Combine Factor');
       }
     } catch (error) {
       console.error("An invalid action has occured\n", error);
@@ -236,7 +236,7 @@ export class Mouse {
         action.apply();
         console.log("Enclosing ", tree);
 
-        this.redisplayExpressionTree();
+        this.redisplayExpressionTree('Introduce Tag');
       }
     } catch (error) {
       console.error("An invalid action has occurred")
@@ -247,7 +247,7 @@ export class Mouse {
       action.apply();
       console.log("Converting ", tree);
 
-      this.redisplayExpressionTree();
+      this.redisplayExpressionTree('Convert Literal');
     }
 
     this.reset();

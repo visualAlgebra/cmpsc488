@@ -8,6 +8,8 @@ import ProblemsHolder from "./vue_components/ProblemsHolder";
 import InvalidPage from "./vue_components/InvalidPage";
 import LessonsHolder from "./vue_components/LessonsHolder";
 import {addListenerForUser} from "./user_system";
+import {getProblemFromDBVue} from "./display_feature";
+
 
 export const profile_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -17,7 +19,8 @@ export const profile_vue=new Vue({
     <ProfilePageTop v-if="display"
     v-bind:bio="bio"
     v-bind:time="time"
-    v-bind:problemCount="problems.length">
+    v-bind:problemCount="problems.length"
+    v-bind:accountID="accountID">
     </ProfilePageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
@@ -29,12 +32,13 @@ export const profile_vue=new Vue({
     };
   }, methods: {
     getAccountFromURL(){
-      let acc=(window.location.href).substr((window.location.href).indexOf('/profile/accounts/'));
-      if(acc.indexOf('profile/accounts/')=== -1||acc==='null'||acc===''||acc==='undefined'){
+      let argArr=(window.location.href).split('/');
+      if(argArr.length>=3){
+        this.accountID=argArr[5];
+      }else{
         return null;
       }
-      this.accountID=acc.substring(acc.lastIndexOf('/')+1, acc.length);
-      return this.accountID;
+      return this.problemID;
     }, distribute(res){
       this.bio=res.bio;
       this.time=res.timeCreated;
@@ -60,10 +64,9 @@ export const profile_vue=new Vue({
   }, created(){
     addListenerForUser(this.oauth_user_getter);
   }, mounted(){
-    let url=this.getAccountFromURL();
-    url!==null?get_account_from_db(url, res=>{
-      this.distribute(res);
-    }):null;
+    if(this.getAccountFromURL()!==null){
+      get_account_from_db(this.accountID,this.distribute);
+    }
   }, components: {
     NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder,
   },

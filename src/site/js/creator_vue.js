@@ -27,7 +27,11 @@ export const creator_vue=new Vue({
       v-if="display"
       :mouse="mouse"
     ></CreatorSpecificActionButtons>
-    <ManipulatorWindow v-if="display&&workTree" :tree="workTree"></ManipulatorWindow>
+    <ManipulatorWindow
+      v-if="display&&workTree"
+      :tree="workTree"
+      :mouse="mouse"
+    ></ManipulatorWindow>
   </div>
   `,
   data: () => ({
@@ -39,8 +43,7 @@ export const creator_vue=new Vue({
     desc:"",
     time:"",
     goalTreeStr: null,
-
-    mouse: new Mouse(), lessonID: null, 
+    mouse: new Mouse(null), lessonID: null, 
     userStruct:null, logged:false
   }), created(){
     addListenerForUser(this.oauth_user_getter);
@@ -50,6 +53,7 @@ export const creator_vue=new Vue({
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }
+    this.mouse = new Mouse(this);
   },
   methods: {
     oauth_user_getter(user){

@@ -17,6 +17,8 @@ class Node {
 }
 
 function heuristicEval(a, b) {
+  if (a == undefined || b == undefined)
+    return Math.MAX_SAFE_INTEGER;
   if (a.equals(b))
     return 0;
   var numDiff = 0;
@@ -29,7 +31,7 @@ function heuristicEval(a, b) {
       }
       var max = Math.min(a.SE.length, b.SE.length);
       numDiff += Math.abs(a.SE.length-b.SE.length);
-      for (var i = 0; i < a.SE.length; i++) {
+      for (var i = 0; i < max; i++) {
         numDiff += heuristicEval(a.SE[i], b.SE[i]);
       }
     }
@@ -45,9 +47,10 @@ function heuristicEval(a, b) {
       else
         return 1;
     }
-    if (b instanceof Variable)
+    else if (b instanceof Variable)
       return 1;
-    return b.treeCount;
+    else
+      return b.treeCount;
   }
 
   if (a instanceof Variable) {
@@ -57,9 +60,12 @@ function heuristicEval(a, b) {
       else
         return 1;
     }
-    if (b instanceof Literal)
+    else if (b instanceof Literal){
       return 1;
-    return b.treeCount;
+    }
+    else{
+      return b.treeCount;
+    }
   }
 
   return numDiff;

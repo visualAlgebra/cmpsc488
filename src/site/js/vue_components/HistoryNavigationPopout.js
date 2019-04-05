@@ -17,7 +17,7 @@ export default {
         </div>
       </li>
     </ul>
-  </div>  
+  </div>
   `,data(){
     return {
       display:false, historyController:null,
@@ -25,7 +25,7 @@ export default {
   }, mounted() {
     M.AutoInit();
     let data=this.dataFunc();
-    addHistoryEntry(data[0], "herro");
+    addHistoryEntry(data[0], "Start");
     setGoalTree(data[1]);
     this.historyController=getHistoryController();
     this.display=true;

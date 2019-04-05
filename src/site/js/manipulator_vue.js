@@ -19,7 +19,7 @@ export const manipulator_vue = new Vue({
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:setTreeFunc="setWorkTree" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
+    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
     <ManipulatorWindow v-if="display&&workTree" :tree="workTree" :mouse="mouse"></ManipulatorWindow>
     <GoalExpression
@@ -41,14 +41,13 @@ export const manipulator_vue = new Vue({
   }, methods: {
     getURL(){
       let argArr=(window.location.href).split('/');
-      if(argArr.length>=3){
+      if(argArr.length===6) {
         this.problemID=argArr[5];
-        if(argArr[7]!==undefined){
-          this.lessonID=argArr[7];
-        }
-        if(argArr[6]!==undefined){
-          this.problemID+='/'+argArr[6];
-        }
+      }else if(arrArr.length===7) {
+        this.problemID=argArr[5]+'/'+argArr[6];
+      }else if(arrArr.length===8) {
+        this.problemID=argArr[5]+'/'+argArr[6];
+        this.lessonID=argArr[7];
       }else{
         return null;
       }
@@ -73,7 +72,7 @@ export const manipulator_vue = new Vue({
       return [this.workTree.toString(), this.goalTreeStr.toString()];
     }, setWorkTree(tree){
       if(tree!==null) {
-        this.workTree = Deserialize(tree);
+        this.workTree = Deserialize(tree.toString());
       }
     }, restart(){
       this.workTree=Deserialize(this.workTreeData);
