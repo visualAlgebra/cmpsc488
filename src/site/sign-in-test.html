@@ -21,12 +21,28 @@
     firebase.auth().onAuthStateChanged(function(user) {
       if(user) {
         console.log("theres a user");
-        console.log(user.getToken());
+        let token = user.getIdToken()
+        .then(token => {
+          console.log(token);
+          postAccount(token);
+        })
+        .catch(error => {
+          console.log(error);
+        });
       } else {
         console.log("theres no user. Signing in:");
         signIn(provider);
       }
     })
+
+    function postAccount(token) {
+      let http = new XMLHttpRequest();
+      http.open("POST", "http://localhost:8080/accounts/", true);
+      http.setRequestHeader("Content-type", "application/json");
+      http.setRequestHeader("oauth_token", token);
+      let str = '{"bio": "testing out account system"}';
+      http.send(str);
+    }
     
     function signIn(provider) {
 
@@ -36,7 +52,10 @@
           // The signed-in user info.
           var user = result.user;
           console.log(token);
-          // ...
+
+         
+          
+
         }).catch(function (error) {
           // Handle Errors here.
           var errorCode = error.code;

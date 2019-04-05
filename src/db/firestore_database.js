@@ -15,7 +15,14 @@ class FirestoreDatabase extends Database {
     this.domainName = "http://localhost:8080";
   }
 
+  //contacts firebase and gets user based on provided token
+  //server: Server class that made call, response: Response class that request was from, idToken: oauth token, callback: success callback with string username as only argument
+  //calls callback on success with accountID as argument, calls server.respondWithError with response as first argument on fail
   getAccountIDFromToken(server, response, idToken, callback) {
+    if(idToken === undefined) {
+      return callback(undefined);
+    }
+    
     this.admin.auth().verifyIdToken(idToken)
       .then(function(decodedToken) {
         let email = decodedToken.email;
