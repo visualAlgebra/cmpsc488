@@ -17,7 +17,7 @@ export default {
         </div>
       </li>
     </ul>
-  </div>  
+  </div>
   `,data(){
     return {
       display:false, historyController:null,

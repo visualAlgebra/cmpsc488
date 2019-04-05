@@ -8,14 +8,13 @@ export default {
       {{(historyLine.line[index].msg)}}
     </div>
     <ul>
-      <HistoryNavigationHistoryLine v-bind:historyLine="historyLine" v-bind:index="index+1"></HistoryNavigationHistoryLine>
+      <HistoryNavigationHistoryLine v-bind:historyLine="historyLine" v-bind:index="index+1" v-bind:setWorkTree="setWorkTree"></HistoryNavigationHistoryLine>
       <HistoryNavigationHistoryLine v-for="(line, index) in historyLine.line[index].refs" v-bind:key="index" v-bind:historyLine="line" v-bind:index="0"></HistoryNavigationHistoryLine>
     </ul>
   </li>
   `, methods: {
     redisplay() {
-      this.setWorkTree(historyList.line[index].data);
-      console.log("hi");
+      this.setWorkTree(this.historyLine.line[this.index].data);
     }
   }, mounted() {
     M.AutoInit();
