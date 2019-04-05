@@ -11,16 +11,20 @@ class User {
 export function signIn(callback) {
   var provider = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(provider).then(function (result) {
-    var token = result.credential.accessToken;
     var user = result.user;
     let email = user.email;
     let atIndex = email.indexOf('@');
     let userName = email.substring(0,atIndex);
-    let currentUser = new User(userName, token);
-    console.log(currentUser);
-    checkIfAccountExists(currentUser, function () {return;})
-    callback(currentUser);
-
+    var token = result.user.getIdToken()
+    .then(token => {
+      let currentUser = new User(userName, token);
+      checkIfAccountExists(currentUser, function () {return;})
+      callback(currentUser);
+    })
+    .catch(error => {
+      console.log("Error getting token: " + error);
+    });
+    
   }).catch(function (error) {
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -89,14 +93,16 @@ function addNewAccount(bio, user, callback) {
   http.open("POST", "http://localhost:8080/accounts/", true);
   http.setRequestHeader("Content-type", "application/json");
   http.setRequestHeader("oauth_token", user.token);
-  let str = '{"bio": "' + bio + '"}';
+  let str = JSON.stringify({"bio": bio});
   http.send(str);
 
   http.onreadystatechange = function () {
 		if ( http.readyState == 4 && http.status == 201) {
 			callback(); 
-		} else {
+		} else if (http.readyState == 4){
       console.log("Error: account creation error");
+      console.log(http.status)
+      console.log(http.responseText);
     }
 	};
 }
@@ -127,9 +133,4 @@ export function addListenerForUser(callback) {
       });
     }
   });
-  let currentUser = firebase.auth().currentUser;
-  if(currentUser !== null) {
-    console.log(currentUser);
-    callback(currentUser);
-  }
 }

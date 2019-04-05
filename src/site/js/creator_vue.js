@@ -13,7 +13,7 @@ import {addListenerForUser, signIn} from "./user_system";
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <CreatorNavigationButtons
       v-if="display"
@@ -41,7 +41,7 @@ export const creator_vue=new Vue({
     goalTreeStr: null,
 
     mouse: new Mouse(), lessonID: null, 
-    userStruct:null,
+    userStruct:null, logged:false
   }), created(){
     addListenerForUser(this.oauth_user_getter);
   }, mounted() {
@@ -54,6 +54,7 @@ export const creator_vue=new Vue({
   methods: {
     oauth_user_getter(user){
       this.userStruct=user;
+      this.logged = true;
     },
     getURL(){
       let argArr=(window.location.href).split('/');

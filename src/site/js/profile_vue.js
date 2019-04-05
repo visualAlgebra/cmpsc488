@@ -12,7 +12,7 @@ import {addListenerForUser} from "./user_system";
 export const profile_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <ProfilePageTop v-if="display"
     v-bind:bio="bio"
@@ -25,7 +25,7 @@ export const profile_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, accountID: null, lessons: null, problems: null, bio: null, time: 0, userStruct:null,
+      display: false, accountID: null, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false,
     };
   }, methods: {
     getAccountFromURL(){
@@ -55,6 +55,7 @@ export const profile_vue=new Vue({
       this.display=true;
     },oauth_user_getter(user) {
       this.userStruct = user;
+      this.logged = true;
     },
   }, created(){
     addListenerForUser(this.oauth_user_getter);

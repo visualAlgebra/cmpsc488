@@ -9,7 +9,7 @@ import {addListenerForUser} from "./user_system";
 export const explorer_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
     <ProblemsHolder
       v-if="display&&problemsToDisplay"
@@ -18,7 +18,7 @@ export const explorer_vue=new Vue({
   </div>
   `, data(){
     return {
-      display:false, problemsToDisplayCount: 1, problemsToDisplay: null, userStruct:null,
+      display:false, problemsToDisplayCount: 1, problemsToDisplay: null, userStruct:null, logged:false,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);
@@ -31,6 +31,7 @@ export const explorer_vue=new Vue({
   methods: {
     oauth_user_getter(user) {
       this.userStruct = user;
+      this.logged = true;
     },
   }, components: {
     ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder,

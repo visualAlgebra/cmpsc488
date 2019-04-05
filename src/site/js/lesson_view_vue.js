@@ -11,7 +11,7 @@ import {addListenerForUser} from "./user_system";
 export const lesson_view_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <LessonViewPageTop v-if="display"
     v-bind:creatorID="creatorID"
@@ -25,7 +25,7 @@ export const lesson_view_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, lessons: [], problems: [], creatorID: "", desc: "", time: 0, lessonID: "", userStruct:null,
+      display: false, lessons: [], problems: [], creatorID: "", desc: "", time: 0, lessonID: "", userStruct:null, logged:false,
     };
   }, methods: {
     getAccountFromURL(){
@@ -52,6 +52,7 @@ export const lesson_view_vue=new Vue({
       this.display=true;
     }, oauth_user_getter(user) {
         this.userStruct = user;
+        this.logged = true;
       },
   }, created(){
     addListenerForUser(this.oauth_user_getter);

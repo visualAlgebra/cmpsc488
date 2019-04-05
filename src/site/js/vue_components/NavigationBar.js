@@ -4,7 +4,7 @@ import {signIn, signOut} from "../user_system";
 import {Mouse} from "../gui";
 
 export default {
-  name: "NavigationBar", props: ["user", "oauth"], template: `
+  name: "NavigationBar", props: ["user", "oauth", "logged"], template: `
   <div>
     <nav>
       <div class="nav-wrapper">
@@ -66,9 +66,7 @@ export default {
       </li>      
     </ul>
   </div>  
-  `,data: () => ({
-    logged:false,
-  }), mounted() {
+  `, mounted() {
     M.AutoInit();
   },
   methods: {

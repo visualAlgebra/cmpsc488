@@ -31,6 +31,7 @@ class FirestoreDatabase extends Database {
         callback(userName);
    
       }).catch(function(error) {
+        console.log(idToken);
         server.respondWithError(response, 403, "Error 403: oauth token not accepted");
       });
   }
@@ -635,7 +636,12 @@ class FirestoreDatabase extends Database {
       }
     })
     .catch(error => {
-      return self.addAccountIntoDatabase(server,response,account,accountID);
+      console.log("============ Error =============");
+      console.log("Error with getting account in addAccount()");
+      console.log(error);
+      console.log("==========End of Error =========");
+      return server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Server Error");
+      //return self.addAccountIntoDatabase(server,response,account,accountID); //what??
     })
     
   }

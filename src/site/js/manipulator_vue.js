@@ -17,7 +17,7 @@ import {addListenerForUser} from "./user_system";
 export const manipulator_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:setTreeFunc="setWorkTree" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
@@ -29,7 +29,7 @@ export const manipulator_vue = new Vue({
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null,
+      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null, logged:false,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);
@@ -80,6 +80,7 @@ export const manipulator_vue = new Vue({
       clearHist();
     }, oauth_user_getter(user) {
       this.userStruct = user;
+      this.logged = true;
     },
   }, components: {
     NavigationBar,
