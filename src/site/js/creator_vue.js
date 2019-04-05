@@ -8,11 +8,12 @@ import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";
 import InvalidPage from "./vue_components/InvalidPage";
+import {addListenerForUser, signIn} from "./user_system";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <CreatorNavigationButtons
       v-if="display"
@@ -42,17 +43,23 @@ export const creator_vue=new Vue({
     desc:"",
     time:"",
     goalTreeStr: null,
-    mouse: new Mouse(null),
-    lessonID: null,
-  }),
-  mounted() {
+    mouse: new Mouse(null), lessonID: null, 
+    userStruct:null, logged:false
+  }), created(){
+    addListenerForUser(this.oauth_user_getter);
+  }, mounted() {
     M.AutoInit();
+    addListenerForUser(this.oauth_user_getter);
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }
     this.mouse = new Mouse(this);
   },
   methods: {
+    oauth_user_getter(user){
+      this.userStruct=user;
+      this.logged = true;
+    },
     getURL(){
       let argArr=(window.location.href).split('/');
       if(argArr.length>=3){

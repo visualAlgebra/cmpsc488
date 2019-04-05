@@ -68,10 +68,8 @@ class Server {
   getSentToken(request) {
     return request.headers.oauth_token;
   }
-  authenticatedUserFromToken(response, token) {
-    this.database.getAccountIDFromToken(this, response, token, function (accountID) {
-      console.log(accountID);
-    });
+  authenticatedUserFromToken(response, token, callback) {
+    this.database.getAccountIDFromToken(this, response, token, callback);
   }
 
   
@@ -161,36 +159,41 @@ class Server {
             console.log("==========End of Error =========");
             return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
           }
-          let accountID = self.authenticatedUser(self.getSentAccountID(request));
 
-          if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
-            self.saveProblem(sentUrl.pathname, response, jsonData, accountID);
-          } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
-            self.saveLesson(sentUrl.pathname, response, jsonData, accountID);
-          } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
-            self.saveAccount(response, jsonData, accountID);
+          self.authenticatedUserFromToken(response, self.getSentToken(request), function (accountID) {
+            if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
+              self.saveProblem(sentUrl.pathname, response, jsonData, accountID);
+            } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
+              self.saveLesson(sentUrl.pathname, response, jsonData, accountID);
+            } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
+              self.saveAccount(response, jsonData, accountID);
+            } else {
+              console.log("============ Error =============");
+              console.log("Sent POST request does not match any api call");
+              console.log("==========End of Error =========");
+              return self.respondWithError(response, 400, "Error 400: Bad Request");
+            }
+            
+          });
+          //let accountID = self.authenticatedUser(self.getSentAccountID(request));
+        });
+
+
+      } else if (method == "DELETE") {
+        self.authenticatedUserFromToken(response, self.getSentToken(request), function (accountID) {
+          if (accountID === undefined) {
+            return self.respondWithError(response, 401, "Error 401: No Authorization Provided");
+          }
+          if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
+            self.deleteProblem(response, sentUrl.pathname, accountID);
+          } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
+            self.deleteLesson(response, sentUrl.pathname, accountID);
+          } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
+            self.deleteAccount(response, sentUrl.pathname, accountID);
           } else {
-            console.log("============ Error =============");
-            console.log("Sent POST request does not match any api call");
-            console.log("==========End of Error =========");
             return self.respondWithError(response, 400, "Error 400: Bad Request");
           }
         });
-
-      } else if (method == "DELETE") {
-        let accountID = self.authenticatedUser(self.getSentAccountID(request));
-        if (accountID === undefined) {
-          return self.respondWithError(response, 401, "Error 401: No Authorization Provided");
-        }
-        if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
-          self.deleteProblem(response, sentUrl.pathname, accountID);
-        } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
-          self.deleteLesson(response, sentUrl.pathname, accountID);
-        } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
-          self.deleteAccount(response, sentUrl.pathname, accountID);
-        } else {
-          return self.respondWithError(response, 400, "Error 400: Bad Request");
-        }
       } else { // we do not handle other methods 
         return self.respondWithError(response, 400, "Error 400: Method not supported");
       }
@@ -319,6 +322,8 @@ class Server {
 
 
   saveAccount(response, account, accountID) {
+
+    
     if (Server.accountIsValid(account)) {
       return this.database.addAccount(this, response, account, accountID);
     } else {
@@ -367,7 +372,7 @@ var server = new Server();
 server.listen();
 const requestTest = require('./request_test');
 
-setTimeout(test, 500);
+//setTimeout(test, 500);
 
 console.log("Ready...");
 //testDatabase(server);

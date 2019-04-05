@@ -15,7 +15,14 @@ class FirestoreDatabase extends Database {
     this.domainName = "http://localhost:8080";
   }
 
+  //contacts firebase and gets user based on provided token
+  //server: Server class that made call, response: Response class that request was from, idToken: oauth token, callback: success callback with string username as only argument
+  //calls callback on success with accountID as argument, calls server.respondWithError with response as first argument on fail
   getAccountIDFromToken(server, response, idToken, callback) {
+    if(idToken === undefined) {
+      return callback(undefined);
+    }
+    
     this.admin.auth().verifyIdToken(idToken)
       .then(function(decodedToken) {
         let email = decodedToken.email;
@@ -24,6 +31,7 @@ class FirestoreDatabase extends Database {
         callback(userName);
    
       }).catch(function(error) {
+        console.log(idToken);
         server.respondWithError(response, 403, "Error 403: oauth token not accepted");
       });
   }
@@ -41,7 +49,7 @@ class FirestoreDatabase extends Database {
           server.respondWithError(serverResponse, 404, "Problem not found");
         } else {
           let problem = doc.data();
-          problem.timeCreated = problem.timeCreated._seconds;
+          problem.timeCreated = problem.timeCreated;
           server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(problem));
         }
       })
@@ -68,7 +76,7 @@ class FirestoreDatabase extends Database {
           snapshot.forEach(doc => {
             let problem = doc.data();
           
-            problem.timeCreated = problem.timeCreated._seconds;
+            problem.timeCreated = problem.timeCreated;
             let index = creations.findIndex( element => {
               return element === "problems/" + problem.problemID;
             })
@@ -93,7 +101,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let newLesson = doc.data();
-            newLesson.timeCreated = newLesson.timeCreated._seconds;
+            newLesson.timeCreated = newLesson.timeCreated;
             let index = creations.findIndex( element => {
               return element === "lessons/" + newLesson.lessonID;
             })
@@ -125,7 +133,7 @@ class FirestoreDatabase extends Database {
           server.respondWithError(serverResponse, 404, "Problem not found");
         } else {
           let lesson = doc.data();
-          lesson.timeCreated = lesson.timeCreated._seconds;
+          lesson.timeCreated = lesson.timeCreated;
           this.assembleLesson(server, lesson, serverResponse);
         }
       })
@@ -150,7 +158,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
-            problem.timeCreated = problem.timeCreated._seconds;
+            problem.timeCreated = problem.timeCreated;
             problems.push(problem);
           });
         }
@@ -171,7 +179,7 @@ class FirestoreDatabase extends Database {
         if (!snapshot.empty) {
           snapshot.forEach(doc => {
             let lesson = doc.data();
-            lesson.timeCreated = lesson.timeCreated._seconds;
+            lesson.timeCreated = lesson.timeCreated;
             lessons.push(lesson);
           });
         }
@@ -198,7 +206,7 @@ class FirestoreDatabase extends Database {
           server.respondWithError(serverResponse, 404, "Problem not found");
         } else {
           let account = doc.data();
-          account.timeCreated = account.timeCreated._seconds;
+          account.timeCreated = account.timeCreated;
           let lessons = [];
           let problems = [];
 
@@ -226,7 +234,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
-            problem.timeCreated = problem.timeCreated._seconds;
+            problem.timeCreated = problem.timeCreated;
             queryResponse.push(problem);
           });
         }
@@ -256,7 +264,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let lesson = doc.data();
-            lesson.timeCreated = lesson.timeCreated._seconds;
+            lesson.timeCreated = lesson.timeCreated;
             queryResponse.push(lesson);
           });
         }
@@ -628,7 +636,12 @@ class FirestoreDatabase extends Database {
       }
     })
     .catch(error => {
-      return self.addAccountIntoDatabase(server,response,account,accountID);
+      console.log("============ Error =============");
+      console.log("Error with getting account in addAccount()");
+      console.log(error);
+      console.log("==========End of Error =========");
+      return server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Server Error");
+      //return self.addAccountIntoDatabase(server,response,account,accountID); //what??
     })
     
   }
