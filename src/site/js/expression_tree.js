@@ -400,6 +400,14 @@ export function randomGoalGenerator(start, validActionsArr, numActions) {
   var end = start.clone();
   var actionApplied;
   var action;
+  var check = false;
+  for (var i = 0; i<validActionsArr.length; i++){
+    if (!check)
+      check = validActionsArr[i];
+  }
+  if (!check){
+    return null;
+  }
   do {
     for (var i = 0; i < numActions; i++) {
       actionApplied = false;

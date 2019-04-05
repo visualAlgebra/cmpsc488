@@ -59,6 +59,7 @@ export default {
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
       testAll();
+      
       // Enable the following commented code to test problem generator
       /*
       var test = randomProblemGenerator(10, actionsArr, 15);
