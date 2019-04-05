@@ -78,6 +78,7 @@ export function solve(current, goal) {
       minIdx = i;
     }
   }
+  console.log(minHeuristic);
   return (nodeArray[minIdx]);
 }
 
