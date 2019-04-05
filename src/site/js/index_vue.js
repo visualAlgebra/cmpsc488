@@ -24,8 +24,7 @@ export const index_vue = new Vue({
     return{
       userStruct:null,
     };
-  },
-  mounted(){
+  }, created(){
     addListenerForUser(this.oauth_user_getter);
   },
   methods: {

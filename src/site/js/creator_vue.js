@@ -39,10 +39,12 @@ export const creator_vue=new Vue({
     desc:"",
     time:"",
     goalTreeStr: null,
-    mouse: new Mouse(this),
-    lessonID: null, userStruct:null,
-  }),
-  mounted() {
+
+    mouse: new Mouse(), lessonID: null, 
+    userStruct:null,
+  }), created(){
+    addListenerForUser(this.oauth_user_getter);
+  }, mounted() {
     M.AutoInit();
     addListenerForUser(this.oauth_user_getter);
     if(this.getURL()!==null){

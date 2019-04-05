@@ -31,9 +31,10 @@ export const manipulator_vue = new Vue({
     return {
       display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null,
     };
+  }, created(){
+    addListenerForUser(this.oauth_user_getter);
   }, mounted(){
     M.AutoInit();
-    addListenerForUser(this.oauth_user_getter);
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }

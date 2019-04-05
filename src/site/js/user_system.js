@@ -9,6 +9,7 @@ class User {
 
 //called to sign in user via google 
 export function signIn(callback) {
+  var provider = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(provider).then(function (result) {
     var token = result.credential.accessToken;
     var user = result.user;
@@ -16,7 +17,7 @@ export function signIn(callback) {
     let atIndex = email.indexOf('@');
     let userName = email.substring(0,atIndex);
     let currentUser = new User(userName, token);
-    checkIfAccountExists(currentUser.accountID, function () {return;})
+    checkIfAccountExists(currentUser, function () {return;})
     callback(currentUser);
 
   }).catch(function (error) {
@@ -66,14 +67,14 @@ function deleteFromDatabase(user, successCallback) {
 	}
 }
 
-function checkIfAccountExists(accountID, callback) {
+function checkIfAccountExists(user, callback) {
   let http = new XMLHttpRequest();
-  http.open("GET", "http://localhost:8080/accounts/" + accountID, true);
+  http.open("GET", "http://localhost:8080/accounts/" + user.accountID, true);
   http.send();
 
   http.onreadystatechange = function () {
 		if ( http.readyState == 4 && http.status == 404) {
-			addNewAccount("new account", callback);
+			addNewAccount("new account", user, callback);
     } else if (http.readyState == 4 && http.status != 200) {
       console.log("Error: failed checking if account exists");
     }
@@ -82,11 +83,11 @@ function checkIfAccountExists(accountID, callback) {
 
 
 //posts new account, called when signIn signs in a new user
-function addNewAccount(bio, callback) {
+function addNewAccount(bio, user, callback) {
   let http = new XMLHttpRequest();
   http.open("POST", "http://localhost:8080/accounts/", true);
   http.setRequestHeader("Content-type", "application/json");
-  http.setRequestHeader("oauth_token", token);
+  http.setRequestHeader("oauth_token", user.token);
   let str = '{"bio": ' + bio + '}';
   http.send(str);
 
@@ -109,7 +110,8 @@ export function addListenerForUser(callback) {
   };
   firebase.initializeApp(config);
   
-  var provider = new firebase.auth.GoogleAuthProvider();
+  console.log("auth state changed");
+  
   firebase.auth().onAuthStateChanged(function(user) {
     if(user) {
       user.getIdToken()
@@ -125,4 +127,9 @@ export function addListenerForUser(callback) {
       });
     }
   });
+  let currentUser = firebase.auth().currentUser;
+  if(currentUser !== null) {
+    console.log(currentUser);
+    callback(currentUser);
+  }
 }
