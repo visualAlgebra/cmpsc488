@@ -80,10 +80,9 @@ export class Mouse {
 
   redisplayExpressionTree() {
     const treeRoot = this.vueComponent.workTree;
-    this.vueComponent.workTree = treeRoot.clone();
-    let temp = addHistoryEntry(treeRoot, "hi");
+    const temp = addHistoryEntry(treeRoot, "hi");
     if (temp) {
-      alert("Win");
+      window.setTimeout(() => alert("Win"), 100);
     }
   }
 

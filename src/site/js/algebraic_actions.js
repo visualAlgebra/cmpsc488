@@ -234,7 +234,7 @@ export class AssociativeInsert {
     const parent = this.sibling.parent;
 
     //removing pointer to sibling in parent
-    parent.remove(this.sibilng, parent.childQuadrant(this.sibilng));
+    parent.remove(this.sibling, parent.childQuadrant(this.sibling));
 
     //inserting sibling into intersion tag
     this.insertionTag.insert(this.sibling, Quadrant.NW, 0);
