@@ -32,7 +32,9 @@ function SolverTest1() {
 function SolverTest2() {
   let t1 = new Tag(Orientation.NS, [newVar(1), newLit(1)], [newVar(2)]);
   let start = new Tag(Orientation.NS, [newVar(3), newVar(4), t1], [newLit(2)]);
-  let end = new Tag(Orientation.NS, [newVar(3), newVar(4)], [newLit(2), t1]);
+
+  let t2 = new Tag(Orientation.NS, [newVar(2)], [newVar(1), newLit(1)]);
+  let end = new Tag(Orientation.NS, [newVar(3), newVar(4)], [newLit(2), t2]);
   var result = solve(start, end);
   if(result.action instanceof QuadrantFlip)
     console.log("Solver Test 2 Success");
