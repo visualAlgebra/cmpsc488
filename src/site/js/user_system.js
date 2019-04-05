@@ -2,8 +2,8 @@ import firebase from "firebase";
 
 class User {
   constructor(accountID, token) {
-    var accountID = accountID;
-    var token = token;
+    this.accountID = accountID;
+    this.token = token;
   }
 }
 
@@ -17,6 +17,7 @@ export function signIn(callback) {
     let atIndex = email.indexOf('@');
     let userName = email.substring(0,atIndex);
     let currentUser = new User(userName, token);
+    console.log(currentUser);
     checkIfAccountExists(currentUser, function () {return;})
     callback(currentUser);
 
@@ -88,7 +89,7 @@ function addNewAccount(bio, user, callback) {
   http.open("POST", "http://localhost:8080/accounts/", true);
   http.setRequestHeader("Content-type", "application/json");
   http.setRequestHeader("oauth_token", user.token);
-  let str = '{"bio": ' + bio + '}';
+  let str = '{"bio": "' + bio + '"}';
   http.send(str);
 
   http.onreadystatechange = function () {
@@ -109,8 +110,7 @@ export function addListenerForUser(callback) {
     projectId: "vatest-83fa4"
   };
   firebase.initializeApp(config);
-  
-  console.log("auth state changed");
+
   
   firebase.auth().onAuthStateChanged(function(user) {
     if(user) {

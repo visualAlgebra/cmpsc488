@@ -74,9 +74,11 @@ export default {
   methods: {
     signInNow(){
       signIn(this.oauth);
+      this.logged = true;
     },
     signOutNow(){
       signOut(this.displayLogoutModal);
+      this.logged = false;
     },displayLogoutModal(){
 
     }
