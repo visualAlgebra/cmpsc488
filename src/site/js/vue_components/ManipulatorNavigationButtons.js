@@ -2,6 +2,7 @@ import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import { solve } from "../solver";
 import {Deserialize, randomProblemGenerator, compress_string_js, ProblemInfo, actionsArr} from "../expression_tree";
 import {clearHist, histAction} from "../history_nav";
+import {testAll} from "../solver.test";
 import { post_problem_from_site, delete_problem_from_db } from "../database_management";
 import {displayExpressionTree, displayTreeFromDBStruct} from "../display_feature";
 import {CommutativeSwap} from "../algebraic_actions";
@@ -57,6 +58,9 @@ export default {
     }, DEBUG_INSTANCES(){
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
+      testAll();
+      // Enable the following commented code to test problem generator
+      /*
       var test = randomProblemGenerator(10, actionsArr, 15);
       var retval=new ProblemInfo('RAND_PROBLEM_3');
       compress_string_js(test.start.toString(), res=>{
@@ -67,6 +71,7 @@ export default {
           post_problem_from_site(retval);
         });
       });
+      */
 
 
       console.log('_DEBUG_FINISHED');
