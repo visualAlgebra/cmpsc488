@@ -1,14 +1,15 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
-import { solve } from "../solver";
-import {Deserialize, randomProblemGenerator, compress_string_js, ProblemInfo, actionsArr} from "../expression_tree";
-import {clearHist, histAction} from "../history_nav";
+import {solve} from "../solver";
+import {Deserialize} from "../expression_tree";
+import {histAction} from "../history_nav";
 import {testAll} from "../solver.test";
-import { post_problem_from_site, delete_problem_from_db } from "../database_management";
-import {displayExpressionTree, displayTreeFromDBStruct} from "../display_feature";
-import {CommutativeSwap} from "../algebraic_actions";
+import LessonNavigationPopout from "./LessonNavigationPopout";
+import {get_lesson_from_db} from "../database_management";
 
 export default {
-  name: "ManipulatorNavigationButtons", props:["dataFunc", "setTreeFunc", "restart", "setWorkTree"], template: `
+  name: "ManipulatorNavigationButtons",
+  props: ["dataFunc", "setTreeFunc", "restart", "setWorkTree", "lessonID"],
+  template: `
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col" v-on:click="hint()">
@@ -31,6 +32,10 @@ export default {
           <i class="material-icons left">redo</i>
           Redo
       </a>
+      <a v-if="lessonID" class="tab waves-effect waves-light btn col sidenav-trigger" data-target="lessonNav">
+          <i class="material-icons left">folder</i>
+          {{lessonID}}
+      </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
@@ -40,26 +45,36 @@ export default {
           DEBUG INSTANCES
       </a>
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
+      <LessonNavigationPopout v-if="lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
     </div>
   </div>  
-  `, methods: {
-    hint(){
+  `,
+  data() {
+    return {
+      lesson:null,
+    };
+  }, mounted(){
+    get_lesson_from_db(this.lessonID, this.initLessonDropdown);
+  },
+  methods: {
+    hint() {
       let problems = this.dataFunc();
       solve(Deserialize(problems[0]), Deserialize(problems[1]));
-    }, share(){
+    }, share() {
       console.log("tehehehe");
-    }, restartClear(){
+    }, restartClear() {
       this.restart();
-      console.log("u tried to restart but u cant, so reload plz")
-    }, undo(){
+    }, undo() {
       this.setTreeFunc(histAction(false));
-    }, redo(){
+    }, redo() {
       this.setTreeFunc(histAction(true));
-    }, DEBUG_INSTANCES(){
+    }, initLessonDropdown(res){
+      this.lesson=res;
+    }, DEBUG_INSTANCES() {
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
       testAll();
-      
+
       // Enable the following commented code to test problem generator
       /*
       var test = randomProblemGenerator(10, actionsArr, 15);
@@ -78,7 +93,7 @@ export default {
       console.log('_DEBUG_FINISHED');
     },
   },
-  components:{
-    HistoryNavigationPopout,
+  components: {
+    HistoryNavigationPopout, LessonNavigationPopout,
   },
 };
