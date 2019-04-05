@@ -3,7 +3,7 @@ export default {
   <div>
     <div class="container">
       <div class="row">
-        <a class="waves-effect waves-light btn" href="http://localhost:8080/manipulator/problems/Getting%20Started">
+        <a class="waves-effect waves-light btn" href="http://localhost:8080/manipulator/problems/Getting_started">
           <i class="material-icons left">file_download</i>
           Get Started!
         </a>
