@@ -1,5 +1,5 @@
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
-import {TreeComponentKind} from "../gui";
+import {ClickTargetKind} from "../gui";
 import {ExpressionTree as jsExpressionTree, Quadrant} from "../expression_tree";
 
 export default {
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       guiObj: {
-        kind: TreeComponentKind.TagQuadrant,
+        kind: ClickTargetKind.TagQuadrant,
         tree: this.tree,
         path: this.path,
       },
