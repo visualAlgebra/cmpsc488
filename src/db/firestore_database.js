@@ -48,7 +48,7 @@ class FirestoreDatabase extends Database {
           server.respondWithError(serverResponse, 404, "Problem not found");
         } else {
           let problem = doc.data();
-          problem.timeCreated = problem.timeCreated._seconds;
+          problem.timeCreated = problem.timeCreated;
           server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(problem));
         }
       })
@@ -75,7 +75,7 @@ class FirestoreDatabase extends Database {
           snapshot.forEach(doc => {
             let problem = doc.data();
           
-            problem.timeCreated = problem.timeCreated._seconds;
+            problem.timeCreated = problem.timeCreated;
             let index = creations.findIndex( element => {
               return element === "problems/" + problem.problemID;
             })
@@ -100,7 +100,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let newLesson = doc.data();
-            newLesson.timeCreated = newLesson.timeCreated._seconds;
+            newLesson.timeCreated = newLesson.timeCreated;
             let index = creations.findIndex( element => {
               return element === "lessons/" + newLesson.lessonID;
             })
@@ -132,7 +132,7 @@ class FirestoreDatabase extends Database {
           server.respondWithError(serverResponse, 404, "Problem not found");
         } else {
           let lesson = doc.data();
-          lesson.timeCreated = lesson.timeCreated._seconds;
+          lesson.timeCreated = lesson.timeCreated;
           this.assembleLesson(server, lesson, serverResponse);
         }
       })
@@ -157,7 +157,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
-            problem.timeCreated = problem.timeCreated._seconds;
+            problem.timeCreated = problem.timeCreated;
             problems.push(problem);
           });
         }
@@ -178,7 +178,7 @@ class FirestoreDatabase extends Database {
         if (!snapshot.empty) {
           snapshot.forEach(doc => {
             let lesson = doc.data();
-            lesson.timeCreated = lesson.timeCreated._seconds;
+            lesson.timeCreated = lesson.timeCreated;
             lessons.push(lesson);
           });
         }
@@ -205,7 +205,7 @@ class FirestoreDatabase extends Database {
           server.respondWithError(serverResponse, 404, "Problem not found");
         } else {
           let account = doc.data();
-          account.timeCreated = account.timeCreated._seconds;
+          account.timeCreated = account.timeCreated;
           let lessons = [];
           let problems = [];
 
@@ -233,7 +233,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
-            problem.timeCreated = problem.timeCreated._seconds;
+            problem.timeCreated = problem.timeCreated;
             queryResponse.push(problem);
           });
         }
@@ -263,7 +263,7 @@ class FirestoreDatabase extends Database {
         if(!snapshot.empty) {
           snapshot.forEach(doc => {
             let lesson = doc.data();
-            lesson.timeCreated = lesson.timeCreated._seconds;
+            lesson.timeCreated = lesson.timeCreated;
             queryResponse.push(lesson);
           });
         }
