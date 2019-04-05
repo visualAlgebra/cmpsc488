@@ -22,11 +22,15 @@ function heuristicEval(a, b) {
   var numDiff = 0;
   if (a instanceof Tag) {
     if (b instanceof Tag) {
-      for (var i = 0; i < a.NW.length; i++) {
-        if(a.NW[i] instanceof Tag && !(b.NW[i] instanceof Tag)){
-          numDiff += 1+heuristicEval(a.NW[i], b);
-
-        }
+      var max = Math.min(a.NW.length, b.NW.length);
+      numDiff += Math.abs(a.NW.length-b.NW.length);
+      for (var i = 0; i < max; i++) {
+        numDiff += heuristicEval(a.NW[i], b.NW[i]);
+      }
+      var max = Math.min(a.SE.length, b.SE.length);
+      numDiff += Math.abs(a.SE.length-b.SE.length);
+      for (var i = 0; i < a.SE.length; i++) {
+        numDiff += heuristicEval(a.SE[i], b.SE[i]);
       }
     }
     else

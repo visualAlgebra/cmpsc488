@@ -46,7 +46,7 @@ function SolverTest3() {
   return solve(start, end) instanceof CommutativeSwap || solve(start, end) instanceof CombineFrac || solve(start, end) instanceof LiteralMerge;
 }
 
-function testAll() {
+export function testAll() {
   if (SolverTest1()&&SolverTest2()&&SolverTest3()) {
     console.log('All solver tests passed');
   }
