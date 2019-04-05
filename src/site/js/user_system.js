@@ -15,6 +15,8 @@ function signIn(callback) {
     let email = user.email;
     let atIndex = email.indexOf('@');
     let userName = email.substring(0,atIndex);
+    let currentUser = new User(userName, token);
+    callback(currentUser);
 
   }).catch(function (error) {
     var errorCode = error.code;
@@ -26,6 +28,36 @@ function signIn(callback) {
 
 function signOut() {
 
+}
+
+
+//user is User class. callback is called on success of deleting account from database & authorization
+function deleteCurrentUser(user, callback) {
+  deleteFromDatabase(user, function () {
+    firebase.auth().currentUser.delete().then(function () {
+      callback();
+    }).catch(function (error) {
+      console.log("Error: could not delete user");
+      console.log(error);
+    });
+  });
+}
+
+
+//user is User class
+function deleteFromDatabase(user, successCallback) {
+  let http = new XMLHttpRequest();
+  http.open("DELETE", "http://localhost:8080/accounts/" + user.accountID, true);
+  http.setRequestHeader("oauth_token", user.token);
+  http.send();
+
+  http.onreadystatechange = function () {
+		if ( http.readyState == 4 && http.status == 200) {
+			successCallback();
+    } else {
+      console.log("Error: failed to delete account");
+    }
+	}
 }
 
 function checkIfAccountExists(accountID, callback) {
@@ -61,6 +93,7 @@ function addNewAccount(bio, callback) {
 	};
 }
 
+//needs to be called on load of every page that has user (every page)
 function addListenerForUser() {
   var config = {
     apiKey: " AIzaSyCDFM-e3QGmKcxarHC9KFeAv_HzwFq3w3M ",
