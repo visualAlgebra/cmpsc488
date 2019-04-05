@@ -9,7 +9,7 @@ import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
 export default {
   name: "ManipulatorNavigationButtons",
-  props: ["dataFunc", "setTreeFunc", "restart", "setWorkTree", "lessonID"],
+  props: ["dataFunc", "restart", "setWorkTree", "lessonID"],
   template: `
   <div>
     <div class="row">
@@ -50,7 +50,7 @@ export default {
           DEBUG INSTANCES
       </a>
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
-      <LessonNavigationPopout v-if="lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
+      <LessonNavigationPopout v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     </div>
   </div>  
@@ -60,7 +60,9 @@ export default {
       lesson:null,
     };
   }, mounted(){
-    get_lesson_from_db(this.lessonID, this.initLessonDropdown);
+    if(this.lessonID!==null){
+      get_lesson_from_db(this.lessonID, this.initLessonDropdown);
+    }
   },
   methods: {
     hint() {
@@ -71,9 +73,9 @@ export default {
     }, restartClear() {
       this.restart();
     }, undo() {
-      this.setTreeFunc(histAction(false));
+      this.setWorkTree(histAction(false));
     }, redo() {
-      this.setTreeFunc(histAction(true));
+      this.setWorkTree(histAction(true));
     }, initLessonDropdown(res){
       this.lesson=res;
     }, DEBUG_INSTANCES() {
