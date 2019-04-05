@@ -32,7 +32,7 @@ export const creator_vue=new Vue({
   `,
   data: () => ({
     stage: "build",
-    display: false,
+    display: true,
     workTree: null,
     startTree: null,
     problemID: "",
@@ -79,6 +79,10 @@ export const creator_vue=new Vue({
     },
   },
   components: {
-    NavigationBar, CreatorSpecificActionButtons, CreatorNavigationButtons, ManipulatorWindow, InvalidPage, AlgebraicActionsModalPopup
+    NavigationBar,
+    CreatorSpecificActionButtons,
+    CreatorNavigationButtons,
+    ManipulatorWindow,
+    InvalidPage,
   },
 });

@@ -33,7 +33,10 @@ export default {
       </div>
     </form>
   </section>
-  <InsertButtons v-if="inInsertMode"></InsertButtons>
+  <InsertButtons
+    v-if="inInsertMode"
+    :mouse="mouse"
+  ></InsertButtons>
 </div>  
   `,
 

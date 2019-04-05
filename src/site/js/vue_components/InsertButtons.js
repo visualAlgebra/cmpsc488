@@ -57,18 +57,37 @@ export default {
     </div>
   </section>
   <svg
-    v-if="showGhost"
+    v-if="ghostIsShown"
     id="drag-ghost"
     xmlns="http://www.w3.org/2000/svg"
     width="100"
     height="100"
+    :style="ghostStyle"
   >
     <ellipse ry="50" rx="50" cy="50" cx="50" stroke-width="1.5" stroke="#000" fill="#EE3388"/>
   </svg>
 </div>
   `,
 
+  mounted() {
+    document.addEventListener("mousemove", this.updateGhost);
+  },
+
   data: () => ({
-    showGhost: true,
+    ghostIsShown: false,
+    ghostStyle: {
+      position: "absolute",
+      zIndex: 1000,
+    },
   }),
+
+  methods: {
+    updateGhost(e) {
+      if (this.ghostIsShown) {
+        const ghost = document.getElementById("drag-ghost");
+        ghost.style.left = e.pageX - (ghost.width.baseVal.value / 2) + "px";
+        ghost.style.top = e.pageY - (ghost.height.baseVal.value / 2) + "px";
+      }
+    },
+  },
 }

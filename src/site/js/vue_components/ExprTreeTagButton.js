@@ -1,4 +1,4 @@
-import {TreeComponentKind} from "../gui";
+import {ClickTargetKind} from "../gui";
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
 import {ExpressionTree} from "../expression_tree";
 
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       guiObj: {
-        kind: TreeComponentKind.TagButton,
+        kind: ClickTargetKind.TagButton,
         tree: this.tree,
         path: this.path,
       },

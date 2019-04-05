@@ -31,6 +31,7 @@ export default {
       guiObj: {
         kind: null,
         tree: null,
+        path: null,
       },
     };
   },

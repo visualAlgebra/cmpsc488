@@ -1,5 +1,5 @@
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
-import {TreeComponentKind} from "../gui";
+import {ClickTargetKind} from "../gui";
 import {ExpressionTree} from "../expression_tree";
 
 export default {
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       guiObj: {
-        kind: TreeComponentKind.Literal,
+        kind: ClickTargetKind.Literal,
         tree: this.tree,
         path: this.path,
       }
