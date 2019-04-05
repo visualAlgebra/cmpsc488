@@ -19,6 +19,7 @@ export const creator_vue=new Vue({
       :stage="stage"
       :setWorkTree="setWorkTree"
       v-bind:clearTree="clearTree"
+      v-bind:lessonID="lessonID"
     ></CreatorNavigationButtons>
     <CreatorSpecificActionButtons
       v-if="display"

@@ -18,7 +18,7 @@ export const manipulator_vue = new Vue({
   <div>
     <NavigationBar></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:setTreeFunc="setWorkTree" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree"></ManipulatorNavigationButtons>
+    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:setTreeFunc="setWorkTree" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
     <ManipulatorWindow v-if="display&&workTree" :tree="workTree" :mouse="mouse"></ManipulatorWindow>
     <GoalExpression
