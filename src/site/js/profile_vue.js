@@ -7,11 +7,12 @@ import {account_to_load, fillPage} from "./profile";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
 import InvalidPage from "./vue_components/InvalidPage";
 import LessonsHolder from "./vue_components/LessonsHolder";
+import {addListenerForUser} from "./user_system";
 
 export const profile_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <ProfilePageTop v-if="display"
     v-bind:bio="bio"
@@ -24,7 +25,7 @@ export const profile_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, accountID: null, lessons: null, problems: null, bio: null, time: 0,
+      display: false, accountID: null, lessons: null, problems: null, bio: null, time: 0, userStruct:null,
     };
   }, methods: {
     getAccountFromURL(){
@@ -52,8 +53,11 @@ export const profile_vue=new Vue({
       this.lessons=les;
       this.problems=prob;
       this.display=true;
+    },oauth_user_getter(user) {
+      this.userStruct = user;
     },
   }, mounted(){
+    addListenerForUser(this.oauth_user_getter);
     let url=this.getAccountFromURL();
     url!==null?get_account_from_db(url, res=>{
       this.distribute(res);

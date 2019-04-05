@@ -100,7 +100,7 @@ function addNewAccount(bio, callback) {
 }
 
 //needs to be called on load of every page that has user (every page)
-export function addListenerForUser() {
+export function addListenerForUser(callback) {
   var config = {
     apiKey: " AIzaSyCDFM-e3QGmKcxarHC9KFeAv_HzwFq3w3M ",
     authDomain: "vatest-83fa4.firebaseapp.com",

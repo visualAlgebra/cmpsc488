@@ -1,7 +1,10 @@
 import * as M from "materialize-css";
+import {Deserialize} from "../expression_tree";
+import {signIn, signOut} from "../user_system";
+import {Mouse} from "../gui";
 
 export default {
-  name: "NavigationBar", template: `
+  name: "NavigationBar", props: ["user", "oauth"], template: `
   <div>
     <nav>
       <div class="nav-wrapper">
@@ -26,12 +29,11 @@ export default {
             <a href="http://localhost:8080/profile.html">User Profile</a>
           </li>
           <li>
-            <a href="">Login</a>
+            <a v-if="!logged" v-on:click="signInNow()">Login</a>
           </li>
           <li>
-            <a href="">Logout</a>
+            <a v-if="logged" v-on:click="signOutNow()">Logout</a>
           </li>
-          
         </ul>
       </div>
     </nav>
@@ -64,7 +66,19 @@ export default {
       </li>      
     </ul>
   </div>  
-  `, mounted(){
+  `,data: () => ({
+    logged:false,
+  }), mounted(){
     M.AutoInit();
-  }
+  },
+  methods: {
+    signInNow(){
+      signIn(this.oauth);
+    },
+    signOutNow(){
+      signOut(this.displayLogoutModal);
+    },displayLogoutModal(){
+
+    }
+  },
 };

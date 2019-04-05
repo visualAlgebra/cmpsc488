@@ -6,11 +6,12 @@ import {get_lesson_from_db} from "./database_management";
 import LessonViewPageTop from "./vue_components/LessonViewPageTop";
 import InvalidPage from "./vue_components/InvalidPage";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
+import {addListenerForUser} from "./user_system";
 
 export const lesson_view_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <LessonViewPageTop v-if="display"
     v-bind:creatorID="creatorID"
@@ -24,7 +25,7 @@ export const lesson_view_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, lessons: [], problems: [], creatorID: "", desc: "", time: 0, lessonID: "",
+      display: false, lessons: [], problems: [], creatorID: "", desc: "", time: 0, lessonID: "", userStruct:null,
     };
   }, methods: {
     getAccountFromURL(){
@@ -49,8 +50,11 @@ export const lesson_view_vue=new Vue({
         }
       }
       this.display=true;
-    },
+    }, oauth_user_getter(user) {
+        this.userStruct = user;
+      },
   }, mounted(){
+    addListenerForUser(this.oauth_user_getter);
     get_lesson_from_db(this.getAccountFromURL(), res=>this.distribute(res));
   }, components: {
     NavigationBar, LessonsHolder, ProblemsHolder, LessonViewPageTop, InvalidPage,

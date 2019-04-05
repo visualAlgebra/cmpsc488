@@ -1,11 +1,12 @@
 import Vue from "vue";
 import NavigationBar from "./vue_components/NavigationBar";
 import IndexPageViewVue from "./vue_components/IndexPageViewVue";
+import {addListenerForUser} from "./user_system";
 
 export const index_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
     <IndexPageViewVue></IndexPageViewVue>
   </div>
   `,
@@ -19,6 +20,19 @@ export const index_vue = new Vue({
   //     post_problem_from_site(temp);
   //   }
   // },
+  data(){
+    return{
+      userStruct:null,
+    };
+  },
+  mounted(){
+    addListenerForUser(this.oauth_user_getter);
+  },
+  methods: {
+    oauth_user_getter(user) {
+      this.userStruct = user;
+    },
+  },
   components:
     {
       NavigationBar, IndexPageViewVue,

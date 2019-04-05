@@ -7,11 +7,12 @@ import * as M from "materialize-css";
 import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";
+import {addListenerForUser, signIn} from "./user_system";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-if="display"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter"></NavigationBar>
     <CreatorNavigationButtons
       v-if="display"
       :goToNextStage="goToNextStage"
@@ -37,9 +38,11 @@ export const creator_vue=new Vue({
     time:"",
     goalTreeStr: null,
     mouse: new Mouse(),
+    userStruct:null,
   }),
   mounted() {
     M.AutoInit();
+    addListenerForUser(this.oauth_user_getter);
     let url=this.getURL();
     if(url===null||this.problemID===null){
       this.display = true;
@@ -48,6 +51,9 @@ export const creator_vue=new Vue({
     getProblemFromDBVue(this.problemID,this.distribute);
   },
   methods: {
+    oauth_user_getter(user){
+      this.userStruct=user;
+    },
     getURL(){
       let problem=(window.location.href).substr((window.location.href).indexOf('/creator'));
       if(problem.indexOf('/creator/')=== -1||problem==='null'||problem===''||problem==='undefined'){
