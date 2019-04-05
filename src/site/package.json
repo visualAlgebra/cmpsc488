@@ -19,6 +19,7 @@
     "lzma": "^2.3.2",
     "materialize-css": "^1.0.0",
     "vue": "^2.6.9",
+    "vue-drag-drop": "^1.1.4",
     "vue-svg-pan-zoom": "^0.1.0"
   }
 }
