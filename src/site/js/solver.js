@@ -78,7 +78,7 @@ export function solve(current, goal) {
       minIdx = i;
     }
   }
-  console.log(nodeArray[minIdx], minHeuristic);
+  return (nodeArray[minIdx]);
 }
 
 function expand(expTree, nodeArray) {
