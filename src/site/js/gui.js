@@ -49,12 +49,13 @@ export const MouseMode = {
   Insertion: "Insertion",
 };
 
-export const TreeComponentKind = {
+export const ClickTargetKind = {
   Tag: "Tag",
   TagQuadrant: "TagQuadrant",
   TagButton: "TagButton",
   Variable: "Variable",
   Literal: "Literal",
+  InsertionButton: "InsertionButton",
 };
 
 export const MouseState = {
@@ -97,7 +98,7 @@ export class Mouse {
     const yQuad = findQuadrant(y);
 
     try {
-      if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeInsert.verify(x, y)) {
+      if (this.mode === MouseMode.Manipulation && this.eventDest.kind === ClickTargetKind.TagQuadrant && AssociativeInsert.verify(x, y)) {
 
         const action = new AssociativeInsert(x, y);
         action.apply();
@@ -106,7 +107,7 @@ export class Mouse {
 
         this.redisplayExpressionTree();
       }
-      else if (this.mode === MouseMode.Manipulation && this.eventDest.kind === TreeComponentKind.TagQuadrant && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
+      else if (this.mode === MouseMode.Manipulation && this.eventDest.kind === ClickTargetKind.TagQuadrant && AssociativeExtract.verify(x, y, xQuad, yQuad)) {
 
         const action = new AssociativeExtract(x, xQuad, yQuad);
         action.apply();
@@ -124,7 +125,7 @@ export class Mouse {
 
         this.redisplayExpressionTree()
       }
-      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagButton && AssociativeMerge.verify(x, y)) {
+      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagButton && AssociativeMerge.verify(x, y)) {
 
         const action = new AssociativeMerge(x, y, xQuad);
         action.apply();
@@ -133,7 +134,7 @@ export class Mouse {
 
         this.redisplayExpressionTree()
       }
-      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagQuadrant && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
+      else if (this.mode === MouseMode.Manipulation && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagQuadrant && QuadrantFlip.verify(x, y, xQuad, yQuad)) {
 
         const action = new QuadrantFlip(x, xQuad);
         action.apply();
@@ -178,7 +179,7 @@ export class Mouse {
 
         this.redisplayExpressionTree();
       }
-      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === TreeComponentKind.TagButton && Distribute.verify(x, y, xQuad, yQuad)) {
+      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === ClickTargetKind.TagButton && Distribute.verify(x, y, xQuad, yQuad)) {
 
         const action = new Distribute(x, y);
         action.apply();
@@ -187,7 +188,7 @@ export class Mouse {
 
         this.redisplayExpressionTree();
       }
-      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === TreeComponentKind.TagButton && this.eventDest.kind === TreeComponentKind.TagButton && SplitFrac.verify(x, y)) {
+      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagButton && SplitFrac.verify(x, y)) {
 
         const action = new SplitFrac(y);
         action.apply();
@@ -197,7 +198,7 @@ export class Mouse {
         this.redisplayExpressionTree();
       }
       // TODO: fix verfiy for Factor
-      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === TreeComponentKind.TagQuadrant && Factor.verify(x, y)) {
+      else if (this.mode === MouseMode.Distribution && this.eventDest.kind === ClickTargetKind.TagQuadrant && Factor.verify(x, y)) {
 
         const action = new Factor(x, y);
         action.apply();
@@ -207,7 +208,7 @@ export class Mouse {
         this.redisplayExpressionTree();
       }
 
-      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === TreeComponentKind.TagQuadrant && this.eventDest.kind === TreeComponentKind.TagButton && CombineFrac.verify(y, x)) {
+      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagQuadrant && this.eventDest.kind === ClickTargetKind.TagButton && CombineFrac.verify(y, x)) {
 
         const action = new CombineFrac(y);
         action.apply();

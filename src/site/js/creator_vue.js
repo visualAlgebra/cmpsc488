@@ -7,6 +7,7 @@ import * as M from "materialize-css";
 import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";
+import InvalidPage from "./vue_components/InvalidPage";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -19,6 +20,7 @@ export const creator_vue=new Vue({
       :stage="stage"
       :setWorkTree="setWorkTree"
       v-bind:clearTree="clearTree"
+      v-bind:lessonID="lessonID"
     ></CreatorNavigationButtons>
     <CreatorSpecificActionButtons
       v-if="display"
@@ -29,7 +31,7 @@ export const creator_vue=new Vue({
   `,
   data: () => ({
     stage: "build",
-    display: false,
+    display: true,
     workTree: null,
     startTree: null,
     problemID: "",
@@ -76,6 +78,10 @@ export const creator_vue=new Vue({
     },
   },
   components: {
-    NavigationBar, CreatorSpecificActionButtons, CreatorNavigationButtons, ManipulatorWindow,
+    NavigationBar,
+    CreatorSpecificActionButtons,
+    CreatorNavigationButtons,
+    ManipulatorWindow,
+    InvalidPage,
   },
 });
