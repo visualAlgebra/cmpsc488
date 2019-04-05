@@ -70,9 +70,6 @@ export default {
     logged:false,
   }), mounted(){
     M.AutoInit();
-<<<<<<< HEAD
-  }
-=======
   },
   methods: {
     signInNow(){
@@ -84,5 +81,4 @@ export default {
 
     }
   },
->>>>>>> 098bfc40ca00505b2238f8032f58be968e994ed9
 };
