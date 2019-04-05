@@ -5,6 +5,7 @@ import {histAction} from "../history_nav";
 import {testAll} from "../solver.test";
 import LessonNavigationPopout from "./LessonNavigationPopout";
 import {get_lesson_from_db} from "../database_management";
+import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
 export default {
   name: "ManipulatorNavigationButtons",
@@ -36,6 +37,10 @@ export default {
           <i class="material-icons left">folder</i>
           {{lessonID}}
       </a>
+      <a class="tab waves-effect waves-light btn col modal-trigger" data-target="algebraicModal">
+          <i class="material-icons left">bug_report</i>
+          Algebraic descriptions
+      </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
@@ -46,6 +51,7 @@ export default {
       </a>
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
       <LessonNavigationPopout v-if="lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
+      <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     </div>
   </div>  
   `,
@@ -94,6 +100,6 @@ export default {
     },
   },
   components: {
-    HistoryNavigationPopout, LessonNavigationPopout,
+    HistoryNavigationPopout, LessonNavigationPopout, AlgebraicActionsModalPopup,
   },
 };

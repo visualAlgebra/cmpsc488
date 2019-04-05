@@ -1,5 +1,6 @@
 import {createRandomExpression} from "../random_expression_creator";
 import {actionsArr, randomProblemGenerator, randomStartGenerator} from "../expression_tree";
+import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
 export default {
   name: "CreatorNavigationButtons",
@@ -32,6 +33,10 @@ export default {
           <i class="material-icons left">redo</i>
           Redo
       </a>
+      <a class="tab waves-effect waves-light btn col modal-trigger" data-target="algebraicModal">
+          <i class="material-icons left">bug_report</i>
+          Algebraic descriptions
+      </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">sort</i>
           History tree
@@ -44,6 +49,7 @@ export default {
           <i class="material-icons left">play_arrow</i>
           Build goal
       </a>
+      <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     </div>
   </div>  
   `,
@@ -66,5 +72,7 @@ export default {
       const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
       this.setWorkTree(res);
     }
-  },
+  }, components:{
+    AlgebraicActionsModalPopup,
+  }
 };

@@ -289,7 +289,7 @@ export class Variable extends ExpressionTree {
   }
 
   equals(that) {
-    if (that.kind !== ExprTreeKind.Var) return false;
+    if (!(that instanceof Variable)) return false;
     return this.value === that.value;
   }
 
