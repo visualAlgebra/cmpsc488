@@ -38,11 +38,11 @@ export function post_problem_from_site(problem) {
     http.send(str);
   } catch (e) {}
 }
-export function delete_problem_from_db(problem_id, acc_id) {
+export function delete_problem_from_db(problem_id, oauth_token) {
   let http = new XMLHttpRequest();
   http.open("DELETE", "http://localhost:8080/problems/" + problem_id, true);
   http.setRequestHeader("Content-type", "application/json");
-  http.setRequestHeader('Account', acc_id);
+  http.setRequestHeader('oauth_token', oauth_token);
   http.send();
 }
 export function get_account_from_db(account_id, callback) {
