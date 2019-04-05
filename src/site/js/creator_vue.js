@@ -36,7 +36,7 @@ export const creator_vue=new Vue({
     desc:"",
     time:"",
     goalTreeStr: null,
-    mouse: new Mouse(),
+    mouse: new Mouse(this),
     lessonID: null,
   }),
   mounted() {
