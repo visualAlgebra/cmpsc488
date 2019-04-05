@@ -28,21 +28,27 @@ export const manipulator_vue = new Vue({
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this),
+      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null,
     };
   }, mounted(){
     M.AutoInit();
-    if(this.getURL()===null){
-      return;
+    if(this.getURL()!==null){
+      getProblemFromDBVue(this.problemID,this.distribute);
     }
-    getProblemFromDBVue(this.problemID,this.distribute);
   }, methods: {
     getURL(){
-      let problem=(window.location.href).substr((window.location.href).indexOf('/manipulator'));
-      if(problem.indexOf('/manipulator/problems')=== -1||problem==='null'||problem===''||problem==='undefined'){
+      let argArr=(window.location.href).split('/');
+      if(argArr.length>=3){
+        this.problemID=argArr[5];
+        if(argArr[7]!==undefined){
+          this.lessonID=argArr[7];
+        }
+        if(argArr[6]!==undefined){
+          this.problemID+='/'+argArr[6];
+        }
+      }else{
         return null;
       }
-      this.problemID=problem.substring(problem.indexOf('/manipulator')+'/manipulator/problems/'.length, problem.length);
       return this.problemID;
     }, distribute(res, code){
       if(code===1){
