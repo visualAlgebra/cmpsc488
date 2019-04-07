@@ -5,7 +5,7 @@
 //   CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
 //   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 // } from "./algebraic_actions";
-import { compress_string_js, ExpressionTree, Literal, Variable, Tag, Quadrant, Orientation, ProblemInfo } from "./expression_tree";
+import { compress_string_js, ExpressionTree, Literal, Variable, Tag, Quadrant, Orientation, ProblemInfo } from "../expression_tree";
 
 let i = 0;
 
