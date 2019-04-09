@@ -1,6 +1,7 @@
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
 import {ClickTargetKind} from "../gui";
 import {ExpressionTree} from "../expression_tree";
+import {Drag, Drop} from "vue-drag-drop";
 
 export default {
   name: "ExprTreeLiteral",
@@ -13,13 +14,17 @@ export default {
   mixins: [ExprTreeListenerMixin],
 
   template: `
-  <div
-    v-on="listeners"
-    :class="classes"
-    xmlns="http://www.w3.org/1999/xhtml"
-  >
-    {{ tree.value }}
-  </div>
+<drop @drop="handleDrop">
+  <drag @dragstart="handleDragStart" :transferData="guiObj">
+    <div
+      v-on="listeners"
+      :class="classes"
+      xmlns="http://www.w3.org/1999/xhtml"
+    >
+      {{ tree.value }}
+    </div>
+  </drag>
+</drop>
   `,
 
   data() {
@@ -39,5 +44,10 @@ export default {
           this.interactive ? "hoverable" : "",
       ]
     },
+  },
+
+  components: {
+    Drag,
+    Drop,
   },
 };

@@ -1,6 +1,7 @@
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
 import {ClickTargetKind} from "../gui";
 import {ExpressionTree as jsExpressionTree, Quadrant} from "../expression_tree";
+import {Drag, Drop} from "vue-drag-drop";
 
 export default {
   name: "ExprTreeTagQuadrant",
@@ -17,8 +18,8 @@ export default {
   mixins: [ExprTreeListenerMixin],
 
   template: `
+<drop @drop="handleDrop">
   <div
-    v-on="listeners"
     :class="classes"
     xmlns="http://www.w3.org/1999/xhtml"
   >
@@ -36,6 +37,7 @@ export default {
       ></ExpressionTree>
     </div>
   </div>
+</drop>
   `,
 
   data() {
@@ -67,6 +69,8 @@ export default {
     // This solves circular reference problem.
     // See https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
     ExpressionTree: () => import("./ExpressionTree.js"),
+    Drag,
+    Drop,
   },
 };
 
