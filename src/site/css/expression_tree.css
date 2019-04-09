@@ -134,12 +134,10 @@
     display: flex;
 }
 
-.east-west > * {
+.east-west > * > * {
     display: flex;
     align-content: center;
 }
-
-/* GIT TEST */
 
 .north-west {
     border: solid var(--border-thickness) var(--tag-positive-color-secondary);
@@ -154,10 +152,6 @@
 .tag-element-container {
     display: flex;
     padding: var(--element-padding);
-}
-
-.tag-element-container > * {
-    margin: auto;
 }
 
 .hoverable:hover {
@@ -180,7 +174,7 @@
     height: var(--tag-button-size1);
 }
 
-.east-west > * > .tag-button {
+.east-west .tag-button {
     width: var(--tag-button-size1);
     height: var(--tag-button-size2);
 }
