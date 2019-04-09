@@ -8,6 +8,7 @@ const path = require("path");
 
 
 class Server {
+
   //isInProd: boolean which is true if running in production mode
   constructor(isInProd) {
     let DB = require('../db/firestore_database.js');
@@ -24,8 +25,9 @@ class Server {
     // this.eventEmitter.addListener("database file recieved", this.sendDatabaseFile);
 
     this.accessibleFolders = ["/src/site/assets/", "/src/site/dist/", "/src/site/node_modules/", "/src/site/css/", "/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
-    this.accessibleHTMLFiles = ["/index.html", "/explorer.html", "/creator.html", "/lesson-view.html", "/manipulator.html", "/profile.html", "/sign-in-test.html"];
+    this.accessibleHTMLFiles = ["/index.html", "/explorer.html", "/creator.html", "/lesson-view.html", "/manipulator.html", "/profile.html"];
     this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
+    this.blacklist = JSON.parse(fs.readFileSync("src/server/blacklist.json")); //form; "ipaddress": true. ie "'127.0.0.1': true" to block 127.0.0.1
   }
 
 
@@ -123,6 +125,9 @@ class Server {
     //so can call methods inside other function
     var self = this; //so can call inside callback function
     http.createServer(function (request, response) {
+      if(self.blacklist[response.connection.remoteAddress]) {
+        response.destroy();
+      }
       let sentUrl = url.parse(request.url, true);
       let method = request.method;
       console.log("Request Recieved: " + method + ": " + sentUrl.pathname);
@@ -387,11 +392,12 @@ function runServer (isInProd) {
   var server = new Server(isInProd);
   server.run();
   //const requestTest = require('./request_test'); //does not work due to valid oauth tokens that are required
+  console.log("Ready...");
 }
 
 //setTimeout(test, 500);
 
-console.log("Ready...");
+
 //testDatabase(server);
 
 
