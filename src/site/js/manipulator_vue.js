@@ -43,9 +43,9 @@ export const manipulator_vue = new Vue({
       let argArr=(window.location.href).split('/');
       if(argArr.length===6) {
         this.problemID=argArr[5];
-      }else if(arrArr.length===7) {
+      }else if(argArr.length===7) {
         this.problemID=argArr[5]+'/'+argArr[6];
-      }else if(arrArr.length===8) {
+      }else if(argArr.length===8) {
         this.problemID=argArr[5]+'/'+argArr[6];
         this.lessonID=argArr[7];
       }else{
