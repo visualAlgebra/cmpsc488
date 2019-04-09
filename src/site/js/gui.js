@@ -176,6 +176,15 @@ export class Mouse {
 
         this.redisplayExpressionTree('Cancel Zeros');
       }
+      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagButton && CombineFrac.verify(x, y)) {
+
+        const action = new CombineFrac(x, y, xQuad);
+        action.apply();
+
+        console.log("Combining Fraction", x, y);
+
+        this.redisplayExpressionTree('Combine Factor');
+      }
       else if (this.mode === MouseMode.Distribution && this.eventDest.kind === ClickTargetKind.TagButton && Distribute.verify(x, y, xQuad, yQuad)) {
 
         const action = new Distribute(x, y);
@@ -203,17 +212,7 @@ export class Mouse {
         console.log("Factoring", x, "from", y);
 
         this.redisplayExpressionTree('Extract Factor');
-      }
-
-      else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagQuadrant && this.eventDest.kind === ClickTargetKind.TagButton && CombineFrac.verify(y, x)) {
-
-        const action = new CombineFrac(y);
-        action.apply();
-
-        console.log("Splitting", y);
-
-        this.redisplayExpressionTree('Combine Factor');
-      }
+      }     
     } catch (error) {
       console.error("An invalid action has occured\n", error);
     }
