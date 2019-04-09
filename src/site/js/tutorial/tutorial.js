@@ -25,7 +25,7 @@ function tutorialProblem1(workTree) {
   tutMessage.push("Hello, welcome to Visual Algebra\n" +
   "This shape we see here is what we call an expression tree\n");
   tutMessage.push("We call the small gray circle a tag button\n");
-  tutMessage.push("When a tag is orientated horizonally, then elements are being added.\n")
+  tutMessage.push("When a tag is orientated horizonally, then elements are being added. We call this an East-West tag.\n")
   tutMessage.push("You're objective is to create the expression tree the same as the goal\n");
   tutMessage.push("Try dragging a child onto another child\n");
   tutMessage.push("Good. This action is called Commutative Swap. Now try to make the working expression the same as the goal\n");
@@ -39,7 +39,7 @@ function tutorialProblem1(workTree) {
 function tutorialProblem2(workTree) {
 
   let tutMessage = [];
-  tutMessage.push("Notice how the tags are vertical this time. This means that the elements are being added.\n");
+  tutMessage.push("Notice how the tags are vertical this time. This means that the elements are being multiplied. We call this a North-South Tag\n");
   tutMessage.push("Now we'll talk about the Associative actions. Try to click on the small tag circle\n");
   tutMessage.push("We see that we can enclose tags as many times as we want. This is called Associative Intro.\n");
   tutMessage.push("To close a tag, drag the outer tag button to the inner tag button. This is called Associative Merge.\n");
@@ -62,9 +62,20 @@ function tutorialProblem3(workTree) {
 }
 
 function tutorialProblem4(workTree) {
+  let tutMessage = [];
+  tutMessage.push("Now we'll talk about manipulating fractions.\n");
+  tutMessage.push("Click on Distribution and drag the tag button of the inner East-West Tag to the outer North-South Tag.\n");
+  tutMessage.push("Good, you've split up the fraction. Notice how this action is similar to Factor. Now try to combine the first two fractions.\n");
+  tutMessage.push("Awesome. Now on to the next problem.")
 }
 
 function tutorialProblem5(workTree) {
+  let tutMessage = [];
+  tutMessage.push("Now we'll go over some miscellaneous things. First, try dragging the tag button of the bottom tag in the divisor into the numerator\n");
+  tutMessage.push("Great, notice how the tag is now flipped. We call this a Tag Flip. This works with East-West Tags as well.\n");
+  tutMessage.push("If two tags that are equal and on opposite sides of a tag, you may cancel them by dragging the tag button of one" +
+  "into the tag button of the other. Try to find out on your own to get the two tags equal\n");
+  tutMessage.push("Great, now on to the next problem.");
 }
 
 function tutorialProblem6(workTree) {
