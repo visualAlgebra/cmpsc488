@@ -358,7 +358,7 @@ class Server {
   deleteAccount(response, pathname, accountID) {
    // let accountName = Server.getSentID(pathname.substr(this.databaseActions[2].length));
     let accountName = pathname.substr(this.databaseActions[2].length);
-    return this.database.deleteAccount(server, response, accountName, accountID);
+    return this.database.deleteAccount(this, response, accountName, accountID);
   }
 
 
