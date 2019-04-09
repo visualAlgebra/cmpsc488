@@ -13,6 +13,7 @@ import * as M from "materialize-css";
 import {clearHist} from "./history_nav";
 import {Mouse} from "./gui";
 import {addListenerForUser} from "./user_system";
+import WinModal from "./vue_components/WinModal";
 
 export const manipulator_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -26,10 +27,11 @@ export const manipulator_vue = new Vue({
       v-if="display&&goalTree"
       :tree="goalTree"
     ></GoalExpression>
+    <WinModal id="winModal" v-show="win"></WinModal>
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null, logged:false,
+      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null, logged:false, win:false,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);
@@ -39,7 +41,12 @@ export const manipulator_vue = new Vue({
       getProblemFromDBVue(this.problemID,this.distribute);
     }
   }, methods: {
-    getURL(){
+    resolveWin(val){
+      if(val) {
+        this.win=true;
+        window.setTimeout(() => {M.Modal.getInstance(document.getElementById('winModal')).open(); } , 0);
+      }
+    }, getURL(){
       let argArr=(window.location.href).split('/');
       if(argArr.length===6) {
         this.problemID=argArr[5];
@@ -90,5 +97,6 @@ export const manipulator_vue = new Vue({
     SingleExpressionDisplay,
     ManipulatorWindow,
     GoalExpression,
+    WinModal,
   },
 });

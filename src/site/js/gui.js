@@ -81,10 +81,7 @@ export class Mouse {
 
   redisplayExpressionTree(actionType) {
     const treeRoot = this.vueComponent.workTree;
-    const temp = addHistoryEntry(treeRoot, actionType);
-    if (temp) {
-      window.setTimeout(() => alert("Win"), 100);
-    }
+    this.vueComponent.resolveWin(addHistoryEntry(treeRoot, actionType));
   }
 
   dragDetected() {
