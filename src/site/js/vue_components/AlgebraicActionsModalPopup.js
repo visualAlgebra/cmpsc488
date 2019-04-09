@@ -1,6 +1,4 @@
 import * as M from "materialize-css";
-import HistoryNavigationHistoryLine from "./HistoryNavigationHistoryLine";
-import {addHistoryEntry, getHistoryController, setGoalTree} from "../history_nav";
 
 export default {
   name: "AlgebraicActionsModalPopup", template: `
@@ -109,11 +107,7 @@ export default {
         </ul>
       </div>
     </div>
-  `,data(){
-    return {
-    }
-  }, mounted() {
+  `, mounted() {
     M.AutoInit();
-  }, components:{
   },
 };

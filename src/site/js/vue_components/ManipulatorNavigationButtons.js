@@ -3,7 +3,7 @@ import {solve} from "../solver";
 import {Deserialize} from "../expression_tree";
 import {histAction} from "../history_nav";
 import {testAll} from "../solver.test";
-import LessonNavigationPopout from "./LessonNavigationPopout";
+import LessonNavigationModal from "./LessonNavigationModal";
 import {get_lesson_from_db} from "../database_management";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
@@ -33,7 +33,7 @@ export default {
           <i class="material-icons left">redo</i>
           Redo
       </a>
-      <a v-if="lessonID" class="tab waves-effect waves-light btn col sidenav-trigger" data-target="lessonNav">
+      <a v-if="lessonID" class="tab waves-effect waves-light btn col modal-trigger" data-target="lessonModal">
           <i class="material-icons left">folder</i>
           {{lessonID}}
       </a>
@@ -50,7 +50,7 @@ export default {
           DEBUG INSTANCES
       </a>
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
-      <LessonNavigationPopout v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationPopout>
+      <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     </div>
   </div>  
@@ -102,6 +102,6 @@ export default {
     },
   },
   components: {
-    HistoryNavigationPopout, LessonNavigationPopout, AlgebraicActionsModalPopup,
+    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup,
   },
 };
