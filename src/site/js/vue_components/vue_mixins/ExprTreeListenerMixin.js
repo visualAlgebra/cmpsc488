@@ -14,9 +14,9 @@ export default {
     listeners() {
       if (this.interactive) {
         return {
-          mousedown: this.mouseDown,
-          mousemove: this.mouseMove,
-          mouseup: this.mouseUp,
+          mousedown: e => { e.stopPropagation(); },
+          mousemove: e => { e.stopPropagation(); },
+          mouseup: e => { e.stopPropagation(); },
         };
       } else {
         // See https://jsfiddle.net/c0Le92xe/ for example
@@ -37,32 +37,14 @@ export default {
   },
 
   methods: {
-    mouseDown(e) {
-      e.stopPropagation();
-      if (this.mouse.state === MouseState.Idle) {
-        this.mouse.state = MouseState.MaybeDragging;
-        this.mouse.eventSource = this.guiObj;
-      }
+    handleDragStart(_data, event) {
+      event.stopPropagation();
     },
 
-    mouseMove(e) {
-      e.stopPropagation();
-      if (this.mouse.state === MouseState.MaybeDragging) {
-        this.mouse.state = MouseState.Dragging;
-      }
-    },
-
-    mouseUp(e) {
-      e.stopPropagation();
-      if (this.mouse.state === MouseState.MaybeDragging
-          || this.guiObj.tree.is(this.mouse.eventSource.tree)
-      ) {
-        this.mouse.clickDetected();
-      } else if (this.mouse.state === MouseState.Dragging) {
-        this.mouse.state = MouseState.Idle;
-        this.mouse.eventDest = this.guiObj;
-        this.mouse.dragDetected();
-      }
+    handleDrop(data) {
+      this.mouse.eventSource = data;
+      this.mouse.eventDest = this.guiObj;
+      this.mouse.dragDetected();
     },
   },
 };
