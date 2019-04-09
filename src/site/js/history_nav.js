@@ -27,7 +27,6 @@ export function histAction(bool){
   }else{
     temp=histControl.backward();
   }
-  console.log(temp);
   return temp;
 }
 
