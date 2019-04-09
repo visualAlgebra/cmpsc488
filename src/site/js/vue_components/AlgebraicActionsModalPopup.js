@@ -79,7 +79,6 @@ export default {
               <span></span>
             </div>
           </li>
-          
           <li>
             <div class="collapsible-header black-text"><i class=""></i>Literal Merge</div>
             <div class="collapsible-body black-text">
