@@ -8,9 +8,16 @@ const path = require("path");
 
 
 class Server {
-  constructor() {
+  //isInProd: boolean which is true if running in production mode
+  constructor(isInProd) {
     let DB = require('../db/firestore_database.js');
     this.database = new DB();
+
+    if(isInProd) {
+      this.PORT_NUMBER = 80;
+    } else {
+      this.PORT_NUMBER = 8080;
+    }
 
     // //setting up event emitter for callbacks
     // this.eventEmitter = new events.EventEmitter();
@@ -110,7 +117,7 @@ class Server {
 
 
   //creates a server session that listens on port 8080 of localhost
-  listen() {
+  run() {
 
     console.log("Booting up");
     //so can call methods inside other function
@@ -199,7 +206,7 @@ class Server {
       }
 
 
-    }).listen(8080);
+    }).listen(this.PORT_NUMBER, '0.0.0.0');
   }
 
   //==========================================================================
@@ -292,14 +299,14 @@ class Server {
     if(Object.keys(query).length == 0) {
       return this.database.getAllProblemIDs(server, response);
     }
-    return this.database.queryProblems(server, response, query);
+    return this.database.queryProblems(this, response, query);
   }
 
   queryLessons(query, response) {
     if(Object.keys(query).length == 0) {
       return this.database.getAllLessonIDs(server, response);
     }
-    return this.database.queryLessons(server, response, query);
+    return this.database.queryLessons(this, response, query);
   }
 
   //==========================================================================
@@ -368,9 +375,19 @@ let test = function test() {
 
 }
 
-var server = new Server();
-server.listen();
-const requestTest = require('./request_test');
+if(process.argv[2] === undefined) {
+  runServer(false);
+} else if (process.argv[2] === "-p") {
+  runServer(true);
+} else {
+  console.log("invalid argument: -p for production mode");
+}
+
+function runServer (isInProd) {
+  var server = new Server(isInProd);
+  server.run();
+  //const requestTest = require('./request_test'); //does not work due to valid oauth tokens that are required
+}
 
 //setTimeout(test, 500);
 
