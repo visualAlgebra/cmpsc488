@@ -7,16 +7,102 @@ export default {
         <h4 class="black-text">Algebraic Actions</h4>
         <ul class="collapsible black-text">
           <li>
-            <div class="collapsible-header black-text"><i class="material-icons">filter_drama</i>Alge1</div>
-            <div class="collapsible-body black-text"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias deleniti quae voluptate. Accusamus adipisci consequuntur corporis eligendi, esse laboriosam natus nemo numquam porro qui repellat vitae? Eligendi labore nihil vitae.</span></div>
+            <div class="collapsible-header black-text"><i class="material-icons">filter_drama</i>Commutative Swap</div>
+            <div class="collapsible-body black-text">
+              <span>You may swap the positions of two nodes in the same tag quadrant. Click and drag one element to another that has the same parent.</span>
+            </div>
           </li>
           <li>
-            <div class="collapsible-header black-text"><i class="material-icons">place</i>Alge2</div>
-            <div class="collapsible-body black-text"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad exercitationem ipsum odit possimus recusandae. Amet, architecto aut culpa error eveniet, facilis harum inventore iusto natus neque nesciunt obcaecati quas saepe!</span></div>
+            <div class="collapsible-header black-text"><i class="material-icons">place</i>Associative Merge</div>
+            <div class="collapsible-body black-text">
+              <span>If an inner tag has the same orientation as its enclosing tag, the elements in the inner tag can be extracted
+               and put into the outer tag i.e. an NS tag in an NS tag or an EW tag in an EW tag. Click and drag the tag button to another tag button.</span>
+            </div>
           </li>
           <li>
-            <div class="collapsible-header black-text"><i class="material-icons">whatshot</i>Alge3</div>
-            <div class="collapsible-body black-text"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A adipisci error libero mollitia suscipit? Aliquid assumenda cumque eum id ipsum iusto maxime natus nostrum numquam quis, recusandae, totam unde voluptate?</span></div>
+            <div class="collapsible-header black-text"><i class="material-icons">whatshot</i>Associative Introduction</div>
+            <div class="collapsible-body black-text">
+              <span>Elements of an expression tree may be enclose with another tag of the same orientation. Click any element to enclose it.</span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Associative Extract</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Associative Insert</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Distribute</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Factor</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Split Fraction</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Combine Fraction</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Tag Flip</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Canceling</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Identity Balance</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Literal Merge</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Zero Merge</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Identity Merge</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header black-text"><i class=""></i>Literal Conversion</div>
+            <div class="collapsible-body black-text">
+              <span></span>
+            </div>
           </li>
         </ul>
       </div>
