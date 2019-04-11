@@ -9,6 +9,7 @@ import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";
 import InvalidPage from "./vue_components/InvalidPage";
 import {addListenerForUser, signIn} from "./user_system";
+import CreateProblemModal from "./vue_components/CreateProblemModal";
 
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -17,11 +18,10 @@ export const creator_vue=new Vue({
     <InvalidPage v-if="!display"></InvalidPage>
     <CreatorNavigationButtons
       v-if="display"
-      :goToNextStage="goToNextStage"
+      v-bind:clearStartStage="clearStartStage"
+      v-bind:clearGoalStage="clearGoalStage"
       :stage="stage"
-      :setWorkTree="setWorkTree"
       :clearTree="clearTree"
-      :lessonID="lessonID"
     ></CreatorNavigationButtons>
     <CreatorSpecificActionButtons
       v-if="display"
@@ -32,24 +32,15 @@ export const creator_vue=new Vue({
       :tree="workTree"
       :mouse="mouse"
     ></ManipulatorWindow>
+    <CreateProblemModal v-if="finish" v-bind:closeFinish="closeFinish"></CreateProblemModal>
   </div>
   `,
   data: () => ({
-    stage: "build",
-    display: true,
-    workTree: null,
-    startTree: null,
-    problemID: "",
-    desc:"",
-    time:"",
-    goalTreeStr: null,
-    mouse: new Mouse(null), lessonID: null, 
-    userStruct:null, logged:false
+    stage: "build",display: true,workTree: null,createdProblem:[null,null], desc:"",time:"",mouse: new Mouse(null), lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
   }), created(){
     addListenerForUser(this.oauth_user_getter);
   }, mounted() {
     M.AutoInit();
-    addListenerForUser(this.oauth_user_getter);
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }
@@ -59,10 +50,12 @@ export const creator_vue=new Vue({
     oauth_user_getter(user){
       this.userStruct=user;
       this.logged = true;
-    },
-    getURL(){
+    }, resolveFinishProblem(){
+      this.finish=true;
+      window.setTimeout(() => {M.Modal.getInstance(document.getElementById('finishProblemModal')).open(); } , 0);
+    }, getURL(){
       let argArr=(window.location.href).split('/');
-      if(argArr.length>=3){
+      if(argArr.length>=5){
         this.problemID=argArr[4];
         if(argArr[7]!==undefined){
           this.lessonID=argArr[6];
@@ -74,9 +67,27 @@ export const creator_vue=new Vue({
         return null;
       }
       return this.problemID;
-    }, goToNextStage() {
+    }, closeFinish(){
+      this.finish=false;
+    }, clearStartStage() {
+      if(this.workTree===null){
+        alert("There must be at least some problem to continue to making goal expression");
+        return;
+      }
       this.stage = "manip";
-      this.startTree = this.workTree.toString();
+      this.createdProblem[0] = this.workTree.toString();
+    }, clearGoalStage() {
+      if(this.workTree===null){
+        alert("Goal expression must contain atleast some element");
+        return;
+      }
+      if(this.createdProblem[0]===this.workTree.toString()){
+        alert("Problem Must not be exactly the same as start expression");
+        return;
+      }
+      this.stage = "build";
+      this.createdProblem[1] = this.workTree.toString();
+      this.resolveFinishProblem();
     }, clearTree() {
       this.workTree=null;
     }, distribute(res, code) {
@@ -84,8 +95,7 @@ export const creator_vue=new Vue({
         this.workTree = Deserialize(res);
         this.display = true;
       }
-    },
-    setWorkTree(tree) {
+    }, setWorkTree(tree) {
       this.workTree = tree;
     },
   },
@@ -95,5 +105,6 @@ export const creator_vue=new Vue({
     CreatorNavigationButtons,
     ManipulatorWindow,
     InvalidPage,
+    CreateProblemModal,
   },
 });

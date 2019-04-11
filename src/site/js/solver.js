@@ -16,6 +16,61 @@ class Node {
 
 }
 
+function additionalHeur(numDiff, a, b){
+  var litA=0;
+  var litB=0;
+  var varA=0;
+  var varA=0;
+  var tagB=0;
+  if (a instanceof Tag){
+    for(var i = 0; i<a.NW.length; i++){
+      if (a.NW[i] instanceof Tag)
+        tagA+=1;
+      else if (a.NW[i] instanceof Literal)
+        litA+=1;
+      else
+        varA+=1;
+    }
+    for(var i = 0; i<a.SE.length; i++){
+      if (a.SE[i] instanceof Tag)
+        tagA+=1;
+      else if (a.SE[i] instanceof Literal)
+        litA+=1;
+      else
+        varA+=1;
+    }
+  }
+  else if (a instanceof Variable)
+    varA += 1;
+  else
+    litA += 1;
+
+  if (b instanceof Tag){
+    for(var i = 0; i<b.NW.length; i++){
+      if (b.NW[i] instanceof Tag)
+        tagB+=1;
+      else if (b.NW[i] instanceof Literal)
+        litB+=1;
+      else
+        varB+=1;
+    }
+    for(var i = 0; i<b.SE.length; i++){
+      if (b.SE[i] instanceof Tag)
+        tagB+=1;
+      else if (b.SE[i] instanceof Literal)
+        litB+=1;
+      else
+        varB+=1;
+    }
+  }
+  else if (b instanceof Variable)
+    varB += 1;
+  else
+    litB += 1;
+  
+  return (numDiff+Math.abs(litA-litB)+Math.abs(varA-varB)+Math.abs(tagA-tagB))
+}
+
 function heuristicEval(a, b) {
   if (a == undefined || b == undefined)
     return Math.MAX_SAFE_INTEGER;
@@ -68,7 +123,7 @@ function heuristicEval(a, b) {
     }
   }
 
-  return numDiff;
+  return additionalHeur(numDiff, a, b);
 }
 
 export function solve(current, goal) {
@@ -83,8 +138,8 @@ export function solve(current, goal) {
       minHeuristic = heuristic;
       minIdx = i;
     }
+    console.log(nodeArray[i], heuristic);
   }
-  console.log(minHeuristic);
   return (nodeArray[minIdx]);
 }
 
