@@ -99,7 +99,6 @@ export const manipulator_vue = new Vue({
       this.userStruct = user;
       this.logged = true;
     }, determineProblem() {
-      
       console.log("HI")
       let tutMessage = determineProblem(1, this.workTree);
       $("#tut").attr("data-tooltip", tutMessage[0]);
