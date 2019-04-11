@@ -44,11 +44,12 @@ function tutorialProblem2(workTree) {
   tutMessage.push("Good, now try dragging it back in. This action is called Associative Insert\n");
   tutMessage.push("Good, now try solving the expression.\n");
   tutMessage.push("Great job, go to the next problem in the lesson.\n");
+  return tutMessage;
 }
 
 function tutorialProblem3(workTree) {
-  let tutMessage = [];[0]
-  tutMessage.push("Now[0]lk about distributing and factoring.\n");
+  let tutMessage = [];
+  tutMessage.push("Now lets talk about distributing and factoring.\n");
   tutMessage.push("Click on Distribution and try dragging that x1 to the outer tag.\n");
   tutMessage.push("Good, this is called Factor. This action works just like factoring in algebra." +
   "Notice how the enclosing tag is now vertical. So x1 is now being multiplied by the sum of the elements when x1 is factored out." +
@@ -56,6 +57,7 @@ function tutorialProblem3(workTree) {
   tutMessage.push("Good, this is called Distribute. It works just like distributing in algebra. Now click on the reset button" +
   "and try to solve the problem. Notice how in the goal, the x1 is not factored from eveything. Hint: try to use an Associative Intro. \n");
   tutMessage.push("Good, now on to the next problem");
+  return tutMessage;
 }
 
 function tutorialProblem4(workTree) {
@@ -64,6 +66,8 @@ function tutorialProblem4(workTree) {
   tutMessage.push("Click on Distribution and drag the tag button of the inner East-West Tag to the outer North-South Tag.\n");
   tutMessage.push("Good, you've split up the fraction. Notice how this action is similar to Factor. Now try to combine the first two fractions.\n");
   tutMessage.push("Awesome. Now on to the next problem.")
+  return tutMessage;
+
 }
 
 function tutorialProblem5(workTree) {
@@ -73,6 +77,8 @@ function tutorialProblem5(workTree) {
   tutMessage.push("If two tags that are equal and on opposite sides of a tag, you may cancel them by dragging the tag button of one" +
   "into the tag button of the other. Try to find out on your own to get the two tags equal\n");
   tutMessage.push("Great, now on to the next problem.");
+  return tutMessage;
+
 }
 
 function tutorialProblem6(workTree) {
