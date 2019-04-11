@@ -14,7 +14,7 @@ import {clearHist} from "./history_nav";
 import {Mouse} from "./gui";
 import {addListenerForUser} from "./user_system";
 import WinModal from "./vue_components/WinModal";
-import {tutorialProblem1} from "./tutorial/tutorial";
+import {determineProblem} from "./tutorial/tutorial";
 
 export const manipulator_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -42,6 +42,10 @@ export const manipulator_vue = new Vue({
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }
+    var script = document.createElement('script');
+    script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
+    script.type = 'text/javascript';
+    document.getElementsByTagName('head')[0].appendChild(script);
   }, methods: {
     resolveWin(val){
       if(val) {
@@ -92,7 +96,7 @@ export const manipulator_vue = new Vue({
     }, determineProblem() {
       
       console.log("HI")
-      let tutMessage = tutorialProblem1(1);
+      let tutMessage = determineProblem(1, this.workTree);
       $("#tut").attr("data-tooltip", tutMessage[0]);
 
     } 

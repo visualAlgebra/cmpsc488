@@ -9,12 +9,12 @@
 
 export function determineProblem(problem, workTree) {
   switch (problem) {
-    case 1: tutorialProblem1(workTree); break;
-    case 2: tutorialProblem2(workTree); break;
-    case 3: tutorialProblem3(workTree); break;
-    case 4: tutorialProblem4(workTree); break;
-    case 5: tutorialProblem5(workTree); break;
-    case 6: tutorialProblem6(workTree); break;
+    case 1: return tutorialProblem1(workTree); 
+    case 2: return tutorialProblem2(workTree); 
+    case 3: return tutorialProblem3(workTree); 
+    case 4: return tutorialProblem4(workTree); 
+    case 5: return tutorialProblem5(workTree); 
+    case 6: return tutorialProblem6(workTree); 
     default: return null;
   }    
 }
