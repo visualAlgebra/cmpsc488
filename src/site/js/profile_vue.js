@@ -20,7 +20,7 @@ export const profile_vue=new Vue({
     v-bind:bio="bio"
     v-bind:time="time"
     v-bind:problemCount="problems.length"
-    v-bind:accountID="accountID">
+    v-bind:accountID="userStruct.accountID">
     </ProfilePageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
@@ -28,18 +28,9 @@ export const profile_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, accountID: null, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false,
+      display: false, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false,
     };
-  }, methods: {
-    getAccountFromURL(){
-      let argArr=(window.location.href).split('/');
-      if(argArr.length>=3){
-        this.accountID=argArr[5];
-      }else{
-        return null;
-      }
-      return this.problemID;
-    }, distribute(res){
+  }, methods: { distribute(res){
       this.bio=res.bio;
       this.time=res.timeCreated;
       let les=[];
@@ -60,13 +51,10 @@ export const profile_vue=new Vue({
     },oauth_user_getter(user) {
       this.userStruct = user;
       this.logged = true;
+      get_account_from_db(this.userStruct.accountID,this.distribute);
     },
   }, created(){
     addListenerForUser(this.oauth_user_getter);
-  }, mounted(){
-    if(this.getAccountFromURL()!==null){
-      get_account_from_db(this.accountID,this.distribute);
-    }
   }, components: {
     NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder,
   },
