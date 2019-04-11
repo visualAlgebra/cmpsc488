@@ -20,7 +20,8 @@ function additionalHeur(numDiff, a, b){
   var litA=0;
   var litB=0;
   var varA=0;
-  var varA=0;
+  var varB=0;
+  var tagA=0;
   var tagB=0;
   if (a instanceof Tag){
     for(var i = 0; i<a.NW.length; i++){
