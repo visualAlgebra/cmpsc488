@@ -5,18 +5,14 @@ import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 export default {
   name: "CreatorNavigationButtons",
   props: [
-    "goToNextStage",
+    "clearStartStage",
+    "clearGoalStage",
     "stage",
     "clearTree",
-    "setWorkTree",
   ],
   template: `
   <div>
     <div class="row">
-      <a class="tab waves-effect waves-light btn col" v-on:click="save()" v-if="stage==='build'">
-          <i class="material-icons left">file_upload</i>
-          Save
-      </a>
       <a v-bind:href="url" class="tab waves-effect waves-light btn col" v-on:click="load()">
           <i class="material-icons left">file_download</i>
           Load
@@ -45,9 +41,13 @@ export default {
           <i class="material-icons left">create</i>
           Generate expression
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="goToNextStage()" v-if="stage==='build'">
+      <a class="tab waves-effect waves-light btn col" v-on:click="clearStartStage()" v-if="stage==='build'">
           <i class="material-icons left">play_arrow</i>
           Build goal
+      </a>
+      <a class="tab waves-effect waves-light btn col" v-on:click="clearGoalStage()" v-if="stage==='manip'">
+          <i class="material-icons left">play_arrow</i>
+          Build Problem Info
       </a>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     </div>

@@ -81,7 +81,7 @@ export class Mouse {
 
   redisplayExpressionTree(actionType) {
     const treeRoot = this.vueComponent.workTree;
-    this.vueComponent.resolveWin(addHistoryEntry(treeRoot, actionType));
+    this.vueComponent.resolveWin(addHistoryEntry(treeRoot, actionType));//TODO can only be manipulator vueComponent
   }
 
   dragDetected() {
