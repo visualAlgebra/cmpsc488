@@ -20,7 +20,7 @@ export const profile_vue=new Vue({
     v-bind:bio="bio"
     v-bind:time="time"
     v-bind:problemCount="problems.length"
-    v-bind:accountID="userStruct.accountID">
+    v-bind:accountID="accountID">
     </ProfilePageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
@@ -28,9 +28,17 @@ export const profile_vue=new Vue({
   </div>
   `, data(){
     return {
-      display: false, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false,
+      display: false, accountID:null, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false, gotAccount:false,
     };
-  }, methods: { distribute(res){
+  }, methods: {
+    getAccountFromURL(){
+      let argArr=(window.location.href).split('/');
+      if(argArr.length==6){
+        return argArr[5];
+      }else{
+        return null;
+      }
+    }, distribute(res){
       this.bio=res.bio;
       this.time=res.timeCreated;
       let les=[];
@@ -48,11 +56,22 @@ export const profile_vue=new Vue({
       this.lessons=les;
       this.problems=prob;
       this.display=true;
-    },oauth_user_getter(user) {
+    },oauth_user_getter(user){
       this.userStruct = user;
       this.logged = true;
-      get_account_from_db(this.userStruct.accountID,this.distribute);
+      if(this.gotAccount===false) {
+        get_account_from_db(this.userStruct.accountID, this.distribute);
+        this.accountID=this.userStruct.accountID;
+        this.gotAccount = true;
+      }
     },
+  }, mounted(){
+    let accountID=this.getAccountFromURL();
+    if(accountID!==null&&this.gotAccount===false){
+      get_account_from_db(accountID,this.distribute);
+      this.accountID=accountID;
+      this.gotAccount=true;
+    }
   }, created(){
     addListenerForUser(this.oauth_user_getter);
   }, components: {

@@ -7,7 +7,7 @@ export default {
           <div class="card-content white-text">
             <span class="card-title" id="userAccountIdField">{{accountID}}</span>
             <p>Bio: {{bio}}</p>
-            <p>Creation Date: {{time}}</p>
+            <p>Creation Date: {{new Date(time)}}</p>
             <p>Problems: {{problemCount}}</p>
           </div>
         </div>
