@@ -45,6 +45,10 @@ export default {
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
       </a>
+      <a class="tab waves-effect waves-light btn col modal-trigger" v-on:click="getAINode()" data-target="helperAIModal">
+          <i class="material-icons left">help_outline</i>
+          AI help
+      </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="DEBUG_INSTANCES()">
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
@@ -52,12 +56,13 @@ export default {
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
       <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
+      <HelperAIModal v-if="AINode" v-bind:node="AINode"></HelperAIModal>
     </div>
   </div>  
   `,
   data() {
     return {
-      lesson:null,
+      lesson:null, AINode:null,
     };
   }, mounted(){
     if(this.lessonID!==null){
@@ -78,6 +83,9 @@ export default {
       this.setWorkTree(histAction(true));
     }, initLessonDropdown(res){
       this.lesson=res;
+    }, getAINode() {
+      let tempTrees=this.dataFunc();
+      this.AINode=solve(tempTrees[0],tempTrees[1]);
     }, DEBUG_INSTANCES() {
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
