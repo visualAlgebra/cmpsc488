@@ -53,7 +53,7 @@ export default {
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
       <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
-      <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:close="closeHelper"></HelperAIModal>
+      <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:closeHelper="closeHelper"></HelperAIModal>
     </div>
   </div>  
   `,

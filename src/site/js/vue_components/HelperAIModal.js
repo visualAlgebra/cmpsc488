@@ -6,23 +6,27 @@ import {Deserialize} from "../expression_tree";
 export default {
   name: "HelperAIModal",props:["dataFunc", "closeHelper"], template: `
     <div id="helperAIModal" class="modal modal-fixed-footer">
-      <div class="modal-content" v-if="AINode">
-        <h4 class="black-text">Action Applied:</h4>
-        <p>{{AINode.action.name}}</p>
-        <SingleExpressionDisplay v-bind:tree="AINode.expression"></SingleExpressionDisplay>
+      <div class="modal-content" v-if="display">
+        <h4 class="black-text">Action Applied: {{AINode.action.name}}</h4>
+        <SingleExpressionDisplay v-if="display" v-bind:tree="AINode.expression"></SingleExpressionDisplay>
       </div>
-      <div class="modal-footer" v-if="AINode">
-        <a class="modal-close waves-effect waves-green btn-flat" v-on:click="closeHelper(AINode.expression.toString(), AINode.action.name)">Apply</a>
+      <div class="modal-footer" v-if="display">
+        <a class="modal-close waves-effect waves-green btn-flat" v-on:click="close()">Apply</a>
       </div>
     </div>
   `, data(){
     return{
-      AINode:null,
+      AINode:null, display:false,
+    }
+  }, methods:{
+    close(){
+      this.closeHelper(this.AINode.expression.toString(), this.AINode.action.name)
     }
   }, mounted() {
+    M.AutoInit();
     let tempTrees=this.dataFunc();
     this.AINode=solve(Deserialize(tempTrees[0]),Deserialize(tempTrees[1]));
-    M.AutoInit();
+    this.display=true;
   }, components: {
     SingleExpressionDisplay,
   }
