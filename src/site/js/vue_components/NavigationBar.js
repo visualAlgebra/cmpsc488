@@ -29,10 +29,10 @@ export default {
             <a href="http://localhost:8080/profile.html">User Profile</a>
           </li>
           <li>
-            <a v-if="!logged" v-on:click="signInNow()">Login</a>
+            <a v-if="!ourLogged" v-on:click="signInNow()">Login</a>
           </li>
           <li>
-            <a v-if="logged" v-on:click="signOutNow()">Logout</a>
+            <a v-if="ourLogged" v-on:click="signOutNow()">Logout</a>
           </li>
         </ul>
       </div>
@@ -59,11 +59,11 @@ export default {
         <a href="http://localhost:8080/profile.html">User Profile</a>
       </li>
       <li>
-        <a href="">Login</a>
+        <a v-if="!ourLogged" v-on:click="signInNow()">Login</a>
       </li>
       <li>
-        <a href="">Logout</a>
-      </li>      
+        <a v-if="ourLogged" v-on:click="signOutNow()">Logout</a>
+      </li>  
     </ul>
   </div>  
   `, mounted() {
@@ -72,13 +72,15 @@ export default {
   methods: {
     signInNow(){
       signIn(this.oauth);
-      this.logged = true;
+      this.ourLogged = true;
     },
     signOutNow(){
       signOut(this.displayLogoutModal);
-      this.logged = false;
+      this.ourLogged = false;
     },displayLogoutModal(){
 
     }
-  },
+  }, computed:{
+    ourLogged: function () {return this.logged;}
+  }
 };

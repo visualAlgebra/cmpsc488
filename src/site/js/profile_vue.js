@@ -8,7 +8,6 @@ import ProblemsHolder from "./vue_components/ProblemsHolder";
 import InvalidPage from "./vue_components/InvalidPage";
 import LessonsHolder from "./vue_components/LessonsHolder";
 import {addListenerForUser} from "./user_system";
-import {getProblemFromDBVue} from "./display_feature";
 
 
 export const profile_vue=new Vue({
@@ -64,7 +63,7 @@ export const profile_vue=new Vue({
         this.accountID=this.userStruct.accountID;
         this.gotAccount = true;
       }
-    },
+    }
   }, mounted(){
     let accountID=this.getAccountFromURL();
     if(accountID!==null&&this.gotAccount===false){
