@@ -6,6 +6,7 @@ import {testAll} from "../solver.test";
 import LessonNavigationModal from "./LessonNavigationModal";
 import {get_lesson_from_db} from "../database_management";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
+import HelperAIModal from "./HelperAIModal";
 
 export default {
   name: "ManipulatorNavigationButtons",
@@ -56,7 +57,7 @@ export default {
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
       <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
-      <HelperAIModal v-if="AINode" v-bind:node="AINode"></HelperAIModal>
+      <HelperAIModal v-bind:node="AINode"></HelperAIModal>
     </div>
   </div>  
   `,
@@ -85,7 +86,7 @@ export default {
       this.lesson=res;
     }, getAINode() {
       let tempTrees=this.dataFunc();
-      this.AINode=solve(tempTrees[0],tempTrees[1]);
+      this.AINode=solve(Deserialize(tempTrees[0]),Deserialize(tempTrees[1]));
     }, DEBUG_INSTANCES() {
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
@@ -110,6 +111,6 @@ export default {
     },
   },
   components: {
-    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup,
+    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup, HelperAIModal,
   },
 };
