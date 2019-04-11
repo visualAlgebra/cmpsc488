@@ -22,7 +22,7 @@ export function determineProblem(problem, workTree) {
 export function tutorialProblem1(workTree) {
   
   let tutMessage = [];
-  tutMessage.push("Hello, welcome to Visual Algebra\n" +
+  tutMessage.push("Hello, welcome to Visual Algebra. We'll show you how to use our system\n" +
   "This shape we see here is what we call an expression tree\n");
   tutMessage.push("We call the small gray circle a tag button\n");
   tutMessage.push("When a tag is orientated horizonally, then elements are being added. We call this an East-West tag.\n")

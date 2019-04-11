@@ -7,6 +7,7 @@ import LessonNavigationModal from "./LessonNavigationModal";
 import {get_lesson_from_db} from "../database_management";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 import HelperAIModal from "./HelperAIModal";
+import TutorialModal from "./TutorialModal";
 
 export default {
   name: "ManipulatorNavigationButtons",
@@ -50,10 +51,15 @@ export default {
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
       </a>
+      <a class="tab waves-effect waves-light btn col modal-trigger" data-target="tutModal">
+          <i class="material-icons left">Title</i>
+          Tutorial
+      </a>  
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
       <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
       <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:closeHelper="closeHelper"></HelperAIModal>
+      <TutorialModal></TutorialModal>
     </div>
   </div>  
   `,
@@ -104,6 +110,6 @@ export default {
     },
   },
   components: {
-    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup, HelperAIModal,
+    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup, HelperAIModal, TutorialModal
   },
 };

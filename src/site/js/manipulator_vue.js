@@ -23,7 +23,6 @@ export const manipulator_vue = new Vue({
     <InvalidPage v-if="!display"></InvalidPage>
     <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:setWorkTreeWithHistory="setWorkTreeWithHistory" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
-    <a id="tut" class="btn-floating btn-large waves-effect waves-light tooltipped red" data-tooltip="Welcome" v-on:click="determineProblem()" >hi</a>    
     <ManipulatorWindow v-if="display&&workTree" :tree="workTree" :mouse="mouse"></ManipulatorWindow>
     <GoalExpression
       v-if="display&&goalTree"
