@@ -10,12 +10,12 @@ import HelperAIModal from "./HelperAIModal";
 
 export default {
   name: "ManipulatorNavigationButtons",
-  props: ["dataFunc", "restart", "setWorkTree", "lessonID"],
+  props: ["dataFunc", "restart", "setWorkTree", "setWorkTreeWithHistory", "lessonID"],
   template: `
   <div>
     <div class="row">
-      <a class="tab waves-effect waves-light btn col" v-on:click="hint()">
-          <i class="material-icons left">compare_arrows</i>
+      <a class="tab waves-effect waves-light btn col modal-trigger" v-on:click="displayHelper=true" data-target="helperAIModal">
+          <i class="material-icons left">help_outline</i>
           Hint
       </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="share()">
@@ -46,10 +46,6 @@ export default {
           <i class="material-icons left">subdirectory_arrow_right</i>
           History tree
       </a>
-      <a class="tab waves-effect waves-light btn col modal-trigger" v-on:click="getAINode()" data-target="helperAIModal">
-          <i class="material-icons left">help_outline</i>
-          AI help
-      </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="DEBUG_INSTANCES()">
           <i class="material-icons left">bug_report</i>
           DEBUG INSTANCES
@@ -57,13 +53,13 @@ export default {
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
       <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
       <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
-      <HelperAIModal v-bind:node="AINode"></HelperAIModal>
+      <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:close="closeHelper"></HelperAIModal>
     </div>
   </div>  
   `,
   data() {
     return {
-      lesson:null, AINode:null,
+      lesson:null, displayHelper:false,
     };
   }, mounted(){
     if(this.lessonID!==null){
@@ -71,10 +67,7 @@ export default {
     }
   },
   methods: {
-    hint() {
-      let problems = this.dataFunc();
-      solve(Deserialize(problems[0]), Deserialize(problems[1]));
-    }, share() {
+    share() {
       console.log("tehehehe");
     }, restartClear() {
       this.restart();
@@ -84,9 +77,9 @@ export default {
       this.setWorkTree(histAction(true));
     }, initLessonDropdown(res){
       this.lesson=res;
-    }, getAINode() {
-      let tempTrees=this.dataFunc();
-      this.AINode=solve(Deserialize(tempTrees[0]),Deserialize(tempTrees[1]));
+    }, closeHelper(tree, actionName){
+      this.displayHelper=false;
+      this.setWorkTreeWithHistory(tree, actionName);
     }, DEBUG_INSTANCES() {
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());

@@ -10,7 +10,7 @@ import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 import GoalExpression from "./vue_components/GoalExpression";
 import * as M from "materialize-css";
-import {clearHist} from "./history_nav";
+import {addHistoryEntry, clearHist} from "./history_nav";
 import {Mouse} from "./gui";
 import {addListenerForUser} from "./user_system";
 import WinModal from "./vue_components/WinModal";
@@ -21,7 +21,7 @@ export const manipulator_vue = new Vue({
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
+    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:setWorkTreeWithHistory="setWorkTreeWithHistory" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
     <a id="tut" class="btn-floating btn-large waves-effect waves-light tooltipped red" data-tooltip="Welcome" v-on:click="determineProblem()" >hi</a>    
     <ManipulatorWindow v-if="display&&workTree" :tree="workTree" :mouse="mouse"></ManipulatorWindow>
@@ -86,6 +86,11 @@ export const manipulator_vue = new Vue({
     }, setWorkTree(tree){
       if(tree!==null) {
         this.workTree = Deserialize(tree.toString());
+      }
+    }, setWorkTreeWithHistory(tree, actionName){
+      if(tree!==null) {
+        this.workTree = Deserialize(tree.toString());
+        addHistoryEntry(tree.toString(), actionName);
       }
     }, restart(){
       this.workTree=Deserialize(this.workTreeData);
