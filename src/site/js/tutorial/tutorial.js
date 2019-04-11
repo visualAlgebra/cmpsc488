@@ -7,7 +7,7 @@
 // } from "./algebraic_actions";
 // import { ExpressionTree, Literal, Variable, Tag, Quadrant, Orientation, ProblemInfo } from "../expression_tree";
 
-function determineProblem(problem, workTree) {
+export function determineProblem(problem, workTree) {
   switch (problem) {
     case 1: tutorialProblem1(workTree); break;
     case 2: tutorialProblem2(workTree); break;
@@ -19,7 +19,7 @@ function determineProblem(problem, workTree) {
   }    
 }
 
-function tutorialProblem1(workTree) {
+export function tutorialProblem1(workTree) {
   
   let tutMessage = [];
   tutMessage.push("Hello, welcome to Visual Algebra\n" +
@@ -30,10 +30,7 @@ function tutorialProblem1(workTree) {
   tutMessage.push("Try dragging a child onto another child\n");
   tutMessage.push("Good. This action is called Commutative Swap. Now try to make the working expression the same as the goal\n");
   tutMessage.push("Great job, go to the next problem in the lesson\n");
-
-  for (let message of tutMessage) {
-    console.log(message);
-  }
+  return tutMessage;
 }
 
 function tutorialProblem2(workTree) {
@@ -50,8 +47,8 @@ function tutorialProblem2(workTree) {
 }
 
 function tutorialProblem3(workTree) {
-  let tutMessage = [];
-  tutMessage.push("Now we will talk about distributing and factoring.\n");
+  let tutMessage = [];[0]
+  tutMessage.push("Now[0]lk about distributing and factoring.\n");
   tutMessage.push("Click on Distribution and try dragging that x1 to the outer tag.\n");
   tutMessage.push("Good, this is called Factor. This action works just like factoring in algebra." +
   "Notice how the enclosing tag is now vertical. So x1 is now being multiplied by the sum of the elements when x1 is factored out." +
