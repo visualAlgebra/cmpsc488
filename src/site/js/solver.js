@@ -7,7 +7,7 @@ import {
 } from "./algebraic_actions";
 import { ExpressionTree, Literal, Variable, Tag, Quadrant } from "./expression_tree";
 
-class Node {
+export class Node {
   constructor(action, expression) {
     this.action = action;
     this.expression = expression;

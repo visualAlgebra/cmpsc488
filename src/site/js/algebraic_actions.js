@@ -31,6 +31,7 @@ export class CommutativeSwap {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
     this.quadrantLabel = quadrantLabel;
+    this.name = "Commutative Swap";
   }
 
   //verifys if the arguments are valid by checking
@@ -68,6 +69,7 @@ export class AssociativeMerge {
     this.sibling = sibling;
     this.parent = parent;
     this.quadrantLabel = quadrantLabel; // The quadrant that `sibling` is in.
+    this.name = "Associative Merge";
   }
 
   //verifys if the arguments are valid by checking
@@ -112,6 +114,7 @@ export class AssociativeIntro {
 
   constructor(expr) {
     this.expr = expr;
+    this.name = "Associative Introduction";
   }
 
   //Valid if siblings is in parent in the correct order
@@ -177,6 +180,7 @@ export class AssociativeExtract {
     this.grandchild = grandchild;
     this.grandChildQuad = grandchildQuad;
     this.parentQuad = parentQuad;
+    this.name = "Associative Extraction";
   }
 
   static verify(grandchild, grandparent) {
@@ -216,6 +220,7 @@ export class AssociativeInsert {
   constructor(sibling, insertionTag) {
     this.sibling = sibling;
     this.insertionTag = insertionTag;
+    this.name = "Associative Insertion";
   }
 
   static verify(sibling, insertionTag, xQuad, yQuad) {
@@ -245,6 +250,7 @@ export class Distribute {
   constructor(value, tagToDistributeOver) {
     this.value = value;
     this.tagToDistributeOver = tagToDistributeOver;
+    this.name = "Distribution";
   }
 
   static verify(value, tagToDistributeOver, xQuad, yQuad) {
@@ -320,6 +326,7 @@ export class Factor {
   constructor(valueToFactor, tagToFactor) {
     this.valueToFactor = valueToFactor;
     this.tagToFactor = tagToFactor;
+    this.name = "Factorization";
   }
 
   static verify(valueToFactor, tagToFactor) {
@@ -421,6 +428,7 @@ export class Factor {
 export class SplitFrac {
   constructor(tag) {
     this.tag = tag;
+    this.name = "Fraction Split";
   }
 
   static verify(dividend, frac) {
@@ -480,7 +488,8 @@ export class CombineFrac {
   constructor(sibling1, sibling2, quadrantLabel) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
-    this.quadrantLabel = quadrantLabel
+    this.quadrantLabel = quadrantLabel;
+    this.name = "Fraction Combination";
   }
 
   static verify(sibling1, sibling2) {
@@ -541,6 +550,7 @@ export class QuadrantFlip {
   constructor(tag, quadrantLabel) {
     this.tag = tag;
     this.quadrantLabel = quadrantLabel;
+    this.name = "Quadrant Flip";
   }
 
   static verify(tag, parent, xQuad, yQuad) {
@@ -575,6 +585,7 @@ export class Cancel {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
+    this.name = "Cancelation";
   }
 
   static verify(x, y, xQuad, yQuad) {
@@ -601,6 +612,7 @@ export class IdentityBalance {
   constructor(newChild, tag) {
     this.newChild = newChild;
     this.tag = tag;
+    this.name = "Identity Balence";
   }
 
   static verify(newChild, tag) {
@@ -632,6 +644,7 @@ export class LiteralMerge {
     this.literalB = literalB;
     this.quadrantA = quadrantA;
     this.quadrantB = quadrantB;
+    this.name = "Literal Merging";
   }
 
   static verify(literalA, literalB, quadrantA, quadrantB) {
@@ -683,6 +696,7 @@ export class ZeroMerge {
   constructor(sibling1, sibling2) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
+    this.name = "Zero Merging";
   }
 
   static verify(sibling1, sibling2, quad1, quad2) {
@@ -726,6 +740,7 @@ export class IdentityMerge {
     this.sibling2 = sibling2;
     this.quadrant1 = quadrant1;
     this.quadrant2 = quadrant2;
+    this.name = "Identity Merging";
   }
 
   static verify(sibling1, sibling2, quadrant1, quadrant2) {
@@ -795,6 +810,7 @@ export class LiteralConversion {
   constructor(literal, quad) {
     this.literal = literal;
     this.quad = quad;
+    this.name = "Literal Conversion";
   }
 
   static verify(literal) {
