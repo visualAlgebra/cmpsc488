@@ -729,7 +729,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions){
 }
 export function randomProblemGeneratorNoArr(numNodes, numActions){
   const start = randomStartGenerator(numNodes);
-  const end = randomGoalGenerator(start, numActions);
+  const end = randomGoalGeneratorNoArr(start, numActions);
   return new StartGoalCombo(start, end);
 }
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
