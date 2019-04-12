@@ -5,6 +5,7 @@ import ExplorerPageTop from "./vue_components/ExplorerPageTop";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
 import {get_problems_from_db} from "./database_management";
 import {addListenerForUser} from "./user_system";
+import ExplorerAIGenerationModal from "./vue_components/ExplorerAIGenerationModal";
 
 export const explorer_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -15,6 +16,7 @@ export const explorer_vue=new Vue({
       v-if="display&&problemsToDisplay"
       :problems="problemsToDisplay"
       ></ProblemsHolder>
+      <ExplorerAIGenerationModal v-bind:userStruct="userStruct"></ExplorerAIGenerationModal>
   </div>
   `, data(){
     return {
@@ -34,6 +36,6 @@ export const explorer_vue=new Vue({
       this.logged = true;
     },
   }, components: {
-    ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder,
+    ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder, ExplorerAIGenerationModal,
   },
 });
