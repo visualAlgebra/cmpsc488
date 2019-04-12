@@ -17,8 +17,20 @@ export default {
     <InsertionButtons
       :mouse="mouse"
     ></InsertionButtons>
+    <div class="row" style="display: flex;">
+      <div class="col" style="margin: auto; margin-top: 10%;">
+        <h5
+          v-if="tree === null"
+          class="grey-text lighten-2"
+        >
+          <i>
+            Click on an element to start a tree...
+          </i>
+        </h5>
+      </div>
+    </div>
     <ManipulatorWindow
-      v-if="instance && instance.isOpen"
+      v-if="instance && instance.isOpen && tree !== null"
       :tree="tree"
       :mouse="mouse"
       :height="'200px'"
@@ -29,7 +41,7 @@ export default {
       @click="closeModal"
       :class="closeButtonClasses"
     >
-      Use as Start Expression
+      Use as Start
     </button>
   </div>
 </div>
