@@ -4,11 +4,46 @@ import ExpressionTree from "./ExpressionTree";
 import SvgPanZoom from "vue-svg-pan-zoom";
 
 export default {
-  name: "SingleExpressionDisplay", props: ["tree"], template: `
+  name: "SingleExpressionDisplay",
+
+  props: {
+    tree: {
+      required: true,
+    },
+    height: {
+      required: false,
+      default: "100%",
+      type: String,
+    },
+    width: {
+      required: false,
+      default: "100%",
+      type: String,
+    },
+    worldHeight: {
+      required: false,
+      default: "500",
+      type: String,
+    },
+    worldWidth: {
+      required: false,
+      default: "2000",
+      type: String,
+    },
+  },
+
+  template: `
   <div>
     <SvgPanZoom :zoomScaleSensitivity="0.1" @svgpanzoom="registerSvgPanZoom" :fit="false">
-      <svg height="100%" width="100%" style="border-style:solid; border-color: white; border-width:1px">
-        <foreignObject height="500" width="2000">
+      <svg
+        :height="height"
+        :width="width"
+        style="border-style:solid; border-color: white; border-width:1px"
+      >
+        <foreignObject
+          :height="worldHeight"
+          :width="worldWidth"
+        >
           <ExpressionTree v-if="display" v-bind:tree="workingExpressionTree"></ExpressionTree>
         </foreignObject>
       </svg>
