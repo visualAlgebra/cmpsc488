@@ -330,6 +330,9 @@ export class Factor {
   }
 
   static verify(valueToFactor, tagToFactor) {
+    if (valueToFactor == undefined || tagToFactor == undefined || valueToFactor == null || tagToFactor == null)
+      return false;
+
     if (!tagToFactor instanceof Tag) {
       return false;
     }
@@ -485,10 +488,11 @@ export class SplitFrac {
 //Combine an EW tag of NS tags that have a common S quadrant
 export class CombineFrac {
   //Where sibligns is the list of
-  constructor(sibling1, sibling2, quadrantLabel) {
+  constructor(sibling1, sibling2, quad1, quad2) {
     this.sibling1 = sibling1;
     this.sibling2 = sibling2;
-    this.quadrantLabel = quadrantLabel;
+    this.quad1 = quad1;
+    this.quad2 = quad2;
     this.name = "Fraction Combination";
   }
 
@@ -502,7 +506,7 @@ export class CombineFrac {
       return false;
     }
 
-    if (sibling1.parent.is(sibling2.parent)) {
+    if (!(sibling1.parent.is(sibling2.parent))) {
       return false; 
     }
 
@@ -523,19 +527,26 @@ export class CombineFrac {
       }
     }
 
+    return true;
   }
 
   apply() {
 
     let parent = this.sibling1.parent;
-    let dividend = this.sibilng1.NW.concat(this.sibling2.NW);
-    let divisor = this.sibling1.SE;
-
-
+    let combined;
+    let dividendTag = new Tag(Orientation.EW);
     
-    let newFrac = new Tag(Orientation.NS, dividend, divisor);
-    parent.replace(this.sibling2, newFrac, this.quadrantLabel);
-    parent.remove(this.sibling1, this.quadrantLabel);
+    for (let child of this.sibling1.NW) {
+      dividendTag.insert(child, this.quad1);
+    }
+    for (let child of this.sibling2.NW) {
+      dividendTag.insert(child, this.quad2);
+    }
+    let divisor = this.sibling1.SE;
+    
+    let newFrac = new Tag(Orientation.NS, [dividendTag], divisor);
+    parent.replace(this.sibling2, newFrac, this.quad1);
+    parent.remove(this.sibling1, this.quad1);
 
   }
 }
@@ -554,6 +565,10 @@ export class QuadrantFlip {
   }
 
   static verify(tag, parent, xQuad, yQuad) {
+    if (tag == undefined || parent == undefined || tag == null || parent == null)
+      return false;
+    if (xQuad == undefined || yQuad == undefined || xQuad == null || yQuad == null)
+      return false;
     return tag instanceof Tag
       && parent !== null
       && tag.parent !== null
@@ -700,7 +715,11 @@ export class ZeroMerge {
   }
 
   static verify(sibling1, sibling2, quad1, quad2) {
-    
+    if (sibling1 == undefined || sibling2 == undefined || sibling1 == null || sibling2 == null)
+      return false;
+    if (quad1 == undefined || quad2 == undefined || quad1 == null || quad2 == null)
+      return false;
+
     if (sibling1.is(sibling2)) {
       return false;
     }

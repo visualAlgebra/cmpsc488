@@ -178,7 +178,7 @@ export class Mouse {
       }
       else if (this.mode === MouseMode.Distribution && this.eventSource.kind === ClickTargetKind.TagButton && this.eventDest.kind === ClickTargetKind.TagButton && CombineFrac.verify(x, y)) {
 
-        const action = new CombineFrac(x, y, xQuad);
+        const action = new CombineFrac(x, y, xQuad, yQuad);
         action.apply();
 
         console.log("Combining Fraction", x, y);
@@ -203,7 +203,6 @@ export class Mouse {
 
         this.redisplayExpressionTree('Split a Fraction');
       }
-      // TODO: fix verfiy for Factor
       else if (this.mode === MouseMode.Distribution && this.eventDest.kind === ClickTargetKind.TagQuadrant && Factor.verify(x, y)) {
 
         const action = new Factor(x, y);
