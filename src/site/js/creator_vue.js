@@ -38,6 +38,7 @@ export const creator_vue=new Vue({
     <CreatorWindow
       v-if="stage === 'build'"
       :mouse="mouse"
+      :tree="workTree"
       :useCreatedTree="setWorkTree"
     ></CreatorWindow>
   </div>
