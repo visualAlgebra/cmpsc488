@@ -1,7 +1,7 @@
 import Vue from "vue";
 import NavigationBar from "./vue_components/NavigationBar";
 import ProfilePageTop from "./vue_components/ProfilePageTop";
-import {get_account_from_db} from "./database_management";
+import {delete_problem_from_db, get_account_from_db} from "./database_management";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {account_to_load, fillPage} from "./profile";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
@@ -23,7 +23,7 @@ export const profile_vue=new Vue({
     </ProfilePageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
-    <ProblemsHolder v-if="display" v-bind:problems="problems"></ProblemsHolder>
+    <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
   </div>
   `, data(){
     return {
@@ -55,7 +55,7 @@ export const profile_vue=new Vue({
       this.lessons=les;
       this.problems=prob;
       this.display=true;
-    },oauth_user_getter(user){
+    }, oauth_user_getter(user){
       this.userStruct = user;
       this.logged = true;
       if(this.gotAccount===false) {
@@ -63,6 +63,14 @@ export const profile_vue=new Vue({
         this.accountID=this.userStruct.accountID;
         this.gotAccount = true;
       }
+    }, deleteProblem(problemID){
+      this.problems=this.problems.filter(function(value){
+        return value.problemID!==problemID;
+      });
+      delete_problem_from_db(problemID,this.userStruct, this.successfulDeletion);
+    }, deleteLesson(lessonID){
+    }, successfulDeletion(){
+      alert("Problem Deleted Successfully");
     }
   }, mounted(){
     let accountID=this.getAccountFromURL();

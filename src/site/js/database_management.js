@@ -3,7 +3,7 @@ import {LessonInfo, parseMultiProblem, ProblemInfo} from "./expression_tree";
 export function get_problem_from_db(problem_id, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {
-    if (http.readyState == 4 && http.status == 200) {
+    if (http.readyState === 4 && http.status === 200) {
       let k=JSON.parse(http.responseText);
       callback(new ProblemInfo(k.problemID,k.startExpression,k.goalExpression, k.description, k.timeCreated));
     }
@@ -14,7 +14,7 @@ export function get_problem_from_db(problem_id, callback) {
 export function get_lesson_from_db(lesson_id, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {
-    if (http.readyState == 4 && http.status == 200) {
+    if (http.readyState === 4 && http.status === 200) {
       let k=JSON.parse(http.responseText);
       callback(new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description));
     }
@@ -34,24 +34,29 @@ export function post_problem_from_site(problem, userStruct, callback) {
       ' "description": \"' + problem.description + '\"}';
     console.log(str);
     http.onreadystatechange = function() {
-      if (http.readyState == 4 && http.status == 201) {
+      if (http.readyState === 4 && http.status === 201) {
         callback(http.responseText);
       }
-    }
+    };
     http.send(str);
   } catch (e) {}
 }
-export function delete_problem_from_db(problem_id, oauth_token) {
+export function delete_problem_from_db(problem_id, userStruct, callback) {
   let http = new XMLHttpRequest();
   http.open("DELETE", "http://localhost:8080/problems/" + problem_id, true);
   http.setRequestHeader("Content-type", "application/json");
-  http.setRequestHeader('oauth_token', oauth_token);
+  http.setRequestHeader('oauth_token', userStruct.token);
+  http.onreadystatechange = function() {
+    if (http.readyState === 4 && http.status === 200) {
+      callback();
+    }
+  };
   http.send();
 }
 export function get_account_from_db(account_id, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {
-    if (http.readyState == 4 && http.status == 200) {
+    if (http.readyState === 4 && http.status === 200) {
       callback(new AccountInfo(JSON.parse(http.responseText)));
     }
   }
@@ -62,7 +67,7 @@ export function get_account_from_db(account_id, callback) {
 export function get_problems_from_db(queryAmt, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {
-    if (http.readyState == 4 && http.status == 200) {
+    if (http.readyState === 4 && http.status === 200) {
       callback(parseMultiProblem(JSON.parse(http.responseText)));
     }
   }
@@ -74,7 +79,7 @@ export function get_problems_from_db(queryAmt, callback) {
 export function get_lessons_from_db(queryAmt, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {
-    if (http.readyState == 4 && http.status == 200) {
+    if (http.readyState === 4 && http.status === 200) {
       callback(JSON.parse(http.responseText));
     }
   }
