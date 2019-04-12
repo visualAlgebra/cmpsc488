@@ -14,7 +14,6 @@ import {addHistoryEntry, clearHist} from "./history_nav";
 import {Mouse} from "./gui";
 import {addListenerForUser} from "./user_system";
 import WinModal from "./vue_components/WinModal";
-import {determineProblem} from "./tutorial/tutorial";
 
 export const manipulator_vue = new Vue({
   name: "Root", el: "#vue-app", template: `

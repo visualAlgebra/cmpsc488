@@ -13,7 +13,7 @@ export default {
   ],
   template: `
   <div>
-    <div class="row">
+    <div class="row spaced-out-row">
       <a v-bind:href="url" class="tab waves-effect waves-light btn col" v-on:click="load()">
           <i class="material-icons left">folder_open</i>
           Load

@@ -3,11 +3,15 @@ import ManipulatorWindow from "./ManipulatorWindow";
 import InsertionButtons from "./InsertionButtons";
 
 export default {
+
   name: "CreatorWindow",
+
   props: [
       "useCreatedTree",
       "mouse",
+      "tree",
   ],
+
   template: `
 <div
   id="creator-window-modal"
@@ -20,7 +24,7 @@ export default {
     <div class="row" style="display: flex;">
       <div class="col" style="margin: auto; margin-top: 10%;">
         <h5
-          v-if="tree === null"
+          v-if="workTree === null"
           class="grey-text lighten-2"
         >
           <i>
@@ -30,8 +34,8 @@ export default {
       </div>
     </div>
     <ManipulatorWindow
-      v-if="instance && instance.isOpen && tree !== null"
-      :tree="tree"
+      v-if="instance && instance.isOpen && workTree !== null"
+      :tree="workTree"
       :mouse="mouse"
       :height="'200px'"
     ></ManipulatorWindow>
@@ -47,10 +51,13 @@ export default {
 </div>
   `,
 
-  data: () => ({
-    instance: null,
-    tree: null,
-  }),
+  data() {
+    const tree = this.tree;
+    return {
+      instance: null,
+      workTree: tree,
+    };
+  },
 
   computed: {
     closeButtonClasses() {
@@ -78,7 +85,7 @@ export default {
     },
     closeModal() {
       this.instance.close();
-      this.useCreatedTree(this.tree);
+      this.useCreatedTree(this.workTree);
     },
   },
 
