@@ -727,7 +727,7 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions){
   const end = randomGoalGenerator(start, validActionsArr, numActions);
   return new StartGoalCombo(start, end);
 }
-export function randomGoalGenerator(numNodes, numActions){
+export function randomProblemGenerator(numNodes, numActions){
   const start = randomStartGenerator(numNodes);
   const end = randomGoalGenerator(start, numActions);
   return new StartGoalCombo(start, end);
