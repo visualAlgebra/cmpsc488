@@ -1,7 +1,7 @@
 const Database = require('./database.js');
 
 class FirestoreDatabase extends Database {
-  constructor() {
+  constructor(domain) {
     super();
     this.admin = require("firebase-admin");
     this.serviceAccount = require("./vatest-83fa4-firebase-adminsdk-kvm0g-7c0191ca53.json");
@@ -12,7 +12,7 @@ class FirestoreDatabase extends Database {
     this.session = this.admin.firestore();
     this.ACCOUNT_BIO_CHARACTER_LIMIT = 1000; //?
     this.ACCOUNT_CREATION_LIMIT = 100;
-    this.domainName = "http://localhost:8080";
+    this.domainName = domain;
   }
 
   //contacts firebase and gets user based on provided token
@@ -644,9 +644,14 @@ class FirestoreDatabase extends Database {
   }
 
 
-  //========================
-  // DELETE METHODS
-  //========================
+
+
+  //================================================================================================
+  //================================================================================================
+  //                                       DELETE METHODS
+  //================================================================================================
+  //================================================================================================
+
 
 
   //used to delete a user's problem when deleting entire account
@@ -929,7 +934,7 @@ class FirestoreDatabase extends Database {
   }
 
 
-  //dev function. do not use in server code
+  //dev function. DO NOT USE in server code
   deleteFile(collection, file) {
     this.session.collection(collection).doc(file).delete()
     .then(value => {return;})

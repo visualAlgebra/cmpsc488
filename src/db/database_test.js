@@ -142,19 +142,19 @@ function noCheck (data, testComparison) {
 
 //for specific test case to store random name
 function specialSaveName(data, testComparison) {
-  savedIDforDeleteTest = data.substring(48);
+  savedIDforDeleteTest = data;
   //console.log(savedIDforDeleteTest);
   return false;
 }
 
 
 function saveName (data, testComparison) {
-  savedIDs.push(data.substring(48));
+  savedIDs.push(data);
   return false;
 }
 
 function testName (data, testComparison) {
-  savedIDs.push(data.substring(48));
+  //savedIDs.push(data);
   if(data === testComparison) {
     return false;
   } else {
@@ -231,7 +231,7 @@ function runTests() {
 
   //problem is saved with name when account provided
   let loadServer4 = new LoadingServer(1, function() {
-    database.saveProblem(server, new FakeResponse(201, 6, "problem-1 is saved in database with name account-5\\problem-1", testName, "Problem Saved at http://localhost:8080/problems/account-5\\problem-1"), "account-5", problems[0], "problem-1");
+    database.saveProblem(server, new FakeResponse(201, 6, "problem-1 is saved in database with name account-5\\problem-1", testName, "account-5\\problem-1"), "account-5", problems[0], "problem-1");
   });
   database.addAccount(loadServer4, new EmptyResponse(noCheck), accounts[0], "account-5");
 
@@ -292,7 +292,7 @@ function runTests() {
     let loadServer15 = new LoadingServer(1, function() {
 
       //can post lesson w/account
-      database.saveLesson(server, new FakeResponse(201, 12, "lesson is saved in database with name account-10\\lesson-1", noCheck, "Lesson Saved at http://localhost:8080/lessons/account-10\\lesson-1"), "account-10", lessons[0], "lesson-1");
+      database.saveLesson(server, new FakeResponse(201, 12, "lesson is saved in database with name account-10\\lesson-1", noCheck, "account-10\\lesson-1"), "account-10", lessons[0], "lesson-1");
 
       //cannot post lesson w/out account
       database.saveLesson(server, new FakeResponse(401, 13, "lesson cannot be saved without account", noCheck, null), null, lessons[0], "lesson-2");
