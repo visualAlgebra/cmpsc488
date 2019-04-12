@@ -314,6 +314,7 @@ export class Literal extends ExpressionTree {
     return "{l" + this.value + "}";
   }
 } // end Literal class
+
 export function array_delete(arr, ref) {
   for (let i = 0; i < arr.length; i++) {
     if (ref.is(arr[i])) {

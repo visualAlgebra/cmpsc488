@@ -1,5 +1,6 @@
 import * as M from "materialize-css";
 import ManipulatorWindow from "./ManipulatorWindow";
+import InsertionButtons from "./InsertionButtons";
 
 export default {
   name: "CreatorWindow",
@@ -8,20 +9,27 @@ export default {
       "mouse",
   ],
   template: `
-<div id="creator-window-modal" class="modal grey darken-2">
+<div
+  id="creator-window-modal"
+  class="modal grey darken-2 modal-fixed-footer big-modal"
+>
   <div class="modal-content">
+    <InsertionButtons
+      :mouse="mouse"
+    ></InsertionButtons>
     <ManipulatorWindow
       v-if="showManipulator"
       :tree="tree"
       :mouse="mouse"
+      :height="'200px'"
     ></ManipulatorWindow>
   </div>
   <div class="modal-footer">
     <button
       @click="closeModal"
-      :class="buttonClasses"
+      :class="closeButtonClasses"
     >
-      Select Expression as Start
+      Use as Start Expression
     </button>
   </div>
 </div>
@@ -34,7 +42,7 @@ export default {
   }),
 
   computed: {
-    buttonClasses() {
+    closeButtonClasses() {
       const disabled = this.tree === null;
       return {
         "waves-effect": true,
@@ -47,7 +55,8 @@ export default {
 
   mounted() {
     const modal = document.getElementById('creator-window-modal');
-    M.Modal.init(modal, {});
+    const options = { dismissable: false };
+    M.Modal.init(modal, options);
     this.instance = M.Modal.getInstance(modal);
     setTimeout(() => { this.openModal(); }, 0);
   },
@@ -65,5 +74,6 @@ export default {
 
   components: {
     ManipulatorWindow,
+    InsertionButtons,
   },
 };
