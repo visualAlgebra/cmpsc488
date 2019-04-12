@@ -433,7 +433,7 @@ export class SplitFrac {
     this.tag = tag;
     this.name = "Fraction Split";
   }
-
+  //TODO: FIX THIS
   static verify(dividend, frac) {
     return dividend instanceof Tag
       && frac instanceof Tag
@@ -533,7 +533,6 @@ export class CombineFrac {
   apply() {
 
     let parent = this.sibling1.parent;
-    let combined;
     let dividendTag = new Tag(Orientation.EW);
     
     for (let child of this.sibling1.NW) {
