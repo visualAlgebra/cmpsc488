@@ -97,12 +97,7 @@ export const manipulator_vue = new Vue({
     }, oauth_user_getter(user) {
       this.userStruct = user;
       this.logged = true;
-    }, determineProblem() {
-      console.log("HI")
-      let tutMessage = determineProblem(1, this.workTree);
-      $("#tut").attr("data-tooltip", tutMessage[0]);
-
-    } 
+    },
   }, components: {
     NavigationBar,
     InvalidPage,
