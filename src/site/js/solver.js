@@ -183,6 +183,12 @@ function getQuad(location) {
   return ((location[location.length-1] & 1) === 1) ? Quadrant.SE : Quadrant.NW;
 }
 
+export function probGenExpand(start){
+  var nodeArray = [];
+  expand(start, nodeArray);
+  return nodeArray;
+}
+
 function dumbExpand(root, nodeArray) {
   //create array with all children and its quadrants
   let childArr = [];
