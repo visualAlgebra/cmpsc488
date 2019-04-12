@@ -18,8 +18,9 @@ export const creator_vue=new Vue({
     <InvalidPage v-if="!display"></InvalidPage>
     <CreatorNavigationButtons
       v-if="display"
-      v-bind:clearStartStage="clearStartStage"
-      v-bind:clearGoalStage="clearGoalStage"
+      :clearStartStage="clearStartStage"
+      :clearGoalStage="clearGoalStage"
+      :setWorkTree="setWorkTree"
       :stage="stage"
       :clearTree="clearTree"
     ></CreatorNavigationButtons>
