@@ -16,7 +16,7 @@ export default {
   <div>
     <div class="row">
       <a class="tab waves-effect waves-light btn col modal-trigger" v-on:click="displayHelper=true" data-target="helperAIModal">
-          <i class="material-icons left">help_outline</i>
+          <i class="material-icons left">blur_on</i>
           Hint
       </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="share()">
@@ -40,19 +40,15 @@ export default {
           {{lessonID}}
       </a>
       <a class="tab waves-effect waves-light btn col modal-trigger" data-target="algebraicModal">
-          <i class="material-icons left">bug_report</i>
-          Algebraic descriptions
+          <i class="material-icons left">info</i>
+          Reference
       </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
-          <i class="material-icons left">subdirectory_arrow_right</i>
-          History tree
-      </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="DEBUG_INSTANCES()">
-          <i class="material-icons left">bug_report</i>
-          DEBUG INSTANCES
+          <i class="material-icons left">history</i>
+          History
       </a>
       <a class="tab waves-effect waves-light btn col modal-trigger" data-target="tutModal">
-          <i class="material-icons left">Title</i>
+          <i class="material-icons left">help</i>
           Tutorial
       </a>  
       <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
@@ -87,25 +83,15 @@ export default {
       this.displayHelper=false;
       this.setWorkTreeWithHistory(tree, actionName);
     }, DEBUG_INSTANCES() {
+
+      //
+      // ATTACH FUNCTIONALITY TO window.MY_GLOBAL_FUNCTION, and then call it
+      // from the console.
+      //
+
       console.log('_DEBUG_TRIGGERED');
       console.log(this.dataFunc());
       testAll();
-
-      // Enable the following commented code to test problem generator
-      /*
-      var test = randomProblemGenerator(10, actionsArr, 15);
-      var retval=new ProblemInfo('RAND_PROBLEM_3');
-      compress_string_js(test.start.toString(), res=>{
-        retval.expression_start=res;
-        compress_string_js(test.goal.toString(), res2=>{
-          retval.expression_goal=res2;
-          retval.description="lul";
-          post_problem_from_site(retval);
-        });
-      });
-      */
-
-
       console.log('_DEBUG_FINISHED');
     },
   },

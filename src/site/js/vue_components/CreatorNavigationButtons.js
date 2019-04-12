@@ -31,7 +31,7 @@ export default {
           Redo
       </a>
       <a class="tab waves-effect waves-light btn col modal-trigger" data-target="algebraicModal">
-          <i class="material-icons left">help</i>
+          <i class="material-icons left">info</i>
           Reference
       </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">

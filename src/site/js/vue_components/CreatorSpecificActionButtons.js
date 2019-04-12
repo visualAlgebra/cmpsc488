@@ -17,13 +17,13 @@ export default {
         <div class="col s12">
           <ul class="tabs blue-grey waves-light">
             <li id="1" class="tab col s3 white-text active">
-              <a class="white-text" @click="generalManipulation()">General Manipulation</a>
+              <a class="white-text" @click="generalManipulation()">Transform</a>
             </li>
             <li id="2" class="tab col s3">
-              <a class="white-text" @click="mergeLiterals()">Merging Literals</a>
+              <a class="white-text" @click="mergeLiterals()">Merge Atoms</a>
             </li>
             <li id="3" class="tab col s3">
-              <a class="white-text" @click="distribution()">Distribution</a>
+              <a class="white-text" @click="distribution()">Distribute</a>
             </li>
             <li id="4" class="tab col s3">
               <a class="white-text" @click="insert()">Insert</a>
