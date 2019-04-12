@@ -413,7 +413,7 @@ class FirestoreDatabase extends Database {
                 problems: self.admin.firestore.FieldValue.arrayUnion(databaseProblem.problemID)
               });
               batch.commit().then(value => {
-                return server.respondWithData(response, 201, 'text/plain', "Problem Saved at " + self.domainName + "/problems/" + databaseProblem.problemID);
+                return server.respondWithData(response, 201, 'text/plain', databaseProblem.problemID);
               }).catch(error => {
                 console.log("============ Error =============");
                 console.log("Error with batch write in saveProblem()");
@@ -459,7 +459,7 @@ class FirestoreDatabase extends Database {
     //console.log(problemReference.id);
     problemReference.set(databaseProblem)
       .then(function () {
-        server.respondWithData(response, 201, 'application/text', "Problem Saved at " + self.domainName + "/problems/" + databaseProblem.problemID);
+        server.respondWithData(response, 201, 'text/plain', databaseProblem.problemID);
       })
       .catch(err => {
         console.log("============ Error =============");
@@ -513,7 +513,7 @@ class FirestoreDatabase extends Database {
     batch.set(lessonReference, databaseLesson);
 
     return batch.commit().then(value => {
-      server.respondWithData(response, 201, 'plain/text', self.domainName + "/lessons/" + databaseLesson.lessonID);
+      server.respondWithData(response, 201, 'text/plain', databaseLesson.lessonID);
     })
     .catch(error => {
       console.log("============ Error =============");
@@ -606,7 +606,7 @@ class FirestoreDatabase extends Database {
       //send query to database
       this.session.collection("accounts").doc(accountID).set(databaseAccount)
       .then(function() {
-        server.respondWithData(response, 201, 'application/text', "account " + accountID + " successfully created");
+        server.respondWithData(response, 201, 'text/plain', "account " + accountID + " successfully created");
       })
       .catch(err => {
         console.log(" =================== ");

@@ -18,7 +18,7 @@ export default {
       :mouse="mouse"
     ></InsertionButtons>
     <ManipulatorWindow
-      v-if="showManipulator"
+      v-if="instance && instance.isOpen"
       :tree="tree"
       :mouse="mouse"
       :height="'200px'"
@@ -38,7 +38,6 @@ export default {
   data: () => ({
     instance: null,
     tree: null,
-    showManipulator: false,
   }),
 
   computed: {
@@ -64,7 +63,6 @@ export default {
   methods: {
     openModal() {
       this.instance.open();
-      this.showManipulator = true;
     },
     closeModal() {
       this.instance.close();

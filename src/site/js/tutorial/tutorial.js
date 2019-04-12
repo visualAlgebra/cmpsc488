@@ -23,63 +23,74 @@ function tutorialProblem1() {
   
   let tutMessage = [];
   tutMessage.push("Hello, welcome to Visual Algebra. We'll show you how to use our system.");
-  tutMessage.push("This shape we see here is what we call an expression tree. We call the small gray circle a tag button." +
-  "The grey and white rectangles are called quadrants. Together, these components represent an algebraic expression.");
-  tutMessage.push("When a tag is orientated horizonally, then elements are being added. We call this an East-West tag." +
+  tutMessage.push("This shape we see here is what we call a tag. We call the small gray circle a tag button. " +
+  "The grey and white rectangles are called quadrants. Inside the quadrants, there may be three things, tags, atoms, or unknowns. " +
+  "Atoms are what we use to represent numbers. Unknowns are represent some atom where the value is not known. Together, these components " +
+  "represent an algebraic expression.");
+  tutMessage.push("When a tag is orientated horizonally, then elements are being added. We call this an East-West tag. " +
   "The elements in the right are being substracted from the elements on the left.");
-  tutMessage.push("When a tag or orientated vertically, this means that the elements are being multiplied. We call this a North-South Tag." +
+  tutMessage.push("When a tag or orientated vertically, this means that the elements are being multiplied. We call this a North-South Tag. " +
   "The elements in top are being divided by the elements in the bottom. You may think of these as fractions.");
-  tutMessage.push("You're objective is to create the expression tree the same as the goal. Using Algebraic Actions. Algebraic Actions are" +
+  tutMessage.push("You're objective is to create the expression tree the same as the goal. Using Algebraic Actions. Algebraic Actions are " +
   "what we use to manipulate the expression tree. As the name may imply, all of these actions are modeled after the things we can in traditional Algebra.");
-  tutMessage.push("The first Algebraic Action we'll go over is Commutative Swap. This action is done by simply dragging an element" +
-  "on top of another in the same quadrant. Look into References if you want more information on Commutative Swap. Try it yourself on the Manipulator." +
-  "Once you are done, you may move on to the next stage of the Tutorial.");
+  tutMessage.push("The first Algebraic Action we'll go over is Commutative Swap. In Transform mode, this action is done by simply dragging an element " +
+  "on top of another in the same quadrant. Try it yourself on the Manipulator on Tutorial Problem 1. " +
+  "Once you are done, you may move on to segment 2.");
   return tutMessage;
 }
 
 function tutorialProblem2() {
 
   let tutMessage = [];
-  tutMessage.push("Now we'll talk about the Associative actions. Try to click on the small tag circle\n");
-  tutMessage.push("We see that we can enclose tags as many times as we want. This is called Associative Intro.\n");
-  tutMessage.push("To close a tag, drag the outer tag button to the inner tag button. This is called Associative Merge.\n");
-  tutMessage.push("Alright, now try dragging x2 to the outer tag. This action is called Associative Extract\n");
-  tutMessage.push("Good, now try dragging it back in. This action is called Associative Insert\n");
-  tutMessage.push("Good, now try solving the expression.\n");
-  tutMessage.push("Great job, go to the next problem in the lesson.\n");
+  tutMessage.push("Now we'll talk about the Associative actions. There are four in total.");
+  tutMessage.push("First we'll talk about Associative Intro. By clicking on any tag, we may enclose it into another tag. We can do this as many times " + 
+  "as we like but try not to get too carried away!");
+  tutMessage.push("To get rid of a tag, drag the outer tag button to the inner tag button. This is called Associative Merge. You can only do this when " +
+  "you have two tags of the same orientation or when there is a single element in the white quadrant.");
+  tutMessage.push("Next is Associative Extract. This is done by dragging an element into a outer parent. You may only do this when " + 
+  "an element is in a tag of the same orientation of the outer tag.");
+  tutMessage.push("Lastly is Associative Insert. This is done by doing the opposite of Associative Extract. Drag an element into a tag of the " +
+  "same orientation as the tag the tag the element is in.");
+  tutMessage.push("Now try these on Tutorial Problem 2. Once you are done, move on to segment 3.");
   return tutMessage;
 }
 
 function tutorialProblem3() {
+
   let tutMessage = [];
-  tutMessage.push("Now lets talk about distributing and factoring.\n");
-  tutMessage.push("Click on Distribution and try dragging that x1 to the outer tag.\n");
-  tutMessage.push("Good, this is called Factor. This action works just like factoring in algebra." +
-  "Notice how the enclosing tag is now vertical. So x1 is now being multiplied by the sum of the elements when x1 is factored out." +
-  "Notice that there is a one where x1 used to be. Now try dragging the x1 back in the tag button.\n");
-  tutMessage.push("Good, this is called Distribute. It works just like distributing in algebra. Now click on the reset button" +
-  "and try to solve the problem. Notice how in the goal, the x1 is not factored from eveything. Hint: try to use an Associative Intro. \n");
-  tutMessage.push("Good, now on to the next problem");
+  tutMessage.push("Now lets talk about distributing and factoring. To preform these actions, Distribution mode must be on. Click Distribution to turn " +
+  "on Distribution mode.");
+  tutMessage.push("The first action we'll talk about is Distribute. To distribue, we need a North-West Tag, an East-West Tag, and " + 
+  "an element in the North-West to distribute. We may distribute by simply dragging the element to distribute into the tag button of the East-West Tag " +
+  "as shown. Notice how the orientation of the tag changes. As the name implies, this Action is modeled after distribution in Algebra.");
+  tutMessage.push("Next we'll talk about is Factor. This action works just like factoring in algebra. " +
+  "To factor, we need an East-West tag with North-South tags. Each North-South Tag must have the same matching element at the top of the North-South Quadrant. " +
+  "To initiate the action, drag the matching element into a the quadrant of the outer parent.");
+  tutMessage.push("Try these on Tutorial Problem 3. After you are done, move on to segement 4.")
   return tutMessage;
 }
 
 function tutorialProblem4() {
+
   let tutMessage = [];
-  tutMessage.push("Now we'll talk about manipulating fractions.\n");
-  tutMessage.push("Click on Distribution and drag the tag button of the inner East-West Tag to the outer North-South Tag.\n");
-  tutMessage.push("Good, you've split up the fraction. Notice how this action is similar to Factor. Now try to combine the first two fractions.\n");
-  tutMessage.push("Awesome. Now on to the next problem.")
+  tutMessage.push("Now we'll talk about manipulating fractions. We have two actions for fractions, Split Fraction and Combine Fraction. " + 
+  "Like for Distribute and Factor, these actions are done in the Distribution mode.");
+  tutMessage.push("To split a fraction, we need an solely an East-West tag in the white quadrant of a North-South tag and something in the grey quadrant." +
+  "To initiate the action, drag the tag button of the inner East-West Tag to the outer North-South Tag.");
+  tutMessage.push("To combine fractions, simply drag one fraction on another. The divisor of the two fractions mut be the same.");
+  tutMessage.push("Try these actions on Tutorial Problem 4. After you're done, move on to segment 5.")
   return tutMessage;
 
 }
 
 function tutorialProblem5() {
+
   let tutMessage = [];
-  tutMessage.push("Now we'll go over some miscellaneous things. First, try dragging the tag button of the bottom tag in the divisor into the numerator\n");
-  tutMessage.push("Great, notice how the tag is now flipped. We call this a Tag Flip. This works with East-West Tags as well.\n");
-  tutMessage.push("If two tags that are equal and on opposite sides of a tag, you may cancel them by dragging the tag button of one" +
-  "into the tag button of the other. Try to find out on your own to get the two tags equal\n");
-  tutMessage.push("Great, now on to the next problem.");
+  tutMessage.push("Now we'll go over some miscellaneous things. First we'll talk about Quadrant Flip.");
+  tutMessage.push("To iniatite Quadrant Flip, drag a tag into the opposite quadrant. For this action to work, the inner tag must be the same " + 
+  "orientation as the outer tag.");
+  tutMessage.push("Next we'll talk about Cancel. If two tags that are equal and on opposite sides of a tag, you may cancel them by dragging the tag button of one" +
+  "into the tag button of the other. Try this on Tutorial Problem 5.");
   return tutMessage;
 
 }
