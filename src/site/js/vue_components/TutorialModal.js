@@ -1,5 +1,5 @@
 import { determineProblem } from "../tutorial/tutorial";
-
+import $ from "jquery"
 
 export default {
   name: "TutorialModal",template: `

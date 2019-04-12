@@ -11,8 +11,8 @@ class Server {
   //isInProd: boolean which is true if running in production mode
   constructor(isInProd) {
     let DB = require('../db/firestore_database.js');
-    this.database = new DB();
-
+    
+    let domain;
     if(isInProd) {
       this.PORT_NUMBER = 443;
       this.http = require("https");
@@ -20,12 +20,15 @@ class Server {
         key: fs.readFileSync('/etc/letsencrypt/live/visualalgebra.org/privkey.pem'),
         cert: fs.readFileSync('/etc/letsencrypt/live/visualalgebra.org/fullchain.pem')
       };
+      domain = "https://visualalgebra.org";
     } else {
       this.PORT_NUMBER = 8080;
       this.http = require("http");
       this.options = {};
+      domain = "http://localhost:8080";
     }
-
+    
+    this.database = new DB(domain);
 
     // //setting up event emitter for callbacks
     // this.eventEmitter = new events.EventEmitter();
