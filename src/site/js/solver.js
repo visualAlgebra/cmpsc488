@@ -258,12 +258,15 @@ function expandAssociativeMerge(child1, child2, location1, location2, root, node
 
 function expandAssociativeExtract(child1, child2, location1, location2, root, nodeArray) {
 
-  if (AssociativeExtract.verify(child1, child2)) {
-    let rootClone = root.clone();
-    let grandChild = getChild(rootClone, location1);
-    let action = new AssociativeExtract(grandChild, getQuad(location1));
-    action.apply();
-    nodeArray.push(new Node(action, rootClone));
+  if (child1.parent !== null) {
+    if (AssociativeExtract.verify(child1, child1.parent.parent)) {
+      let rootClone = root.clone();
+      let grandChild = getChild(rootClone, location1);
+      let grandParent = grandChild.parent.parent;
+      let action = new AssociativeExtract(grandChild, getQuad(location1), grandParent.childQuadrant(grandChild.parent));
+      action.apply();
+      nodeArray.push(new Node(action, rootClone));
+    }
   }
 
 }
