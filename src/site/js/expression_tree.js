@@ -3,6 +3,7 @@ import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
 import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance, Cancel, QuadrantFlip, CombineFrac} from './algebraic_actions.js';
 import Vue from "vue";
+import { probGenExpand, Node } from './solver.js';
 
 export const Orientation = {
   EW: "eastwest",
@@ -396,6 +397,17 @@ export function randomStartGenerator(numNodes){
   return ret;
 }
 
+export function randomGoalGenerator(start, numActions){
+  end = start.clone();
+  var rand;
+  var possibleNext;
+  for (var i = 0; i<numActions; i++){
+    possibleNext = probGenExpand(end);
+    rand = Math.floor(Math.random()*possibleNext.length);
+    end = possibleNext[rand].expression;
+  }
+  return end;
+}
 export function randomGoalGenerator(start, validActionsArr, numActions) {
   var end = start.clone();
   var actionApplied;
@@ -713,6 +725,11 @@ export function randomGoalGenerator(start, validActionsArr, numActions) {
 export function randomProblemGenerator(numNodes, validActionsArr, numActions){
   const start = randomStartGenerator(numNodes);
   const end = randomGoalGenerator(start, validActionsArr, numActions);
+  return new StartGoalCombo(start, end);
+}
+export function randomGoalGenerator(numNodes, numActions){
+  const start = randomStartGenerator(numNodes);
+  const end = randomGoalGenerator(start, numActions);
   return new StartGoalCombo(start, end);
 }
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});
