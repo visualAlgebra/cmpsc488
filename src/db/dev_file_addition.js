@@ -6,8 +6,6 @@ admin.initializeApp({
   databaseURL: 'https://vatest-83fa4.firebaseio.com'
 });
 const database = admin.firestore();
-const domainName = "http://localhost:8080";
-
 
 //dev function to save problem to account without using random id
 function saveProblemWithoutAccount(problem, enteredName) {

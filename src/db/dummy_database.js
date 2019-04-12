@@ -3,9 +3,10 @@ const Database = require('./database.js');
 
 //returns preset files rather than ones from actual database
 class DummyDatabase extends Database {
-    constructor() {
+    constructor(domain) {
         super();
         this.session = require('fs');
+        this.domain = domain
     }
 
     getCurrentTimeStamp() {
@@ -93,6 +94,7 @@ class DummyDatabase extends Database {
 
 
     saveProblem(server, response, accountID, problem, enteredName) {
+      let self = this;
         let fileName = "";
         let usedName;
         problem.timeCreated = this.getCurrentTimeStamp();
@@ -113,12 +115,13 @@ class DummyDatabase extends Database {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
-                return server.respondWithData(response, 201, 'text/plain', 'localhost:8080/problems/' + usedName);
+                return server.respondWithData(response, 201, 'text/plain', self.domain + '/problems/' + usedName);
             }
         });
     }
 
     saveLesson(server, response, accountID, lesson, enteredName) {
+      let self = this;
         let fileName = "";
         if (accountID === undefined) {
             return server.respondWithError(response, 401, "Error 401: No Authorization Provided");
@@ -136,7 +139,7 @@ class DummyDatabase extends Database {
             if(err) {
                 return server.respondWithError(response, 500, "Error 500: Internal Server Error");
             } else {
-                return server.respondWithData(response, 201, 'text/plain', 'localhost:8080/lessons/' + enteredName);
+                return server.respondWithData(response, 201, 'text/plain', self.domain + '/lessons/' + enteredName);
             }
         });
     }
