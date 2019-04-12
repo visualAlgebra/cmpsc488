@@ -330,11 +330,14 @@ export class Factor {
   }
 
   static verify(valueToFactor, tagToFactor) {
+    if (valueToFactor == undefined || tagToFactor == undefined || valueToFactor == null || tagToFactor == null)
+      return false;
+
     if (!tagToFactor instanceof Tag) {
       return false;
     }
 
-    if (tagToFactor.orientation != "eastwest")
+    if (tagToFactor.orientation != Orientation.EW)
       return false;
     for (var i = 0; i < tagToFactor.NW.length; i++) {
       if (tagToFactor.NW[i] instanceof Tag) {
@@ -562,6 +565,10 @@ export class QuadrantFlip {
   }
 
   static verify(tag, parent, xQuad, yQuad) {
+    if (tag == undefined || parent == undefined || tag == null || parent == null)
+      return false;
+    if (xQuad == undefined || yQuad == undefined || xQuad == null || yQuad == null)
+      return false;
     return tag instanceof Tag
       && parent !== null
       && tag.parent !== null
@@ -708,7 +715,11 @@ export class ZeroMerge {
   }
 
   static verify(sibling1, sibling2, quad1, quad2) {
-    
+    if (sibling1 == undefined || sibling2 == undefined || sibling1 == null || sibling2 == null)
+      return false;
+    if (quad1 == undefined || quad2 == undefined || quad1 == null || quad2 == null)
+      return false;
+
     if (sibling1.is(sibling2)) {
       return false;
     }
