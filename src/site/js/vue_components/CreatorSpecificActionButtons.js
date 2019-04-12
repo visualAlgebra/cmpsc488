@@ -1,6 +1,6 @@
 import * as M from "materialize-css";
 import {Mouse, MouseMode} from "../gui";
-import InsertButtons from "./InsertButtons";
+import InsertButtons from "./InsertionButtons";
 
 export default {
   name: "CreatorSpecificActionButtons",

@@ -207,9 +207,6 @@ class FirestoreDatabase extends Database {
         } else {
           let account = doc.data();
           account.timeCreated = account.timeCreated;
-          let lessons = [];
-          let problems = [];
-
           this.assembleAccount(server, account, serverResponse);
         }
       })

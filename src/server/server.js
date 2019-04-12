@@ -1,5 +1,4 @@
 const fs = require("fs");
-const http = require("http");
 const url = require("url");
 const maxPostSize = 1e4 //10KB
 const qs = require("querystring");
@@ -15,10 +14,18 @@ class Server {
     this.database = new DB();
 
     if(isInProd) {
-      this.PORT_NUMBER = 80;
+      this.PORT_NUMBER = 443;
+      this.http = require("https");
+      this.options = {
+        key: fs.readFileSync('/etc/letsencrypt/live/visualalgebra.org/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/visualalgebra.org/fullchain.pem')
+      };
     } else {
       this.PORT_NUMBER = 8080;
+      this.http = require("http");
+      this.options = {};
     }
+
 
     // //setting up event emitter for callbacks
     // this.eventEmitter = new events.EventEmitter();
@@ -120,11 +127,12 @@ class Server {
 
   //creates a server session that listens on port 8080 of localhost
   run() {
-
+    
     console.log("Booting up");
     //so can call methods inside other function
     var self = this; //so can call inside callback function
-    http.createServer(function (request, response) {
+    
+    let serverHandler = function (request, response) {
       if(self.blacklist[response.connection.remoteAddress]) {
         response.destroy();
       }
@@ -211,7 +219,14 @@ class Server {
       }
 
 
-    }).listen(this.PORT_NUMBER, '0.0.0.0');
+    }
+
+    //https has a required options section, but http does not allow it on older versions of node
+    if(this.PORT_NUMBER === 443) {
+      this.http.createServer(this.options, serverHandler).listen(this.PORT_NUMBER, '0.0.0.0');
+    } else {
+      this.http.createServer(serverHandler).listen(this.PORT_NUMBER, '0.0.0.0');
+    }
   }
 
   //==========================================================================

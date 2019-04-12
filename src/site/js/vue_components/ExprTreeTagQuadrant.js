@@ -52,10 +52,16 @@ export default {
 
   computed: {
     classes() {
-      return [
-        this.quadrant === Quadrant.NW ? "north-west" : "south-east",
-        this.interactive ? "hoverable" : "",
-      ];
+      const isNW = this.quadrant === Quadrant.NW;
+      const isSE = this.quadrant === Quadrant.SE;
+      const isInteractive = this.interactive;
+      const spaceItOut = this.values.length === 0;
+      return {
+        "north-west": isNW,
+        "south-east": isSE,
+        "hoverable": isInteractive,
+        "tag-spacer": spaceItOut,
+      };
     },
   },
 

@@ -183,6 +183,11 @@
     display: flex;
 }
 
+.tag-spacer {
+    width: 3rem !important;
+    height: 3rem !important;
+}
+
 .variable, .literal {
     padding: var(--element-padding);
     margin: var(--element-margin);

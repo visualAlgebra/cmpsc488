@@ -1,7 +1,7 @@
 import ExprTreeTag from "./ExprTreeTag";
 import ExprTreeVariable from "./ExprTreeVariable";
 import ExprTreeLiteral from "./ExprTreeLiteral";
-import {ExpressionTree} from "../expression_tree";
+import {ExpressionTree, ExprTreeKind} from "../expression_tree";
 import {Mouse} from "../gui";
 
 export default {
@@ -20,31 +20,32 @@ export default {
   template: `
   <div xmlns="http://www.w3.org/1999/xhtml">
     <ExprTreeTag
-      v-if="tree.kind === 'tag'"
+      v-if="tree.kind === ExprTreeKind.Tag"
       :tree="tree.clone()"
       :path="path"
       :interactive="interactive"
       :mouse="mouse"
-    >
-    </ExprTreeTag>
+    ></ExprTreeTag>
     <ExprTreeVariable
-      v-else-if="tree.kind === 'variable'"
+      v-else-if="tree.kind === ExprTreeKind.Var"
       :tree="tree.clone()"
       :path="path"
       :interactive="interactive"
       :mouse="mouse"
-    >
-    </ExprTreeVariable>
+    ></ExprTreeVariable>
     <ExprTreeLiteral
-      v-else-if="tree.kind === 'literal'"
+      v-else-if="tree.kind === ExprTreeKind.Lit"
       :tree="tree.clone()"
       :path="path"
       :interactive="interactive"
       :mouse="mouse"
-    >
-    </ExprTreeLiteral>
+    ></ExprTreeLiteral>
   </div>
   `,
+
+  data: () => ({
+    ExprTreeKind,
+  }),
 
   components: {
     ExprTreeTag,
