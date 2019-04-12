@@ -18,7 +18,7 @@ export default {
           <label>Select from 1 to 10 the difficulty:</label>
           <form>
             <p class="range-field">
-              <input type="range" id="basicSlider" min="1" max="10" step="1" value="1">
+              <input type="range" id="basicSlider" min="1" max="10">
             </p>
           </form>
         </div>
