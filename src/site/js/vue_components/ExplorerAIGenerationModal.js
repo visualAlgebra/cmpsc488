@@ -18,7 +18,7 @@ export default {
           <label>Select from 1 to 10 the difficulty:</label>
           <form>
             <p class="range-field">
-              <input type="range" id="basicSlider" min="1" max="10">
+              <input type="range" id="basicSlider" min="1" max="10" step="1" value="1">
             </p>
           </form>
         </div>
@@ -26,13 +26,13 @@ export default {
           <label>Select size of tree to start with:</label>
           <form>
             <p class="range-field">
-              <input type="range" id="num_nodes" min="10" max="30">
+              <input type="range" id="num_nodes" min="10" max="30" step="1" value="10">
             </p>
           </form>
           <label>Select complexity of goal expression:</label>
           <form>
             <p class="range-field">
-              <input type="range" id="num_actions" min="10" max="100">
+              <input type="range" id="num_actions" min="10" max="100" step="1" value="10">
             </p>
           </form>
         </div>
@@ -57,14 +57,13 @@ export default {
     getID(){
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < 30; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       }
       return text;
     }, fillExpressions() {
       if (!this.state) {
         this.val = parseInt(document.getElementById('basicSlider').value);
-        console.log(this.val+" sadasdasdas");
         if (this.val < 1 || this.val > 10) {
           alert("Failed to create problem, webpage was modified");
           this.display = false;
@@ -74,9 +73,7 @@ export default {
         this.goalTree = randomGoalGeneratorNoArr(this.workTree, this.basicActs[this.val]);
       } else {
         let num_nodes = parseInt(document.getElementById('num_nodes').value);
-        console.log(num_nodes+" sadasdasdas");
         let num_actions = parseInt(document.getElementById('num_actions').value);
-        console.log(num_actions+" sadasdasdas");
         if (num_nodes < 10 || num_nodes >= 30 || num_actions < 10 || num_actions > 100) {
           alert("Failed to create problem, webpage was modified");
           this.display = false;
@@ -88,17 +85,17 @@ export default {
       this.display = true;
     }, distributeStart(res){
       this.problemInformation.expression_start=res;
-      compress_string_js(this.goalTree, this.distributeGoal);
+      compress_string_js(this.goalTree.toString(), this.distributeGoal);
     }, distributeGoal(res){
       this.problemInformation.expression_goal=res;
       this.problemInformation.description="Auto-generated problem from explorer page";
       post_problem_from_site(this.problemInformation, this.userStruct, this.redirectCallback);
     }, redirectCallback(res){
       console.log(res);
-      //window.location.href=res;
+      // window.location.href=res;
     }, submitProblem(){
       this.problemInformation=new ProblemInfo(this.getID());
-      compress_string_js(this.workTree, this.distributeStart);
+      compress_string_js(this.workTree.toString(), this.distributeStart);
     }
   }, components:{
     SingleExpressionDisplay,
