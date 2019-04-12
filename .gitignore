@@ -3,3 +3,4 @@ node_modules
 .idea
 vatest-83fa4-firebase-adminsdk-kvm0g-7c0191ca53.json
 src/site/dist/*.js
+ssl_cert.json
