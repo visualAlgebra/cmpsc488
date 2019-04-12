@@ -42,6 +42,8 @@ export default {
       this.setText();
     }, setText() {
       $("#tutText").text(this.tutMessages[this.index]);
+    }, changeImg() {
+      
     }
   }
 }
