@@ -36,7 +36,7 @@ export const creator_vue=new Vue({
     ></ManipulatorWindow>
     <CreateProblemModal v-if="finish" v-bind:closeFinish="closeFinish"></CreateProblemModal>
     <CreatorWindow
-      v-if="stage === 'build'"
+      v-if="stage === 'build' && workTree !== null"
       :mouse="mouse"
       :tree="workTree"
       :useCreatedTree="setWorkTree"
@@ -101,6 +101,7 @@ export const creator_vue=new Vue({
     }, distribute(res, code) {
       if(code===2) {//start
         this.workTree = Deserialize(res);
+        console.log("ADFASDFASDF", this.workTree);
         this.display = true;
       }
     }, setWorkTree(tree) {

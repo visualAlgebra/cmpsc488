@@ -21,10 +21,13 @@ export default {
     <InsertionButtons
       :mouse="mouse"
     ></InsertionButtons>
-    <div class="row" style="display: flex;">
+    <div
+      v-if="workTree === null"
+      class="row"
+      style="display: flex;"
+    >
       <div class="col" style="margin: auto; margin-top: 10%;">
         <h5
-          v-if="workTree === null"
           class="grey-text lighten-2"
         >
           <i>
@@ -52,10 +55,9 @@ export default {
   `,
 
   data() {
-    const tree = this.tree;
     return {
       instance: null,
-      workTree: tree,
+      workTree: this.tree,
     };
   },
 
