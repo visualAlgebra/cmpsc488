@@ -9,6 +9,7 @@ export default {
     "clearGoalStage",
     "stage",
     "clearTree",
+    "setWorkTree",
   ],
   template: `
   <div>
