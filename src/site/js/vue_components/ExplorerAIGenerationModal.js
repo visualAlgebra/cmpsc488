@@ -42,14 +42,18 @@ export default {
         </a>
         <SingleExpressionDisplay v-if="display&&workTree" v-bind:tree="workTree"></SingleExpressionDisplay>
         <SingleExpressionDisplay v-if="display&&goalTree" v-bind:tree="goalTree"></SingleExpressionDisplay>
+        <p class="black-text" v-if="submitted">Your problem has been submitted and you should be redirected shortly</p>
+        <p class="black-text" v-if="submitted">Click link if not redirected automatically:
+          <a class="black-text" v-if="submitted" v-bind:href="url">{{url}}</a>
+        </p>
       </div>
       <div class="modal-footer">
-        <a class="waves-effect waves-green btn-flat" v-on:click="submitProblem()">Submit</a>
+        <a v-if="!submitted" class="waves-effect waves-green btn-flat" v-on:click="submitProblem()">Submit</a>
       </div>
     </div>
   `, data(){
     return{
-      state:false, display:false, problemInformation:null, basicAmts:[10,12,14,16,18,20,22,24,26,28], basicActs:[10,12,14,16,18,20,22,24,26,28], workTree:null, goalTree:null, val:0,
+      state:false, display:false, problemInformation:null, basicAmts:[10,12,14,16,18,20,22,24,26,28], basicActs:[10,12,14,16,18,20,22,24,26,28], workTree:null, goalTree:null, val:0,url:"", submitted:false,
     }
   }, mounted() {
     M.AutoInit();
@@ -91,8 +95,9 @@ export default {
       this.problemInformation.description="Auto-generated problem from explorer page";
       post_problem_from_site(this.problemInformation, this.userStruct, this.redirectCallback);
     }, redirectCallback(res){
-      console.log(res);
-      // window.location.href=res;
+      this.url="http://localhost:8080/manipulator/problems/"+res.toString();
+      this.submitted=true;
+      window.location.href = this.url;
     }, submitProblem(){
       this.problemInformation=new ProblemInfo(this.getID());
       compress_string_js(this.workTree.toString(), this.distributeStart);
