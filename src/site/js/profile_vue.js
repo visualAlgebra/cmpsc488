@@ -32,7 +32,7 @@ export const profile_vue=new Vue({
   }, methods: {
     getAccountFromURL(){
       let argArr=(window.location.href).split('/');
-      if(argArr.length==6){
+      if(argArr.length===6){
         return argArr[5];
       }else{
         return null;

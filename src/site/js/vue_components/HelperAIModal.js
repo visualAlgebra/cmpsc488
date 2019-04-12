@@ -11,7 +11,7 @@ export default {
         <SingleExpressionDisplay v-if="display" v-bind:tree="AINode.expression"></SingleExpressionDisplay>
       </div>
       <div class="modal-footer" v-if="display">
-        <a class="modal-close waves-effect waves-green btn-flat" v-on:click="close()">Apply</a>
+        <a class="modal-close waves-effect waves-green btn-flat" v-on:click="close()">Close</a>
       </div>
     </div>
   `, data(){
@@ -20,7 +20,7 @@ export default {
     }
   }, methods:{
     close(){
-      this.closeHelper(this.AINode.expression.toString(), this.AINode.action.name)
+      this.closeHelper();
     }
   }, mounted() {
     M.AutoInit();

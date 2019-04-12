@@ -9,6 +9,7 @@ export default {
           <li>
             <div class="collapsible-header black-text"><i class="material-icons">filter_drama</i>Commutative Swap</div>
             <div class="collapsible-body black-text">
+              <img src="http://localhost:8080/src/site/assets/com_swap_160.gif"><br>
               <span>You may swap the positions of two nodes in the same tag quadrant. Click and drag one element to another that has the same parent.</span>
             </div>
           </li>
@@ -62,7 +63,7 @@ export default {
             </div>
           </li>
           <li>
-            <div class="collapsible-header black-text"><i class=""></i>Tag Flip</div>
+            <div class="collapsible-header black-text"><i class=""></i>Quadrant Flip</div>
             <div class="collapsible-body black-text">
               <span></span>
             </div>
