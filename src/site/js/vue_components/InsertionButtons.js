@@ -6,43 +6,43 @@ export default {
   name: "InsertionButtons",
 
   template: `
-<div class="row center-align">
-  <div class="col s4">
+<div class="row insertion-btn-row">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeEWTag()"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeNSTag()"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeLit(0)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeLit(1)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeLit(2)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeVar(1)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeVar(2)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeVar(3)"
     ></ExpressionTree>
@@ -50,26 +50,7 @@ export default {
 </div>
   `,
 
-  mounted() {
-    document.addEventListener("mousemove", this.updateGhost);
-  },
-
-  data: () => ({
-    ghostIsShown: false,
-    ghostStyle: {
-      position: "absolute",
-      zIndex: 1000,
-    },
-  }),
-
   methods: {
-    updateGhost(e) {
-      if (this.ghostIsShown) {
-        const ghost = document.getElementById("drag-ghost");
-        ghost.style.left = e.pageX - (ghost.width.baseVal.value / 2) + "px";
-        ghost.style.top = e.pageY - (ghost.height.baseVal.value / 2) + "px";
-      }
-    },
     makeEWTag: () => new Tag(Orientation.EW, [], []),
     makeNSTag: () => new Tag(Orientation.NS, [], []),
     makeVar: x => new Variable(x),

@@ -14,7 +14,7 @@ export default {
   props: ["dataFunc", "restart", "setWorkTree", "setWorkTreeWithHistory", "lessonID"],
   template: `
   <div>
-    <div class="row">
+    <div class="row spaced-out-row">
       <a class="tab waves-effect waves-light btn col modal-trigger" v-on:click="displayHelper=true" data-target="helperAIModal">
           <i class="material-icons left">blur_on</i>
           Hint

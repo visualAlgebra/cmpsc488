@@ -2,3 +2,11 @@
     width: 90vw !important;
     height: 90vh !important;
 }
+
+.spaced-out-row {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: space-around;
+    width: 100%;
+}
+
