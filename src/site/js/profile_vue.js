@@ -19,7 +19,8 @@ export const profile_vue=new Vue({
     v-bind:bio="bio"
     v-bind:time="time"
     v-bind:problemCount="problems.length"
-    v-bind:accountID="accountID">
+    v-bind:accountID="accountID"
+    v-bind:userStruct="userStruct">
     </ProfilePageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>

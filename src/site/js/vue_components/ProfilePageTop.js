@@ -1,9 +1,9 @@
 import * as M from "materialize-css";
-import {get_account_from_db} from "../database_management";
+import {delete_account_from_db} from "../database_management";
 import {signOut} from "../user_system";
 
 export default {
-  name: "ProfilePageTop", props: ["bio", "time", "problemCount", "accountID"], template: `
+  name: "ProfilePageTop", props: ["bio", "time", "problemCount", "accountID", "userStruct"], template: `
   <div>
     <div class="row">
       <div class="col s12 m12">
@@ -30,9 +30,9 @@ export default {
   </div>  
   `,methods:{
     deleteAccount(){
-      get_account_from_db(this.accountID, signOut(()=>{
+      delete_account_from_db(this.accountID, this.userStruct, signOut(()=>{
         alert("Account successfully deleted");
-        document.location.reload();
+        window.document.href="http://localhost:8080/index.html";
       }));
     },
   },mounted(){

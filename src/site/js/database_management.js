@@ -64,6 +64,17 @@ export function get_account_from_db(account_id, callback) {
   http.setRequestHeader('account', account_id);
   http.send();
 }
+export function delete_account_from_db(account_id, userStruct, callback) {
+  let http = new XMLHttpRequest();
+  http.onreadystatechange = function() {
+    if (http.readyState === 4 && http.status === 200) {
+      callback();
+    }
+  };
+  http.open("DELETE", "http://localhost:8080/accounts/" + account_id, true);
+  http.setRequestHeader('oauth_token', userStruct.token);
+  http.send();
+}
 export function get_problems_from_db(queryAmt, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {

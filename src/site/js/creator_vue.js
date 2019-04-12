@@ -64,10 +64,10 @@ export const creator_vue=new Vue({
       let argArr=(window.location.href).split('/');
       if(argArr.length>=5){
         this.problemID=argArr[4];
-        if(argArr[7]!==undefined){
+        if(argArr[6]!==undefined){
           this.lessonID=argArr[6];
         }
-        if(argArr[6]!==undefined){
+        if(argArr[5]!==undefined){
           this.problemID+='/'+argArr[5];
         }
       }else{
