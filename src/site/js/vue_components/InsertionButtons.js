@@ -6,43 +6,43 @@ export default {
   name: "InsertionButtons",
 
   template: `
-<div class="row center-align">
-  <div class="col s4">
+<div class="row insertion-btn-row">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeEWTag()"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeNSTag()"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeLit(0)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeLit(1)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeLit(2)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeVar(1)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeVar(2)"
     ></ExpressionTree>
   </div>
-  <div class="col">
+  <div class="col insertion-btn">
     <ExpressionTree
       :tree="makeVar(3)"
     ></ExpressionTree>
