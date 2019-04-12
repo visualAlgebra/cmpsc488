@@ -314,6 +314,7 @@ export class Literal extends ExpressionTree {
     return "{l" + this.value + "}";
   }
 } // end Literal class
+
 export function array_delete(arr, ref) {
   for (let i = 0; i < arr.length; i++) {
     if (ref.is(arr[i])) {
@@ -398,7 +399,7 @@ export function randomStartGenerator(numNodes){
 }
 
 export function randomGoalGeneratorNoArr(start, numActions){
-  end = start.clone();
+  let end = start.clone();
   var rand;
   var possibleNext;
   for (var i = 0; i<numActions; i++){

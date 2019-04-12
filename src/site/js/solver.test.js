@@ -57,7 +57,7 @@ function SolverTest3() {
     console.log("Error wrong action returned in Solver Test 3", result);
 }
 
-export function testAll() {
+window.testAll = function() {
   SolverTest1();
   SolverTest2();
   SolverTest3();

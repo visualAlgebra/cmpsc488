@@ -5,7 +5,24 @@ import {Mouse} from "../gui";
 export default {
   name: "ManipulatorWindow",
 
-  props: ["tree", "mouse"],
+  props: {
+    tree: {
+      required: true,
+    },
+    mouse: {
+      required: true,
+    },
+    width: {
+      required: false,
+      default: "100%",
+      type: String,
+    },
+    height: {
+      required: false,
+      default: "500px",
+      type: String,
+    },
+  },
 
   template: `
 <div
@@ -20,8 +37,8 @@ export default {
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="100%"
-      height="500px"
+      :width="width"
+      :height="height"
     >
       <foreignObject width="2000" height="1000">
         <ExpressionTree
