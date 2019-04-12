@@ -50,26 +50,7 @@ export default {
 </div>
   `,
 
-  mounted() {
-    document.addEventListener("mousemove", this.updateGhost);
-  },
-
-  data: () => ({
-    ghostIsShown: false,
-    ghostStyle: {
-      position: "absolute",
-      zIndex: 1000,
-    },
-  }),
-
   methods: {
-    updateGhost(e) {
-      if (this.ghostIsShown) {
-        const ghost = document.getElementById("drag-ghost");
-        ghost.style.left = e.pageX - (ghost.width.baseVal.value / 2) + "px";
-        ghost.style.top = e.pageY - (ghost.height.baseVal.value / 2) + "px";
-      }
-    },
     makeEWTag: () => new Tag(Orientation.EW, [], []),
     makeNSTag: () => new Tag(Orientation.NS, [], []),
     makeVar: x => new Variable(x),
