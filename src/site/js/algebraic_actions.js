@@ -334,7 +334,7 @@ export class Factor {
       return false;
     }
 
-    if (tagToFactor.orientation != "eastwest")
+    if (tagToFactor.orientation != Orientation.EW)
       return false;
     for (var i = 0; i < tagToFactor.NW.length; i++) {
       if (tagToFactor.NW[i] instanceof Tag) {
