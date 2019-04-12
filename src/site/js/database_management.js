@@ -22,19 +22,22 @@ export function get_lesson_from_db(lesson_id, callback) {
   http.open("GET", "http://localhost:8080/lessons/" + lesson_id, true);
   http.send();
 }
-export function post_problem_from_site(problem) {
+export function post_problem_from_site(problem, userStruct, callback) {
   try {
     let http = new XMLHttpRequest();
     http.open("POST", "http://localhost:8080/problems/" + problem.problemID, true);
     http.setRequestHeader("Content-type", "application/json");
-    let user = "TEST_USER_0";
-    http.setRequestHeader("Account", user);
+    http.setRequestHeader("oauth_token", userStruct.token);
     let str = '{ "problemName": "' + problem.problemID + '\",'+
       ' "startExpression": [' + problem.expression_start + '],'+
       ' "goalExpression": [' + problem.expression_goal + '],'+
-      ' "description": \"' + problem.description + '\",'+
-      ' "createdBy": "' + user + '" }';
+      ' "description": \"' + problem.description + '\"}';
     console.log(str);
+    http.onreadystatechange = function() {
+      if (http.readyState == 4 && http.status == 201) {
+        callback(http.responseText);
+      }
+    }
     http.send(str);
   } catch (e) {}
 }

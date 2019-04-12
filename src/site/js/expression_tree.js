@@ -398,7 +398,7 @@ export function randomStartGenerator(numNodes){
 }
 
 export function randomGoalGeneratorNoArr(start, numActions){
-  end = start.clone();
+  let end = start.clone();
   var rand;
   var possibleNext;
   for (var i = 0; i<numActions; i++){
