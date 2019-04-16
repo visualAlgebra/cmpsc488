@@ -320,11 +320,12 @@ function expandCancel(child1, child2, location1, location2, root, nodeArray) {
 function expandCombineFrac(child1, child2, location1, location2, root, nodeArray) {
 
   let quad1 = getQuad(location1);
+  let quad2 = getQuad(location2)
   if (CombineFrac.verify(child1, child2)) {
     let rootClone = root.clone();
     let sibling1 = getChild(rootClone, location1);
     let sibling2 = getChild(rootClone, location2);
-    let action = new CombineFrac(sibling1, sibling2, quad1);
+    let action = new CombineFrac(sibling1, sibling2, quad1, quad2);
     action.apply();
     nodeArray.push(new Node(action, rootClone));
   }
