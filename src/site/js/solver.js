@@ -139,6 +139,7 @@ export function solve(current, goal) {
       minHeuristic = heuristic;
       minIdx = i;
     }
+    console.log(heuristic, nodeArray[i]);
   }
   return (nodeArray[minIdx]);
 }
@@ -405,8 +406,19 @@ function expandLiteralMerge(child1, child2, location1, location2, root, nodeArra
 
 function expandQuadrantFlip(child1, child2, location1, location2, root, nodeArray) {
   if (child1.parent !== null && child1.parent.parent !== null) {
-    let quad1 = getQuad(location1);
+    let quad1 = child1.parent.childQuadrant(child1);
     let quad2 = child1.parent.parent.childQuadrant(child1.parent);
+    if (QuadrantFlip.verify(child1, child1.parent, quad1, quad2)) {
+      let rootClone = root.clone();
+      let tag = getChild(rootClone, location1);
+      let action = new QuadrantFlip(tag, quad1);
+      action.apply();
+      nodeArray.push(new Node(action, rootClone));
+    }
+  }
+  else if(child1.parent !== null && child1.parent.equals(root)){
+    let quad1 = child1.parent.childQuadrant(child1);
+    let quad2 = null;
     if (QuadrantFlip.verify(child1, child1.parent, quad1, quad2)) {
       let rootClone = root.clone();
       let tag = getChild(rootClone, location1);

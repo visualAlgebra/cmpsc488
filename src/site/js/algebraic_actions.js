@@ -566,12 +566,12 @@ export class QuadrantFlip {
   static verify(tag, parent, xQuad, yQuad) {
     if (tag == undefined || parent == undefined || tag == null || parent == null)
       return false;
-    if (xQuad == undefined || yQuad == undefined || xQuad == null || yQuad == null)
+    if (xQuad == undefined || xQuad == null)
       return false;
     return tag instanceof Tag
       && parent !== null
       && tag.parent !== null
-      && parent.is(tag.parent)
+      && parent.equals(tag.parent)
       && xQuad !== yQuad
       && tag.orientation === parent.orientation;
   }
