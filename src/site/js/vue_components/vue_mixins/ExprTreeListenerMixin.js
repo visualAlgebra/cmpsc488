@@ -18,6 +18,7 @@ export default {
           mousedown: e => { e.stopPropagation(); },
           mousemove: e => { e.stopPropagation(); },
           mouseup: e => { e.stopPropagation(); },
+          click: this.mouseClicked
         };
       } else {
         // See https://jsfiddle.net/c0Le92xe/ for example
@@ -51,5 +52,11 @@ export default {
       this.mouse.eventDest = this.guiObj;
       this.mouse.dragDetected();
     },
+
+    mouseClicked(event) {
+      event.stopPropagation();
+      this.mouse.eventSource = this.guiObj;
+      this.mouse.clickDetected();
+    }
   },
 };
