@@ -13,8 +13,9 @@ export default {
       type: Array,
       default: () => [],
     },
-    interactive: Boolean,
     mouse: Mouse,
+    interactive: Boolean,
+    insertable: Boolean,
   },
 
   template: `
@@ -23,22 +24,25 @@ export default {
       v-if="tree.kind === ExprTreeKind.Tag"
       :tree="tree.clone()"
       :path="path"
-      :interactive="interactive"
       :mouse="mouse"
+      :interactive="interactive"
+      :insertable="insertable"
     ></ExprTreeTag>
     <ExprTreeVariable
       v-else-if="tree.kind === ExprTreeKind.Var"
       :tree="tree.clone()"
       :path="path"
-      :interactive="interactive"
       :mouse="mouse"
+      :interactive="interactive"
+      :insertable="insertable"
     ></ExprTreeVariable>
     <ExprTreeLiteral
       v-else-if="tree.kind === ExprTreeKind.Lit"
       :tree="tree.clone()"
       :path="path"
-      :interactive="interactive"
       :mouse="mouse"
+      :interactive="interactive"
+      :insertable="insertable"
     ></ExprTreeLiteral>
   </div>
   `,

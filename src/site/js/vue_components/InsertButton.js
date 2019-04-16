@@ -20,6 +20,7 @@ export default {
     :tree="tree"
     :interactive="!clickable"
     :mouse="mouse"
+    insertable
   ></ExpressionTree>
 </div>
   `,

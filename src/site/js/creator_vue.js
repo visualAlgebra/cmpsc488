@@ -37,7 +37,6 @@ export const creator_vue=new Vue({
     <CreateProblemModal v-if="finish" v-bind:closeFinish="closeFinish"></CreateProblemModal>
     <CreatorWindow
       v-if="stage === 'build'"
-      :mouse="mouse"
       :tree="workTree"
       :useCreatedTree="setWorkTree"
     ></CreatorWindow>

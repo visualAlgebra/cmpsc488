@@ -9,8 +9,9 @@ export default {
   props: {
     tree: jsExpressionTree,
     path: Array,
-    interactive: Boolean,
     mouse: Mouse,
+    interactive: Boolean,
+    insertable: Boolean,
   },
 
   template: `
@@ -24,6 +25,7 @@ export default {
       :values="tree.NW"
       :interactive="interactive"
       :mouse="mouse"
+      :insertable="insertable"
     >
     </ExprTreeTagQuadrant>
     
@@ -32,6 +34,7 @@ export default {
       :path="path"
       :interactive="interactive"
       :mouse="mouse"
+      :insertable="insertable"
     ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
@@ -42,6 +45,7 @@ export default {
       :values="tree.SE"
       :interactive="interactive"
       :mouse="mouse"
+      :insertable="insertable"
     >
     </ExprTreeTagQuadrant>
     

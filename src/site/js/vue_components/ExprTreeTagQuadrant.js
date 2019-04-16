@@ -34,6 +34,7 @@ export default {
         :path="extendPath(index)"
         :interactive="interactive"
         :mouse="mouse"
+        :insertable="insertable"
       ></ExpressionTree>
     </div>
   </div>
@@ -46,6 +47,7 @@ export default {
         kind: ClickTargetKind.TagQuadrant,
         tree: this.tree,
         path: this.path,
+        quadrant: this.quadrant,
       },
     };
   },

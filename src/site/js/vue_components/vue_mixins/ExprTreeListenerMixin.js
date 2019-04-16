@@ -1,4 +1,4 @@
-import {Mouse, MouseState} from "../../gui";
+import {Mouse, MouseMode} from "../../gui";
 
 export default {
 
@@ -7,6 +7,7 @@ export default {
     //   <MyComponent interactive></MyComponent> --> interactive == true
     //   <MyComponent></MyComponent>             --> interactive == false
     interactive: Boolean,
+    insertable: Boolean,
     mouse: Mouse,
   },
 
@@ -38,6 +39,9 @@ export default {
 
   methods: {
     handleDragStart(_data, event) {
+      if (this.insertable) {
+        this.mouse.mode = MouseMode.Insertion;
+      }
       event.stopPropagation();
     },
 
