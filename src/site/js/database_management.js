@@ -32,12 +32,30 @@ export function post_problem_from_site(problem, userStruct, callback) {
       ' "startExpression": [' + problem.expression_start + '],'+
       ' "goalExpression": [' + problem.expression_goal + '],'+
       ' "description": \"' + problem.description + '\"}';
-    console.log(str);
     http.onreadystatechange = function() {
       if (http.readyState === 4 && http.status === 201) {
         callback(http.responseText);
       }
       if (http.readyState === 4 && http.status === 400) {
+        callback(false);
+      }
+    };
+    http.send(str);
+  } catch (e) {}
+}
+export function post_lesson_from_site(lesson, userStruct, callback) {
+  try {
+    let http = new XMLHttpRequest();
+    http.open("POST", "http://localhost:8080/lessons/" + lesson.lessonID, true);
+    http.setRequestHeader("Content-type", "application/json");
+    http.setRequestHeader("oauth_token", userStruct.token);
+    let str = '{ "lessonID": "' + lesson.lessonID + '\",'+
+      ' "description": ' + lesson.description + '}';
+    http.onreadystatechange = function() {
+      if (http.readyState === 4 && http.status === 201) {
+        callback(http.responseText);
+      }
+      if (http.readyState === 4 && http.status === 400) {//already in database
         callback(false);
       }
     };
