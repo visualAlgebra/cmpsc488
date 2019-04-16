@@ -128,6 +128,8 @@ function heuristicEval(a, b) {
 }
 
 export function solve(current, goal) {
+  if (current.equals(goal))
+    return null;
   let nodeArray = [];
   let minHeuristic = Number.MAX_SAFE_INTEGER;
   let minIdx = -1;
@@ -139,7 +141,6 @@ export function solve(current, goal) {
       minHeuristic = heuristic;
       minIdx = i;
     }
-    console.log(heuristic, nodeArray[i]);
   }
   return (nodeArray[minIdx]);
 }

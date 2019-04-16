@@ -9,9 +9,14 @@ export default {
   template: `
     <div id="helperAIModal" class="modal modal-fixed-footer big-modal">
       <div class="modal-content" v-if="display">
-        <h4 class="black-text center-align">Hint: try applying {{AINode.action.name}}</h4>
+        <h4 v-if="AINode"
+        class="black-text center-align">
+        Hint: try applying {{AINode.action.name}}</h4>
+        <h4 v-else
+        class="black-text center-align">
+        Goal already reached</h4>
         <SingleExpressionDisplay
-          v-if="display && instance && instance.isOpen"
+          v-if="display && instance && instance.isOpen && AINode"
           v-bind:tree="AINode.expression"
           v-bind:height="'500px'"
           v-bind:worldHeight="'900'"

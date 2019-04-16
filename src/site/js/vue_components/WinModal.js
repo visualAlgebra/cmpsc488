@@ -1,6 +1,6 @@
 export default {
-  name: "WinModal",template: `
-  <div id="lessonModal" class="modal">
+  name: "WinModal", props:["navigateNextProblem"], template: `
+  <div id="winModal" class="modal">
       <div class="modal-content center-align">
         <div class="row">
           <h1 class="black-text">Success!</h1>
@@ -15,8 +15,24 @@ export default {
           >
             Return to Explore Page
           </a>
-        </div>
+          <div v-if="display">
+            <a class="waves-effect waves-green btn-flat" data-target="lessonModal">
+              View Lesson
+            </a>
+          </div>
+          <div v-if="display">
+            <a class="waves-effect waves-green btn-flat" v-on:click="navigateNextProblem">Go to next problem</a>
+          </div>
+          </div>
       </div>
   </div>  
-  `
+  `,data(){
+    return{
+      display:false,
+    }
+  }, mounted(){
+    if(document.getElementById('lessonModal')){
+      this.display=true;
+    }
+  }
 };

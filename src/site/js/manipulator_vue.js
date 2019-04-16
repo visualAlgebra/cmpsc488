@@ -20,18 +20,18 @@ export const manipulator_vue = new Vue({
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:setWorkTreeWithHistory="setWorkTreeWithHistory" v-bind:lessonID="lessonID"></ManipulatorNavigationButtons>
+    <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:setWorkTreeWithHistory="setWorkTreeWithHistory" v-bind:lessonID="lessonID" v-bind:problemID="problemID" v-bind:setNextProblemURL="setNextProblemURL"></ManipulatorNavigationButtons> 
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
     <ManipulatorWindow v-if="display&&workTree" :tree="workTree" :mouse="mouse"></ManipulatorWindow>
     <GoalExpression
       v-if="display&&goalTree"
       :tree="goalTree"
     ></GoalExpression>
-    <WinModal id="winModal" v-show="win"></WinModal>
+    <WinModal v-show="win" v-bind:navigateNextProblem="navigateNextProblem"></WinModal> 
   </div>
   `, data(){
     return {
-      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null, logged:false, win:false,
+      display: false, goalTree: null, workTree:null, dbInfo:0, problemID: "", desc:"", time:"", goalTreeStr: null, workTreeData:null, mouse: new Mouse(this), lessonID: null, userStruct:null, logged:false, win:false, nextProblemURL:null,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);
@@ -89,6 +89,12 @@ export const manipulator_vue = new Vue({
     }, restart(){
       this.workTree=Deserialize(this.workTreeData);
       clearHist();
+    }, setNextProblemURL(url){
+      this.nextProblemURL=url+this.lessonID;
+    }, navigateNextProblem(){
+      if(this.nextProblemURL!==null) {
+        window.location.href = this.nextProblemURL;
+      }
     }, oauth_user_getter(user) {
       this.userStruct = user;
       this.logged = true;
