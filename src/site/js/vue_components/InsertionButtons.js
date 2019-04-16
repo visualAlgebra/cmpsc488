@@ -1,52 +1,68 @@
 import {Literal, Orientation, Tag, Variable} from "../expression_tree";
 import ExpressionTree from "./ExpressionTree";
+import InsertButton from "./InsertButton";
+import {Mouse} from "../gui";
 
 export default {
 
   name: "InsertionButtons",
 
+  props: {
+    mouse: Mouse,
+    clickFirstNode: Boolean,
+    chooseRootNode: Function,
+  },
+
   template: `
 <div class="row insertion-btn-row">
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeEWTag()"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeNSTag()"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeLit(0)"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeLit(1)"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeLit(2)"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeVar(1)"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeVar(2)"
-    ></ExpressionTree>
-  </div>
-  <div class="col insertion-btn">
-    <ExpressionTree
-      :tree="makeVar(3)"
-    ></ExpressionTree>
-  </div>
+  <InsertButton
+    :tree="makeEWTag()"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeNSTag()"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeLit(0)"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeLit(1)"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeLit(2)"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeVar(1)"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeVar(2)"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
+  <InsertButton
+    :tree="makeVar(3)"
+    :mouse="mouse"
+    :clickable="clickFirstNode"
+    @click="chooseRootNode"
+  ></InsertButton>
 </div>
   `,
 
@@ -59,5 +75,6 @@ export default {
 
   components: {
     ExpressionTree,
+    InsertButton,
   },
 }
