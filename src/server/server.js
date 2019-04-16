@@ -233,6 +233,7 @@ class Server {
       const h = require('http');
       let redirectServerHandler = function (request, response) {
         let sentUrl = url.parse(request.url, true);
+        console.log('Redirecting to: https://visualalgebra.org' + sentUrl.pathname);
         response.writeHead(301, { Location: 'https://visualalgebra.org' + sentUrl.pathname});
         response.end();
       }
