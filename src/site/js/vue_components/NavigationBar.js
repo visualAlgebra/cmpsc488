@@ -50,7 +50,7 @@ export default {
         <a href="http://localhost:8080/creator.html">Create</a>
       </li>
       <li>
-        <a href="http://localhost:8080/manipulator.html">Manipulate</a>
+        <a href="http://localhost:8080/manipulator/problems/Getting_started">Manipulate</a>
       </li>
       <li>
         <a href="http://localhost:8080/explorer.html">Explore</a>
