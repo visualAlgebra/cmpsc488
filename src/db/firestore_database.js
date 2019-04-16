@@ -19,18 +19,18 @@ class FirestoreDatabase extends Database {
   //server: Server class that made call, response: Response class that request was from, idToken: oauth token, callback: success callback with string username as only argument
   //calls callback on success with accountID as argument, calls server.respondWithError with response as first argument on fail
   getAccountIDFromToken(server, response, idToken, callback) {
-    if(idToken === undefined) {
+    if (idToken === undefined) {
       return callback(undefined);
     }
-    
+
     this.admin.auth().verifyIdToken(idToken)
-      .then(function(decodedToken) {
+      .then(function (decodedToken) {
         let email = decodedToken.email;
         let atIndex = email.indexOf('@');
-        let userName = email.substring(0,atIndex);
+        let userName = email.substring(0, atIndex);
         callback(userName);
-   
-      }).catch(function(error) {
+
+      }).catch(function (error) {
         console.log(idToken);
         server.respondWithError(response, 403, "Error 403: oauth token not accepted");
       });
@@ -42,7 +42,16 @@ class FirestoreDatabase extends Database {
   getProblem(server, serverResponse, link) {
     let unassembledLink = link.split('/');
     let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
-    let problemReference = this.session.collection('problems').doc(correctLink);
+    let problemReference;
+    try {
+      problemReference = this.session.collection('problems').doc(correctLink);
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error getting problem");
+      console.error(error);
+      console.error("==========End of Error =========");
+      server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Problem Link");
+    }
     let problemQuery = problemReference.get()
       .then(doc => {
         if (!doc.exists) {
@@ -72,12 +81,12 @@ class FirestoreDatabase extends Database {
 
     problemsQuery.get()
       .then(snapshot => {
-        if(!snapshot.empty) {
+        if (!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
-          
+
             problem.timeCreated = problem.timeCreated;
-            let index = creations.findIndex( element => {
+            let index = creations.findIndex(element => {
               return element === "problems/" + problem.problemID;
             })
             creations[index] = problem;
@@ -96,13 +105,13 @@ class FirestoreDatabase extends Database {
       });
 
 
-      lessonsQuery.get()
+    lessonsQuery.get()
       .then(snapshot => {
-        if(!snapshot.empty) {
+        if (!snapshot.empty) {
           snapshot.forEach(doc => {
             let newLesson = doc.data();
             newLesson.timeCreated = newLesson.timeCreated;
-            let index = creations.findIndex( element => {
+            let index = creations.findIndex(element => {
               return element === "lessons/" + newLesson.lessonID;
             })
             creations[index] = newLesson;
@@ -126,7 +135,16 @@ class FirestoreDatabase extends Database {
   getLesson(server, serverResponse, link) {
     let unassembledLink = link.split('/');
     let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
-    let lessonReference = this.session.collection('lessons').doc(correctLink);
+    let lessonReference;
+    try {
+      lessonReference = this.session.collection('lessons').doc(correctLink);
+    }
+    catch (error) {
+      console.error("Error: Could not get Lesson");
+      console.error(error);
+      console.error("End of Error");
+      server.respondWithError(serverResponse, 400, "Error: Invalid Lesson Sent");
+    }
     let lessonQuery = lessonReference.get()
       .then(doc => {
         if (!doc.exists) {
@@ -155,7 +173,7 @@ class FirestoreDatabase extends Database {
 
     problemsQuery.get()
       .then(snapshot => {
-        if(!snapshot.empty) {
+        if (!snapshot.empty) {
           snapshot.forEach(doc => {
             let problem = doc.data();
             problem.timeCreated = problem.timeCreated;
@@ -199,7 +217,16 @@ class FirestoreDatabase extends Database {
 
 
   getAccount(server, serverResponse, accountID) {
-    let accountReference = this.session.collection('accounts').doc(accountID);
+    let accountReference
+    try {
+      accountReference = this.session.collection('accounts').doc(accountID);
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error getting account");
+      console.error(error);
+      console.error("==========End of Error =========");
+      server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Account");
+    }
     let accountQuery = accountReference.get()
       .then(doc => {
         if (!doc.exists) {
@@ -227,22 +254,22 @@ class FirestoreDatabase extends Database {
       let queryResponse = [];
       let firebaseQuery = this.session.collection('problems').orderBy('timeCreated').limit(query.number);
       firebaseQuery.get()
-      .then( snapshot => {
-        if(!snapshot.empty) {
-          snapshot.forEach(doc => {
-            let problem = doc.data();
-            problem.timeCreated = problem.timeCreated;
-            queryResponse.push(problem);
-          });
-        }
-        server.respondWithData(response, 200, 'application/json', JSON.stringify({'results': queryResponse}));
-      })
-      .catch( error => {
-        console.log("Error with querying problems: ==========");
-        console.log(error);
-        console.log("=======end of error========");
-        server.respondWithError(response, 500, "Error 500: Internal database error with query");
-      });
+        .then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              let problem = doc.data();
+              problem.timeCreated = problem.timeCreated;
+              queryResponse.push(problem);
+            });
+          }
+          server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': queryResponse }));
+        })
+        .catch(error => {
+          console.log("Error with querying problems: ==========");
+          console.log(error);
+          console.log("=======end of error========");
+          server.respondWithError(response, 500, "Error 500: Internal database error with query");
+        });
     }
   }
 
@@ -257,25 +284,25 @@ class FirestoreDatabase extends Database {
       let queryResponse = [];
       let firebaseQuery = this.session.collection('lessons').orderBy('timeCreated').limit(query.number);
       firebaseQuery.get()
-      .then( snapshot => {
-        if(!snapshot.empty) {
-          snapshot.forEach(doc => {
-            let lesson = doc.data();
-            lesson.timeCreated = lesson.timeCreated;
-            queryResponse.push(lesson);
-          });
-        }
-        server.respondWithData(response, 200, 'application/json', JSON.stringify({'results': queryResponse}));
-      })
-      .catch( error => {
-        console.log("Error with querying lessons: ==========");
-        console.log(error);
-        console.log("=======end of error========");
-        server.respondWithError(response, 500, "Error 500: Internal database error with query");
-      });
+        .then(snapshot => {
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              let lesson = doc.data();
+              lesson.timeCreated = lesson.timeCreated;
+              queryResponse.push(lesson);
+            });
+          }
+          server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': queryResponse }));
+        })
+        .catch(error => {
+          console.log("Error with querying lessons: ==========");
+          console.log(error);
+          console.log("=======end of error========");
+          server.respondWithError(response, 500, "Error 500: Internal database error with query");
+        });
     }
   }
-  
+
   getAllLessonIDs(server, response) {
     let lessonIDs = [];
     let lessonCollectionReference = this.session.collection("lessons");
@@ -315,9 +342,9 @@ class FirestoreDatabase extends Database {
   }
 
 
-// ==========================================================
-// ================== write handling ========================
-// ==========================================================
+  // ==========================================================
+  // ================== write handling ========================
+  // ==========================================================
 
 
 
@@ -326,11 +353,11 @@ class FirestoreDatabase extends Database {
   //
   verifyProblemData(problem) {
     let failed = false;
-    if(problem.startExpression === undefined || typeof(problem.startExpression) !== 'object') {
+    if (problem.startExpression === undefined || typeof (problem.startExpression) !== 'object') {
       return false;
-    } else if (problem.goalExpression === undefined || typeof(problem.goalExpression) !== 'object') {
+    } else if (problem.goalExpression === undefined || typeof (problem.goalExpression) !== 'object') {
       return false;
-    } else if (problem.description !== undefined && typeof(problem.description) !== 'string') {
+    } else if (problem.description !== undefined && typeof (problem.description) !== 'string') {
       return false;
     }
 
@@ -342,13 +369,13 @@ class FirestoreDatabase extends Database {
   //lesson is the lesson object sent by the user
   //
   verifyLessonData(lesson) {
-    if(lesson.creations === undefined || typeof(lesson.creations) !== 'object') {
+    if (lesson.creations === undefined || typeof (lesson.creations) !== 'object') {
       return false;
-    } else if (lesson.description !== undefined && typeof(lesson.description) !== 'string') {
+    } else if (lesson.description !== undefined && typeof (lesson.description) !== 'string') {
       return false;
     }
     for (let i = 0; i < lesson.creations.length; i++) {
-      if (typeof(lesson.creations[i]) !== 'string') {
+      if (typeof (lesson.creations[i]) !== 'string') {
         return false;
       }
     }
@@ -359,7 +386,7 @@ class FirestoreDatabase extends Database {
   //account is the account object sent by the user
   //
   verifyAccountData(account) {
-    if(account.bio !== undefined && !(typeof(account.bio) == 'string')) {
+    if (account.bio !== undefined && !(typeof (account.bio) == 'string')) {
       return false;
     } else if (account.bio.length > this.ACCOUNT_BIO_CHARACTER_LIMIT) {
       return false;
@@ -372,9 +399,9 @@ class FirestoreDatabase extends Database {
   //accountID is either a valid account in the database, or undefined, problem is the data sent from the client, enteredName is a string
   saveProblem(server, response, accountID, problem, enteredName) {
     var self = this;
-    if(this.verifyProblemData(problem)) {
+    if (this.verifyProblemData(problem)) {
       let databaseProblem = {};
-      if(problem.description === undefined) {
+      if (problem.description === undefined) {
         databaseProblem.description = "";
       } else {
         databaseProblem.description = problem.description;
@@ -386,10 +413,19 @@ class FirestoreDatabase extends Database {
 
       let problemReference;
       if (accountID !== undefined) {
-        let ownerAccountReference = this.session.collection("accounts").doc(accountID);
+        let ownerAccountReference
+        try {
+          ownerAccountReference = this.session.collection("accounts").doc(accountID);
+        } catch (error) {
+          console.error("============ Error =============");
+          console.error("Error getting account when saving problem");
+          console.error(error);
+          console.error("==========End of Error =========");
+          server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Account");
+        }
 
         ownerAccountReference.get().then(doc => {
-          if(!doc.exists) {
+          if (!doc.exists) {
             return server.respondWithError(response, 400, "Error 400: Account does not exist in database");
           }
           let ownerAccount = doc.data();
@@ -401,43 +437,43 @@ class FirestoreDatabase extends Database {
           databaseProblem.creatorAccountID = accountID;
           problemReference = this.session.collection("problems").doc(databaseProblem.problemID);
           problemReference.get()
-          .then( doc => {
-            if(doc.exists) { //need to check to see if problem already exists in database, if so, block from overwriting
-              server.respondWithError(response, 400, "problem with that name already exists");
-            } else {
+            .then(doc => {
+              if (doc.exists) { //need to check to see if problem already exists in database, if so, block from overwriting
+                server.respondWithError(response, 400, "problem with that name already exists");
+              } else {
 
-              //atomically write problem & add to account
-              let batch = self.session.batch();
-              batch.set(problemReference, databaseProblem);
-              batch.update(ownerAccountReference, {
-                problems: self.admin.firestore.FieldValue.arrayUnion(databaseProblem.problemID)
-              });
-              batch.commit().then(value => {
-                return server.respondWithData(response, 201, 'text/plain', databaseProblem.problemID);
-              }).catch(error => {
-                console.log("============ Error =============");
-                console.log("Error with batch write in saveProblem()");
-                console.log(error);
-                console.log("==========End of Error =========");
-                return server.respondWithError(response, 500, "Internal Database Error");
-              });
-              
-            }
-          })
-          .catch( error => {
-            server.respondWithError(response, 500, "Error 500: Internal Database Error");
-          });
+                //atomically write problem & add to account
+                let batch = self.session.batch();
+                batch.set(problemReference, databaseProblem);
+                batch.update(ownerAccountReference, {
+                  problems: self.admin.firestore.FieldValue.arrayUnion(databaseProblem.problemID)
+                });
+                batch.commit().then(value => {
+                  return server.respondWithData(response, 201, 'text/plain', databaseProblem.problemID);
+                }).catch(error => {
+                  console.log("============ Error =============");
+                  console.log("Error with batch write in saveProblem()");
+                  console.log(error);
+                  console.log("==========End of Error =========");
+                  return server.respondWithError(response, 500, "Internal Database Error");
+                });
+
+              }
+            })
+            .catch(error => {
+              server.respondWithError(response, 500, "Error 500: Internal Database Error");
+            });
 
 
 
         })
-        .catch(err => {
-          console.log("============ Error =============");
-          console.log("Error posting problem with account");
-          console.log(err);
-          console.log("==========End of Error =========");
-          server.respondWithError(response, 500, "Error 500: Internal Database Error");
-        });
+          .catch(err => {
+            console.log("============ Error =============");
+            console.log("Error posting problem with account");
+            console.log(err);
+            console.log("==========End of Error =========");
+            server.respondWithError(response, 500, "Error 500: Internal Database Error");
+          });
 
       } else {
         problemReference = this.saveProblemWithoutAccount(problemReference, databaseProblem, server, response);
@@ -463,9 +499,9 @@ class FirestoreDatabase extends Database {
       })
       .catch(err => {
         console.log("============ Error =============");
-          console.log("Error posting problem without account");
-          console.log(err);
-          console.log("==========End of Error =========");
+        console.log("Error posting problem without account");
+        console.log(err);
+        console.log("==========End of Error =========");
         server.respondWithError(response, 500, "Error 500: Internal Database Error");
       });
     return problemReference;
@@ -479,20 +515,20 @@ class FirestoreDatabase extends Database {
   saveLessonBatchWrite(server, response, databaseLesson) {
     let batch = this.session.batch();
     let self = this;
-    
-    for(let i = 0; i < databaseLesson.creations.length; i++) {
+
+    for (let i = 0; i < databaseLesson.creations.length; i++) {
       let slashIndex = databaseLesson.creations[i].indexOf('/');
-      let creationType = databaseLesson.creations[i].substring(0,slashIndex);
-      if(creationType === 'problems') {
+      let creationType = databaseLesson.creations[i].substring(0, slashIndex);
+      if (creationType === 'problems') {
         if (databaseLesson.creations[i].indexOf('\\') === -1) {
           return server.respondWithError(response, 400, "Error 400: Cannot create Lesson with a Problem created by a non-member");
         }
-        let problem = this.session.collection("problems").doc(databaseLesson.creations[i].substring(slashIndex+1));
+        let problem = this.session.collection("problems").doc(databaseLesson.creations[i].substring(slashIndex + 1));
         batch.update(problem, {
           ownerLessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
         });
       } else if (creationType === 'lessons') {
-        let lesson = this.session.collection("lessons").doc(databaseLesson.creations[i].substring(slashIndex+1));
+        let lesson = this.session.collection("lessons").doc(databaseLesson.creations[i].substring(slashIndex + 1));
         batch.update(lesson, {
           ownerLessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
         });
@@ -508,20 +544,20 @@ class FirestoreDatabase extends Database {
     batch.update(accountReference, {
       lessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
     });
-    
+
     let lessonReference = this.session.collection("lessons").doc(databaseLesson.lessonID);
     batch.set(lessonReference, databaseLesson);
 
     return batch.commit().then(value => {
       server.respondWithData(response, 201, 'text/plain', databaseLesson.lessonID);
     })
-    .catch(error => {
-      console.log("============ Error =============");
-      console.log("Error with batch posting lesson to database");
-      console.log(error);
-      console.log("==========End of Error =========");
-      server.respondWithError(response, 500, "Error 500: Internal Database Error");
-    })
+      .catch(error => {
+        console.log("============ Error =============");
+        console.log("Error with batch posting lesson to database");
+        console.log(error);
+        console.log("==========End of Error =========");
+        server.respondWithError(response, 500, "Error 500: Internal Database Error");
+      })
   }
 
 
@@ -530,12 +566,12 @@ class FirestoreDatabase extends Database {
   //
   saveLesson(server, response, accountID, lesson, enteredName) {
     let self = this;
-    if(accountID === null || accountID === undefined || typeof(accountID) != 'string') {
+    if (accountID === null || accountID === undefined || typeof (accountID) != 'string') {
       return server.respondWithError(response, 401, "Error 401: Authorization required to post lesson")
     }
-    if(this.verifyLessonData(lesson)) {
+    if (this.verifyLessonData(lesson)) {
       let databaseLesson = {};
-      if(lesson.description === undefined) {
+      if (lesson.description === undefined) {
         databaseLesson.description = "";
       } else {
         databaseLesson.description = lesson.description;
@@ -545,39 +581,46 @@ class FirestoreDatabase extends Database {
       databaseLesson.ownerLessons = [];
       databaseLesson.lessonID = accountID + "\\" + enteredName;
       databaseLesson.creatorAccountID = accountID;
-
-      return this.session.collection("lessons").doc(databaseLesson.lessonID).get()
-      .then(doc => {
-        if(doc.exists) {
-          return server.respondWithError(response, 400, "lesson wtih that name already exists");
-        } else {
-          //first determine if account has too many saved items
-          let ownerAccountReference = this.session.collection("accounts").doc(accountID);
-          ownerAccountReference.get().then(doc => {
-            let ownerAccount = doc.data();
-            let creationCount = ownerAccount.lessons.length + ownerAccount.problems.length;
-            if (creationCount >= self.ACCOUNT_CREATION_LIMIT) {
-              return server.respondWithError(response, 400, "Account already has limit of " + self.ACCOUNT_CREATION_LIMIT + " creations. Delete an old creation to save a new one.")
+      try {
+        return this.session.collection("lessons").doc(databaseLesson.lessonID).get()
+          .then(doc => {
+            if (doc.exists) {
+              return server.respondWithError(response, 400, "lesson wtih that name already exists");
             } else {
-              return self.saveLessonBatchWrite(server, response, databaseLesson);
+              //first determine if account has too many saved items
+              let ownerAccountReference = this.session.collection("accounts").doc(accountID);
+              ownerAccountReference.get().then(doc => {
+                let ownerAccount = doc.data();
+                let creationCount = ownerAccount.lessons.length + ownerAccount.problems.length;
+                if (creationCount >= self.ACCOUNT_CREATION_LIMIT) {
+                  return server.respondWithError(response, 400, "Account already has limit of " + self.ACCOUNT_CREATION_LIMIT + " creations. Delete an old creation to save a new one.")
+                } else {
+                  return self.saveLessonBatchWrite(server, response, databaseLesson);
+                }
+              })
+                .catch(error => {
+                  console.log("============ Error =============");
+                  console.log("Error with getting creator's account in SaveLesson()");
+                  console.log(error);
+                  console.log("==========End of Error =========");
+                  return server.respondWithError(response, 500, "Error 500: Error getting account of user");
+                });
             }
           })
-          .catch( error => {
+          .catch(error => {
             console.log("============ Error =============");
-            console.log("Error with getting creator's account in SaveLesson()");
+            console.log("Error with getting lesson in saveLesson()");
             console.log(error);
             console.log("==========End of Error =========");
-            return server.respondWithError(response, 500, "Error 500: Error getting account of user");
+            return server.respondWithError(response, 500, "Error 500: Internal Database Error");
           });
-        }
-      })
-      .catch(error => {
-        console.log("============ Error =============");
-        console.log("Error with getting lesson in saveLesson()");
-        console.log(error);
-        console.log("==========End of Error =========");
-        return server.respondWithError(response, 500, "Error 500: Internal Database Error");
-      });
+      } catch (error) {
+        console.error("============ Error =============");
+        console.error("Error checking for existing lesson while saving lesson");
+        console.error(error);
+        console.error("==========End of Error =========");
+        server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Lesson Link");
+      }
 
 
     } else {
@@ -588,13 +631,13 @@ class FirestoreDatabase extends Database {
     }
   }
 
-  
+
   //used by addAccount to write account to database
   //
   //
   addAccountIntoDatabase(server, response, account, accountID) {
     if (this.verifyAccountData(account)) {
-  
+
       //make database object to store in database
       let databaseAccount = {};
       databaseAccount.accountID = accountID;
@@ -602,19 +645,27 @@ class FirestoreDatabase extends Database {
       databaseAccount.bio = account.bio;
       databaseAccount.lessons = [];
       databaseAccount.problems = [];
-  
+
       //send query to database
-      this.session.collection("accounts").doc(accountID).set(databaseAccount)
-      .then(function() {
-        server.respondWithData(response, 201, 'text/plain', "account " + accountID + " successfully created");
-      })
-      .catch(err => {
-        console.log(" =================== ");
-        console.log("Error posting account");
-        console.log(err);
-        console.log(" =================== ");
-        server.respondWithError(response, 500, "Error 500: Internal Database Error");
-      });
+      try {
+        this.session.collection("accounts").doc(accountID).set(databaseAccount)
+          .then(function () {
+            server.respondWithData(response, 201, 'text/plain', "account " + accountID + " successfully created");
+          })
+          .catch(err => {
+            console.log(" =================== ");
+            console.log("Error posting account");
+            console.log(err);
+            console.log(" =================== ");
+            server.respondWithError(response, 500, "Error 500: Internal Database Error");
+          });
+      } catch (error) {
+        console.error("============ Error =============");
+        console.error("Error Setting Account");
+        console.error(error);
+        console.error("==========End of Error =========");
+        server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Account Details");
+      }
     } else {
       server.respondWithError(response, 400, "Error 400: Account data not formatted correctly");
     }
@@ -624,23 +675,31 @@ class FirestoreDatabase extends Database {
   //used to add account to database
   addAccount(server, response, account, accountID) {
     let self = this;
-    return this.session.collection("accounts").doc(accountID).get()
-    .then(doc => {
-      if(doc.exists) {
-        return server.respondWithError(response, 400, 'text/plain', "account already exists");
-      } else {
-        return self.addAccountIntoDatabase(server,response,account,accountID);
-      }
-    })
-    .catch(error => {
-      console.log("============ Error =============");
-      console.log("Error with getting account in addAccount()");
-      console.log(error);
-      console.log("==========End of Error =========");
-      return server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Server Error");
-      //return self.addAccountIntoDatabase(server,response,account,accountID); //what??
-    })
-    
+    try {
+      return this.session.collection("accounts").doc(accountID).get()
+        .then(doc => {
+          if (doc.exists) {
+            return server.respondWithError(response, 400, 'text/plain', "account already exists");
+          } else {
+            return self.addAccountIntoDatabase(server, response, account, accountID);
+          }
+        })
+        .catch(error => {
+          console.log("============ Error =============");
+          console.log("Error with getting account in addAccount()");
+          console.log(error);
+          console.log("==========End of Error =========");
+          return server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Server Error");
+          //return self.addAccountIntoDatabase(server,response,account,accountID); //what??
+        })
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error checking for existing account while posting account");
+      console.error(error);
+      console.error("==========End of Error =========");
+      server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Account");
+    }
+
   }
 
 
@@ -661,39 +720,47 @@ class FirestoreDatabase extends Database {
     let self = this;
     let unassembledLink = problemID.split('/');
     let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
-    return this.session.collection("problems").doc(correctLink).get()
-    .then(doc => {
-      if(!doc.exists) {
-        return -1;
-      }
+    try {
+      return this.session.collection("problems").doc(correctLink).get()
+        .then(doc => {
+          if (!doc.exists) {
+            return -1;
+          }
 
-      //make deletes atomic
-      let batch = self.session.batch();
-      //remove problem from lessons that it exists in
-      let problem = doc.data();
-      problem.ownerLessons.forEach(lessonID => {
-        let lessonReference = self.session.collection("lessons").doc(lessonID);
-        batch.update(lessonReference, {
-          creations: self.admin.firestore.FieldValue.arrayRemove("problems/" + correctLink)
+          //make deletes atomic
+          let batch = self.session.batch();
+          //remove problem from lessons that it exists in
+          let problem = doc.data();
+          problem.ownerLessons.forEach(lessonID => {
+            let lessonReference = self.session.collection("lessons").doc(lessonID);
+            batch.update(lessonReference, {
+              creations: self.admin.firestore.FieldValue.arrayRemove("problems/" + correctLink)
+            });
+          });
+
+          //remove problem
+          batch.delete(doc.ref);
+
+          //commit all deletes/updates
+          return batch.commit()
+            .then(result => {
+              return;
+            })
+            .catch(error => {
+              return;
+            });
+        })
+
+        .catch(error => {
+          return;
         });
-      });
-
-      //remove problem
-      batch.delete(doc.ref);
-
-      //commit all deletes/updates
-      return batch.commit()
-      .then(result => {
-        return;
-      })
-      .catch(error => {
-        return;
-      });
-    })
-
-    .catch(error => {
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error getting problem in deleteUserProblem");
+      console.error(error);
+      console.error("==========End of Error =========");
       return;
-    });
+    }
   }
 
 
@@ -705,57 +772,68 @@ class FirestoreDatabase extends Database {
     //is problem deletable by user
     let unassembledLink = problemID.split('/');
     let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
-    this.session.collection("problems").doc(correctLink).get()
-    .then(doc => {
-      if(!doc.exists) {
-        return server.respondWithError(response, 404, "Error 404: Problem not found");
-      }
+    let problemReference;
+    try {
+      problemReference = this.session.collection("problems").doc(correctLink)
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error with gettting problem in deleteProblem");
+      console.error(error);
+      console.error("==========End of Error =========");
+      return server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Problem Link");
+    }
 
-      let problem = doc.data();
-      if(problem.creatorAccountID !== accountID) {
-        return server.respondWithError(response, 403, "Error 403: Invalid Authorization to delete problem")
-      }
+    problemReference.get()
+      .then(doc => {
+        if (!doc.exists) {
+          return server.respondWithError(response, 404, "Error 404: Problem not found");
+        }
 
-      //make deletes atomic
-      let batch = self.session.batch();
-      //remove problem from lessons that it exists in
-      problem.ownerLessons.forEach(lessonID => {
-        let lessonReference = self.session.collection("lessons").doc(lessonID);
-        batch.update(lessonReference, {
-          creations: self.admin.firestore.FieldValue.arrayRemove("problems/" + correctLink)
+        let problem = doc.data();
+        if (problem.creatorAccountID !== accountID) {
+          return server.respondWithError(response, 403, "Error 403: Invalid Authorization to delete problem")
+        }
+
+        //make deletes atomic
+        let batch = self.session.batch();
+        //remove problem from lessons that it exists in
+        problem.ownerLessons.forEach(lessonID => {
+          let lessonReference = self.session.collection("lessons").doc(lessonID);
+          batch.update(lessonReference, {
+            creations: self.admin.firestore.FieldValue.arrayRemove("problems/" + correctLink)
+          });
         });
-      });
 
-      //remove problem from list of account's creations
-      let accountReference = self.session.collection("accounts").doc(accountID);
-      batch.update(accountReference, {
-        problems: self.admin.firestore.FieldValue.arrayRemove(correctLink)
-      });
+        //remove problem from list of account's creations
+        let accountReference = self.session.collection("accounts").doc(accountID);
+        batch.update(accountReference, {
+          problems: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+        });
 
-      //remove problem
-      batch.delete(doc.ref);
+        //remove problem
+        batch.delete(doc.ref);
 
-      //commit all deletes/updates
-      batch.commit()
-      .then(result => {
-        return server.respondWithData(response, 200, 'text/plain', problemID + " deleted successfully");
+        //commit all deletes/updates
+        batch.commit()
+          .then(result => {
+            return server.respondWithData(response, 200, 'text/plain', problemID + " deleted successfully");
+          })
+          .catch(error => {
+            console.log("============ Error =============");
+            console.log("Error with comitting batch delete in deleteProblem()");
+            console.log(error);
+            console.log("==========End of Error =========");
+            return server.respondWithError(response, 500, 'Error 500: Internal Server Error');
+          });
       })
+
       .catch(error => {
         console.log("============ Error =============");
-        console.log("Error with comitting batch delete in deleteProblem()");
+        console.log("Error with getting problem in deleteProblem())");
         console.log(error);
         console.log("==========End of Error =========");
-        return server.respondWithError(response, 500, 'Error 500: Internal Server Error');
+        return server.respondWithError(response, 500, "Error 500: Internal Server Error");
       });
-    })
-
-    .catch(error => {
-      console.log("============ Error =============");
-      console.log("Error with getting problem in deleteProblem())");
-      console.log(error);
-      console.log("==========End of Error =========");
-      return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    });
   }
 
 
@@ -766,60 +844,70 @@ class FirestoreDatabase extends Database {
   deleteUserLesson(lessonID) {
     let self = this;
 
-    
+
     let unassembledLink = lessonID.split('/');
     let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
-    return this.session.collection("lessons").doc(correctLink).get()
-    .then(doc => {
-      if(!doc.exists) {
-        return;
-      }
-      let lesson = doc.data()
-      
-      //make deletes atomic
-      let batch = self.session.batch();
-
-      for(let i = 0; i < lesson.creations.length; i++) {
-        let databaseLink = lesson.creations[i];
-        let splitLink = databaseLink.split('/'); //since it should be "problems/lksjdflsdkjf" OR "lessons/laksjdflasdjf"
-        if (splitLink[0] === "problems") {
-          let problemReference = self.session.collection("problems").doc(splitLink[1]);
-          batch.update(problemReference, {
-            ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
-          });
-        } else if (splitLink[0] === "lessons") {
-          let problemReference = self.session.collection("lessons").doc(splitLink[1]);
-          batch.update(problemReference, {
-            ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
-          });
-        } else {
+    let lessonRef;
+    try {
+      lessonRef = this.session.collection("lessons").doc(correctLink)
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error getting lesson in deleteUserLesson");
+      console.error(error);
+      console.error("==========End of Error =========");
+      return;
+    }
+    lessonRef.get()
+      .then(doc => {
+        if (!doc.exists) {
           return;
         }
-      }
+        let lesson = doc.data()
 
-      //remove lesson from lessons that it exists in
-      lesson.ownerLessons.forEach(ownerLessonID => {
-        let lessonReference = self.session.collection("lessons").doc(ownerLessonID);
-        batch.update(lessonReference, {
-          creations: self.admin.firestore.FieldValue.arrayRemove("lessons/" + correctLink)
+        //make deletes atomic
+        let batch = self.session.batch();
+
+        for (let i = 0; i < lesson.creations.length; i++) {
+          let databaseLink = lesson.creations[i];
+          let splitLink = databaseLink.split('/'); //since it should be "problems/lksjdflsdkjf" OR "lessons/laksjdflasdjf"
+          if (splitLink[0] === "problems") {
+            let problemReference = self.session.collection("problems").doc(splitLink[1]);
+            batch.update(problemReference, {
+              ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+            });
+          } else if (splitLink[0] === "lessons") {
+            let problemReference = self.session.collection("lessons").doc(splitLink[1]);
+            batch.update(problemReference, {
+              ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+            });
+          } else {
+            return;
+          }
+        }
+
+        //remove lesson from lessons that it exists in
+        lesson.ownerLessons.forEach(ownerLessonID => {
+          let lessonReference = self.session.collection("lessons").doc(ownerLessonID);
+          batch.update(lessonReference, {
+            creations: self.admin.firestore.FieldValue.arrayRemove("lessons/" + correctLink)
+          });
         });
-      });
 
-      //remove lesson
-      batch.delete(doc.ref);
+        //remove lesson
+        batch.delete(doc.ref);
 
-      //commit batched deletes/updates
-      return batch.commit()
-      .then(result => {
-        return;
+        //commit batched deletes/updates
+        return batch.commit()
+          .then(result => {
+            return;
+          })
+          .catch(error => {
+            return;
+          })
       })
       .catch(error => {
         return;
       })
-    })
-    .catch(error => {
-      return;
-    })
   }
 
 
@@ -828,70 +916,78 @@ class FirestoreDatabase extends Database {
   //
   deleteLesson(server, response, accountID, lessonID) {
     let self = this;
+    try {
+      //is lesson deletable by user
+      let unassembledLink = lessonID.split('/');
+      let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
+      this.session.collection("lessons").doc(correctLink).get()
+        .then(doc => {
+          if (!doc.exists) {
+            return server.respondWithError(response, 404, "Error 404: Problem not found");
+          }
+          let lesson = doc.data()
+          if (accountID !== lesson.creatorAccountID) {
+            return server.respondWithError(response, 403, "Error 403: User does not have permission to delete file");
+          }
 
-    //is lesson deletable by user
-    let unassembledLink = lessonID.split('/');
-    let correctLink = unassembledLink.reduce((assembler, part) => assembler + "\\" + part);
-    this.session.collection("lessons").doc(correctLink).get()
-    .then(doc => {
-      if(!doc.exists) {
-        return server.respondWithError(response, 404, "Error 404: Problem not found");
-      }
-      let lesson = doc.data()
-      if(accountID !== lesson.creatorAccountID) {
-        return server.respondWithError(response, 403, "Error 403: User does not have permission to delete file");
-      }
+          //make deletes atomic
+          let batch = self.session.batch();
 
-      //make deletes atomic
-      let batch = self.session.batch();
-
-      lesson.creations.forEach(databaseLink => {
-        let splitLink = databaseLink.split('/'); //since it should be "problems/lksjdflsdkjf" OR "lessons/laksjdflasdjf"
-        if (splitLink[0] === "problems") {
-          let problemReference = self.session.collection("problems").doc(splitLink[1]);
-          return batch.update(problemReference, {
-            ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+          lesson.creations.forEach(databaseLink => {
+            let splitLink = databaseLink.split('/'); //since it should be "problems/lksjdflsdkjf" OR "lessons/laksjdflasdjf"
+            if (splitLink[0] === "problems") {
+              let problemReference = self.session.collection("problems").doc(splitLink[1]);
+              return batch.update(problemReference, {
+                ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+              });
+            } else if (splitLink[0] === "lessons") {
+              let problemReference = self.session.collection("lessons").doc(splitLink[1]);
+              return batch.update(problemReference, {
+                ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+              });
+            } else {
+              return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+            }
           });
-        } else if (splitLink[0] === "lessons") {
-          let problemReference = self.session.collection("lessons").doc(splitLink[1]);
-          return batch.update(problemReference, {
-            ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+
+          //remove lesson from lessons that it exists in
+          lesson.ownerLessons.forEach(ownerLessonID => {
+            let lessonReference = self.session.collection("lessons").doc(ownerLessonID);
+            batch.update(lessonReference, {
+              creations: self.admin.firestore.FieldValue.arrayRemove("lessons/" + correctLink)
+            });
           });
-        } else {
-          return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-        }
-      });
 
-      //remove lesson from lessons that it exists in
-      lesson.ownerLessons.forEach(ownerLessonID => {
-        let lessonReference = self.session.collection("lessons").doc(ownerLessonID);
-        batch.update(lessonReference, {
-          creations: self.admin.firestore.FieldValue.arrayRemove("lessons/" + correctLink)
-        });
-      });
+          //remove lesson from list of account's creations
+          let accountReference = self.session.collection("accounts").doc(accountID);
+          batch.update(accountReference, {
+            lessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+          });
 
-      //remove lesson from list of account's creations
-      let accountReference = self.session.collection("accounts").doc(accountID);
-      batch.update(accountReference, {
-        lessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
-      });
+          //remove lesson
+          batch.delete(doc.ref);
 
-      //remove lesson
-      batch.delete(doc.ref);
+          //commit batched deletes/updates
+          batch.commit()
+            .then(result => {
+              server.respondWithData(response, 200, 'text/plain', lessonID + " deleted successfully");
+            })
+            .catch(error => {
+              server.respondWithError(response, 500, 'Error 500: Internal Server Error');
+            })
+        })
+        .catch(error => {
+          server.respondWithError(response, 500, "Error 500: Internal Server Error");
+        })
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error inside deleteLesson");
+      console.error(error);
+      console.error("==========End of Error =========");
+      server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Link");
+    }
 
-      //commit batched deletes/updates
-      batch.commit()
-      .then(result => {
-        server.respondWithData(response, 200, 'text/plain', lessonID + " deleted successfully");
-      })
-      .catch(error => {
-        server.respondWithError(response, 500, 'Error 500: Internal Server Error');
-      })
-    })
-    .catch(error => {
-      server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    })
-      
+
   }
 
 
@@ -900,48 +996,57 @@ class FirestoreDatabase extends Database {
   //
   deleteAccount(server, response, accountID) {
     let self = this;
-    return this.session.collection("accounts").doc(accountID).get()
-    .then(doc => {
-      let account = doc.data();
-      account.lessons.forEach(lesson => {
-        self.deleteUserLesson(lesson);
-      });
-      account.problems.forEach(problem => {
-        self.deleteUserProblem(problem);
-      });
+    try {
+      return this.session.collection("accounts").doc(accountID).get()
+        .then(doc => {
+          let account = doc.data();
+          account.lessons.forEach(lesson => {
+            self.deleteUserLesson(lesson);
+          });
+          account.problems.forEach(problem => {
+            self.deleteUserProblem(problem);
+          });
 
-      doc.ref.delete()
-      .then(results => {
-        return server.respondWithData(response, 200, 'text/plain', "account deleted successfully");
-      })
-      .catch(error => {
-        console.log("============ Error =============");
-        console.log("Error with deleting account in deleteAccount()");
-        console.log(error);
-        console.log("==========End of Error =========");
-        return server.respondWithError(response, 500, "Error 500: Interal Server Error");
-      })
+          doc.ref.delete()
+            .then(results => {
+              return server.respondWithData(response, 200, 'text/plain', "account deleted successfully");
+            })
+            .catch(error => {
+              console.log("============ Error =============");
+              console.log("Error with deleting account in deleteAccount()");
+              console.log(error);
+              console.log("==========End of Error =========");
+              return server.respondWithError(response, 500, "Error 500: Interal Server Error");
+            })
 
-    })
-    .catch(error => {
-      console.log("============ Error =============");
-      console.log("Error with getting account in deleteAccount()");
-      console.log(error);
-      console.log("==========End of Error =========");
-      return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-    });
-  
+        })
+        .catch(error => {
+          console.log("============ Error =============");
+          console.log("Error with getting account in deleteAccount()");
+          console.log(error);
+          console.log("==========End of Error =========");
+          return server.respondWithError(response, 500, "Error 500: Internal Server Error");
+        });
+
+    } catch (error) {
+      console.error("============ Error =============");
+      console.error("Error inside deleteAccount");
+      console.error(error);
+      console.error("==========End of Error =========");
+      server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Account");
+    }
+
   }
 
 
   //dev function. DO NOT USE in server code
   deleteFile(collection, file) {
     this.session.collection(collection).doc(file).delete()
-    .then(value => {return;})
-    .catch(error => {
-      console.log("failed to delete " + collection + "/" + file);
-      return;
-    })
+      .then(value => { return; })
+      .catch(error => {
+        console.log("failed to delete " + collection + "/" + file);
+        return;
+      })
   }
 
 
