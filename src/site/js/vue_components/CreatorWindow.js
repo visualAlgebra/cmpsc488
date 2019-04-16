@@ -1,6 +1,7 @@
 import * as M from "materialize-css";
 import ManipulatorWindow from "./ManipulatorWindow";
 import InsertionButtons from "./InsertionButtons";
+import {Mouse} from "../gui";
 
 export default {
 
@@ -8,7 +9,6 @@ export default {
 
   props: [
       "useCreatedTree",
-      "mouse",
       "tree",
   ],
 
@@ -61,7 +61,14 @@ export default {
     return {
       instance: null,
       workTree: this.tree,
+      mouse: null,
     };
+  },
+
+  created() {
+    // Create a separate Mouse instance, don't use the Mouse instance from `creator_vue.js`!
+    // This is so that `this.mouse` targets `this` (specifically, can access `this.workTree`).
+    this.mouse = new Mouse(this);
   },
 
   computed: {

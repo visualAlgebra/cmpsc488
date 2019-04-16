@@ -2,7 +2,7 @@ import * as M from "materialize-css";
 import {LessonInfo, ProblemInfo} from "../expression_tree";
 
 export default {
-  name: "LessonNavigationModal", props:["lesson"], template: `
+  name: "LessonNavigationModal", props:["lesson", "problem", "setNextProblemURL"], template: `
   <div id="lessonModal" class="modal modal-fixed-footer" v-if="lesson">
       <div class="modal-content">
         <h4 class="black-text">Lesson: {{lesson.lessonID}}</h4>
@@ -12,12 +12,18 @@ export default {
             <div class="collapsible-body">
               <ul class="collapsible black-text">
                 <li v-for="prob in dataProblems">
-                  <div class="collapsible-header black-text">Problem: {{prob.problemID}}
+                  <div v-if="prob.problemID!==problem" class="collapsible-header black-text">Problem: {{prob.problemID}}
                     <a :href="url+prob.problemID+lesson" class="secondary-content right">
                       <i class="material-icons">send</i>
                     </a>
                   </div>
-                  <div class="collapsible-body black-text"><span>win? (there is a bug here): {{prob.description}}</span></div>
+                  <div v-if="prob.problemID!==problem" class="collapsible-body black-text"><span>win? (there is a bug here): {{prob.description}}</span></div>
+                  <div v-if="prob.problemID===problem" class="collapsible-header black-text blue">Problem: {{prob.problemID}}
+                    <a :href="url+prob.problemID+lesson" class="secondary-content right">
+                      <i class="material-icons">send</i>
+                    </a>
+                  </div>
+                  <div v-if="prob.problemID===problem" class="collapsible-body black-text blue"><span>win? (there is a bug here): {{prob.description}}</span></div>
                 </li>
               </ul>
             </div>
@@ -43,7 +49,7 @@ export default {
   </div>  
   `,data(){
     return {
-      dataProblems:[], dataLessons:[], displayProblems:false, displayLessons:false, url:'http://localhost:8080/manipulator/problems/', lessonUrl:'http://localhost:8080/lesson-view/', user:null, lessonName:null,
+      dataProblems:[], dataLessons:[], displayProblems:false, displayLessons:false, url:'http://localhost:8080/manipulator/problems/', lessonUrl:'http://localhost:8080/lesson-view/', user:null, lessonName:null,  foundNextProb:false
     }
   },
   methods: {
@@ -63,6 +69,13 @@ export default {
         if (this.lesson.creations[creation].lessonID === undefined) {
           let prob = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
           this.dataProblems.push(prob);
+          if(this.foundNextProb){
+            this.setNextProblemURL("http://localhost:8080/manipulator/problems/"+prob.problemID);
+            this.foundNextProb=false;
+          }
+          if(prob.problemID===this.problem){
+            this.foundNextProb=true;
+          }
         } else {
           let les = new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description);
           this.dataLessons.push(les);

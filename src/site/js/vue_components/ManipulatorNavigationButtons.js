@@ -11,7 +11,7 @@ import TutorialModal from "./TutorialModal";
 
 export default {
   name: "ManipulatorNavigationButtons",
-  props: ["dataFunc", "restart", "setWorkTree", "setWorkTreeWithHistory", "lessonID"],
+  props: ["dataFunc", "restart", "setWorkTree", "setWorkTreeWithHistory", "lessonID", "problemID", "setNextProblemURL"],
   template: `
   <div>
     <div class="row spaced-out-row">
@@ -64,7 +64,7 @@ export default {
       lesson:null, displayHelper:false,
     };
   }, mounted(){
-    if(this.lessonID!==null){
+    if(this.lessonID!==null&&this.lessonID.length!==0){
       get_lesson_from_db(this.lessonID, this.initLessonDropdown);
     }
   },
