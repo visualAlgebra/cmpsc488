@@ -10,7 +10,7 @@ export default {
 
   template: `
     <div>
-      <a class="waves-effect waves-light btn btn-floating modal-trigger" data-target="goalModal">Goal</a>
+      <a id="goalBtn" class="waves-effect waves-light btn btn-floating modal-trigger" data-target="goalModal">Goal</a>
       <div id="goalModal" class="modal modal-fixed-footer">
         <div class="modal-content">
           <SingleExpressionDisplay :tree="tree"></SingleExpressionDisplay>

@@ -3,3 +3,8 @@
   background-color: deepskyblue;
   overflow:auto;
 }
+#goalBtn{
+  position: fixed;
+  bottom:50px;
+  right:50px;
+}
