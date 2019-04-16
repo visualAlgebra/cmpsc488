@@ -241,6 +241,7 @@ export class Tag extends ExpressionTree {
   }
 
   equals(that) {
+    if (that === undefined || that === null) return false;
     if (that.kind === "tag") {
       if (
         this.orientation !== that.orientation ||
@@ -290,6 +291,7 @@ export class Variable extends ExpressionTree {
   }
 
   equals(that) {
+    if (that === undefined || that === null) return false;
     if (!(that instanceof Variable)) return false;
     return this.value === that.value;
   }
@@ -306,6 +308,7 @@ export class Literal extends ExpressionTree {
   }
 
   equals(that) {
+    if (that === undefined || that === null) return false;
     if (that.kind !== ExprTreeKind.Lit) return false;
     return this.value === that.value;
   }
