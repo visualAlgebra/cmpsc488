@@ -39,13 +39,14 @@ export default {
 
   methods: {
     handleDragStart(_data, event) {
+      event.stopPropagation();
       if (this.insertable) {
         this.mouse.mode = MouseMode.Insertion;
       }
-      event.stopPropagation();
     },
 
-    handleDrop(data) {
+    handleDrop(data, event) {
+      event.stopPropagation();
       this.mouse.eventSource = data;
       this.mouse.eventDest = this.guiObj;
       this.mouse.dragDetected();
