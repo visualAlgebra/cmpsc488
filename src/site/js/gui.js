@@ -7,6 +7,7 @@ import {
   CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
   QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
 } from "./algebraic_actions";
+import * as M from "materialize-css";
 
 
 // Given a Tag instance, it will return the `n`th "child" of that tag where the
@@ -211,8 +212,11 @@ export class Mouse {
         console.log("Factoring", x, "from", y);
 
         this.redisplayExpressionTree('Extract Factor');
-      }     
+      } else {
+        M.toast({ html: "Sorry, I don't understand!" });
+      }
     } catch (error) {
+      M.toast({ html: "Uh-oh, an error occurred..." });
       console.error("An invalid action has occured\n", error);
     }
 

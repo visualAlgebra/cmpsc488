@@ -2,6 +2,18 @@
     display: flex;
 }
 
-.insertion-btn {
+.insertion-btn-row > * {
     margin: auto;
+}
+
+.creator-insertion-btn {
+    background: #777;
+    border-radius: 0.5rem;
+    padding: 0.5rem !important;
+
+    transition: 0.2s;
+}
+
+.creator-insertion-btn:hover {
+    background: #aaa;
 }

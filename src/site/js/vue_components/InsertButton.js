@@ -1,40 +1,48 @@
-import {ClickTargetKind, MouseState} from "../gui";
+import {ExpressionTree as JsExpressionTree} from "../expression_tree";
+import {Mouse} from "../gui";
+import ExpressionTree from "./ExpressionTree";
 
 export default {
   name: "InsertButton",
 
   props: {
-    clickTargetKind: String,
+    tree: JsExpressionTree,
+    mouse: Mouse,
+    clickable: Boolean,
   },
 
   template: `
-<button
+<div
   v-on="listeners"
-  class="btn waves-effect waves-light"
+  :class="classes"
 >
-  <i class="material-icons left">add</i>
-  <slot></slot>
-</button>
+  <ExpressionTree
+    :tree="tree"
+    :interactive="!clickable"
+    :mouse="mouse"
+  ></ExpressionTree>
+</div>
   `,
 
-  data: () => ({
-    listeners: {
-      mousedown(e) {
-        e.stopPropagation();
-        if (this.mouse.state === MouseState.Idle) {
-          this.mouse.state = MouseState.Dragging;
-          this.mouse.eventSource = {
-            kind: ClickTargetKind.InsertionButton,
-            tree: this.tree,
-          };
-        }
-      },
-
-      mouseup(e) {
-        e.stopPropagation();
-        this.mouse.reset();
-      },
+  computed: {
+    listeners() {
+      return (this.clickable) ? {
+        click: () => this.$emit("click", this.tree)
+      } : {};
     },
-  }),
 
+    classes() {
+      return (this.clickable) ? {
+        "col": true,
+        "creator-insertion-btn": true,
+        "pulse": true,
+      } : {
+        "col": true,
+      };
+    },
+  },
+
+  components: {
+    ExpressionTree,
+  },
 }

@@ -17,46 +17,46 @@ export default {
     <div class="row spaced-out-row">
       <a class="tab waves-effect waves-light btn col modal-trigger" v-on:click="displayHelper=true" data-target="helperAIModal">
           <i class="material-icons left">blur_on</i>
-          Hint
+          <span class="truncate">Hint</span>
       </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="share()">
           <i class="material-icons left">share</i>
-          Share
+          <span class="truncate">Share</span>
       </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="restartClear()">
           <i class="material-icons left">rotate_left</i>
-          Restart
+         <span class="truncate">Restart</span>
       </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="undo()">
           <i class="material-icons left">undo</i>
-          Undo
+          <span class="truncate">Undo</span>
       </a>
       <a class="tab waves-effect waves-light btn col" v-on:click="redo()">
           <i class="material-icons left">redo</i>
-          Redo
+          <span class="truncate">Redo</span>
       </a>
       <a v-if="lessonID" class="tab waves-effect waves-light btn col modal-trigger" data-target="lessonModal">
           <i class="material-icons left">folder</i>
-          {{lessonID}}
+          <span class="truncate">Lesson</span>
       </a>
       <a class="tab waves-effect waves-light btn col modal-trigger" data-target="algebraicModal">
           <i class="material-icons left">info</i>
-          Reference
+          <span class="truncate">Reference</span>
       </a>
       <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
           <i class="material-icons left">history</i>
-          History
+          <span class="truncate">History</span>
       </a>
       <a class="tab waves-effect waves-light btn col modal-trigger" data-target="tutModal">
           <i class="material-icons left">help</i>
-          Tutorial
+          <span class="truncate">Tutorial</span>
       </a>  
-      <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
-      <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
-      <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
-      <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:closeHelper="closeHelper"></HelperAIModal>
-      <TutorialModal></TutorialModal>
     </div>
+    <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:closeHelper="closeHelper"></HelperAIModal>
+    <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
+    <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
+    <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
+    <TutorialModal></TutorialModal>
   </div>  
   `,
   data() {

@@ -29,7 +29,7 @@ export default {
   @dblclick="center()"
 >
   <SvgPanZoom
-    :maxZoom="3"
+    :maxZoom="5"
     :minZoom="0.5"
     :zoomScaleSensitivity="0.1"
     :dblClickZoomEnabled="false"

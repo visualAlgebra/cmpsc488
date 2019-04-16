@@ -44,15 +44,15 @@ export const creator_vue=new Vue({
   </div>
   `,
   data: () => ({
-    stage: "build",display: true,workTree: null,createdProblem:[null,null], desc:"",time:"",mouse: new Mouse(null), lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
+    stage: "build", display: true,workTree: null,createdProblem:[null,null], desc:"",time:"",mouse: null, lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
   }), created(){
     addListenerForUser(this.oauth_user_getter);
+    this.mouse = new Mouse(this);
   }, mounted() {
     M.AutoInit();
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
     }
-    this.mouse = new Mouse(this);
   },
   methods: {
     oauth_user_getter(user){
@@ -101,6 +101,7 @@ export const creator_vue=new Vue({
     }, distribute(res, code) {
       if(code===2) {//start
         this.workTree = Deserialize(res);
+        console.log("ADFASDFASDF", this.workTree);
         this.display = true;
       }
     }, setWorkTree(tree) {

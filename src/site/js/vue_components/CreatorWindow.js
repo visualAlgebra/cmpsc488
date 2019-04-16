@@ -20,11 +20,16 @@ export default {
   <div class="modal-content">
     <InsertionButtons
       :mouse="mouse"
+      :clickFirstNode="workTree === null"
+      :chooseRootNode="handleRootNodeSelection"
     ></InsertionButtons>
-    <div class="row" style="display: flex;">
+    <div
+      v-if="workTree === null"
+      class="row"
+      style="display: flex;"
+    >
       <div class="col" style="margin: auto; margin-top: 10%;">
         <h5
-          v-if="workTree === null"
           class="grey-text lighten-2"
         >
           <i>
@@ -37,7 +42,7 @@ export default {
       v-if="instance && instance.isOpen && workTree !== null"
       :tree="workTree"
       :mouse="mouse"
-      :height="'200px'"
+      :height="'300px'"
     ></ManipulatorWindow>
   </div>
   <div class="modal-footer">
@@ -46,27 +51,27 @@ export default {
       :class="closeButtonClasses"
     >
       Use as Start
+      <i class="material-icons right">navigate_next</i>
     </button>
   </div>
 </div>
   `,
 
   data() {
-    const tree = this.tree;
     return {
       instance: null,
-      workTree: tree,
+      workTree: this.tree,
     };
   },
 
   computed: {
     closeButtonClasses() {
-      const disabled = this.tree === null;
       return {
-        "waves-effect": true,
-        "waves-green": true,
         "btn-flat": true,
-        disabled,
+        "green": true,
+        "white-text": true,
+        "waves-effect": true,
+        disabled: this.workTree === null,
       };
     },
   },
@@ -83,10 +88,15 @@ export default {
     openModal() {
       this.instance.open();
     },
+
     closeModal() {
       this.instance.close();
       this.useCreatedTree(this.workTree);
     },
+
+    handleRootNodeSelection(tree) {
+      this.workTree = tree;
+    }
   },
 
   components: {
