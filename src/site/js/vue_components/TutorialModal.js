@@ -12,8 +12,8 @@ export default {
       <li class="waves-effect"><a href="#!" v-on:click="setTut(5)">5</a></li>
     </ul>
     <div class="modal-content">
-      <h4>Tutorial</h4>
-      <img src="http://localhost:8080/src/site/assets/com_swap_160.gif">
+      < id="tutTitle" h4>Tutorial</h4>
+      <img id="tutImg" src="http://localhost:8080/src/site/assets/com_swap_160.gif">
       <p id="tutText" ></p>
     </div>
     <div class="modal-footer">
@@ -32,18 +32,21 @@ export default {
     next(){
       if(this.index < this.tutMessages.length) this.index++;
       this.setText();
+      this.changeImg();
     }, back() {
       if (this.index > 0) this.index--;
       this.setText();
+      this.changeImg();
     }, setTut(i) {
       this.tutNum = i;
       this.index = 0;
-      this.tutMessages = determineProblem(this.tutNum)
+      this.tutMessages = determineProblem(this.tutNum);
       this.setText();
+      this.changeImg();
     }, setText() {
       $("#tutText").text(this.tutMessages[this.index]);
     }, changeImg() {
-      
+      document.getElementById("tutImg").setAttribute("src", "http://localhost:8080/src/site/assets/com_swap_225.gif")
     }
   }
 }
