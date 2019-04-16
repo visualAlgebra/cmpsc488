@@ -544,7 +544,7 @@ export class CombineFrac {
     let divisor = this.sibling1.SE;
     
     let newFrac = new Tag(Orientation.NS, [dividendTag], divisor);
-    parent.replace(this.sibling2, newFrac, this.quad1);
+    parent.replace(this.sibling2, newFrac, this.quad2);
     parent.remove(this.sibling1, this.quad1);
 
   }
