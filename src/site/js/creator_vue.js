@@ -9,7 +9,7 @@ import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";
 import InvalidPage from "./vue_components/InvalidPage";
 import {addListenerForUser, signIn} from "./user_system";
-import CreateProblemModal from "./vue_components/CreateProblemModal";
+import PublishProblemModal from "./vue_components/PublishProblemModal";
 import CreatorWindow from "./vue_components/CreatorWindow";
 
 export const creator_vue=new Vue({
@@ -34,12 +34,12 @@ export const creator_vue=new Vue({
       :tree="workTree"
       :mouse="mouse"
     ></ManipulatorWindow>
-    <CreateProblemModal v-if="finish" v-bind:closeFinish="closeFinish"></CreateProblemModal>
     <CreatorWindow
       v-if="stage === 'build'"
       :tree="workTree"
       :useCreatedTree="setWorkTree"
     ></CreatorWindow>
+    <PublishProblemModal v-if="finish" v-bind:closeFinish="closeFinish"></PublishProblemModal>
   </div>
   `,
   data: () => ({
@@ -113,7 +113,7 @@ export const creator_vue=new Vue({
     CreatorNavigationButtons,
     ManipulatorWindow,
     InvalidPage,
-    CreateProblemModal,
+    PublishProblemModal,
     CreatorWindow,
   },
 });

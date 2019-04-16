@@ -1,7 +1,7 @@
 import * as M from "materialize-css";
 
 export default {
-  name: "CreateProblemModal", props: ["closeFinish"], template: `
+  name: "PublishProblemModal", props: ["closeFinish"], template: `
     <div id="finishProblemModal" class="modal">
       <div class="modal-content">
         <h4 class="black-text">Finish making problem:</h4>
