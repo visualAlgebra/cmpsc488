@@ -1,6 +1,6 @@
 import * as M from "materialize-css";
 import {post_problem_from_site} from "../database_management";
-import {compress_string_js} from "../expression_tree";
+import {compress_string_js, ProblemInfo} from "../expression_tree";
 
 export default {
   name: "PublishProblemModal", props: ["closeFinish", "createdProblem"], template: `

@@ -19,11 +19,11 @@ export const creator_vue=new Vue({
     <InvalidPage v-if="!display"></InvalidPage>
     <CreatorNavigationButtons
       v-if="display"
-      :clearStartStage="clearStartStage"
-      :clearGoalStage="clearGoalStage"
-      :setWorkTree="setWorkTree"
       :stage="stage"
       :clearTree="clearTree"
+      :problemIsSavable="problemIsSavable()"
+      :editStartTree="editStartTree"
+      :saveProblem="saveProblem"
     ></CreatorNavigationButtons>
     <CreatorSpecificActionButtons
       v-if="display"
@@ -37,13 +37,17 @@ export const creator_vue=new Vue({
     <CreatorWindow
       v-if="stage === 'build'"
       :tree="workTree"
-      :useCreatedTree="setWorkTree"
+      :useCreatedTree="setStartTree"
     ></CreatorWindow>
-    <PublishProblemModal v-if="finish" v-bind:closeFinish="closeFinish" v-bind:createdProblem="createdProblem"></PublishProblemModal>
+    <PublishProblemModal
+      v-if="finish"
+      v-bind:closeFinish="closeFinish"
+      v-bind:createdProblem="createdProblem"
+    ></PublishProblemModal>
   </div>
   `,
   data: () => ({
-    stage: "build", display: true,workTree: null,createdProblem:[null,null], desc:"",time:"",mouse: null, lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
+    stage: "build", display: true,workTree: null, startTree: null, createdProblem:[null,null], desc:"",time:"",mouse: null, lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
   }), created(){
     addListenerForUser(this.oauth_user_getter);
     this.mouse = new Mouse(this);
@@ -54,12 +58,16 @@ export const creator_vue=new Vue({
     }
   },
   methods: {
-    oauth_user_getter(user){
+    problemIsSavable(){
+      console.log("STARTTREE:", this.startTree !== null ? this.startTree.toString() : null);
+      console.log(" WORKTREE:", this.workTree !== null ? this.workTree.toString() : null);
+      return this.startTree !== null
+          && this.workTree !== null
+          && !this.startTree.equals(this.workTree);
+    }, oauth_user_getter(user){
       this.userStruct=user;
       this.logged = true;
     }, resolveFinishProblem(){
-      this.finish=true;
-      window.setTimeout(() => {M.Modal.getInstance(document.getElementById('finishProblemModal')).open(); } , 0);
     }, getURL(){
       let argArr=(window.location.href).split('/');
       if(argArr.length>=5){
@@ -76,25 +84,6 @@ export const creator_vue=new Vue({
       return this.problemID;
     }, closeFinish(){
       this.finish=false;
-    }, clearStartStage() {
-      if(this.workTree===null){
-        alert("There must be at least some problem to continue to making goal expression");
-        return;
-      }
-      this.stage = "manip";
-      this.createdProblem[0] = this.workTree.toString();
-    }, clearGoalStage() {
-      if(this.workTree===null){
-        alert("Goal expression must contain atleast some element");
-        return;
-      }
-      if(this.createdProblem[0]===this.workTree.toString()){
-        alert("Problem Must not be exactly the same as start expression");
-        return;
-      }
-      this.stage = "build";
-      this.createdProblem[1] = this.workTree.toString();
-      this.resolveFinishProblem();
     }, clearTree() {
       this.workTree=null;
     }, distribute(res, code) {
@@ -103,9 +92,21 @@ export const creator_vue=new Vue({
         console.log("ADFASDFASDF", this.workTree);
         this.display = true;
       }
-    }, setWorkTree(tree) {
-      this.workTree = tree;
-    },
+    }, setStartTree(tree){
+      this.startTree=tree.clone();// Save a copy as the start tree.
+      this.workTree=tree;
+      this.stage="manip";
+    }, editStartTree(){
+      this.workTree=this.startTree;// We can reuse startTree obj since workTree is overwritten.
+      this.stage="build";
+    }, saveProblem(){
+      this.createdProblem = [this.startTree.toString(), this.workTree.toString()];
+      this.finish=true;
+      window.setTimeout(() => {
+        const modal = document.getElementById('finishProblemModal');
+        M.Modal.getInstance(modal).open();
+      }, 0);
+    }
   },
   components: {
     NavigationBar,

@@ -1,15 +1,15 @@
-import {createRandomExpression} from "../random_expression_creator";
-import {actionsArr, randomProblemGenerator, randomStartGenerator} from "../expression_tree";
+import {randomStartGenerator} from "../expression_tree";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
 export default {
   name: "CreatorNavigationButtons",
   props: [
-    "clearStartStage",
-    "clearGoalStage",
     "stage",
     "clearTree",
     "setWorkTree",
+    "problemIsSavable",
+    "editStartTree",
+    "saveProblem",
   ],
   template: `
   <div>
@@ -18,7 +18,7 @@ export default {
           <i class="material-icons left">folder_open</i>
           <span class="truncate">Load</span>
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="clear()">
+      <a class="tab waves-effect waves-light btn col" v-on:click="clearTree()">
           <i class="material-icons left">clear</i>
           <span class="truncate">Clear</span>
       </a>
@@ -42,14 +42,15 @@ export default {
           <i class="material-icons left">lightbulb_outline</i>
           <span class="truncate">Generate</span>
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="clearStartStage()" v-if="stage==='build'">
-          <i class="material-icons left">navigate_next</i>
-          <span class="truncate">Create Goal</span>
-      </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="clearGoalStage()" v-if="stage==='manip'">
+      <a class="tab waves-effect waves-light btn col" v-on:click="editStartTree()" v-if="stage==='manip'">
           <i class="material-icons left">navigate_before</i>
-          <span class="truncate">Change Start</span>
+          <span class="truncate">Edit Start</span>
       </a>
+      <a v-bind:class="saveBtnClasses" v-on:click="saveProblem()">
+          <i class="material-icons left">save</i>
+          <span class="truncate">Save</span>
+      </a>
+      
     </div>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
   </div>  
@@ -57,13 +58,26 @@ export default {
   data: () => ({
     url:"http://localhost:8080/profile/accounts/"+"TEST_USER_0",
   }),
+
+  computed: {
+    saveBtnClasses() {
+      const disabled = !this.problemIsSavable;
+      return {
+        "tab": true,
+        "waves-effect": true,
+        "waves-light": true,
+        "btn": true,
+        "col": true,
+        disabled,
+      };
+    },
+  },
+
   methods: {
     save(){
 
     },load(){
 
-    }, clear(){
-      this.clearTree();
     }, undo(){
 
     }, redo(){
