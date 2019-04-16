@@ -421,7 +421,7 @@ function expandSplitFrac(child1, child2, location1, location2, root, nodeArray) 
 
   if (SplitFrac.verify(child1, child2)) {
     let rootClone = root.clone();
-    let tag = getChild(rootClone, location1);
+    let tag = getChild(rootClone, location2);
     let action = new SplitFrac(tag); 
     action.apply();
     nodeArray.push(new Node(action, rootClone));
