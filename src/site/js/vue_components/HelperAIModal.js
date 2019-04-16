@@ -14,7 +14,7 @@ export default {
         Hint: try applying {{AINode.action.name}}</h4>
         <h4 v-else
         class="black-text center-align">
-        Goal already reached</h4>
+        Goal Already Reached, Good Job!</h4>
         <SingleExpressionDisplay
           v-if="display && instance && instance.isOpen && AINode"
           v-bind:tree="AINode.expression"
