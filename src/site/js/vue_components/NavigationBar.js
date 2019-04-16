@@ -66,21 +66,25 @@ export default {
       </li>  
     </ul>
   </div>  
-  `, mounted() {
+  `, data(){
+    return{
+      ourLogged:false
+    }
+  }, mounted() {
     M.AutoInit();
+    this.ourLogged=this.logged;
   },
   methods: {
     signInNow(){
       signIn(this.oauth);
-      this.ourLogged = true;
-    },
-    signOutNow(){
+      this.setOurLogged(true);
+    }, signOutNow(){
       signOut(this.displayLogoutModal);
-      this.ourLogged = false;
-    },displayLogoutModal(){
+      this.setOurLogged(false);
+    }, displayLogoutModal(){
 
+    }, setOurLogged(val){
+      this.ourLogged=val;
     }
-  }, computed:{
-    ourLogged: function () {return this.logged;}
   }
 };
