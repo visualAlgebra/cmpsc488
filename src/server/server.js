@@ -134,6 +134,8 @@ class Server {
     console.log("Booting up");
     //so can call methods inside other function
     var self = this; //so can call inside callback function
+
+    
     
     let serverHandler = function (request, response) {
       if(self.blacklist[response.connection.remoteAddress]) {
@@ -227,6 +229,14 @@ class Server {
     //https has a required options section, but http does not allow it on older versions of node
     if(this.PORT_NUMBER === 443) {
       this.http.createServer(this.options, serverHandler).listen(this.PORT_NUMBER, '0.0.0.0');
+
+      const h = require('http');
+      let redirectServerHandler = function (request, response) {
+        let sentUrl = url.parse(request.url, true);
+        response.writeHead(301, { Location: 'https://visualalgebra.org' + sentUrl.pathname});
+        response.end();
+      }
+      h.createServer(redirectServerHandler).listen(80, '0.0.0.0');
     } else {
       this.http.createServer(serverHandler).listen(this.PORT_NUMBER, '0.0.0.0');
     }

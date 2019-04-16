@@ -60,3 +60,16 @@ $ node src/server/server.js
 ```
 
 Then in your browser, go to [http://localhost:8080](http://localhost:8080).
+
+
+#### Starting up Production Server
+To start up a production server:
+
+```shell
+$ pwd #make sure you're in the project root
+/path/to/cmpsc488
+
+$ chmod 700 deploy.sh
+$ ./deploy.sh
+$ npm run build
+$ sudo node src/server/server.js -p #enter root password, required as listens to port below 1024
