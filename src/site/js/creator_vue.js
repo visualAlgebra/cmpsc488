@@ -39,7 +39,7 @@ export const creator_vue=new Vue({
       :tree="workTree"
       :useCreatedTree="setWorkTree"
     ></CreatorWindow>
-    <PublishProblemModal v-if="finish" v-bind:closeFinish="closeFinish"></PublishProblemModal>
+    <PublishProblemModal v-if="finish" v-bind:closeFinish="closeFinish" v-bind:createdProblem="createdProblem"></PublishProblemModal>
   </div>
   `,
   data: () => ({

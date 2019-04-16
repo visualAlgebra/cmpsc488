@@ -1,7 +1,9 @@
 import * as M from "materialize-css";
+import {post_problem_from_site} from "../database_management";
+import {compress_string_js} from "../expression_tree";
 
 export default {
-  name: "PublishProblemModal", props: ["closeFinish"], template: `
+  name: "PublishProblemModal", props: ["closeFinish", "createdProblem"], template: `
     <div id="finishProblemModal" class="modal">
       <div class="modal-content">
         <h4 class="black-text">Finish making problem:</h4>
@@ -30,10 +32,21 @@ export default {
       }else if(this.problemID.length<=2){
         alert("Name field requires more characters");
         return;
-      }else if(this.checkIfNameAlreadyInUse(this.problemID)){//TODO because this will require an async call, we will require async handler here
-        alert("Name is already being used by another problem, please select another");
-        return;
       }
+      let prob=new ProblemInfo(this.problemID);
+      compress_string_js(this.createdProblem[0], (res)=>{
+        prob.expression_start=res;
+        compress_string_js(this.createdProblem[1], (res2)=>{
+          prob.expression_goal=res2;
+          prob.description=this.description;
+          post_problem_from_site(prob, this.actuallyClose);
+        });
+      });
+    }, actuallyClose(res){
+      if(!res){
+        this.tryCloseFinish();
+      }
+      alert("Successfully added.");
       this.closeFinish();
     }, checkIfNameAlreadyInUse(name){//TODO try to get boolean from database to tell if this name already in use.
       return false;

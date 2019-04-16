@@ -37,6 +37,9 @@ export function post_problem_from_site(problem, userStruct, callback) {
       if (http.readyState === 4 && http.status === 201) {
         callback(http.responseText);
       }
+      if (http.readyState === 4 && http.status === 400) {
+        callback(false);
+      }
     };
     http.send(str);
   } catch (e) {}
