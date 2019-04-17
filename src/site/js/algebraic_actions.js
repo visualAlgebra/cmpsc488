@@ -59,7 +59,6 @@ export class CommutativeSwap {
   }
 }
 
-// TODO: AssociativeMerge does not preserve order
 //  [ 1 [2><] 3 ><]
 //  [ 1 3 2 ><]
 
@@ -172,13 +171,12 @@ export class AssociativeIntro {
 }
 
 // Taking out a sibling from a tag and adding it into its grandparent
-// TODO: Make this preserve order?
 export class AssociativeExtract {
 
   // QuadrantLabel is the quadrant label of the parent that contains the child.
   constructor(grandchild, grandchildQuad, parentQuad) {
     this.grandchild = grandchild;
-    this.grandChildQuad = grandchildQuad;
+    this.grandchildQuad = grandchildQuad;
     this.parentQuad = parentQuad;
     this.name = "Associative Extraction";
   }
@@ -197,15 +195,23 @@ export class AssociativeExtract {
     //setting pointers to parent and grandparent
     let parent = this.grandchild.parent;
     const grandparent = parent.parent;
-    const index = grandparent.find(parent, this.grandChildQuad);
-
+    const index = grandparent.find(parent, this.grandchildQuad);
+    let parentQuad = grandparent.childQuadrant(parent);
+    
     //removing grandchild from grandparent and prepending into parent
-    parent.remove(this.grandchild, this.grandChildQuad);
-    // console.log(parent);
+    parent.remove(this.grandchild, this.grandchildQuad);
+    
     if (parent.treeCount === 1) {
-      grandparent.remove(parent, this.parentQuad);
+      grandparent.remove(parent, parentQuad);
     }
-    grandparent.insert(this.grandchild, grandparent.childQuadrant(parent), index);
+    
+    // grandparent.insert(this.grandchild, this.grandchildQuad, index);
+    if (this.grandchildQuad === parentQuad) {
+      grandparent.insert(this.grandchild, Quadrant.NW, index);
+    } else {
+      grandparent.insert(this.grandchild, Quadrant.SE, index);
+    }
+
 
   }
 }
@@ -433,7 +439,7 @@ export class SplitFrac {
     this.tag = tag;
     this.name = "Fraction Split";
   }
-  //TODO: FIX THIS
+  
   static verify(dividend, frac) {
     return dividend instanceof Tag
       && frac instanceof Tag
