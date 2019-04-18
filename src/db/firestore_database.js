@@ -910,6 +910,35 @@ class FirestoreDatabase extends Database {
       })
   }
 
+  //checks through creations array for formatting errors and splits into 2 array of lessons and problems
+  //creations: array of ids of problems and lesssons
+  //if returns null, had error with formatting of creations and should not batch.  otherwise returns object with lessons and problems array to batch update
+  splitCreationsIntoArrays(creations) {
+    //console.log("creations: " + creations);
+    let retVal = {"lessons": [], "problems": []};
+    let finishedWithoutErrors = true;
+
+    for(let i = 0; i < creations.length && finishedWithoutErrors == true; i++) {
+      let disassembledLink = creations[i].split('/');
+      //console.log(disassembledLink);
+      let type = disassembledLink.splice(0,1);
+      if(type[0] === "problems") {
+        //console.log(disassembledLink.reduce((assembler, part) => assembler + "\\" + part));
+        retVal.problems.push(disassembledLink.reduce((assembler, part) => assembler + "\\" + part));
+      } else if (type[0] === "lessons") {
+        retVal.lessons.push(disassembledLink.reduce((assembler, part) => assembler + "\\" + part));
+      } else {
+        finishedWithoutErrors = false;
+      }
+    }
+    if(finishedWithoutErrors) {
+      return retVal;
+    } else {
+      return null;
+    }
+  }
+
+
 
   //deletes lesson from database atomically. only deletes if creatorAccountID == accountID.  removes
   //lesson from it's creations' ownerLessons array.  also removes lesson from account @ accountID
@@ -929,54 +958,62 @@ class FirestoreDatabase extends Database {
           if (accountID !== lesson.creatorAccountID) {
             return server.respondWithError(response, 403, "Error 403: User does not have permission to delete file");
           }
-
-          //make deletes atomic
-          let batch = self.session.batch();
-
-          lesson.creations.forEach(databaseLink => {
-            let splitLink = databaseLink.split('/'); //since it should be "problems/lksjdflsdkjf" OR "lessons/laksjdflasdjf"
-            if (splitLink[0] === "problems") {
-              let problemReference = self.session.collection("problems").doc(splitLink[1]);
+          
+          let splitArrays = self.splitCreationsIntoArrays(lesson.creations);
+          if(splitArrays === null) {
+            return server.respondWithError(response, 400, "Error 400: Lesson creation data not formatted correctly");
+          } else {
+            //make deletes atomic
+            let batch = self.session.batch();
+  
+            //update ownerLessons for each lesson that it has
+            splitArrays.lessons.forEach(databaseLink => {
+              let problemReference = self.session.collection("lessons").doc(databaseLink);
               return batch.update(problemReference, {
                 ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
               });
-            } else if (splitLink[0] === "lessons") {
-              let problemReference = self.session.collection("lessons").doc(splitLink[1]);
-              return batch.update(problemReference, {
-                ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
-              });
-            } else {
-              return server.respondWithError(response, 500, "Error 500: Internal Server Error");
-            }
-          });
-
-          //remove lesson from lessons that it exists in
-          lesson.ownerLessons.forEach(ownerLessonID => {
-            let lessonReference = self.session.collection("lessons").doc(ownerLessonID);
-            batch.update(lessonReference, {
-              creations: self.admin.firestore.FieldValue.arrayRemove("lessons/" + correctLink)
             });
-          });
+            
+            //update ownerLessons for each problem that it has
+            splitArrays.problems.forEach(databaseLink => {
+              let problemReference = self.session.collection("problems").doc(databaseLink);
+              return batch.update(problemReference, {
+               ownerLessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+              });
+            });
+           
+            //remove lesson from lessons that it exists in
+            lesson.ownerLessons.forEach(ownerLessonID => {
+              let lessonReference = self.session.collection("lessons").doc(ownerLessonID);
+              batch.update(lessonReference, {
+                creations: self.admin.firestore.FieldValue.arrayRemove("lessons/" + correctLink)
+              });
+            });
+  
+            //remove lesson from list of account's creations
+            let accountReference = self.session.collection("accounts").doc(accountID);
+            batch.update(accountReference, {
+              lessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
+            });
+  
+            //remove lesson
+            batch.delete(doc.ref);
+  
+            //commit batched deletes/updates
+            batch.commit()
+              .then(result => {
+                server.respondWithData(response, 200, 'text/plain', lessonID + " deleted successfully");
+              })
+              .catch(error => {
+                console.log("batch commit error")
+                console.log(error);
+                server.respondWithError(response, 500, 'Error 500: Internal Server Error');
+              })
 
-          //remove lesson from list of account's creations
-          let accountReference = self.session.collection("accounts").doc(accountID);
-          batch.update(accountReference, {
-            lessons: self.admin.firestore.FieldValue.arrayRemove(correctLink)
-          });
-
-          //remove lesson
-          batch.delete(doc.ref);
-
-          //commit batched deletes/updates
-          batch.commit()
-            .then(result => {
-              server.respondWithData(response, 200, 'text/plain', lessonID + " deleted successfully");
-            })
-            .catch(error => {
-              server.respondWithError(response, 500, 'Error 500: Internal Server Error');
-            })
+          }
         })
         .catch(error => {
+          console.log(error);
           server.respondWithError(response, 500, "Error 500: Internal Server Error");
         })
     } catch (error) {
