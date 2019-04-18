@@ -21,7 +21,8 @@ export default {
         ></SingleExpressionDisplay>
       </div>
       <div class="modal-footer" v-if="display">
-        <a class="modal-close waves-effect waves-green btn-flat" v-on:click="closeHelper(AINode.expression.toString(), AINode.action.name)">Apply</a>
+        <a v-if="AINode"
+        class="modal-close waves-effect waves-green btn-flat" v-on:click="closeHelper(AINode.expression.toString(), AINode.action.name)">Apply</a>
         <a class="modal-close waves-effect waves-green btn-flat" v-on:click="close()">Close</a>
       </div>
     </div>
