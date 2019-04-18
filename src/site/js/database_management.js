@@ -11,6 +11,17 @@ export function get_problem_from_db(problem_id, callback) {
   http.open("GET", "http://localhost:8080/problems/" + problem_id, true);
   http.send();
 }
+export function get_all_problems_from_db(callback) {
+  let http = new XMLHttpRequest();
+  http.onreadystatechange = function() {
+    if (http.readyState === 4 && http.status === 200) {
+      let k=JSON.parse(http.responseText);
+      console.log(JSON.parse(http.responseText));
+    }
+  }
+  http.open("GET", "http://localhost:8080/problems", true);
+  http.send();
+}
 export function get_lesson_from_db(lesson_id, callback) {
   let http = new XMLHttpRequest();
   http.onreadystatechange = function() {

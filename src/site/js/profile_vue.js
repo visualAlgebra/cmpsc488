@@ -1,7 +1,12 @@
 import Vue from "vue";
 import NavigationBar from "./vue_components/NavigationBar";
 import ProfilePageTop from "./vue_components/ProfilePageTop";
-import {delete_lesson_from_db, delete_problem_from_db, get_account_from_db} from "./database_management";
+import {
+  delete_lesson_from_db,
+  delete_problem_from_db,
+  get_account_from_db,
+  get_all_problems_from_db
+} from "./database_management";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {account_to_load, fillPage} from "./profile";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
@@ -91,6 +96,7 @@ export const profile_vue=new Vue({
       alert("Lesson Deleted Successfully");
     }
   }, mounted(){
+    get_all_problems_from_db();
     let accountID=this.getAccountFromURL();
     if(accountID!==null&&this.gotAccount===false){
       get_account_from_db(accountID,this.distribute);
