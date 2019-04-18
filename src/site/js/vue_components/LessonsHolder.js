@@ -2,13 +2,15 @@ import * as M from "materialize-css";
 import SingleLessonDisplay from "./SingleLessonDisplay";
 
 export default {
-  name: "LessonHolder", props: ["lessons"], template: `
+  name: "LessonsHolder", props: ["lessons", "deleteLesson"], template: `
   <div>
     <ul class="collection with-header">
       <li class="collection-header blue-grey darken-1 white-text">
         <h4 id="lessonsSavedAmountField">Lessons: {{lessons.length}}</h4>
       </li>
-      <SingleLessonDisplay v-if="lessons.length>0" v-bind:lessons="lessons"></SingleLessonDisplay>
+      <ul class="collapsible" style="overflow:auto; height:280px;">
+        <SingleLessonDisplay v-for="(lesson, index) in lessons" v-bind:key="index" v-bind:lesson="lesson" v-bind:deleteLesson="deleteLesson"></SingleLessonDisplay>
+      </ul>
     </ul>
   </div>  
   `, mounted(){

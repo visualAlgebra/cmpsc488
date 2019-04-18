@@ -10,10 +10,10 @@ export default {
     <a :href="url" class="secondary-content">
       <i class="material-icons">send</i>
     </a>
-    <a class="secondary-content dropdown-trigger"  data-target="dropdownProb">
+    <a class="secondary-content dropdown-trigger" :data-target="targetID">
       <i class="material-icons">delete_forever</i>
     </a>
-    <ul id='dropdownProb' class='dropdown-content'>
+    <ul :id="targetID" class='dropdown-content'>
       <li><a>Are you sure?</a></li>
       <li><a>No</a></li>
       <li><a v-on:click="deleteProb">Yes</a></li>
@@ -31,6 +31,7 @@ export default {
     return {
       url: "http://localhost:8080/manipulator/problems/"+this.problemID,
       edit: "http://localhost:8080/creator/"+this.problemID,
+      targetID: "dataP"+this.problemID
     };
   }, methods:{
     deleteProb(){

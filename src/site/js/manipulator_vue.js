@@ -18,7 +18,7 @@ import WinModal from "./vue_components/WinModal";
 export const manipulator_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <ManipulatorNavigationButtons v-if="display&&workTree&&goalTreeStr" v-bind:dataFunc="getTreeData" v-bind:restart="restart" v-bind:setWorkTree="setWorkTree" v-bind:setWorkTreeWithHistory="setWorkTreeWithHistory" v-bind:lessonID="lessonID" v-bind:problemID="problemID" v-bind:setNextProblemURL="setNextProblemURL"></ManipulatorNavigationButtons> 
     <ManipulatorSpecificActionButtons v-if="display" :mouse="mouse"></ManipulatorSpecificActionButtons>
@@ -98,6 +98,9 @@ export const manipulator_vue = new Vue({
     }, oauth_user_getter(user) {
       this.userStruct = user;
       this.logged = true;
+    }, oauth_user_remover(){
+      this.usersStruct=null;
+      this.logged=false;
     },
   }, components: {
     NavigationBar,
