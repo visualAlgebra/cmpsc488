@@ -59,8 +59,6 @@ export const creator_vue=new Vue({
   },
   methods: {
     problemIsSavable(){
-      console.log("STARTTREE:", this.startTree !== null ? this.startTree.toString() : null);
-      console.log(" WORKTREE:", this.workTree !== null ? this.workTree.toString() : null);
       return this.startTree !== null
           && this.workTree !== null
           && !this.startTree.equals(this.workTree);
@@ -89,7 +87,6 @@ export const creator_vue=new Vue({
     }, distribute(res, code) {
       if(code===2) {//start
         this.workTree = Deserialize(res);
-        console.log("ADFASDFASDF", this.workTree);
         this.display = true;
       }
     }, setStartTree(tree){
