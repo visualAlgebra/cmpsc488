@@ -2,19 +2,10 @@ import {randomStartGenerator} from "../expression_tree";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 
 export default {
-  name: "CreatorNavigationButtons",
-  props: [
-    "stage",
-    "clearTree",
-    "setWorkTree",
-    "problemIsSavable",
-    "editStartTree",
-    "saveProblem",
-  ],
-  template: `
+  name: "CreatorNavigationButtons", props: ["stage", "clearTree", "setWorkTree", "problemIsSavable", "editStartTree", "saveProblem", ], template: `
   <div>
     <div class="row spaced-out-row">
-      <a v-bind:href="url" class="tab waves-effect waves-light btn col" v-on:click="load()">
+      <a v-bind:href="url" class="tab waves-effect waves-light btn col">
           <i class="material-icons left">folder_open</i>
           <span class="truncate">Load</span>
       </a>
@@ -50,16 +41,14 @@ export default {
           <i class="material-icons left">save</i>
           <span class="truncate">Save</span>
       </a>
-      
     </div>
+    <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
   </div>  
   `,
   data: () => ({
-    url:"http://localhost:8080/profile/accounts/"+"TEST_USER_0",
-  }),
-
-  computed: {
+    url:"http://localhost:8080/profile.html",
+  }), computed: {
     saveBtnClasses() {
       const disabled = !this.problemIsSavable;
       return {
@@ -71,17 +60,11 @@ export default {
         disabled,
       };
     },
-  },
-
-  methods: {
-    save(){
-
-    },load(){
-
-    }, undo(){
-
+  }, methods: {
+    undo(){
+      console.log("hi3");
     }, redo(){
-
+      console.log("hi4");
     }, generate(){
       const numNodes = 15;
       const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
