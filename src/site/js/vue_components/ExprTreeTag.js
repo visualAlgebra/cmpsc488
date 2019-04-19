@@ -40,6 +40,7 @@ export default {
       :interactive="interactive"
       :mouse="mouse"
       :insertable="insertable"
+      :pulse="pulse"
     ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
