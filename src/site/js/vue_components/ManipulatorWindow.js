@@ -21,6 +21,20 @@ export default {
       default: "500px",
       type: String,
     },
+    worldWidth: {
+      required: false,
+      default: 3000,
+      type: Number,
+    },
+    worldHeight: {
+      required: false,
+      default: 1500,
+      type: Number,
+    },
+    pulse: {
+      default: false,
+      type: Boolean,
+    },
   },
 
   template: `
@@ -39,13 +53,14 @@ export default {
       :width="width"
       :height="height"
     >
-      <foreignObject width="2000" height="1000">
+      <foreignObject :width="worldWidth" :height="worldHeight">
         <ExpressionTree
           v-if="tree"
           :tree="tree.clone()"
           :path="[]"
           interactive
           :mouse="mouse"
+          :pulse="pulse"
         ></ExpressionTree>
       </foreignObject>
     </svg>

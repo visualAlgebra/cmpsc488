@@ -38,11 +38,15 @@ export const manipulator_vue = new Vue({
     <ManipulatorSpecificActionButtons
       v-if="display"
       :mouse="mouse"
+      :useCreatedTree="insertCreatedTree"
+      :setPulseMode="setPulseMode"
+      :displayCreatorMenu="displayCreatorMenu"
     ></ManipulatorSpecificActionButtons>
     <ManipulatorWindow
       v-if="display && workTree"
       :tree="workTree"
       :mouse="mouse"
+      :pulse="pulse"
     ></ManipulatorWindow>
     <GoalExpression
       v-if="display && goalTree"
@@ -70,6 +74,10 @@ export const manipulator_vue = new Vue({
       logged: false,
       win: false,
       nextProblemURL: null,
+      selectingInsertionPoint: false,
+      insertionPoint: null,
+      pulse: false,
+      displayCreatorMenu: false,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);
@@ -79,7 +87,9 @@ export const manipulator_vue = new Vue({
       getProblemFromDBVue(this.problemID,this.distribute);
     }
   }, methods: {
-    resolveWin(val){
+    setPulseMode(pulse){
+      this.pulse = pulse;
+    }, resolveWin(val){
       if(val) {
         this.win=true;
         window.setTimeout(() => {M.Modal.getInstance(document.getElementById('winModal')).open(); } , 0);
@@ -139,6 +149,17 @@ export const manipulator_vue = new Vue({
     }, oauth_user_remover(){
       this.usersStruct=null;
       this.logged=false;
+    },
+
+    insertionQuadrantSelected(insertionPoint) {
+      this.displayCreatorMenu = true;
+      this.setPulseMode(false);
+      this.insertionPoint = insertionPoint;
+    },
+
+    insertCreatedTree(tree) {
+      this.displayCreatorMenu = false;
+      this.mouse.identityBalance(tree, this.insertionPoint);
     },
   }, components: {
     NavigationBar,

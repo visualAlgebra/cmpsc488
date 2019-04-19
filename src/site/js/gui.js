@@ -9,13 +9,13 @@ import {
   CombineFrac,
   CommutativeSwap,
   Distribute,
-  Factor,
+  Factor, IdentityBalance,
   IdentityMerge,
   LiteralConversion,
   LiteralMerge,
   QuadrantFlip,
   SplitFrac,
-  ZeroMerge
+  ZeroMerge,
 } from "./algebraic_actions";
 import * as M from "materialize-css";
 
@@ -58,6 +58,8 @@ export const MouseMode = {
   MergingLiterals: "Merging Literals",
   Distribution: "Distribution",
   Insertion: "Insertion",
+  IdentityBalance: "IdentityBalance",
+  SelectingInsertionQuadrant: "SelectingInsertionQuadrant",
 };
 
 export const ClickTargetKind = {
@@ -95,6 +97,12 @@ export class Mouse {
     if (this.vueComponent.hasOwnProperty("resolveWin")) {
       this.vueComponent.resolveWin(addHistoryEntry(treeRoot, actionType));//TODO can only be manipulator vueComponent
     }
+  }
+
+  identityBalance(toInsert, pathToInsertionPoint) {
+    const insertionPoint = findDescendent(this.vueComponent.workTree, pathToInsertionPoint);
+    const action = new IdentityBalance(toInsert, insertionPoint);
+    action.apply();
   }
 
   getEventCtx() {
@@ -275,7 +283,10 @@ export class Mouse {
     const tree = findDescendent(this.vueComponent.workTree, this.eventSource.path);
 
     try {
-      if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(tree)) {
+      if (this.mode === MouseMode.SelectingInsertionQuadrant) {
+        this.vueComponent.insertionQuadrantSelected(this.eventSource.path);
+      }
+      else if (this.mode === MouseMode.Manipulation && AssociativeIntro.verify(tree)) {
         const action = new AssociativeIntro(tree);
         action.apply();
         console.log("Enclosing ", tree);

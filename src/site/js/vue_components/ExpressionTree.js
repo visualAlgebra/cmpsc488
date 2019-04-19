@@ -16,6 +16,10 @@ export default {
     mouse: Mouse,
     interactive: Boolean,
     insertable: Boolean,
+    pulse: {
+      default: false,
+      type: Boolean,
+    },
   },
 
   template: `
@@ -27,6 +31,7 @@ export default {
       :mouse="mouse"
       :interactive="interactive"
       :insertable="insertable"
+      :pulse="pulse"
     ></ExprTreeTag>
     <ExprTreeVariable
       v-else-if="tree.kind === ExprTreeKind.Var"
