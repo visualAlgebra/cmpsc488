@@ -12,11 +12,8 @@ export const explorer_vue=new Vue({
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
-    <ProblemsHolder
-      v-if="display&&problemsToDisplay"
-      :problems="problemsToDisplay"
-      ></ProblemsHolder>
-      <ExplorerAIGenerationModal v-bind:userStruct="userStruct"></ExplorerAIGenerationModal>
+    <ProblemsHolder v-if="display&&problemsToDisplay"v-bind:problems="problemsToDisplay"></ProblemsHolder>
+    <ExplorerAIGenerationModal v-bind:userStruct="userStruct"></ExplorerAIGenerationModal>
   </div>
   `, data(){
     return {
