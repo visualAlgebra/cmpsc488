@@ -110,7 +110,7 @@ export class Tag extends ExpressionTree {
   // (including itself).
   updateParentTreeCount(count) {
     this.treeCount += count;
-    if (this.parent != null) {
+    if (this.parent != null && !this.parent.is(this)) {
       this.parent.updateParentTreeCount(count);
     }
   }
@@ -241,6 +241,7 @@ export class Tag extends ExpressionTree {
   }
 
   equals(that) {
+    if (that === undefined || that === null) return false;
     if (that.kind === "tag") {
       if (
         this.orientation !== that.orientation ||
@@ -290,6 +291,7 @@ export class Variable extends ExpressionTree {
   }
 
   equals(that) {
+    if (that === undefined || that === null) return false;
     if (!(that instanceof Variable)) return false;
     return this.value === that.value;
   }
@@ -306,6 +308,7 @@ export class Literal extends ExpressionTree {
   }
 
   equals(that) {
+    if (that === undefined || that === null) return false;
     if (that.kind !== ExprTreeKind.Lit) return false;
     return this.value === that.value;
   }
@@ -729,8 +732,8 @@ export function randomProblemGenerator(numNodes, validActionsArr, numActions){
   return new StartGoalCombo(start, end);
 }
 export function randomProblemGeneratorNoArr(numNodes, numActions){
-  const start = randomStartGenerator(numNodes);
-  const end = randomGoalGeneratorNoArr(start, numActions);
+  var start = randomStartGenerator(numNodes);
+  var end = randomGoalGeneratorNoArr(start, numActions);
   return new StartGoalCombo(start, end);
 }
 //compress_string_js(expressionTree.toString(),res => {console.log(res)});

@@ -1,9 +1,9 @@
 import * as M from "materialize-css";
 import {post_problem_from_site} from "../database_management";
-import {compress_string_js} from "../expression_tree";
+import {compress_string_js, ProblemInfo} from "../expression_tree";
 
 export default {
-  name: "PublishProblemModal", props: ["closeFinish", "createdProblem"], template: `
+  name: "PublishProblemModal", props: ["closeFinish", "createdProblem", "userStruct"], template: `
     <div id="finishProblemModal" class="modal">
       <div class="modal-content">
         <h4 class="black-text">Finish making problem:</h4>
@@ -39,7 +39,7 @@ export default {
         compress_string_js(this.createdProblem[1], (res2)=>{
           prob.expression_goal=res2;
           prob.description=this.description;
-          post_problem_from_site(prob, this.actuallyClose);
+          post_problem_from_site(prob, this.userStruct, this.actuallyClose);
         });
       });
     }, actuallyClose(res){
@@ -47,7 +47,7 @@ export default {
         this.tryCloseFinish();
       }
       alert("Successfully added.");
-      this.closeFinish();
+      this.closeFinish(res);
     }, checkIfNameAlreadyInUse(name){//TODO try to get boolean from database to tell if this name already in use.
       return false;
     }

@@ -79,8 +79,11 @@ export default {
       this.setWorkTree(histAction(true));
     }, initLessonDropdown(res){
       this.lesson=res;
-    }, closeHelper(){
+    }, closeHelper(tree, actionName){
       this.displayHelper=false;
+      if(tree!==null&&actionName!==null){
+        this.setWorkTreeWithHistory(tree, actionName);
+      }
     }, DEBUG_INSTANCES() {
 
       //

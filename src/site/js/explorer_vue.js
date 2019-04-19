@@ -10,7 +10,7 @@ import ExplorerAIGenerationModal from "./vue_components/ExplorerAIGenerationModa
 export const explorer_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
     <ProblemsHolder
       v-if="display&&problemsToDisplay"
@@ -34,6 +34,9 @@ export const explorer_vue=new Vue({
     oauth_user_getter(user) {
       this.userStruct = user;
       this.logged = true;
+    }, oauth_user_remover(){
+      this.usersStruct=null;
+      this.logged=false;
     },
   }, components: {
     ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder, ExplorerAIGenerationModal,

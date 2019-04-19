@@ -4,7 +4,7 @@ import {signIn, signOut} from "../user_system";
 import {Mouse} from "../gui";
 
 export default {
-  name: "NavigationBar", props: ["user", "oauth", "logged"], template: `
+  name: "NavigationBar", props: ["user", "oauth_user_getter", "oauth_user_remover", "logged"], template: `
   <div>
     <nav>
       <div class="nav-wrapper">
@@ -29,10 +29,10 @@ export default {
             <a href="http://localhost:8080/profile.html">User Profile</a>
           </li>
           <li>
-            <a v-if="!ourLogged" v-on:click="signInNow()">Login</a>
+            <a v-if="!logged" v-on:click="signInNow()">Login</a>
           </li>
           <li>
-            <a v-if="ourLogged" v-on:click="signOutNow()">Logout</a>
+            <a v-if="logged" v-on:click="signOutNow()">Logout</a>
           </li>
         </ul>
       </div>
@@ -59,32 +59,21 @@ export default {
         <a href="http://localhost:8080/profile.html">User Profile</a>
       </li>
       <li>
-        <a v-if="!ourLogged" v-on:click="signInNow()">Login</a>
+        <a v-if="!logged" v-on:click="signInNow()">Login</a>
       </li>
       <li>
-        <a v-if="ourLogged" v-on:click="signOutNow()">Logout</a>
+        <a v-if="logged" v-on:click="signOutNow()">Logout</a>
       </li>  
     </ul>
   </div>  
-  `, data(){
-    return{
-      ourLogged:false
-    }
-  }, mounted() {
+  `, mounted() {
     M.AutoInit();
-    this.ourLogged=this.logged;
   },
   methods: {
     signInNow(){
-      signIn(this.oauth);
-      this.setOurLogged(true);
+      signIn(this.oauth_user_getter);
     }, signOutNow(){
-      signOut(this.displayLogoutModal);
-      this.setOurLogged(false);
-    }, displayLogoutModal(){
-
-    }, setOurLogged(val){
-      this.ourLogged=val;
+      signOut(this.oauth_user_remover);
     }
   }
 };

@@ -2,15 +2,19 @@ import * as M from "materialize-css";
 import ManipulatorWindow from "./ManipulatorWindow";
 import InsertionButtons from "./InsertionButtons";
 import {Mouse} from "../gui";
+import {ExpressionTree as JsExpressionTree} from "../expression_tree";
 
 export default {
 
   name: "CreatorWindow",
 
-  props: [
-      "useCreatedTree",
-      "tree",
-  ],
+  props: {
+      useCreatedTree: Function,
+      tree: {
+        type: JsExpressionTree,
+        default: null,
+      },
+  },
 
   template: `
 <div
@@ -46,6 +50,13 @@ export default {
     ></ManipulatorWindow>
   </div>
   <div class="modal-footer">
+    <button
+      @click="workTree = null"
+      class="btn-flat white-text waves-effect"
+    >
+      Clear
+      <i class="material-icons right">clear</i>
+    </button>
     <button
       @click="closeModal"
       :class="closeButtonClasses"

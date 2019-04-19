@@ -12,9 +12,10 @@ export default {
       <li class="waves-effect"><a href="#!" v-on:click="setTut(5)">5</a></li>
     </ul>
     <div class="modal-content">
-      < id="tutTitle" h4>Tutorial</h4>
+      <h4 id="tutTitle" >Tutorial</h4>
       <img id="tutImg" src="http://localhost:8080/src/site/assets/com_swap_160.gif">
       <p id="tutText" ></p>
+      <a id="tutProbLink" href=""></a>
     </div>
     <div class="modal-footer">
       <a class="waves-effect waves-green btn-flat" v-on:click="back()">Back</a>
@@ -45,6 +46,9 @@ export default {
       this.changeImg();
     }, setText() {
       $("#tutText").text(this.tutMessages[this.index]);
+      $("#tutProbLink").text("Tutorial Problem " + this.tutNum);
+      // $("#tutProbLink").attr("href", "https://visualalgebra.org/manipulator/problems/tp" + this.tutNum);
+      $("#tutProbLink").attr("href", "http://localhost:8080/manipulator/problems/tp" + this.tutNum);      
     }, changeImg() {
       document.getElementById("tutImg").setAttribute("src", "http://localhost:8080/src/site/assets/com_swap_225.gif")
     }
