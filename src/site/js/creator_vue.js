@@ -43,6 +43,7 @@ export const creator_vue=new Vue({
       v-if="finish"
       v-bind:closeFinish="closeFinish"
       v-bind:createdProblem="createdProblem"
+      v-bind:userStruct="userStruct"
     ></PublishProblemModal>
   </div>
   `,
@@ -83,8 +84,9 @@ export const creator_vue=new Vue({
         return null;
       }
       return this.problemID;
-    }, closeFinish(){
+    }, closeFinish(res){
       this.finish=false;
+      window.location.href="http://localhost:8080/manipulator/problems/"+res
     }, clearTree() {
       this.workTree=null;
     }, distribute(res, code) {
