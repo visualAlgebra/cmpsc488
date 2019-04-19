@@ -1,7 +1,5 @@
 import * as M from "materialize-css";
-import {Deserialize} from "../expression_tree";
 import {signIn, signOut} from "../user_system";
-import {Mouse} from "../gui";
 
 export default {
   name: "NavigationBar", props: ["user", "oauth_user_getter", "oauth_user_remover", "logged"], template: `
@@ -20,7 +18,7 @@ export default {
             <a href="http://localhost:8080/creator.html">Create</a>
           </li>
           <li>
-            <a href="http://localhost:8080/manipulator/problems/Getting_started">Manipulate</a>
+            <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra</a>
           </li>
           <li>
             <a href="http://localhost:8080/explorer.html">Explore</a>
@@ -50,7 +48,7 @@ export default {
         <a href="http://localhost:8080/creator.html">Create</a>
       </li>
       <li>
-        <a href="http://localhost:8080/manipulator/problems/Getting_started">Manipulate</a>
+        <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra</a>
       </li>
       <li>
         <a href="http://localhost:8080/explorer.html">Explore</a>
