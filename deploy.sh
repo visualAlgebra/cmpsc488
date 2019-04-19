@@ -33,4 +33,4 @@ done
 cd src/site
 npm run build
 cd ../..
-sudo node src/server/server.js -p
+sudo node src/server/server.js -p 2> error_log.txt & > ../process_to_kill_.txt
