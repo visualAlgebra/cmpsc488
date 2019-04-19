@@ -1,7 +1,5 @@
 import * as M from "materialize-css";
-import {Deserialize} from "../expression_tree";
 import {signIn, signOut} from "../user_system";
-import {Mouse} from "../gui";
 
 export default {
   name: "NavigationBar", props: ["user", "oauth_user_getter", "oauth_user_remover", "logged"], template: `
@@ -14,13 +12,13 @@ export default {
         </a>
         <ul class="right hide-on-med-and-down" id="nav-mobile">
           <li>
-            <a href="http://localhost:8080/index.html">Home</a>
+            <a href="http://localhost:8080/">Home</a>
           </li>
           <li>
             <a href="http://localhost:8080/creator.html">Create</a>
           </li>
           <li>
-            <a href="http://localhost:8080/manipulator/problems/Getting_started">Manipulate</a>
+            <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra</a>
           </li>
           <li>
             <a href="http://localhost:8080/explorer.html">Explore</a>
@@ -44,13 +42,13 @@ export default {
         </div>
       </nav>
       <li>
-        <a href="http://localhost:8080/index.html">Home</a>
+        <a href="http://localhost:8080/">Home</a>
       </li>
       <li>
         <a href="http://localhost:8080/creator.html">Create</a>
       </li>
       <li>
-        <a href="http://localhost:8080/manipulator/problems/Getting_started">Manipulate</a>
+        <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra</a>
       </li>
       <li>
         <a href="http://localhost:8080/explorer.html">Explore</a>

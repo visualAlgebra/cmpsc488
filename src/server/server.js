@@ -35,8 +35,8 @@ class Server {
     // this.eventEmitter.addListener("database file recieved", this.sendDatabaseFile);
 
     this.accessibleFolders = ["/src/site/assets/", "/src/site/dist/", "/src/site/node_modules/", "/src/site/css/", "/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
-    this.accessibleHTMLFiles = this.accessibleFilesMap = {"/index.html": "index.html", "/explorer.html": "/explorer.html", "/creator.html": "/creator.html", "/lesson-view.html": "/lesson-view.html", "/manipulator.html": "/manipulator.html", "/profile.html": "/profile.html"};
-    this.accessibleFilesMap = {"index": "index.html", "explorer": "/explorer.html", "creator": "/creator.html", "lesson-view": "/lesson-view.html", "manipulator": "/manipulator.html", "profile": "/profile.html"}
+    this.accessibleHTMLFiles = this.accessibleFilesMap = {"/index.html": "index.html", "/explorer.html": "/explorer.html", "/creator.html": "/creator.html", "/lesson-view.html": "/lesson-view.html", "/manipulator.html": "/manipulator.html", "/profile.html": "/profile.html", "/algebra.html": "/manipulator.html"};
+    this.accessibleFilesMap = {"index": "index.html", "explorer": "/explorer.html", "creator": "/creator.html", "lesson-view": "/lesson-view.html", "manipulator": "/manipulator.html", "profile": "/profile.html", "algebra": "/manipulator.html"}
     this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
     this.blacklist = JSON.parse(fs.readFileSync("src/server/blacklist.json")); //form; "ipaddress": true. ie "'127.0.0.1': true" to block 127.0.0.1
   }
@@ -45,6 +45,7 @@ class Server {
   //returns true is filePath is an html file we allow to be found
   isAccessibleHTMLFile(filePath) {
     let file = this.accessibleHTMLFiles[filePath];
+    //console.log(file);
     if (file === undefined) {
       return false;
     } else {
@@ -284,7 +285,7 @@ class Server {
     } else if (this.isAccessibleFolder(pageName)) {
       filename = pageName.substr(1);
     } else if (this.isAccessibleHTMLFile(pageName)) {
-      filename = "src/site" + pageName;
+      filename = "src/site" + this.isAccessibleHTMLFile(pageName);
     } else if (pageName === "/favicon.ico") {
       filename = "src/site/assets/example_image.png";
     } else {
