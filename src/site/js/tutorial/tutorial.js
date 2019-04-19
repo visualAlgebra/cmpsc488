@@ -18,6 +18,18 @@ export function determineProblem(problem) {
     default: return null;
   }    
 }
+
+export function getImg(problem) {
+  switch (problem) {
+    case 1: return imgTutProb1();
+    case 2: return imgTutProb2();
+    case 3: return imgTutProb3();
+    case 4: return imgTutProb4();
+    case 5: return imgTutProb5();
+    default: return null;
+  }
+}
+
 //TODO: Fix tutorial text
 function tutorialProblem1() {
   
@@ -96,4 +108,74 @@ function tutorialProblem5() {
 }
 
 function tutorialProblem6() {
+}
+
+function imgTutProb1() {
+  
+  let imgs = [];
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+
+  return imgs;
+}
+
+function imgTutProb2() {
+
+  let imgs = [];
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+
+  return imgs;
+}
+
+function imgTutProb3() {
+
+  let imgs = [];
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+
+  return imgs;
+}
+
+function imgTutProb4() {
+
+  let imgs = [];
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+
+  return imgs;
+}
+
+function imgTutProb5() {
+
+  let imgs = [];
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
+  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+  
+  return imgs;
 }
