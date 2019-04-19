@@ -12,7 +12,7 @@ export default {
         </a>
         <ul class="right hide-on-med-and-down" id="nav-mobile">
           <li>
-            <a href="http://localhost:8080/index.html">Home</a>
+            <a href="http://localhost:8080/">Home</a>
           </li>
           <li>
             <a href="http://localhost:8080/creator.html">Create</a>
@@ -42,7 +42,7 @@ export default {
         </div>
       </nav>
       <li>
-        <a href="http://localhost:8080/index.html">Home</a>
+        <a href="http://localhost:8080/">Home</a>
       </li>
       <li>
         <a href="http://localhost:8080/creator.html">Create</a>
