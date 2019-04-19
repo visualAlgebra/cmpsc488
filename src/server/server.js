@@ -331,14 +331,14 @@ class Server {
 
   queryProblems(query, response) {
     if(Object.keys(query).length == 0) {
-      return this.database.getAllProblemIDs(server, response);
+      return this.database.getAllProblemIDs(this, response);
     }
     return this.database.queryProblems(this, response, query);
   }
 
   queryLessons(query, response) {
     if(Object.keys(query).length == 0) {
-      return this.database.getAllLessonIDs(server, response);
+      return this.database.getAllLessonIDs(this, response);
     }
     return this.database.queryLessons(this, response, query);
   }

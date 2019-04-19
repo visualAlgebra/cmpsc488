@@ -17,6 +17,10 @@ export class Node {
 }
 
 function additionalHeur(numDiff, a, b){
+  var tagDiffMod = 15;
+  var litDiffMod = 20*tagDiffMod;
+  var varDiffMod = litDiffMod;
+  var numDiffMod = 20;
   var litA=0;
   var litB=0;
   var varA=0;
@@ -69,7 +73,7 @@ function additionalHeur(numDiff, a, b){
   else
     litB += 1;
   
-  return (numDiff+Math.abs(litA-litB)+Math.abs(varA-varB)+Math.abs(tagA-tagB))
+  return (numDiffMod*numDiff+(litDiffMod*Math.abs(litA-litB)+varDiffMod*Math.abs(varA-varB)+tagDiffMod*Math.abs(tagA-tagB)))
 }
 
 function heuristicEval(a, b) {
@@ -141,6 +145,7 @@ export function solve(current, goal) {
       minHeuristic = heuristic;
       minIdx = i;
     }
+    console.log(nodeArray[i], heuristic);
   }
   return (nodeArray[minIdx]);
 }

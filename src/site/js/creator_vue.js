@@ -15,7 +15,7 @@ import CreatorWindow from "./vue_components/CreatorWindow";
 export const creator_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <CreatorNavigationButtons
       v-if="display"
@@ -65,6 +65,9 @@ export const creator_vue=new Vue({
     }, oauth_user_getter(user){
       this.userStruct=user;
       this.logged = true;
+    }, oauth_user_remover(){
+      this.usersStruct=null;
+      this.logged=false;
     }, resolveFinishProblem(){
     }, getURL(){
       let argArr=(window.location.href).split('/');

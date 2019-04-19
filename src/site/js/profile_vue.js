@@ -1,7 +1,7 @@
 import Vue from "vue";
 import NavigationBar from "./vue_components/NavigationBar";
 import ProfilePageTop from "./vue_components/ProfilePageTop";
-import {delete_problem_from_db, get_account_from_db} from "./database_management";
+import {delete_lesson_from_db, delete_problem_from_db, get_account_from_db} from "./database_management";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {account_to_load, fillPage} from "./profile";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
@@ -13,7 +13,7 @@ import {addListenerForUser} from "./user_system";
 export const profile_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
-    <NavigationBar v-bind:user="userStruct" v-bind:oauth="oauth_user_getter" v-bind:logged="logged"></NavigationBar>
+    <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
     <ProfilePageTop v-if="display"
     v-bind:bio="bio"
@@ -22,7 +22,7 @@ export const profile_vue=new Vue({
     v-bind:accountID="accountID"
     v-bind:userStruct="userStruct">
     </ProfilePageTop>
-    <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
+    <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
     <div class="divider"></div>
     <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
   </div>
@@ -64,14 +64,31 @@ export const profile_vue=new Vue({
         this.accountID=this.userStruct.accountID;
         this.gotAccount = true;
       }
+    }, oauth_user_remover(){
+      this.usersStruct=null;
+      this.logged=false;
+      if(this.gotAccount){
+        this.gotAccount=false;
+        this.display=false;
+        this.lessons=null;
+        this.problems=null;
+        this.bio=null;
+        this.time=0;
+      }
     }, deleteProblem(problemID){
       this.problems=this.problems.filter(function(value){
         return value.problemID!==problemID;
       });
-      delete_problem_from_db(problemID,this.userStruct, this.successfulDeletion);
+      delete_problem_from_db(problemID, this.userStruct, this.successfulDeletionProb);
     }, deleteLesson(lessonID){
-    }, successfulDeletion(){
+      this.lessons=this.lessons.filter(function(value){
+       return value.lessonID!==lessonID;
+      });
+      delete_lesson_from_db(lessonID, this.userStruct, this.successfulDeletionLesson);
+    }, successfulDeletionProb(){
       alert("Problem Deleted Successfully");
+    }, successfulDeletionLesson(){
+      alert("Lesson Deleted Successfully");
     }
   }, mounted(){
     let accountID=this.getAccountFromURL();

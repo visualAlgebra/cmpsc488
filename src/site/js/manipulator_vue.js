@@ -20,7 +20,8 @@ export const manipulator_vue = new Vue({
   <div>
     <NavigationBar
       :user="userStruct"
-      :oauth="oauth_user_getter"
+      :oauth_user_getter="oauth_user_getter"
+      :oauth_user_remover="oauth_user_remover"
       :logged="logged"
     ></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
@@ -135,6 +136,9 @@ export const manipulator_vue = new Vue({
     }, oauth_user_getter(user) {
       this.userStruct = user;
       this.logged = true;
+    }, oauth_user_remover(){
+      this.usersStruct=null;
+      this.logged=false;
     },
   }, components: {
     NavigationBar,
