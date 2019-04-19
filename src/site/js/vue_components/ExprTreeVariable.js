@@ -16,13 +16,28 @@ export default {
   template: `
 <drop @drop="handleDrop">
   <drag @dragstart="handleDragStart" :transferData="guiObj">
-    <div
+    <svg
       v-on="listeners"
       :class="classes"
-      xmlns="http://www.w3.org/1999/xhtml"
+      width="70"
+      height="70"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:svg="http://www.w3.org/2000/svg"
     >
-      {{ "x" + tree.value }}
-    </div>
+
+     <g>
+      <title>Layer 1</title>
+      <polygon
+        id="svg_1"
+        :fill="fill"
+        points="64.93092346191406,35.07620620727539 49.747314453125,61.37498474121094 19.380094528198242,61.37498474121094 4.19648551940918,35.07620620727539 19.380094528198242,8.777419090270996 49.747314453125,8.777419090270996 64.93092346191406,35.07620620727539 "
+        :stroke="stroke"
+        stroke-width="8"
+        transform="rotate(30, 34.5637, 35.0762)"
+        stroke-linejoin="round"
+      />
+     </g>
+    </svg>
   </drag>
 </drop>
   `,
@@ -40,9 +55,21 @@ export default {
   computed: {
     classes() {
       return [
-        "variable",
+        // "variable",
         this.interactive ? "hoverable" : "",
       ]
+    },
+
+    stroke() {
+      if (this.tree.value % 3 === 0) return "#ff7f99";
+      if (this.tree.value % 3 === 1) return "#f0b5ff";
+      if (this.tree.value % 3 === 2) return "#ffc68e";
+    },
+
+    fill() {
+      if (this.tree.value % 3 === 0) return "#e54477";
+      if (this.tree.value % 3 === 1) return "#be6fbf";
+      if (this.tree.value % 3 === 2) return "#f5aa3f";
     },
   },
 
