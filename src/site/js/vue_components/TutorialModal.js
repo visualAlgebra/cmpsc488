@@ -1,4 +1,4 @@
-import { determineProblem } from "../tutorial/tutorial";
+import { determineProblem, getImg } from "../tutorial/tutorial";
 import $ from "jquery"
 
 export default {
@@ -24,7 +24,7 @@ export default {
   </div>
   `, data() {
     return {
-      index: null, tutMessages: null, tutNum: null
+      index: null, tutMessages: null, tutNum: null, tutImgs: null
     };
   }, mounted() {
     this.setTut(1);
@@ -42,6 +42,7 @@ export default {
       this.tutNum = i;
       this.index = 0;
       this.tutMessages = determineProblem(this.tutNum);
+      this.tutImgs = getImg(this.tutNum);
       this.setText();
       this.changeImg();
     }, setText() {
@@ -50,7 +51,8 @@ export default {
       // $("#tutProbLink").attr("href", "https://visualalgebra.org/manipulator/problems/tp" + this.tutNum);
       $("#tutProbLink").attr("href", "http://localhost:8080/manipulator/problems/tp" + this.tutNum);      
     }, changeImg() {
-      document.getElementById("tutImg").setAttribute("src", "http://localhost:8080/src/site/assets/com_swap_225.gif")
+
+      document.getElementById("tutImg").setAttribute("src", this.tutImgs[this.index]);
     }
   }
 }
