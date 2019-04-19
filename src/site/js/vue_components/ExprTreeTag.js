@@ -12,6 +12,10 @@ export default {
     mouse: Mouse,
     interactive: Boolean,
     insertable: Boolean,
+    pulse: {
+      default: false,
+      type: Boolean,
+    },
   },
 
   template: `
@@ -26,6 +30,7 @@ export default {
       :interactive="interactive"
       :mouse="mouse"
       :insertable="insertable"
+      :pulse="pulse"
     >
     </ExprTreeTagQuadrant>
     
@@ -35,6 +40,7 @@ export default {
       :interactive="interactive"
       :mouse="mouse"
       :insertable="insertable"
+      :pulse="pulse"
     ></ExprTreeTagButton>
     
     <ExprTreeTagQuadrant
@@ -46,6 +52,7 @@ export default {
       :interactive="interactive"
       :mouse="mouse"
       :insertable="insertable"
+      :pulse="pulse"
     >
     </ExprTreeTagQuadrant>
     
