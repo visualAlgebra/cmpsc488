@@ -1,12 +1,6 @@
-import { Literal, Orientation, Quadrant, Tag, Variable } from "./expression_tree";
-import { solve } from "./solver";
-import {
-  AssociativeExtract,
-  AssociativeInsert, AssociativeIntro,
-  AssociativeMerge, Cancel, CombineFrac,
-  CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
-  QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
-} from "./algebraic_actions";
+import {Literal, Orientation, Tag, Variable} from "./expression_tree";
+import {solve} from "./solver";
+import {CombineFrac, CommutativeSwap, LiteralMerge, QuadrantFlip} from "./algebraic_actions";
 
 function newVar(val) {
   return new Variable(val);

@@ -1,6 +1,5 @@
 import ExpressionTree from "./ExpressionTree";
 import SvgPanZoom from "vue-svg-pan-zoom";
-import {Mouse} from "../gui";
 
 export default {
   name: "ManipulatorWindow",

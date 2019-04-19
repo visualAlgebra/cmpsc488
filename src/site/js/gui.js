@@ -2,10 +2,20 @@ import {addHistoryEntry} from "./history_nav";
 import {ExprTreeKind, Quadrant} from "./expression_tree";
 import {
   AssociativeExtract,
-  AssociativeInsert, AssociativeIntro,
-  AssociativeMerge, Cancel, CombineFrac,
-  CommutativeSwap, Distribute, Factor, IdentityMerge, LiteralMerge,
-  QuadrantFlip, SplitFrac, ZeroMerge, LiteralConversion
+  AssociativeInsert,
+  AssociativeIntro,
+  AssociativeMerge,
+  Cancel,
+  CombineFrac,
+  CommutativeSwap,
+  Distribute,
+  Factor,
+  IdentityMerge,
+  LiteralConversion,
+  LiteralMerge,
+  QuadrantFlip,
+  SplitFrac,
+  ZeroMerge
 } from "./algebraic_actions";
 import * as M from "materialize-css";
 

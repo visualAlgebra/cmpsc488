@@ -1,6 +1,4 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
-import {solve} from "../solver";
-import {Deserialize} from "../expression_tree";
 import {histAction} from "../history_nav";
 import {testAll} from "../solver.test";
 import LessonNavigationModal from "./LessonNavigationModal";
