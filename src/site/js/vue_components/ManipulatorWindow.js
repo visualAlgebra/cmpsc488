@@ -40,6 +40,7 @@ export default {
   template: `
 <div
   @dblclick="center()"
+  class="manip-window-outline"
 >
   <SvgPanZoom
     :maxZoom="5"
