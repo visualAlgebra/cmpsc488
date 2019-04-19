@@ -4,7 +4,7 @@ import ProfilePageTop from "./vue_components/ProfilePageTop";
 import {
   delete_lesson_from_db,
   delete_problem_from_db,
-  get_account_from_db,
+  get_account_from_db, get_all_lessons_from_db,
   get_all_problems_from_db
 } from "./database_management";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
@@ -13,6 +13,7 @@ import ProblemsHolder from "./vue_components/ProblemsHolder";
 import InvalidPage from "./vue_components/InvalidPage";
 import LessonsHolder from "./vue_components/LessonsHolder";
 import {addListenerForUser} from "./user_system";
+import LessonEditModal from "./vue_components/LessonEditModal";
 
 
 export const profile_vue=new Vue({
@@ -27,9 +28,14 @@ export const profile_vue=new Vue({
     v-bind:accountID="accountID"
     v-bind:userStruct="userStruct">
     </ProfilePageTop>
+    <button v-if="userStruct&&userStruct.token&&display" class="modal-trigger btn waves-effect waves-light" data-target="lessonEditModal">
+      <i class="material-icons right">+</i>
+      Create new lesson
+    </button>
     <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
     <div class="divider"></div>
     <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
+    <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
   </div>
   `, data(){
     return {
@@ -96,7 +102,6 @@ export const profile_vue=new Vue({
       alert("Lesson Deleted Successfully");
     }
   }, mounted(){
-    get_all_problems_from_db();
     let accountID=this.getAccountFromURL();
     if(accountID!==null&&this.gotAccount===false){
       get_account_from_db(accountID,this.distribute);
@@ -106,6 +111,6 @@ export const profile_vue=new Vue({
   }, created(){
     addListenerForUser(this.oauth_user_getter);
   }, components: {
-    NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder,
+    NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder, LessonEditModal,
   },
 });
