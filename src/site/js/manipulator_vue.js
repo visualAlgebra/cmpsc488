@@ -51,6 +51,7 @@ export const manipulator_vue = new Vue({
     <WinModal
       v-show="win"
       :navigateNextProblem="navigateNextProblem"
+      v-bind:hasLessonAttached="this.lessonID!==null"
     ></WinModal> 
   </div>
   `, data(){
