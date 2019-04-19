@@ -35,7 +35,8 @@ class Server {
     // this.eventEmitter.addListener("database file recieved", this.sendDatabaseFile);
 
     this.accessibleFolders = ["/src/site/assets/", "/src/site/dist/", "/src/site/node_modules/", "/src/site/css/", "/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
-    this.accessibleHTMLFiles = ["/index.html", "/explorer.html", "/creator.html", "/lesson-view.html", "/manipulator.html", "/profile.html"];
+    this.accessibleHTMLFiles = this.accessibleFilesMap = {"/index.html": "index.html", "/explorer.html": "/explorer.html", "/creator.html": "/creator.html", "/lesson-view.html": "/lesson-view.html", "/manipulator.html": "/manipulator.html", "/profile.html": "/profile.html"};
+    this.accessibleFilesMap = {"index": "index.html", "explorer": "/explorer.html", "creator": "/creator.html", "lesson-view": "/lesson-view.html", "manipulator": "/manipulator.html", "profile": "/profile.html"}
     this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
     this.blacklist = JSON.parse(fs.readFileSync("src/server/blacklist.json")); //form; "ipaddress": true. ie "'127.0.0.1': true" to block 127.0.0.1
   }
@@ -43,22 +44,28 @@ class Server {
 
   //returns true is filePath is an html file we allow to be found
   isAccessibleHTMLFile(filePath) {
-    for (var i = 0; i < this.accessibleHTMLFiles.length; i++) {
-      if (filePath === this.accessibleHTMLFiles[i]) {
-        return true;
-      }
+    let file = this.accessibleHTMLFiles[filePath];
+    if (file === undefined) {
+      return false;
+    } else {
+      return file;
     }
-    return false;
   }
 
   mapToHTMLFile(filePath) {
-    for (var i = 0; i < this.accessibleHTMLFiles.length; i++) {
-      let file = this.accessibleHTMLFiles[i];
-      if (filePath.startsWith(file.substr(0, file.length - 5) + '/')) {
-        return file;
-      }
+    // for (var i = 0; i < this.accessibleHTMLFiles.length; i++) {
+    //   let file = this.accessibleHTMLFiles[i];
+    //   if (filePath.startsWith(file.substr(0, file.length - 5) + '/')) {
+    //     return file;
+    //   }
+    // }
+    let topLevel = filePath.split('/')[1];
+    let file = this.accessibleFilesMap[topLevel];
+    if(file === undefined) {
+      return null;
+    } else {
+      return file;
     }
-    return null;
   }
 
 
