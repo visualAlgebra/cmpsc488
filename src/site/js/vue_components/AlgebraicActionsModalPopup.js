@@ -118,21 +118,21 @@ export default {
             </div>
           </li>
           <li>
-            <div class="collapsible-header black-text">Zero Merge</div>
+            <div class="collapsible-header black-text">Atom Absorption</div>
             <div class="collapsible-body black-text">
               <span>The zero atom in a North-South tag may destroy everything.</span><br>
               <p><b>To Initiate:</b> Select Atom Merge mode. Drag one atome onto another.</p>
             </div>
           </li>
           <li>
-            <div class="collapsible-header black-text">Identity Merge</div>
+            <div class="collapsible-header black-text">Atom Destruction</div>
             <div class="collapsible-body black-text">
               <span>The identity may be removed from a tag</span>
               <p><b>To Initiate:</b> Select Atom Merge mode. Drag any element onto the identity</p>
             </div>
           </li>
           <li>
-            <div class="collapsible-header black-text">Atom Conversion</div>
+            <div class="collapsible-header black-text">Atom Split</div>
             <div class="collapsible-body black-text">
               <span>Atoms may be converted into their equivalent atoms</span>
               <p><b>To Initiate:</b> Select Atom Merge mode. Click on any atom.</p>
