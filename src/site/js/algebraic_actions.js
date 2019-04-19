@@ -339,19 +339,20 @@ export class Factor {
     if (valueToFactor == undefined || tagToFactor == undefined || valueToFactor == null || tagToFactor == null)
       return false;
 
-    if (!tagToFactor instanceof Tag) {
+    if (!(tagToFactor instanceof Tag)) {
       return false;
     }
 
     if (tagToFactor.orientation != Orientation.EW)
       return false;
+
     for (var i = 0; i < tagToFactor.NW.length; i++) {
       if (tagToFactor.NW[i] instanceof Tag) {
         if (!tagToFactor.NW[i].NW[0].equals(valueToFactor))
           return false;
       }
       else {
-        if (!tagToFactor.NW[i].equals(valueToFactor))
+        if (!(tagToFactor.NW[i].equals(valueToFactor)))
           return false;
       }
     }

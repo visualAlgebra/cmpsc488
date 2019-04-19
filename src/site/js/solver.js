@@ -18,9 +18,9 @@ export class Node {
 
 function additionalHeur(numDiff, a, b){
   var tagDiffMod = 15;
-  var litDiffMod = 20*tagDiffMod;
+  var litDiffMod = 3*tagDiffMod;
   var varDiffMod = litDiffMod;
-  var numDiffMod = 20;
+  var numDiffMod = 2*litDiffMod;
   var litA=0;
   var litB=0;
   var varA=0;
