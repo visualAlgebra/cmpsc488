@@ -21,7 +21,7 @@
 # sed -i 's/http:\/\/localhost:8080/https:\/\/visualalgebra.org/g' src/site/js/vue_components/ExprTreeLiteral.js
 # sed -i 's/http:\/\/localhost:8080/https:\/\/visualalgebra.org/g' src/site/js/vue_components/ExprTreeVariable.js
 # sed -i 's/http:\/\/localhost:8080/https:\/\/visualalgebra.org/g' src/site/js/vue_components/LessonEditModal.js
-FILES=`grep -rl . --exclude-dir={server,node_modules} -e https://visualalgebra.org`
+FILES=`grep -rl ./src --exclude-dir={server,node_modules} -e http://localhost:8080`
 for i in $FILES;
 do
   if [ "$i" != "./README.md" ];
