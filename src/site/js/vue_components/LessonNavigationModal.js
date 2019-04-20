@@ -2,7 +2,7 @@ import * as M from "materialize-css";
 import {LessonInfo, ProblemInfo} from "../expression_tree";
 
 export default {
-  name: "LessonNavigationModal", props:["lesson", "problem", "setNextProblemURL"], template: `
+  name: "LessonNavigationModal", props:["lesson", "problemID", "setNextProblemURL"], template: `
   <div id="lessonModal" class="modal modal-fixed-footer" v-if="lesson">
       <div class="modal-content">
         <h4 class="black-text">Lesson: {{lesson.lessonID}}</h4>
@@ -10,37 +10,13 @@ export default {
           <li>
             <div class="collapsible-header black-text">Problems</div>
             <div class="collapsible-body">
-              <ul class="collapsible black-text">
-                <li v-for="prob in dataProblems">
-                  <div v-if="prob.problemID!==problem" class="collapsible-header black-text">Problem: {{prob.problemID}}
-                    <a :href="url+prob.problemID+lesson" class="secondary-content right">
-                      <i class="material-icons">send</i>
-                    </a>
-                  </div>
-                  <div v-if="prob.problemID!==problem" class="collapsible-body black-text"><span>win? (there is a bug here): {{prob.description}}</span></div>
-                  <div v-if="prob.problemID===problem" class="collapsible-header black-text blue">Problem: {{prob.problemID}}
-                    <a :href="url+prob.problemID+lesson" class="secondary-content right">
-                      <i class="material-icons">send</i>
-                    </a>
-                  </div>
-                  <div v-if="prob.problemID===problem" class="collapsible-body black-text blue"><span>win? (there is a bug here): {{prob.description}}</span></div>
-                </li>
-              </ul>
+              <div class="collection"><a :href="url+problem" :class="getCurrentProblem(problem)" v-for="problem in dataProblems">{{problem}}</a></div>
             </div>
           </li>
           <li>
             <div class="collapsible-header black-text">Lessons</div>
             <div class="collapsible-body">
-              <ul class="collapsible black-text">
-                <li v-for="lesson in dataLessons">
-                  <div class="collapsible-header black-text">Lesson: {{lesson.lessonID}}
-                    <a :href="lessonUrl+lesson.problemID" class="secondary-content right">
-                      <i class="material-icons">send</i>
-                    </a>
-                  </div>
-                  <div class="collapsible-body black-text"><span>{{lesson.description}}</span></div>
-                </li>
-              </ul>
+              <div class="collection"><a :href="lessonUrl+lesson" :class="getCurrentLesson(lesson)" v-for="lesson in dataLessons">{{lesson}}</a></div>
             </div>
           </li>
         </ul>
@@ -49,7 +25,7 @@ export default {
   </div>  
   `,data(){
     return {
-      dataProblems:[], dataLessons:[], displayProblems:false, displayLessons:false, url:'http://localhost:8080/manipulator/problems/', lessonUrl:'http://localhost:8080/lesson-view/', user:null, lessonName:null,  foundNextProb:false
+      dataProblems:[], dataLessons:[], displayProblems:false, displayLessons:false, url:'http://localhost:8080/manipulator/problems', lessonUrl:'http://localhost:8080/lesson-view/', lessonName:null,  foundNextProb:false
     }
   },
   methods: {
@@ -59,26 +35,28 @@ export default {
     }, lessons(){
       this.displayProblems=false;
       this.displayLessons=true;
+    }, getCurrentProblem(problem){
+      return{
+        "collection-item" :true,
+        "black-text" :true,
+        "blue":this.problemID.replace("/","\\")===problem,
+      }
+    }, getCurrentLesson(lesson){
+      return{
+        "collection-item" :true,
+        "black-text" :true,
+        "blue":this.lesson.replace("/","\\")===lesson,
+      }
     }
   }, mounted() {
     M.AutoInit();
-    this.user=this.lesson
     if(this.lesson!==null) {
       for (let creation in this.lesson.creations) {
         let k = this.lesson.creations[creation];
-        if (this.lesson.creations[creation].lessonID === undefined) {
-          let prob = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
-          this.dataProblems.push(prob);
-          if(this.foundNextProb){
-            this.setNextProblemURL("http://localhost:8080/manipulator/problems/"+prob.problemID);
-            this.foundNextProb=false;
-          }
-          if(prob.problemID===this.problem){
-            this.foundNextProb=true;
-          }
-        } else {
-          let les = new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description);
-          this.dataLessons.push(les);
+        if(k.indexOf("lessons/")===-1){
+          this.dataProblems.push(k.replace("problems/",""));
+        }else{
+          this.dataLessons.push(k.replace("lessons/",""));
         }
       }
     }

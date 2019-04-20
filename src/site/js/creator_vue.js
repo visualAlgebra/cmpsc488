@@ -48,7 +48,7 @@ export const creator_vue=new Vue({
   </div>
   `,
   data: () => ({
-    stage: "build", display: true,workTree: null, startTree: null, createdProblem:[null,null], desc:"",time:"",mouse: null, lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
+    stage: null, display: true,workTree: null, startTree: null, createdProblem:[null,null], desc:"",time:"",mouse: null, lessonID: null, userStruct:null, logged:false, finish:false, problemID:null,
   }), created(){
     addListenerForUser(this.oauth_user_getter);
     this.mouse = new Mouse(this);
@@ -56,6 +56,8 @@ export const creator_vue=new Vue({
     M.AutoInit();
     if(this.getURL()!==null){
       getProblemFromDBVue(this.problemID,this.distribute);
+    }else{
+      this.stage="build";
     }
   },
   methods: {
@@ -92,7 +94,9 @@ export const creator_vue=new Vue({
     }, distribute(res, code) {
       if(code===2) {//start
         this.workTree = Deserialize(res);
+        this.startTree=this.workTree.clone();
         this.display = true;
+        this.stage="manip";
       }
     }, setStartTree(tree){
       this.startTree=tree.clone();// Save a copy as the start tree.
