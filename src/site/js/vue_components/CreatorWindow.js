@@ -52,7 +52,7 @@ export default {
   <div class="modal-footer">
     <button
       @click="workTree = null"
-      class="btn-flat white-text waves-effect"
+      class="btn waves-effect"
     >
       Clear
       <i class="material-icons right">clear</i>
