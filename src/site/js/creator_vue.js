@@ -37,6 +37,8 @@ export const creator_vue = new Vue({
   <CreatorSpecificActionButtons
     v-if="display"
     :mouse="mouse"
+    :enterPulseMode="() => { pulse = true; }"
+    :exitPulseMode="() => { pulse = false; }"
   ></CreatorSpecificActionButtons>
   <ManipulatorWindow
     v-if="display&&workTree"
@@ -48,6 +50,11 @@ export const creator_vue = new Vue({
     v-if="stage === 'build'"
     :tree="workTree"
     :useCreatedTree="setStartTree"
+  ></CreatorWindow>
+  <CreatorWindow
+    v-if="displayInsertionCreatorModal"
+    :mouse="mouse"
+    :useCreatedTree="useTreeToIdentityBalance"
   ></CreatorWindow>
   <PublishProblemModal
     v-if="finish"
@@ -74,6 +81,7 @@ export const creator_vue = new Vue({
     problemID: null,
     pulse: false,
     insertionPoint: null,
+    displayInsertionCreatorModal: false,
   }),
 
   created() {
@@ -159,6 +167,16 @@ export const creator_vue = new Vue({
         const modal = document.getElementById('finishProblemModal');
         M.Modal.getInstance(modal).open();
       }, 0);
+    },
+
+    insertionQuadrantSelected(insertionPoint) {
+      this.pulse = false;
+      this.displayInsertionCreatorModal = true;
+      this.insertionPoint = insertionPoint;
+    },
+
+    useTreeToIdentityBalance(tree) {
+      this.mouse.identityBalance(tree, this.insertionPoint);
     },
   },
 

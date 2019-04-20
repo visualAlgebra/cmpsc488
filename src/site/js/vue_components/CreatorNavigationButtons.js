@@ -42,7 +42,7 @@ export default {
           <span class="truncate">Save</span>
       </a>
     </div>
-    <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
+    <HistoryNavigationPopout v-bind:dataFunc="TEMPORARY_DATA_FUNC" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
   </div>  
   `,
@@ -61,6 +61,11 @@ export default {
       };
     },
   }, methods: {
+
+    TEMPORARY_DATA_FUNC(...args) {
+      console.log("Calling CreatorNavigationButtons.TEMPORARY_DATA_FUNC()");
+    },
+
     undo(){
       console.log("hi3");
     }, redo(){
