@@ -42,6 +42,7 @@ export const creator_vue = new Vue({
     v-if="display&&workTree"
     :tree="workTree"
     :mouse="mouse"
+    :pulse="pulse"
   ></ManipulatorWindow>
   <CreatorWindow
     v-if="stage === 'build'"
@@ -50,9 +51,9 @@ export const creator_vue = new Vue({
   ></CreatorWindow>
   <PublishProblemModal
     v-if="finish"
-    v-bind:closeFinish="closeFinish"
-    v-bind:createdProblem="createdProblem"
-    v-bind:userStruct="userStruct"
+    :closeFinish="closeFinish"
+    :createdProblem="createdProblem"
+    :userStruct="userStruct"
   ></PublishProblemModal>
 </div>
   `,
@@ -71,6 +72,8 @@ export const creator_vue = new Vue({
     logged: false,
     finish: false,
     problemID: null,
+    pulse: false,
+    insertionPoint: null,
   }),
 
   created() {
@@ -88,6 +91,15 @@ export const creator_vue = new Vue({
   },
 
   methods: {
+    distribute(res, code) {
+      if (code === 2) { // Start
+        this.workTree = Deserialize(res);
+        this.startTree = this.workTree.clone();
+        this.display = true;
+        this.stage = "manip";
+      }
+    },
+
     problemIsSavable() {
       return this.startTree !== null
           && this.workTree !== null
@@ -100,7 +112,7 @@ export const creator_vue = new Vue({
     },
 
     oauth_user_remover() {
-      this.usersStruct = null;
+      this.userStruct = null;
       this.logged = false;
     },
 
@@ -122,30 +134,21 @@ export const creator_vue = new Vue({
 
     closeFinish(res) {
       this.finish = false;
-      window.location.href = "http://localhost:8080/manipulator/problems/" + res
+      window.location.href = "http://localhost:8080/algebra/problems/" + res
     },
 
     clearTree() {
       this.workTree = null;
     },
 
-    distribute(res, code) {
-      if (code === 2) {//start
-        this.workTree = Deserialize(res);
-        this.startTree = this.workTree.clone();
-        this.display = true;
-        this.stage = "manip";
-      }
-    },
-
     setStartTree(tree) {
-      this.startTree = tree.clone();// Save a copy as the start tree.
+      this.startTree = tree.clone(); // Save a copy as the start tree.
       this.workTree = tree;
       this.stage = "manip";
     },
 
     editStartTree() {
-      this.workTree = this.startTree;// We can reuse startTree obj since workTree is overwritten.
+      this.workTree = this.startTree; // We can reuse startTree obj since workTree is overwritten.
       this.stage = "build";
     },
 
