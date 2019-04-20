@@ -81,9 +81,9 @@
 }
 
 .hoverable:hover {
-    -webkit-border-radius: 0.5rem;
-    -moz-border-radius: 0.5rem;
-    border-radius: 0.5rem;
+    -webkit-border-radius: var(--tag-border-radius);
+    -moz-border-radius: var(--tag-border-radius);
+    border-radius: var(--tag-border-radius);
     box-shadow: 10px 10px 60px black;
     transition: 0.15s box-shadow;
 }
