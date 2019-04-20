@@ -52,7 +52,7 @@ export default {
   <div class="modal-footer">
     <button
       @click="workTree = null"
-      class="btn waves-effect"
+      :class="clearButtonClasses"
     >
       Clear
       <i class="material-icons right">clear</i>
@@ -61,7 +61,7 @@ export default {
       @click="closeModal"
       :class="closeButtonClasses"
     >
-      Use as Start
+      Accept
       <i class="material-icons right">navigate_next</i>
     </button>
   </div>
@@ -85,11 +85,20 @@ export default {
   computed: {
     closeButtonClasses() {
       return {
-        "btn-flat": true,
+        "btn": true,
         "green": true,
         "white-text": true,
         "waves-effect": true,
-        disabled: this.workTree === null,
+        "disabled": this.workTree === null,
+      };
+    },
+
+    clearButtonClasses() {
+      return {
+        "btn": true,
+        "orange": true,
+        "waves-effect": true,
+        "disabled": this.workTree === null,
       };
     },
   },
