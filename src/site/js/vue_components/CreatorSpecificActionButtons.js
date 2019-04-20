@@ -1,6 +1,5 @@
 import * as M from "materialize-css";
 import {Mouse, MouseMode} from "../gui";
-import InsertButtons from "./InsertionButtons";
 
 export default {
   name: "CreatorSpecificActionButtons",
@@ -11,7 +10,6 @@ export default {
 
   template: `
 <div>
-  <section>
     <form action="#">
       <div class="row">
         <div class="col s12">
@@ -32,11 +30,6 @@ export default {
         </div>
       </div>
     </form>
-  </section>
-  <InsertButtons
-    v-if="inInsertMode"
-    :mouse="mouse"
-  ></InsertButtons>
 </div>  
   `,
 
@@ -73,9 +66,5 @@ export default {
   mounted(){
     M.AutoInit();
     this.mouse.mode = MouseMode.Manipulation;
-  },
-
-  components: {
-    InsertButtons
   },
 };
