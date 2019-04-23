@@ -14,6 +14,7 @@ import InvalidPage from "./vue_components/InvalidPage";
 import LessonsHolder from "./vue_components/LessonsHolder";
 import {addListenerForUser} from "./user_system";
 import LessonEditModal from "./vue_components/LessonEditModal";
+import Footer from "./vue_components/Footer";
 
 
 export const profile_vue=new Vue({
@@ -36,6 +37,7 @@ export const profile_vue=new Vue({
     <div class="divider"></div>
     <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
     <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
+    <Footer/>
   </div>
   `, data(){
     return {
@@ -111,6 +113,6 @@ export const profile_vue=new Vue({
   }, created(){
     addListenerForUser(this.oauth_user_getter);
   }, components: {
-    NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder, LessonEditModal,
+    NavigationBar, ProfilePageTop, ProblemsHolder, InvalidPage, LessonsHolder, LessonEditModal, Footer,
   },
 });
