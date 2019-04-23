@@ -287,7 +287,7 @@ class Server {
     } else if (this.isAccessibleHTMLFile(pageName)) {
       filename = "src/site" + this.isAccessibleHTMLFile(pageName);
     } else if (pageName === "/favicon.ico") {
-      filename = "src/site/assets/example_image.png";
+      filename = "src/site/assets/FAVICON.png";
     } else {
       let htmlFile = this.mapToHTMLFile(pageName);
       if (htmlFile === null) {

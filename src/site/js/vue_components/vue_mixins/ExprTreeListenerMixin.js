@@ -9,21 +9,30 @@ export default {
     interactive: Boolean,
     insertable: Boolean,
     mouse: Mouse,
+    pulse: {
+      default: false,
+      type: Boolean,
+    },
   },
 
   computed: {
     listeners() {
+      const fns = {};
       if (this.interactive) {
-        return {
-          mousedown: e => { e.stopPropagation(); },
-          mousemove: e => { e.stopPropagation(); },
-          mouseup: e => { e.stopPropagation(); },
-          click: this.mouseClicked
+        fns.mousedown = e => {
+          e.stopPropagation();
         };
-      } else {
-        // See https://jsfiddle.net/c0Le92xe/ for example
-        return null;
+        fns.mousemove = e => {
+          e.stopPropagation();
+        };
+        fns.mouseup = e => {
+          e.stopPropagation();
+        };
+        if (!this.pulse) {
+          fns.click = this.mouseClicked;
+        }
       }
+      return fns;
     },
   },
 

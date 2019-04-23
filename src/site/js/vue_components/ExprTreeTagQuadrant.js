@@ -1,5 +1,5 @@
 import ExprTreeListenerMixin from "./vue_mixins/ExprTreeListenerMixin";
-import {ClickTargetKind} from "../gui";
+import {ClickTargetKind, MouseMode} from "../gui";
 import {ExpressionTree as jsExpressionTree, Quadrant} from "../expression_tree";
 import {Drag, Drop} from "vue-drag-drop";
 
@@ -13,6 +13,10 @@ export default {
     quadrant: String,
     values: Array,
     interactive: Boolean,
+    pulse: {
+      default: false,
+      type: Boolean,
+    },
   },
 
   mixins: [ExprTreeListenerMixin],
@@ -22,6 +26,7 @@ export default {
   <div
     :class="classes"
     xmlns="http://www.w3.org/1999/xhtml"
+    v-on="listener"
   >
     <div
       xmlns="http://www.w3.org/1999/xhtml"
@@ -35,6 +40,7 @@ export default {
         :interactive="interactive"
         :mouse="mouse"
         :insertable="insertable"
+        :pulse="pulse"
       ></ExpressionTree>
     </div>
   </div>
@@ -58,12 +64,25 @@ export default {
       const isSE = this.quadrant === Quadrant.SE;
       const isInteractive = this.interactive;
       const spaceItOut = this.values.length === 0;
+      const pulse = this.pulse;
       return {
         "north-west": isNW,
         "south-east": isSE,
         "hoverable": isInteractive,
         "tag-spacer": spaceItOut,
+        "pulse": pulse,
       };
+    },
+
+    listener() {
+      return (this.pulse) ? {
+        click: e => {
+          e.stopPropagation();
+          this.mouse.mode = MouseMode.SelectingInsertionQuadrant;
+          this.mouse.eventSource = this.guiObj;
+          this.mouse.clickDetected();
+        },
+      } : {};
     },
   },
 

@@ -633,7 +633,7 @@ export class IdentityBalance {
   constructor(newChild, tag) {
     this.newChild = newChild;
     this.tag = tag;
-    this.name = "Identity Balence";
+    this.name = "Identity Balance";
   }
 
   static verify(newChild, tag) {

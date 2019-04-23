@@ -1,9 +1,25 @@
 import {LZMA} from './lzma_worker.js';
 import {LiteralGui, TagGui, VariableGui} from "./gui";
 import {createRandomExpression} from './random_expression_creator.js';
-import {AssociativeIntro, AssociativeMerge, CommutativeSwap, AssociativeInsert, Distribute, Factor, SplitFrac, LiteralConversion, IdentityMerge, ZeroMerge, LiteralMerge, IdentityBalance, Cancel, QuadrantFlip, CombineFrac} from './algebraic_actions.js';
+import {
+  AssociativeInsert,
+  AssociativeIntro,
+  AssociativeMerge,
+  Cancel,
+  CombineFrac,
+  CommutativeSwap,
+  Distribute,
+  Factor,
+  IdentityBalance,
+  IdentityMerge,
+  LiteralConversion,
+  LiteralMerge,
+  QuadrantFlip,
+  SplitFrac,
+  ZeroMerge
+} from './algebraic_actions.js';
 import Vue from "vue";
-import { probGenExpand, Node } from './solver.js';
+import {probGenExpand} from './solver.js';
 
 export const Orientation = {
   EW: "eastwest",

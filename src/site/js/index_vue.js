@@ -10,16 +10,6 @@ export const index_vue = new Vue({
     <IndexPageViewVue></IndexPageViewVue>
   </div>
   `,
-  // mounted() {
-  //   console.log("here");
-  //   this.TESTPOST();
-  // }, methods: {
-  //   TESTPOST() {
-  //     let temp = createDummyProblem(20, 2);
-  //     console.log(temp);
-  //     post_problem_from_site(temp);
-  //   }
-  // },
   data(){
     return{
       userStruct:null, logged:false,

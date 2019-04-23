@@ -8,8 +8,8 @@
     --atom-size: 2.5rem;
 
     /*********COLORSCHEME 4*************************/
-    --tag-positive-color: #b6ccde;
-    --tag-positive-color-secondary: #81959f;
+    --tag-positive-color: #81959f;
+    --tag-positive-color-secondary: #b6ccde;
     --tag-negative-color: #485061;
     --tag-negative-color-secondary: #5f6b81;
     /*--tag-negative-color: #61454b;*/
@@ -47,16 +47,23 @@
 .north-south {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
 }
 
 .east-west {
     display: flex;
+    align-items: center;
 }
 
 .east-west > * > * {
     display: flex;
     align-content: center;
+}
+
+.north-south > * > .north-west {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .north-west {
@@ -70,14 +77,13 @@
 }
 
 .tag-element-container {
-    display: flex;
     padding: var(--element-padding);
 }
 
 .hoverable:hover {
-    -webkit-border-radius: 0.5rem;
-    -moz-border-radius: 0.5rem;
-    border-radius: 0.5rem;
+    -webkit-border-radius: var(--tag-border-radius);
+    -moz-border-radius: var(--tag-border-radius);
+    border-radius: var(--tag-border-radius);
     box-shadow: 10px 10px 60px black;
     transition: 0.15s box-shadow;
 }

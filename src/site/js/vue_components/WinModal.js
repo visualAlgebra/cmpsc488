@@ -1,5 +1,5 @@
 export default {
-  name: "WinModal", props:["navigateNextProblem"], template: `
+  name: "WinModal", props:["navigateNextProblem", "hasLessonAttached"], template: `
   <div id="winModal" class="modal">
       <div class="modal-content center-align">
         <div class="row">
@@ -15,24 +15,16 @@ export default {
           >
             Return to Explore Page
           </a>
-          <div v-if="display">
-            <a class="waves-effect waves-green btn-flat" data-target="lessonModal">
+          <div v-if="hasLessonAttached">
+            <a class="waves-effect waves-green btn-flat modal-trigger" data-target="lessonModal">
               View Lesson
             </a>
           </div>
-          <div v-if="display">
+          <div v-if="hasLessonAttached">
             <a class="waves-effect waves-green btn-flat" v-on:click="navigateNextProblem">Go to next problem</a>
           </div>
           </div>
       </div>
   </div>  
-  `,data(){
-    return{
-      display:false,
-    }
-  }, mounted(){
-    if(document.getElementById('lessonModal')){
-      this.display=true;
-    }
-  }
+  `
 };
