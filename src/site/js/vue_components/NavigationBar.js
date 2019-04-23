@@ -5,7 +5,7 @@ export default {
   <div>
     <nav>
       <div class="nav-wrapper">
-        <a href="http://localhost:8080/index.html" class="brand-logo">VisualAlgebra</a>
+        <a href="http://localhost:8080/" class="brand-logo">VisualAlgebra</a>
         <a href="#" class="sidenav-trigger" data-target="navbarSidenav">
           <i class="material-icons">menu</i>
         </a>
@@ -14,7 +14,7 @@ export default {
             <a href="http://localhost:8080/">Home</a>
           </li>
           <li>
-            <a href="http://localost:8080/creator.html">Create</a>
+            <a href="http://localhost:8080/creator.html">Create</a>
           </li>
           <li>
             <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra</a>
