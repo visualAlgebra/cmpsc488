@@ -45,7 +45,6 @@ class Server {
   //returns true is filePath is an html file we allow to be found
   isAccessibleHTMLFile(filePath) {
     let file = this.accessibleHTMLFiles[filePath];
-    //console.log(file);
     if (file === undefined) {
       return false;
     } else {
@@ -146,93 +145,100 @@ class Server {
     
     
     let serverHandler = function (request, response) {
-      if(self.blacklist[response.connection.remoteAddress]) {
-        response.destroy();
-      }
-      let sentUrl = url.parse(request.url, true);
-      let method = request.method;
-      console.log("Request Recieved: " + method + ": " + sentUrl.pathname);
+      try {
 
-
-      //determine action required
-      if (method == "GET") {
-        //sentUrl.pathname = removeExtraPaths(sentUrl.pathname);
-        if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //GET request for problem
-          self.getProblem(sentUrl.pathname, response);
-        } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //GET request for Lesson
-          self.getLesson(sentUrl.pathname, response);
-        } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //GET request for an account
-          self.getAccount(sentUrl.pathname, response);
-        } else if (sentUrl.pathname === self.databaseActions[3]) {
-          self.queryProblems(sentUrl.query, response);
-        } else if (sentUrl.pathname === self.databaseActions[4]) {
-          self.queryLessons(sentUrl.query, response);
-        } else { //GET request for a webpage
-          self.getPage(sentUrl.pathname, response);
+        if(self.blacklist[response.connection.remoteAddress]) {
+          response.destroy();
         }
-
-      } else if (method == "POST") {
-        let body = "";
-
-        request.on('data', function (data) { //event listener for data received from POST request
-          body += data;
-          if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
-            request.connection.destroy();
+        let sentUrl = url.parse(request.url, true);
+        let method = request.method;
+        console.log("Request Recieved: " + method + ": " + sentUrl.pathname);
+  
+  
+        //determine action required
+        if (method == "GET") {
+          //sentUrl.pathname = removeExtraPaths(sentUrl.pathname);
+          if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //GET request for problem
+            self.getProblem(sentUrl.pathname, response);
+          } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //GET request for Lesson
+            self.getLesson(sentUrl.pathname, response);
+          } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //GET request for an account
+            self.getAccount(sentUrl.pathname, response);
+          } else if (sentUrl.pathname === self.databaseActions[3]) {
+            self.queryProblems(sentUrl.query, response);
+          } else if (sentUrl.pathname === self.databaseActions[4]) {
+            self.queryLessons(sentUrl.query, response);
+          } else { //GET request for a webpage
+            self.getPage(sentUrl.pathname, response);
           }
-        });
-
-        request.on('end', function () { //event listener for when data finished coming from POST request
-          let jsonData;
-          try {
-            jsonData = JSON.parse(body);
-          } catch (error) {
-            console.log("============ Error =============");
-            console.log("Error parsing posted data");
-            console.log(error);
-            console.log("==========End of Error =========");
-            return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
-          }
-
-          self.authenticatedUserFromToken(response, self.getSentToken(request), function (accountID) {
-            if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
-              self.saveProblem(sentUrl.pathname, response, jsonData, accountID);
-            } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
-              self.saveLesson(sentUrl.pathname, response, jsonData, accountID);
-            } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
-              self.saveAccount(response, jsonData, accountID);
-            } else {
+  
+        } else if (method == "POST") {
+          let body = "";
+  
+          request.on('data', function (data) { //event listener for data received from POST request
+            body += data;
+            if (body.length > maxPostSize) { //stops outside from sending enormous file and crashing server
+              request.connection.destroy();
+            }
+          });
+  
+          request.on('end', function () { //event listener for when data finished coming from POST request
+            let jsonData;
+            try {
+              jsonData = JSON.parse(body);
+            } catch (error) {
               console.log("============ Error =============");
-              console.log("Sent POST request does not match any api call");
+              console.log("Error parsing posted data");
+              console.log(error);
               console.log("==========End of Error =========");
+              return self.respondWithError(response, 400, "Error 400: JSON POST data has bad syntax");
+            }
+  
+            self.authenticatedUserFromToken(response, self.getSentToken(request), function (accountID) {
+              if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //POST request for problem
+                self.saveProblem(sentUrl.pathname, response, jsonData, accountID);
+              } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //POST request for Lesson
+                self.saveLesson(sentUrl.pathname, response, jsonData, accountID);
+              } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //POST request for account
+                self.saveAccount(response, jsonData, accountID);
+              } else {
+                console.log("============ Error =============");
+                console.log("Sent POST request does not match any api call");
+                console.log("==========End of Error =========");
+                return self.respondWithError(response, 400, "Error 400: Bad Request");
+              }
+              
+            });
+            //let accountID = self.authenticatedUser(self.getSentAccountID(request));
+          });
+  
+  
+        } else if (method == "DELETE") {
+          self.authenticatedUserFromToken(response, self.getSentToken(request), function (accountID) {
+            if (accountID === undefined) {
+              return self.respondWithError(response, 401, "Error 401: No Authorization Provided");
+            }
+            if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
+              self.deleteProblem(response, sentUrl.pathname, accountID);
+            } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
+              self.deleteLesson(response, sentUrl.pathname, accountID);
+            } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
+              self.deleteAccount(response, sentUrl.pathname, accountID);
+            } else {
               return self.respondWithError(response, 400, "Error 400: Bad Request");
             }
-            
           });
-          //let accountID = self.authenticatedUser(self.getSentAccountID(request));
-        });
-
-
-      } else if (method == "DELETE") {
-        self.authenticatedUserFromToken(response, self.getSentToken(request), function (accountID) {
-          if (accountID === undefined) {
-            return self.respondWithError(response, 401, "Error 401: No Authorization Provided");
-          }
-          if (sentUrl.pathname.startsWith(self.databaseActions[0])) { //DELETE request for problem
-            self.deleteProblem(response, sentUrl.pathname, accountID);
-          } else if (sentUrl.pathname.startsWith(self.databaseActions[1])) { //DELETE request for Lesson
-            self.deleteLesson(response, sentUrl.pathname, accountID);
-          } else if (sentUrl.pathname.startsWith(self.databaseActions[2])) { //DELETE request for account
-            self.deleteAccount(response, sentUrl.pathname, accountID);
-          } else {
-            return self.respondWithError(response, 400, "Error 400: Bad Request");
-          }
-        });
-      } else { // we do not handle other methods 
-        return self.respondWithError(response, 400, "Error 400: Method not supported");
+        } else { // we do not handle other methods 
+          return self.respondWithError(response, 400, "Error 400: Method not supported");
+        }
+      } catch (error) {
+        console.error("============ Error =============");
+        console.error("Uncaught Error!!!");
+        console.error(error);
+        console.error("==========End of Error =========");
       }
-
-
     }
+
 
     //https has a required options section, but http does not allow it on older versions of node
     if(this.PORT_NUMBER === 443) {
