@@ -107,7 +107,7 @@ function _genRandomNode(tag){
     rand=Math.floor(Math.random()*3);//0-2
     return new Literal(rand);
   }else if(rand===1){
-    rand=Math.floor(Math.random()*3);//0-3
+    rand=Math.floor(Math.random()*3);//0-2
     return new Variable(rand);
   }
 }
