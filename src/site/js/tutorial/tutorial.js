@@ -126,7 +126,7 @@ function imgTutProb1() {
 function imgTutProb2() {
 
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
+  imgs.push("");
   imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
   imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
   imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
