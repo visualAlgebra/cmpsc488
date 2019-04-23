@@ -60,7 +60,7 @@ export default {
       </li>
       <li>
         <a v-if="logged" v-on:click="signOutNow()">Logout</a>
-      </li>  
+      </li>
     </ul>
   </div>  
   `, mounted() {
