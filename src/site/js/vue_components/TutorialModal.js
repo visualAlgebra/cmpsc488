@@ -36,14 +36,12 @@ export default {
         this.setText();
         this.changeImg();
       }
-      console.log(this.index)
     }, back() {
       if (this.index > 0){
         this.index--;
         this.setText();
         this.changeImg();
       } 
-      console.log(this.index)
     }, setTut(i) {
       this.tutNum = i;
       this.index = 0;

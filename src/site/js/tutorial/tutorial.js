@@ -102,9 +102,10 @@ function tutorialProblem5() {
   tutMessage.push("To iniatite Quadrant Flip, drag a tag into the opposite quadrant. For this action to work, the inner tag must be the same " + 
   "orientation as the outer tag.");
   tutMessage.push("Next we'll talk about Cancel. If two tags that are equal and on opposite sides of a tag, you may cancel them by dragging the tag button of one" +
-  "into the tag button of the other. Try this on Tutorial Problem 5.");
+  "into the tag button of the other.");
+  tutMessage.push("Finally, let's talk about Identity Balance. This action allows you to put any expression on both quadrants of a tag. " +
+  "This mode is done by clicking on Insert. Click on a start and add elements as you choose. Try these actions on Tutorial Problem 5.")
   return tutMessage;
-
 }
 
 function tutorialProblem6() {
@@ -113,7 +114,7 @@ function tutorialProblem6() {
 function imgTutProb1() {
   
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/FAVICON.png");
+  imgs.push("");
   imgs.push("http://localhost:8080/src/site/assets/VAComps.png");
   imgs.push("http://localhost:8080/src/site/assets/EWTagEX.png");
   imgs.push("http://localhost:8080/src/site/assets/NSTagEX.png");
@@ -127,12 +128,11 @@ function imgTutProb2() {
 
   let imgs = [];
   imgs.push("");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AssociativeIntro.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AssociativeMerge.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AssociativeExtract.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AssociativeInsert.gif");
+  imgs.push("");
 
   return imgs;
 }
@@ -140,13 +140,10 @@ function imgTutProb2() {
 function imgTutProb3() {
 
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+  imgs.push("");
+  imgs.push("http://localhost:8080/src/site/assets/Distribute.gif");
+  imgs.push("http://localhost:8080/src/site/assets/Factor.gif");
+  imgs.push("");
 
   return imgs;
 }
@@ -154,13 +151,10 @@ function imgTutProb3() {
 function imgTutProb4() {
 
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+  imgs.push("");
+  imgs.push("http://localhost:8080/src/site/assets/SplitFrac.gif");
+  imgs.push("http://localhost:8080/src/site/assets/CombineFrac.gif");
+  imgs.push("");
 
   return imgs;
 }
@@ -168,13 +162,10 @@ function imgTutProb4() {
 function imgTutProb5() {
 
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+  imgs.push("");
+  imgs.push("http://localhost:8080/src/site/assets/QuadrantFlip.gif");
+  imgs.push("http://localhost:8080/src/site/assets/Cancel.gif");
+  imgs.push("http://localhost:8080/src/site/assets/IdentityBalance.gif");
   
   return imgs;
 }
