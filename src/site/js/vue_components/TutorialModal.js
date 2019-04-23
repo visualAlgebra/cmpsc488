@@ -10,6 +10,7 @@ export default {
       <li class="waves-effect"><a href="#!" v-on:click="setTut(3)">3</a></li>
       <li class="waves-effect"><a href="#!" v-on:click="setTut(4)">4</a></li>
       <li class="waves-effect"><a href="#!" v-on:click="setTut(5)">5</a></li>
+      <li class="waves-effect"><a href="#!" v-on:click="setTut(6)">6</a></li>
     </ul>
     <div class="modal-content">
       <h4 id="tutTitle" >Tutorial</h4>
@@ -31,13 +32,17 @@ export default {
   },
   methods: {
     next(){
-      if(this.index < this.tutMessages.length) this.index++;
-      this.setText();
-      this.changeImg();
+      if(this.index < this.tutMessages.length-1) {
+        this.index++;
+        this.setText();
+        this.changeImg();
+      }
     }, back() {
-      if (this.index > 0) this.index--;
-      this.setText();
-      this.changeImg();
+      if (this.index > 0){
+        this.index--;
+        this.setText();
+        this.changeImg();
+      } 
     }, setTut(i) {
       this.tutNum = i;
       this.index = 0;

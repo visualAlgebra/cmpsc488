@@ -1,5 +1,4 @@
 import SingleExpressionDisplay from "./SingleExpressionDisplay";
-import * as M from "materialize-css";
 
 export default {
   name: "GoalExpression",

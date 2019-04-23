@@ -3,7 +3,6 @@ import NavigationBar from "./vue_components/NavigationBar";
 import CreatorSpecificActionButtons from "./vue_components/CreatorSpecificActionButtons";
 import CreatorNavigationButtons from "./vue_components/CreatorNavigationButtons";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
-import * as M from "materialize-css";
 import {getProblemFromDBVue} from "./display_feature";
 import {Deserialize} from "./expression_tree";
 import {Mouse} from "./gui";

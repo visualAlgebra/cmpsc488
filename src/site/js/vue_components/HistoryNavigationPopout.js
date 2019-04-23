@@ -1,4 +1,4 @@
-import * as M from "materialize-css";
+
 import HistoryNavigationHistoryLine from "./HistoryNavigationHistoryLine";
 import {addHistoryEntry, getHistoryController, setGoalTree} from "../history_nav";
 

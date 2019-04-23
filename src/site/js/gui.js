@@ -17,7 +17,6 @@ import {
   SplitFrac,
   ZeroMerge,
 } from "./algebraic_actions";
-import * as M from "materialize-css";
 
 
 // Given a Tag instance, it will return the `n`th "child" of that tag where the

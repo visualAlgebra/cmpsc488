@@ -9,7 +9,6 @@ import ExpressionTree from "./vue_components/ExpressionTree";
 import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 import GoalExpression from "./vue_components/GoalExpression";
-import * as M from "materialize-css";
 import {addHistoryEntry, clearHist} from "./history_nav";
 import {Mouse} from "./gui";
 import {addListenerForUser} from "./user_system";

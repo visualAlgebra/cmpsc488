@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import ManipulatorWindow from "./ManipulatorWindow";
 import InsertionButtons from "./InsertionButtons";
 import {Mouse} from "../gui";

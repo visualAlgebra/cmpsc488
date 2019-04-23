@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import {Mouse, MouseMode} from "../gui";
 
 export default {

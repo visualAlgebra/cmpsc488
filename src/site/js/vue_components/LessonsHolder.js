@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import SingleLessonDisplay from "./SingleLessonDisplay";
 
 export default {

@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import SingleExpressionDisplay from "./SingleExpressionDisplay";
 import {solve} from "../solver";
 import {Deserialize} from "../expression_tree";
