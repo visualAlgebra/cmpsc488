@@ -1,7 +1,38 @@
-.wavecard {
-  height: 150px;
-  display:inline-block;
-  width: auto;
-  border-width: 2px;
-  border-style: groove;
+:root {
+  --header-vert-margin: 7rem;
+  --our-teal: #abf2ed;
+  --our-pink: #fa909a;
 }
+
+.index-header {
+  text-align: center;
+  margin-top: var(--header-vert-margin);
+  margin-bottom: var(--header-vert-margin);
+}
+
+.index-header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.index-header-title > svg {
+  margin-right: 1.5rem;
+  margin-bottom: -4rem;
+}
+
+.index-header-title > h1 {
+  margin-bottom: -1rem;
+}
+
+.subtitle {
+  font-size: 14pt;
+  font-style: italic;
+  color: var(--our-teal);
+}
+
+a {
+  color: var(--our-pink);
+  font-style: italic;
+}
+

@@ -1,60 +1,41 @@
 import * as M from "materialize-css";
+import TwoSvg from "./TwoSvg";
 
 export default {
   name: "IndexPageViewVue",
 
   template: `
-<div>
-  <div class="container">
-    <div class="row">
-      <a class="waves-effect waves-light btn" href="http://localhost:8080/algebra/problems/Getting_started">
-        <i class="material-icons left">file_download</i>
-        Get Started!
-      </a>
+<div class="container">
+  <div class="index-header">
+    <div class="index-header-title">
+      <TwoSvg/>
+      <h1>VisualAlgebra</h1>
     </div>
+    <h2 class="subtitle">A graphical, interactive, algebraic playground.</h2>
   </div>
-  <div class="container">
-    <h4>Why we created VisualAlgebra</h4>
-    <div class="row wavecard">
-      <div class="col m3">
-        <img class="materialboxed" src="http://localhost:8080/src/site/assets/example_image.png" width="50">
-      </div>
-      <div class="col m9">
-        <p>Our project members are dedicated to create a new and interesting algebra revolving around visual graphics and
-          simple to understand operations!</p>
-      </div>
-    </div>
-    <div class="row wavecard">
-      <div class="col m9">
-        <p>Our (not yet) implemented auto solving algorithm will help any user find the next step to complete their
-          problem!</p>
-      </div>
-      <div class="col m3">
-        <img class="materialboxed" src="http://localhost:8080/src/site/assets/example_image.png" width="50">
-      </div>
-    </div>
-    <div class="row wavecard">
-      <div class="col m3">
-        <img class="materialboxed" src="http://localhost:8080/src/site/assets/example_image.png" width="50">
-      </div>
-      <div class="col m9">
-        <p>Visit our explorer page to find new problems created by teachers or other lesson and problem creators!</p>
-      </div>
-    </div>
-    <div class="row wavecard">
-      <div class="col m9">
-        <p>Please visit us at GitHub to get introducted to the process of creating our webpage and implementing all our
-          algebraic actions!</p>
-      </div>
-      <div class="col m3">
-        <img class="materialboxed" src="http://localhost:8080/src/site/assets/example_image.png" width="50">
-      </div>
-    </div>
-  </div>    
+  <p class="flow-text">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis excepturi repellat repellendus! Ad, culpa dolorem eveniet illo laborum molestias quisquam voluptatum? A consequuntur earum esse placeat qui sunt tempora ullam!
+  </p>
+  <p class="flow-text">
+     We simplify algebra by basing our graphical system on ℤ3, an algebraic field with <strong>only three numbers.</strong> Rather than getting bogged down in arithmetic, we want you to focus on the algebraic laws common to all kinds of algebras.
+  </p>
+  <p class="flow-text">
+    Solve puzzles on the <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra page</a> by transforming one expression into another.
+  </p>
+  <p class="flow-text">
+    Create problems on the <a href="http://localhost:8080/creator">Creator page</a> and share them with your friends.
+  </p>
+  <p class="flow-text">
+    Browse problems created by other students on the <a href="http://localhost:8080/explorer">Explorer page</a>.
+  </p>
 </div>  
   `,
 
-  mounted(){
+  mounted() {
     M.AutoInit();
+  },
+
+  components: {
+    TwoSvg,
   },
 };
