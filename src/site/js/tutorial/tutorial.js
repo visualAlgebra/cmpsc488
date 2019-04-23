@@ -113,13 +113,12 @@ function tutorialProblem6() {
 function imgTutProb1() {
   
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_125.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_150.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_160.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_170.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_180.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_190.gif");
-  imgs.push("http://localhost:8080/src/site/assets/com_swap_200.gif");
+  imgs.push("http://localhost:8080/src/site/assets/FAVICON.png");
+  imgs.push("http://localhost:8080/src/site/assets/VAComps.png");
+  imgs.push("http://localhost:8080/src/site/assets/EWTagEX.png");
+  imgs.push("http://localhost:8080/src/site/assets/NSTagEX.png");
+  imgs.push("http://localhost:8080/src/site/assets/SolveEx.gif");
+  imgs.push("http://localhost:8080/src/site/assets/CommutativeSwap.gif");
 
   return imgs;
 }
