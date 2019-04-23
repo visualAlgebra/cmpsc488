@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 
 export default {
   name: "AlgebraicActionsModalPopup", template: `

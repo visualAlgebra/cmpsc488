@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import {delete_account_from_db} from "../database_management";
 import {signOut} from "../user_system";
 

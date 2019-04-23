@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import {get_all_lessons_from_db, get_all_problems_from_db, post_lesson_from_site} from "../database_management";
 import {LessonInfo} from "../expression_tree";
 

@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import {displayExpressionTree} from "../display_feature";
 
 export default {
