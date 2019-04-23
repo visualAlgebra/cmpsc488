@@ -1,5 +1,7 @@
 import * as M from "materialize-css";
 import TwoSvg from "./TwoSvg";
+import {Literal} from "../expression_tree";
+import ExpressionTree from "./ExpressionTree";
 
 export default {
   name: "IndexPageViewVue",
@@ -16,6 +18,25 @@ export default {
   <p class="flow-text">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis excepturi repellat repellendus! Ad, culpa dolorem eveniet illo laborum molestias quisquam voluptatum? A consequuntur earum esse placeat qui sunt tempora ullam!
   </p>
+  
+  <section class="row literal-row">
+    <div class="col s4">
+      <div class="expr-tree-box hoverable">
+        <ExpressionTree :tree="zero()" />
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="expr-tree-box hoverable">
+        <ExpressionTree :tree="one()" />
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="expr-tree-box hoverable">
+        <ExpressionTree :tree="two()" />
+      </div>
+    </div>
+  </section>
+  
   <p class="flow-text">
      We simplify algebra by basing our graphical system on ℤ3, an algebraic field with <strong>only three numbers.</strong> Rather than getting bogged down in arithmetic, we want you to focus on the algebraic laws common to all kinds of algebras.
   </p>
@@ -35,7 +56,14 @@ export default {
     M.AutoInit();
   },
 
+  methods: {
+    zero: () => new Literal(0),
+    one: () => new Literal(1),
+    two: () => new Literal(2),
+  },
+
   components: {
     TwoSvg,
+    ExpressionTree,
   },
 };
