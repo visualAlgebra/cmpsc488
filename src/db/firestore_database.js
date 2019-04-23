@@ -31,7 +31,7 @@ class FirestoreDatabase extends Database {
         callback(userName);
 
       }).catch(function (error) {
-        console.log(idToken);
+        //console.log(idToken);
         server.respondWithError(response, 403, "Error 403: oauth token not accepted");
       });
   }
@@ -46,10 +46,10 @@ class FirestoreDatabase extends Database {
     try {
       problemReference = this.session.collection('problems').doc(correctLink);
     } catch (error) {
-      console.error("============ Error =============");
-      console.error("Error getting problem");
-      console.error(error);
-      console.error("==========End of Error =========");
+      console.log("============ Error =============");
+      console.log("Error getting problem");
+      console.log(error);
+      console.log("==========End of Error =========");
       server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Problem Link");
     }
     let problemQuery = problemReference.get()
@@ -62,8 +62,11 @@ class FirestoreDatabase extends Database {
           server.respondWithData(serverResponse, 200, "application/json", JSON.stringify(problem));
         }
       })
-      .catch(err => {
-        console.log("Error getting file from database: ", err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error getting file from database");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
   }
@@ -99,8 +102,11 @@ class FirestoreDatabase extends Database {
           problemsFinished = true;
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error assembling problems in lesson");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
 
@@ -124,8 +130,11 @@ class FirestoreDatabase extends Database {
           lessonsFinished = true;
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error assembling lessons in lesson");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
   }
@@ -140,10 +149,7 @@ class FirestoreDatabase extends Database {
       lessonReference = this.session.collection('lessons').doc(correctLink);
     }
     catch (error) {
-      console.error("Error: Could not get Lesson");
-      console.error(error);
-      console.error("End of Error");
-      server.respondWithError(serverResponse, 400, "Error: Invalid Lesson Sent");
+      server.respondWithError(serverResponse, 400, "Error 400: Invalid Lesson Sent");
     }
     let lessonQuery = lessonReference.get()
       .then(doc => {
@@ -155,8 +161,11 @@ class FirestoreDatabase extends Database {
           this.assembleLesson(server, lesson, serverResponse);
         }
       })
-      .catch(err => {
-        console.log("Error getting file from database: ", err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error getting lesson");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
   }
@@ -187,8 +196,11 @@ class FirestoreDatabase extends Database {
           problemsFinished = true;
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error getting problems in assemble account");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
 
@@ -208,8 +220,11 @@ class FirestoreDatabase extends Database {
           lessonsFinished = true;
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error getting lessons in assembleAccount");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
   }
@@ -237,8 +252,11 @@ class FirestoreDatabase extends Database {
           this.assembleAccount(server, account, serverResponse);
         }
       })
-      .catch(err => {
-        console.log("Error getting file from database: ", err);
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error getting account");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(serverResponse, 500, "Error 500: Internal Server Error");
       });
   }
@@ -265,10 +283,11 @@ class FirestoreDatabase extends Database {
           server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': queryResponse }));
         })
         .catch(error => {
-          console.log("Error with querying problems: ==========");
-          console.log(error);
-          console.log("=======end of error========");
-          server.respondWithError(response, 500, "Error 500: Internal database error with query");
+          console.error("============ Error =============");
+          console.error("Error querying problems");
+          console.error(error);
+          console.error("==========End of Error =========");
+          server.respondWithError(response, 500, "Error 500: Internal Database Error");
         });
     }
   }
@@ -295,10 +314,11 @@ class FirestoreDatabase extends Database {
           server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': queryResponse }));
         })
         .catch(error => {
-          console.log("Error with querying lessons: ==========");
-          console.log(error);
-          console.log("=======end of error========");
-          server.respondWithError(response, 500, "Error 500: Internal database error with query");
+          console.error("============ Error =============");
+          console.error("Error querying lessons");
+          console.error(error);
+          console.error("========== End of Error =========");
+          server.respondWithError(response, 500, "Error 500: Internal Database Error");
         });
     }
   }
@@ -314,10 +334,10 @@ class FirestoreDatabase extends Database {
         server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': lessonIDs }));
       })
       .catch(error => {
-        console.log("============ Error =============");
-        console.log("Error with getting all lesson ids");
-        console.log(error);
-        console.log("==========End of Error =========");
+        console.error("============ Error =============");
+        console.error("Error with getting all lesson ids");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Database Error");
       });
   }
@@ -333,10 +353,10 @@ class FirestoreDatabase extends Database {
         server.respondWithData(response, 200, 'application/json', JSON.stringify({ 'results': problemIDs }));
       })
       .catch(error => {
-        console.log("============ Error =============");
-        console.log("Error with getting all problem ids");
-        console.log(error);
-        console.log("==========End of Error =========");
+        console.error("============ Error =============");
+        console.error("Error with getting all problem ids");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Database Error");
       });
   }
@@ -352,7 +372,6 @@ class FirestoreDatabase extends Database {
   //problem is the problem object sent by the user
   //
   verifyProblemData(problem) {
-    let failed = false;
     if (problem.startExpression === undefined || typeof (problem.startExpression) !== 'object') {
       return false;
     } else if (problem.goalExpression === undefined || typeof (problem.goalExpression) !== 'object') {
@@ -451,27 +470,31 @@ class FirestoreDatabase extends Database {
                 batch.commit().then(value => {
                   return server.respondWithData(response, 201, 'text/plain', databaseProblem.problemID);
                 }).catch(error => {
-                  console.log("============ Error =============");
-                  console.log("Error with batch write in saveProblem()");
-                  console.log(error);
-                  console.log("==========End of Error =========");
+                  console.error("============ Error =============");
+                  console.error("Error with batch write in saveProblem()");
+                  console.error(error);
+                  console.error("==========End of Error =========");
                   return server.respondWithError(response, 500, "Internal Database Error");
                 });
 
               }
             })
             .catch(error => {
+              console.error("============ Error =============");
+              console.error("Error getting problem in saveProblem()");
+              console.error(error);
+              console.error("==========End of Error =========");
               server.respondWithError(response, 500, "Error 500: Internal Database Error");
             });
 
 
 
         })
-          .catch(err => {
-            console.log("============ Error =============");
-            console.log("Error posting problem with account");
-            console.log(err);
-            console.log("==========End of Error =========");
+          .catch(Error => {
+            console.error("============ Error =============");
+            console.error("Error posting problem with account");
+            console.error(error);
+            console.error("==========End of Error =========");
             server.respondWithError(response, 500, "Error 500: Internal Database Error");
           });
 
@@ -497,11 +520,11 @@ class FirestoreDatabase extends Database {
       .then(function () {
         server.respondWithData(response, 201, 'text/plain', databaseProblem.problemID);
       })
-      .catch(err => {
-        console.log("============ Error =============");
-        console.log("Error posting problem without account");
-        console.log(err);
-        console.log("==========End of Error =========");
+      .catch(error => {
+        console.error("============ Error =============");
+        console.error("Error posting problem without account");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(response, 500, "Error 500: Internal Database Error");
       });
     return problemReference;
@@ -533,9 +556,6 @@ class FirestoreDatabase extends Database {
           ownerLessons: self.admin.firestore.FieldValue.arrayUnion(databaseLesson.lessonID)
         });
       } else {
-        console.log("====");
-        console.log("Error saving lesson:");
-        console.log("Provided lesson creation '" + databaseLesson.creations[i] + "' not a problem or lesson");
         return server.respondWithError(response, 400, "Error 400: Cannot create Lesson with a Problem created by a non-member");
       }
     }
@@ -552,10 +572,10 @@ class FirestoreDatabase extends Database {
       server.respondWithData(response, 201, 'text/plain', databaseLesson.lessonID);
     })
       .catch(error => {
-        console.log("============ Error =============");
-        console.log("Error with batch posting lesson to database");
-        console.log(error);
-        console.log("==========End of Error =========");
+        console.error("============ Error =============");
+        console.error("Error with batch posting lesson to database");
+        console.error(error);
+        console.error("==========End of Error =========");
         server.respondWithError(response, 500, "Error 500: Internal Database Error");
       })
   }
@@ -599,19 +619,19 @@ class FirestoreDatabase extends Database {
                 }
               })
                 .catch(error => {
-                  console.log("============ Error =============");
-                  console.log("Error with getting creator's account in SaveLesson()");
-                  console.log(error);
-                  console.log("==========End of Error =========");
+                  console.error("============ Error =============");
+                  console.error("Error with getting creator's account in SaveLesson()");
+                  console.error(error);
+                  console.error("==========End of Error =========");
                   return server.respondWithError(response, 500, "Error 500: Error getting account of user");
                 });
             }
           })
           .catch(error => {
-            console.log("============ Error =============");
-            console.log("Error with getting lesson in saveLesson()");
-            console.log(error);
-            console.log("==========End of Error =========");
+            console.error("============ Error =============");
+            console.error("Error with getting lesson in saveLesson()");
+            console.error(error);
+            console.error("==========End of Error =========");
             return server.respondWithError(response, 500, "Error 500: Internal Database Error");
           });
       } catch (error) {
@@ -624,9 +644,6 @@ class FirestoreDatabase extends Database {
 
 
     } else {
-      console.log("============ Error =============");
-      console.log("Posted lesson is not formatted correctly");
-      console.log("==========End of Error =========");
       return server.respondWithError(response, 400, "Error 400: Lesson Data not formatted correctly");
     }
   }
@@ -652,11 +669,11 @@ class FirestoreDatabase extends Database {
           .then(function () {
             server.respondWithData(response, 201, 'text/plain', "account " + accountID + " successfully created");
           })
-          .catch(err => {
-            console.log(" =================== ");
-            console.log("Error posting account");
-            console.log(err);
-            console.log(" =================== ");
+          .catch(error => {
+            console.error("============ Error =============");
+            console.error("Error setting account");
+            console.error(error);
+            console.error("==========End of Error =========");
             server.respondWithError(response, 500, "Error 500: Internal Database Error");
           });
       } catch (error) {
@@ -685,10 +702,10 @@ class FirestoreDatabase extends Database {
           }
         })
         .catch(error => {
-          console.log("============ Error =============");
-          console.log("Error with getting account in addAccount()");
-          console.log(error);
-          console.log("==========End of Error =========");
+          console.error("============ Error =============");
+          console.error("Error with getting account in addAccount()");
+          console.error(error);
+          console.error("==========End of Error =========");
           return server.respondWithError(response, 500, 'text/plain', "Error 500: Internal Server Error");
           //return self.addAccountIntoDatabase(server,response,account,accountID); //what??
         })
@@ -819,19 +836,19 @@ class FirestoreDatabase extends Database {
             return server.respondWithData(response, 200, 'text/plain', problemID + " deleted successfully");
           })
           .catch(error => {
-            console.log("============ Error =============");
-            console.log("Error with comitting batch delete in deleteProblem()");
-            console.log(error);
-            console.log("==========End of Error =========");
+            console.error("============ Error =============");
+            console.error("Error with comitting batch delete in deleteProblem()");
+            console.error(error);
+            console.error("==========End of Error =========");
             return server.respondWithError(response, 500, 'Error 500: Internal Server Error');
           });
       })
 
       .catch(error => {
-        console.log("============ Error =============");
-        console.log("Error with getting problem in deleteProblem())");
-        console.log(error);
-        console.log("==========End of Error =========");
+        console.error("============ Error =============");
+        console.error("Error with getting problem in deleteProblem())");
+        console.error(error);
+        console.error("==========End of Error =========");
         return server.respondWithError(response, 500, "Error 500: Internal Server Error");
       });
   }
@@ -1005,15 +1022,20 @@ class FirestoreDatabase extends Database {
                 server.respondWithData(response, 200, 'text/plain', lessonID + " deleted successfully");
               })
               .catch(error => {
-                console.log("batch commit error")
-                console.log(error);
+                console.error("============ Error =============");
+                console.error("Error in batch deleting lesson info");
+                console.error(error);
+                console.error("==========End of Error =========");
                 server.respondWithError(response, 500, 'Error 500: Internal Server Error');
               })
 
           }
         })
         .catch(error => {
-          console.log(error);
+          console.error("============ Error =============");
+          console.error("Error in batch deleting lesson info");
+          console.error(error);
+          console.error("==========End of Error =========");
           server.respondWithError(response, 500, "Error 500: Internal Server Error");
         })
     } catch (error) {
@@ -1049,27 +1071,23 @@ class FirestoreDatabase extends Database {
               return server.respondWithData(response, 200, 'text/plain', "account deleted successfully");
             })
             .catch(error => {
-              console.log("============ Error =============");
-              console.log("Error with deleting account in deleteAccount()");
-              console.log(error);
-              console.log("==========End of Error =========");
+              console.error("============ Error =============");
+              console.error("Error with deleting account in deleteAccount()");
+              console.error(error);
+              console.error("==========End of Error =========");
               return server.respondWithError(response, 500, "Error 500: Interal Server Error");
             })
 
         })
         .catch(error => {
-          console.log("============ Error =============");
-          console.log("Error with getting account in deleteAccount()");
-          console.log(error);
-          console.log("==========End of Error =========");
+          console.error("============ Error =============");
+          console.error("Error with getting account in deleteAccount()");
+          console.error(error);
+          console.error("==========End of Error =========");
           return server.respondWithError(response, 500, "Error 500: Internal Server Error");
         });
 
     } catch (error) {
-      console.error("============ Error =============");
-      console.error("Error inside deleteAccount");
-      console.error(error);
-      console.error("==========End of Error =========");
       server.respondWithError(response, 400, 'text/plain', "Error 400: Invalid Account");
     }
 

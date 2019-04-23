@@ -1,6 +1,3 @@
-import * as M from "materialize-css";
-import {LessonInfo, ProblemInfo} from "../expression_tree";
-
 export default {
   name: "LessonNavigationModal", props:["lesson", "problemID", "setNextProblemURL"], template: `
   <div id="lessonModal" class="modal modal-fixed-footer" v-if="lesson">

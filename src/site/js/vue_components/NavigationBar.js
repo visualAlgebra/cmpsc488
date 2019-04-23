@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import {signIn, signOut} from "../user_system";
 
 export default {
@@ -15,7 +14,7 @@ export default {
             <a href="http://localhost:8080/">Home</a>
           </li>
           <li>
-            <a href="http://localhost:8080/creator.html">Create</a>
+            <a href="http://localost:8080/creator.html">Create</a>
           </li>
           <li>
             <a href="http://localhost:8080/algebra/problems/Getting_started">Algebra</a>
@@ -61,7 +60,7 @@ export default {
       </li>
       <li>
         <a v-if="logged" v-on:click="signOutNow()">Logout</a>
-      </li>  
+      </li>
     </ul>
   </div>  
   `, mounted() {
