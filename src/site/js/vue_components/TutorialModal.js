@@ -31,13 +31,19 @@ export default {
   },
   methods: {
     next(){
-      if(this.index < this.tutMessages.length) this.index++;
-      this.setText();
-      this.changeImg();
+      if(this.index < this.tutMessages.length-1) {
+        this.index++;
+        this.setText();
+        this.changeImg();
+      }
+      console.log(this.index)
     }, back() {
-      if (this.index > 0) this.index--;
-      this.setText();
-      this.changeImg();
+      if (this.index > 0){
+        this.index--;
+        this.setText();
+        this.changeImg();
+      } 
+      console.log(this.index)
     }, setTut(i) {
       this.tutNum = i;
       this.index = 0;
