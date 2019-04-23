@@ -2,13 +2,14 @@ import Vue from "vue";
 import NavigationBar from "./vue_components/NavigationBar";
 import IndexPageViewVue from "./vue_components/IndexPageViewVue";
 import {addListenerForUser} from "./user_system";
+import Footer from "./vue_components/Footer";
 
 export const index_vue = new Vue({
   name: "Root",
   el: "#vue-app",
 
   template: `
-<div>
+<main>
   <NavigationBar
     :user="userStruct"
     :oauth_user_getter="oauth_user_getter"
@@ -16,7 +17,8 @@ export const index_vue = new Vue({
     :logged="logged"
   ></NavigationBar>
   <IndexPageViewVue/>
-</div>
+  <Footer/>
+</main>
   `,
 
   data() {
@@ -44,6 +46,7 @@ export const index_vue = new Vue({
   components: {
     NavigationBar,
     IndexPageViewVue,
+    Footer,
   },
 });
 

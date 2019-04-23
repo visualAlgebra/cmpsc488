@@ -6,13 +6,13 @@ export default {
 
   template: `
 <div class="container">
-  <div class="index-header">
+  <header class="index-header">
     <div class="index-header-title">
       <TwoSvg/>
       <h1>VisualAlgebra</h1>
     </div>
     <h2 class="subtitle">A graphical, interactive, algebraic playground.</h2>
-  </div>
+  </header>
   <p class="flow-text">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis excepturi repellat repellendus! Ad, culpa dolorem eveniet illo laborum molestias quisquam voluptatum? A consequuntur earum esse placeat qui sunt tempora ullam!
   </p>
