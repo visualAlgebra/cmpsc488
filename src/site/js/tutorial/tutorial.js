@@ -26,11 +26,11 @@ export function getImg(problem) {
     case 3: return imgTutProb3();
     case 4: return imgTutProb4();
     case 5: return imgTutProb5();
+    case 6: return imgTutProb6();
     default: return null;
   }
 }
 
-//TODO: Fix tutorial text
 function tutorialProblem1() {
   
   let tutMessage = [];
@@ -124,6 +124,8 @@ function tutorialProblem6() {
   "into a pair of one atoms. This is done by clicking on any Atom.");
   tutMessage.push("Try these action on Tutorial Problem 6. Once your are don't, you've finally used all of our actions! You will be ready to solve " +
   "problems on our website!")
+
+  return tutMessage;
 }
 
 function imgTutProb1() {
