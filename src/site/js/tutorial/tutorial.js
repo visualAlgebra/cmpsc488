@@ -114,7 +114,7 @@ function tutorialProblem6() {
 function imgTutProb1() {
   
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/FAVICON.png");
+  imgs.push("");
   imgs.push("http://localhost:8080/src/site/assets/VAComps.png");
   imgs.push("http://localhost:8080/src/site/assets/EWTagEX.png");
   imgs.push("http://localhost:8080/src/site/assets/NSTagEX.png");
@@ -140,10 +140,10 @@ function imgTutProb2() {
 function imgTutProb3() {
 
   let imgs = [];
-  imgs.push("http://localhost:8080/src/site/assets/FAVICON.png");
+  imgs.push("");
   imgs.push("http://localhost:8080/src/site/assets/Distribute.gif");
   imgs.push("http://localhost:8080/src/site/assets/Factor.gif");
-  imgs.push("http://localhost:8080/src/site/assets/FAVICON.png");
+  imgs.push("");
 
   return imgs;
 }
