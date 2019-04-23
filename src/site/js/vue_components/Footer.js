@@ -25,7 +25,7 @@ export default {
   </div>
   <div class="footer-copyright">
     <div class="container">
-    © 2019 VisualAlgebra
+<!-- © --> 2019 VisualAlgebra
     <a class="grey-text text-lighten-4 right" href="https://github.com/visualAlgebra/cmpsc488">GitHub Repo</a>
     </div>
   </div>
