@@ -1,6 +1,4 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
-import {solve} from "../solver";
-import {Deserialize} from "../expression_tree";
 import {histAction} from "../history_nav";
 import {testAll} from "../solver.test";
 import LessonNavigationModal from "./LessonNavigationModal";
@@ -54,7 +52,7 @@ export default {
     </div>
     <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:closeHelper="closeHelper"></HelperAIModal>
     <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
-    <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson"></LessonNavigationModal>
+    <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson" v-bind:problemID="problemID" v-bind:setNextProblemURL="setNextProblemURL"></LessonNavigationModal>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     <TutorialModal></TutorialModal>
   </div>  
