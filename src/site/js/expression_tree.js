@@ -132,9 +132,11 @@ export class Tag extends ExpressionTree {
   }
 
   addSouthEast(child) {
-    this.SE.push(child);
-    child.parent = this;
-    this.updateParentTreeCount(child.treeCount);
+    if (child !== undefined){
+      this.SE.push(child);
+      child.parent = this;
+      this.updateParentTreeCount(child.treeCount);
+    }
   }
 
   prependSouthEast(child) {
@@ -150,21 +152,31 @@ export class Tag extends ExpressionTree {
   }
 
   addNorthWest(child) {
-    this.NW.push(child);
-    child.parent = this;
-    this.updateParentTreeCount(child.treeCount);
+    if (child !== undefined){
+      this.NW.push(child);
+      child.parent = this;
+      this.updateParentTreeCount(child.treeCount);
+    }
   }
 
   removeSouthEast(child) {
-    this.SE = this.SE.filter(x => !x.is(child));
-    child.parent = null;
-    this.updateParentTreeCount(-child.treeCount);
+    this.NW = this.NW.filter(x => !x.is(child));
+    if (child !== null && child !== undefined)
+      child.parent = null;
+    if(child !== null && child !== undefined)
+      this.updateParentTreeCount(-child.treeCount);
+    else
+      this.updateParentTreeCount(-1);
   }
 
   removeNorthWest(child) {
     this.NW = this.NW.filter(x => !x.is(child));
-    child.parent = null;
-    this.updateParentTreeCount(-child.treeCount);
+    if (child !== null && child !== undefined)
+      child.parent = null;
+    if(child !== null && child !== undefined)
+      this.updateParentTreeCount(-child.treeCount);
+    else
+      this.updateParentTreeCount(-1);
   }
 
   emptyNorthWest() {

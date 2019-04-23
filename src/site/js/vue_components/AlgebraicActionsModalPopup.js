@@ -117,7 +117,8 @@ export default {
             <div class="collapsible-header black-text">Identity Balance</div>
             <div class="collapsible-body black-text">
               <img src="http://localhost:8080/src/site/assets/IdentityBalance.gif"><br>
-              <span>Any element may be inserted into both quadrants of a tag.</span>
+              <span>Any element may be inserted into both quadrants of a tag. This works for both North-South and East-West tags.</span><br>
+              <p><b>To Initiate:</b>Select Insert mode. Click on the quadrant that you wish to insert the tag in. Then contruct the desired expression to insert.</p>
             </div>
           </li>
           <li>
