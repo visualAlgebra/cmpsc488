@@ -160,7 +160,7 @@ export class Tag extends ExpressionTree {
   }
 
   removeSouthEast(child) {
-    this.NW = this.NW.filter(x => !x.is(child));
+    this.SE = this.SE.filter(x => !x.is(child));
     if (child !== null && child !== undefined)
       child.parent = null;
     if(child !== null && child !== undefined)
