@@ -103,12 +103,27 @@ function tutorialProblem5() {
   "orientation as the outer tag.");
   tutMessage.push("Next we'll talk about Cancel. If two tags that are equal and on opposite sides of a tag, you may cancel them by dragging the tag button of one" +
   "into the tag button of the other.");
-  tutMessage.push("Finally, let's talk about Identity Balance. This action allows you to put any expression on both quadrants of a tag. " +
+  tutMessage.push("Now let's talk about Identity Balance. This action allows you to put any expression on both quadrants of a tag. " +
   "This mode is done by clicking on Insert. Click on a start and add elements as you choose. Try these actions on Tutorial Problem 5.")
   return tutMessage;
 }
 
 function tutorialProblem6() {
+
+  let tutMessage = [];
+  tutMessage.push("Now we'll finally talk about the Atom actions. There are four in total. All of these actions are done in Atom Merge mode. Click on " +
+  "Atom Merge to switch to Atom Merge mode.");
+  tutMessage.push("The first action is Atom Merge. This action will combine two atoms in a to create a new atom. Simply drag one atom onto another " +
+  "to initiate this action. Note that two special cases may occur when doing this. We will dicuss these actions next.");
+  tutMessage.push("The next is Atom Absorption. If the zero atom is in the North Quadrant of a North-South tag, then it may absorb any other " +
+  "element in the North quadrant. Just drag a zero atom into another element in a North quadrant or vice to do this action.");
+  tutMessage.push("The next is Atom Destruction. If the zero atom is in an East-West tag or the one atom is in a North-South Tag, those atoms " +
+  "may be destroy upon mergin with another atom.");
+  tutMessage.push("Finally, we have Atom Split. Atoms may be split into two. The values of the split atoms will depend on the value of the atom to split " +
+  "The zero atom will always split into the one and two atom. The one atom will always split into a pair of two atoms. The two atom will always split " +
+  "into a pair of one atoms. This is done by clicking on any Atom.");
+  tutMessage.push("Try these action on Tutorial Problem 6. Once your are don't, you've finally used all of our actions! You will be ready to solve " +
+  "problems on our website!")
 }
 
 function imgTutProb1() {
@@ -166,6 +181,19 @@ function imgTutProb5() {
   imgs.push("http://localhost:8080/src/site/assets/QuadrantFlip.gif");
   imgs.push("http://localhost:8080/src/site/assets/Cancel.gif");
   imgs.push("http://localhost:8080/src/site/assets/IdentityBalance.gif");
+  
+  return imgs;
+}
+
+function imgTutProb6() {
+
+  let imgs = [];
+  imgs.push("");
+  imgs.push("http://localhost:8080/src/site/assets/AtomMerge.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AtomAbsorption.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AtomDestruction.gif");
+  imgs.push("http://localhost:8080/src/site/assets/AtomSplit.gif");
+  imgs.push("");
   
   return imgs;
 }

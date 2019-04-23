@@ -275,9 +275,11 @@ function expandAssociativeExtract(child1, child2, location1, location2, root, no
       let rootClone = root.clone();
       let grandChild = getChild(rootClone, location1);
       let grandParent = grandChild.parent.parent;
-      let action = new AssociativeExtract(grandChild, getQuad(location1), grandParent.childQuadrant(grandChild.parent));
-      action.apply();
-      nodeArray.push(new Node(action, rootClone));
+      if (grandParent !== null) {
+        let action = new AssociativeExtract(grandChild, getQuad(location1), grandParent.childQuadrant(grandChild.parent));
+        action.apply();
+        nodeArray.push(new Node(action, rootClone));
+      }
     }
   }
 

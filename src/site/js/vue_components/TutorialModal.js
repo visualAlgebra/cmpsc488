@@ -10,6 +10,7 @@ export default {
       <li class="waves-effect"><a href="#!" v-on:click="setTut(3)">3</a></li>
       <li class="waves-effect"><a href="#!" v-on:click="setTut(4)">4</a></li>
       <li class="waves-effect"><a href="#!" v-on:click="setTut(5)">5</a></li>
+      <li class="waves-effect"><a href="#!" v-on:click="setTut(6)">6</a></li>
     </ul>
     <div class="modal-content">
       <h4 id="tutTitle" >Tutorial</h4>

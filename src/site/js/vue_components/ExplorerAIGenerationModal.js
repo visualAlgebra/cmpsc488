@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import SingleExpressionDisplay from "./SingleExpressionDisplay";
 import {compress_string_js, ProblemInfo, randomGoalGeneratorNoArr, randomStartGenerator} from "../expression_tree";
 import {post_problem_from_site} from "../database_management";

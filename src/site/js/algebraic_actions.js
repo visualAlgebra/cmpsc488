@@ -263,6 +263,8 @@ export class Distribute {
     if (!tagToDistributeOver instanceof Tag) {
       return false;
     }
+    if (value.parent == null || tagToDistributeOver.parent == null)
+      return false;
     if (xQuad !== yQuad)
       return false;
 
@@ -347,7 +349,7 @@ export class Factor {
       return false;
 
     for (var i = 0; i < tagToFactor.NW.length; i++) {
-      if (tagToFactor.NW[i] instanceof Tag) {
+      if (tagToFactor.NW[i] instanceof Tag && tagToFactor.NW[i].NW.length>0) {
         if (!tagToFactor.NW[i].NW[0].equals(valueToFactor))
           return false;
       }
@@ -358,7 +360,7 @@ export class Factor {
     }
 
     for (var i = 0; i < tagToFactor.SE.length; i++) {
-      if (tagToFactor.SE[i] instanceof Tag) {
+      if (tagToFactor.SE[i] instanceof Tag && tagToFactor.SE[i].NW.length>0) {
         if (!tagToFactor.SE[i].NW[0].equals(valueToFactor))
           return false;
       }
@@ -442,6 +444,8 @@ export class SplitFrac {
   }
   
   static verify(dividend, frac) {
+    if (dividend == undefined || dividend == null || frac == undefined || frac == null)
+      return false;
     return dividend instanceof Tag
       && frac instanceof Tag
       && frac.orientation === Orientation.NS
@@ -460,23 +464,25 @@ export class SplitFrac {
     let divisor = this.tag.SE;
 
     //Push the split fractions into their respective quadrants
-    for (let child of this.tag.NW[0].NW) {
-      //Cloning the children in divisor
-      let newDivisor = [];
-      for (let div of divisor) {
-        newDivisor.push(div.clone());
+    if (this.tag.NW.length > 0 && this.tag.NW[0] instanceof Tag) {
+      for (let child of this.tag.NW[0].NW) {
+        //Cloning the children in divisor
+        let newDivisor = [];
+        for (let div of divisor) {
+          newDivisor.push(div.clone());
+        }
+        //Adding the new tags into NW quadrant
+        newNW.push(new Tag(Orientation.NS, [child], newDivisor));
       }
-      //Adding the new tags into NW quadrant
-      newNW.push(new Tag(Orientation.NS, [child], newDivisor));
-    }
-    for (let child of this.tag.NW[0].SE) {
-      //Cloning the children in divisor
-      let newDivisor = [];
-      for (let div of divisor) {
-        newDivisor.push(div.clone());
+      for (let child of this.tag.NW[0].SE) {
+        //Cloning the children in divisor
+        let newDivisor = [];
+        for (let div of divisor) {
+          newDivisor.push(div.clone());
+        }
+        //adding the new tags into SE quadrant
+        newSE.push(new Tag(Orientation.NS, [child], newDivisor));
       }
-      //adding the new tags into SE quadrant
-      newSE.push(new Tag(Orientation.NS, [child], newDivisor));
     }
 
     //update the tag with new orientation and quadrants
@@ -610,6 +616,13 @@ export class Cancel {
   }
 
   static verify(x, y, xQuad, yQuad) {
+    if (x == null || y == null || x == undefined || y == undefined)
+      return false;
+    if (xQuad == null || yQuad == null || xQuad == undefined || yQuad == undefined)
+      return false;
+
+    if (x.parent == null || y.parent == null)
+      return false;
     return x.equals(y)
       && !x.is(y)
       && x.parent.is(y.parent)
@@ -669,6 +682,8 @@ export class LiteralMerge {
   }
 
   static verify(literalA, literalB, quadrantA, quadrantB) {
+    if (literalA.parent == null || literalB.parent == null)
+      return false;
     if (literalA.parent !== literalB.parent)
       return false;
     if (!(literalA instanceof Literal && literalB instanceof Literal))
@@ -725,6 +740,8 @@ export class ZeroMerge {
       return false;
     if (quad1 == undefined || quad2 == undefined || quad1 == null || quad2 == null)
       return false;
+    if (sibling1.parent == null || sibling2.parent == null)
+      return false;
 
     if (sibling1.is(sibling2)) {
       return false;
@@ -769,8 +786,12 @@ export class IdentityMerge {
   }
 
   static verify(sibling1, sibling2, quadrant1, quadrant2) {
-
+    if (sibling1 == undefined || sibling2 == undefined || sibling1 == null || sibling2 == null)
+      return false;
     if (sibling1.is(sibling2))
+      return false;
+
+    if (sibling1.parent == null || sibling2.parent == null)
       return false;
 
     if (!(sibling1 instanceof Literal) && !(sibling2 instanceof Literal)) {
