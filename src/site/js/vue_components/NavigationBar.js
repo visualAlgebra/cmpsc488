@@ -5,7 +5,9 @@ export default {
   <div>
     <nav>
       <div class="nav-wrapper">
-        <a href="http://localhost:8080/" class="brand-logo">VisualAlgebra</a>
+        <a href="http://localhost:8080/" class="brand-logo">
+          <img class="our-brand-logo" src="http://localhost:8080/src/site/assets/FAVICON.png" alt="Brand Logo" style="height: 3rem">
+        </a>
         <a href="#" class="sidenav-trigger" data-target="navbarSidenav">
           <i class="material-icons">menu</i>
         </a>

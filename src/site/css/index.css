@@ -1,7 +1,52 @@
-.wavecard {
-  height: 150px;
-  display:inline-block;
-  width: auto;
-  border-width: 2px;
-  border-style: groove;
+:root {
+  --header-vert-margin: 7rem;
+  --our-teal: #abf2ed;
+  --our-pink: #faabae;
 }
+
+.index-header {
+  text-align: center;
+  margin-top: var(--header-vert-margin);
+  margin-bottom: var(--header-vert-margin);
+}
+
+.index-header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.index-header-title > svg {
+  margin-right: 1.5rem;
+  margin-bottom: -4rem;
+}
+
+.index-header-title > h1 {
+  margin-bottom: -1rem;
+}
+
+.subtitle {
+  font-size: 14pt;
+  font-style: italic;
+  color: var(--our-teal);
+}
+
+a {
+  color: var(--our-pink);
+  font-style: italic;
+}
+
+.literal-row > * {
+  display: flex;
+  justify-content: space-around;
+}
+
+.expr-tree-box {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-border-radius: 1rem;
+  -moz-border-radius: 1rem;
+  border-radius: 1rem;
+  width: min-content;
+}
+

@@ -14,3 +14,15 @@
     border-style: solid;
     border-width: 0.5rem;
 }
+
+.footer-links li {
+    display: inline-block;
+    list-style-type: none;
+    margin-right: 2rem;
+    margin-bottom: 1rem;
+}
+
+.our-brand-logo {
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+}

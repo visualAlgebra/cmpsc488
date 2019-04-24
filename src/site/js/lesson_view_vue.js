@@ -7,6 +7,7 @@ import LessonViewPageTop from "./vue_components/LessonViewPageTop";
 import InvalidPage from "./vue_components/InvalidPage";
 import {LessonInfo, ProblemInfo} from "./expression_tree";
 import {addListenerForUser} from "./user_system";
+import Footer from "./vue_components/Footer";
 
 export const lesson_view_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -22,6 +23,7 @@ export const lesson_view_vue = new Vue({
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
     <ProblemsHolder v-if="display" v-bind:problems="problems"></ProblemsHolder>
+    <Footer/>
   </div>
   `, data() {
     return {
@@ -70,6 +72,6 @@ export const lesson_view_vue = new Vue({
   }, mounted() {
     get_lesson_from_db(this.getAccountFromURL(), res => this.distribute(res));
   }, components: {
-    NavigationBar, LessonsHolder, ProblemsHolder, LessonViewPageTop, InvalidPage,
+    NavigationBar, LessonsHolder, ProblemsHolder, LessonViewPageTop, InvalidPage, Footer,
   },
 });
