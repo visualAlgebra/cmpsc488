@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/visualAlgebra/cmpsc488#readme",
   "dependencies": {
-    "firebase-admin": "^7.0.0"
+    "firebase-admin": "^7.0.0",
+    "materialize-css": "^1.0.0"
   },
   "devDependencies": {}
 }

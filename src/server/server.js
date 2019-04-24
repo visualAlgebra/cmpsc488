@@ -35,7 +35,7 @@ class Server {
     // this.eventEmitter.addListener("database file recieved", this.sendDatabaseFile);
 
     this.accessibleFolders = ["/documentation/Additional_Documents", "/documentation/Phase_1/", "/documentation/Phase_2/", "/documentation/Phase_3/", "/src/site/assets/", "/src/site/dist/", "/src/site/node_modules/", "/src/site/css/", "/src/site/js/", "/node_modules/"]; //filepath from default directory of folders that are accessible for requests
-    this.accessibleHTMLFiles = this.accessibleFilesMap = {"/index.html": "index.html", "/explorer.html": "/explorer.html", "/creator.html": "/creator.html", "/lesson-view.html": "/lesson-view.html", "/manipulator.html": "/manipulator.html", "/profile.html": "/profile.html", "/algebra.html": "/manipulator.html"};
+    this.accessibleHTMLFiles = this.accessibleFilesMap = {"/about.html": "/about.html", "/about": "/about.html", "/index.html": "/index.html", "/explorer.html": "/explorer.html", "/creator.html": "/creator.html", "/lesson-view.html": "/lesson-view.html", "/manipulator.html": "/manipulator.html", "/profile.html": "/profile.html", "/algebra.html": "/manipulator.html"};
     this.accessibleFilesMap = {"index": "index.html", "explorer": "/explorer.html", "creator": "/creator.html", "lesson-view": "/lesson-view.html", "manipulator": "/manipulator.html", "profile": "/profile.html", "algebra": "/manipulator.html"}
     this.databaseActions = ["/problems/", "/lessons/", "/accounts/", "/problems", "/lessons"];
     this.blacklist = JSON.parse(fs.readFileSync("src/server/blacklist.json")); //form; "ipaddress": true. ie "'127.0.0.1': true" to block 127.0.0.1
