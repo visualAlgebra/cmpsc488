@@ -1,4 +1,3 @@
-import * as M from "materialize-css";
 import TwoSvg from "./TwoSvg";
 import {Literal} from "../expression_tree";
 import ExpressionTree from "./ExpressionTree";
