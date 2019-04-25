@@ -133,6 +133,12 @@ class Server {
     return path.basename(pathname);
   }
 
+  replaceWithSpaces(string) {
+    let splitString = string.split("%20");
+    console.log(splitString.reduce((assembler, part) => assembler + " " + part));
+    return splitString.reduce((assembler, part) => assembler + " " + part);
+  }
+
 
 
   //creates a server session that listens on port 8080 of localhost
@@ -311,8 +317,12 @@ class Server {
       contentType = "application/javascript";
     } else if (filename.substr(-3) === "png") {
       contentType = "image/png";
+    } else if (filename.substr(-3) === "pdf") {
+      contentType = "application/pdf";
+    } else if (filename.substr(-4) === "docx") {
+      contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     }
-
+    filename = this.replaceWithSpaces(filename);
     var self = this; //required for callback in readFile scope
     fs.readFile(filename, function (err, data) {
       if (err) {

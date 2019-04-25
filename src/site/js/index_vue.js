@@ -16,6 +16,7 @@ export const index_vue = new Vue({
     :oauth_user_remover="oauth_user_remover"
     :logged="logged"
   ></NavigationBar>
+  <a download href="http://localhost:8080/documentation/Phase_1/Domain Model.pdf"> Domain Model </a>
   <IndexPageViewVue/>
   <Footer/>
 </main>
