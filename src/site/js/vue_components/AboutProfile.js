@@ -12,7 +12,7 @@ export default {
       <div class="card-content black-text">
         <span class="card-title">
           {{name}}
-          <span v-for="role of roles" class="new badge">{{role}}</span>
+          <span v-for="role of reversed(roles)" class="badge">{{role}}</span>
         </span>
         <p>
           <slot></slot>
@@ -25,4 +25,12 @@ export default {
   </div>
 </div>
   `,
+
+  methods: {
+    reversed(arr) {
+      const arr2 = [...arr];
+      arr2.reverse();
+      return arr2;
+    },
+  },
 };
