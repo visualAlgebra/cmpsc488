@@ -1,12 +1,6 @@
 export default {
 
-  name: "Deliverables",
-
-  props: {
-      
-  },
-
-  template: `
+  name: "Deliverables", template: `
 <div>
   <ol>
     <li>
@@ -57,19 +51,4 @@ export default {
   </ol>
 </div>
   `,
-
-  data() {
-    return {};
-  },
-
-  computed: {
-    
-  },
-
-  methods: {
-    
-  },
-
-  components: {
-  },
 };
