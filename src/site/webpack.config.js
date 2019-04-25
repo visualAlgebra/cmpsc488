@@ -8,7 +8,8 @@ module.exports = {
     creator: './js/creator.js',
     explorer: './js/explorer.js',
     profile: './js/profile.js',
-    lesson_view: './js/lesson_view.js'
+    lesson_view: './js/lesson_view.js',
+    about: './js/about.js',
   },
   resolve: {
     alias: {
