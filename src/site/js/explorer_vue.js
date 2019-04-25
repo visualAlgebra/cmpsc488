@@ -13,13 +13,13 @@ export const explorer_vue=new Vue({
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <ExplorerPageTop></ExplorerPageTop>
-    <ProblemsHolder v-if="display&&problemsToDisplay"v-bind:problems="problemsToDisplay"></ProblemsHolder>
+    <ProblemsHolder v-if="display&&problemsToDisplay" v-bind:problems="problemsToDisplay" v-bind:type="'explorer'"></ProblemsHolder>
     <ExplorerAIGenerationModal v-bind:userStruct="userStruct"></ExplorerAIGenerationModal>
     <Footer/>
   </div>
   `, data(){
     return {
-      display:false, problemsToDisplayCount: 10, problemsToDisplay: null, userStruct:null, logged:false,
+      display:false, problemsToDisplayCount: 1, problemsToDisplay: null, userStruct:null, logged:false,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);

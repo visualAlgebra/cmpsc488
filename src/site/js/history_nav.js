@@ -5,7 +5,6 @@ export function addHistoryEntry(tree, msg){
   if(histControl===null||histControl===undefined){
     histControl=new historyController();
     let temp=histControl.init(tree, msg);
-    console.log(histControl);
     return temp;
   }else{
     return histControl.add(tree, msg);
