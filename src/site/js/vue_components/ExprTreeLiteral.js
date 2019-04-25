@@ -15,7 +15,13 @@ export default {
 
   template: `
 <drop @drop="handleDrop">
-  <drag @dragstart="handleDragStart" :hide-image-html="true" :image="null" :transferData="guiObj">
+  <drag
+    @dragstart="handleDragStart"
+    :hide-image-html="true"
+    :image="null"
+    :transferData="guiObj"
+    :draggable="interactive"
+  >
     <svg
       v-on="listeners"
       :class="classes"
