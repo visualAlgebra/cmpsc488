@@ -14,7 +14,10 @@ export default {
       default: () => [],
     },
     mouse: Mouse,
-    interactive: Boolean,
+    interactive: {
+      type: Boolean,
+      default: false,
+    },
     insertable: Boolean,
     pulse: {
       default: false,
