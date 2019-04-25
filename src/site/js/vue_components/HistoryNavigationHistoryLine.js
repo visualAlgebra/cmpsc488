@@ -16,7 +16,6 @@ export default {
       this.setWorkTree(this.historyLine.line[this.index].data);
     }, currentClass(){
       let temp=this.curLoc===this.historyLine.line[this.index].id?'currentHist':'';
-      console.log(temp);
       return temp;
     }
   }, mounted() {
