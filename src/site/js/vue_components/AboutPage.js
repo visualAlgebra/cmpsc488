@@ -32,10 +32,10 @@ export default {
   
   <AboutProfile
     name="Eric Koskovich"
-    :links="[['https://www.google.com', 'Google']]"
-    :roles="['my-role']"
+    :links="[['https://github.com/Fractalyst', 'Github']]"
+    :roles="['History', 'HTML', 'Vue-Componentizer', 'User Profile', 'Explorer', 'Navbar']"
   >
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, adipisci atque aut commodi cupiditate eaque eveniet explicabo fugiat magnam minus molestias omnis pariatur praesentium quas quisquam rerum, unde veniam voluptate!
+  I like to make programs in my spare time and enjoy working with front end HTML frameworks like vue. Working on creating efficient algorithms for problems is also interesting to me.
   </AboutProfile>
   
   <AboutProfile
