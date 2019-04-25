@@ -16,18 +16,18 @@ export default {
   
   <AboutProfile
     name="Jacob Mitzel"
-    :links="[['https://www.google.com', 'Google']]"
-    :roles="['my-role']"
+    :links="[['https://github.com/mitzeljw', 'Github']]"
+    :roles="['Server', 'Database', 'User Accounts']"
   >
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate facilis iusto magnam magni, nulla omnis perspiciatis recusandae similique? Atque beatae deserunt dolore dolores dolorum eligendi pariatur placeat possimus quia veniam?
+    Jake enjoys working on back-end systems, using Python, Java, C++, and C.  He also has experience working with SQL and NoSQL databases professionally. However, he enjoys learning new systems and does so quickly.
   </AboutProfile>
   
   <AboutProfile
     name="Joshua Fisher"
-    :links="[['https://www.google.com', 'Google']]"
-    :roles="['my-role']"
+    :links="[['https://www.github.com/jfisher19335/', 'Github'], ['https://www.linkedin.com/in/joshua-fisher-57974a141/', 'LinkedIn']]"
+    :roles="['AI', 'Problem Generator', 'Algebraic Actions']"
   >
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos eum expedita magni quisquam! Aliquid amet deleniti, dicta eligendi et maxime. Adipisci assumenda cum id impedit omnis qui quisquam vero voluptates.
+    Joshua has strong interests in AI, Java, C++, and Scheme.
   </AboutProfile>
   
   <AboutProfile
