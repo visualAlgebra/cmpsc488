@@ -25,6 +25,9 @@ export default {
             <a href="http://localhost:8080/explorer.html">Explore</a>
           </li>
           <li>
+            <a href="http://localhost:8080/about.html">About</a>
+          </li>
+          <li>
             <a href="http://localhost:8080/profile.html">User Profile</a>
           </li>
           <li>
@@ -53,6 +56,9 @@ export default {
       </li>
       <li>
         <a href="http://localhost:8080/explorer.html">Explore</a>
+      </li>
+      <li>
+        <a href="http://localhost:8080/about.html">About</a>
       </li>
       <li>
         <a href="http://localhost:8080/profile.html">User Profile</a>
