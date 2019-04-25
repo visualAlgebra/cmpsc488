@@ -6,6 +6,7 @@ import {get_lesson_from_db} from "../database_management";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
 import HelperAIModal from "./HelperAIModal";
 import TutorialModal from "./TutorialModal";
+import ManipulatorShareModal from "./ManipulatorShareModal";
 
 export default {
   name: "ManipulatorNavigationButtons",
@@ -17,7 +18,7 @@ export default {
           <i class="material-icons left">blur_on</i>
           <span class="truncate">Hint</span>
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="share()">
+      <a class="tab waves-effect waves-light btn col modal-trigger" data-target="shareModal">
           <i class="material-icons left">share</i>
           <span class="truncate">Share</span>
       </a>
@@ -54,6 +55,7 @@ export default {
     <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
     <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson" v-bind:problemID="problemID" v-bind:setNextProblemURL="setNextProblemURL"></LessonNavigationModal>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
+    <ManipulatorShareModal></ManipulatorShareModal>
     <TutorialModal></TutorialModal>
   </div>  
   `,
@@ -67,9 +69,7 @@ export default {
     }
   },
   methods: {
-    share() {
-      console.log("tehehehe");
-    }, restartClear() {
+    restartClear() {
       this.restart();
     }, undo() {
       this.setWorkTree(histAction(false));
@@ -96,6 +96,6 @@ export default {
     },
   },
   components: {
-    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup, HelperAIModal, TutorialModal
+    HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup, HelperAIModal, TutorialModal, ManipulatorShareModal
   },
 };
