@@ -322,6 +322,7 @@ class Server {
     } else if (filename.substr(-4) === "docx") {
       contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     }
+    
     filename = this.replaceWithSpaces(filename);
     var self = this; //required for callback in readFile scope
     fs.readFile(filename, function (err, data) {
