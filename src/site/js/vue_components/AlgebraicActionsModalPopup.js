@@ -125,7 +125,7 @@ export default {
             <div class="collapsible-header black-text">Atom Merge</div>
             <div class="collapsible-body black-text">
               <img class="col s12 m6 l6 xl6 gif"  src="http://localhost:8080/src/site/assets/AtomMerge.gif">
-              <span class="col s12 m6 l6 xl6">Two atoms may be combined.</span>
+              <span class="col s12 m6 l6 xl6">Two atoms may be combined. The value of the result will depend on the value of the two atoms being combined.</span>
               <span class="col s12 m6 l6 xl6"><b>To Initiate:</b> Select Atom Merge mode. Drag one atom onto another.</span>
             </div>
           </li>
@@ -133,7 +133,7 @@ export default {
             <div class="collapsible-header black-text">Atom Absorption</div>
             <div class="collapsible-body black-text">
               <img class="col s12 m6 l6 xl6 gif"  src="http://localhost:8080/src/site/assets/AtomAbsorption.gif">
-              <span class="col s12 m6 l6 xl6">The zero atom in a North-South tag may destroy everything.</span>
+              <span class="col s12 m6 l6 xl6">The zero atom in a North-South tag may absorb any other element with the north quadrant.</span>
               <span class="col s12 m6 l6 xl6"><b>To Initiate:</b> Select Atom Merge mode. Drag one atome onto another.</span>
             </div>
           </li>
@@ -141,7 +141,7 @@ export default {
             <div class="collapsible-header black-text">Atom Destruction</div>
             <div class="collapsible-body black-text">
               <img class="col s12 m6 l6 xl6 gif"  src="http://localhost:8080/src/site/assets/AtomDestruction.gif">
-              <span class="col s12 m6 l6 xl6">The identity may be removed from a tag</span>
+              <span class="col s12 m6 l6 xl6">The zero atom may be destroyed from an East-West tag and the one atom may be destroyed in a North-South tag.</span>
               <span class="col s12 m6 l6 xl6"><b>To Initiate:</b> Select Atom Merge mode. Drag any element onto the identity</span>
             </div>
           </li>
@@ -149,7 +149,8 @@ export default {
             <div class="collapsible-header black-text">Atom Split</div>
             <div class="collapsible-body black-text">
               <img class="col s12 m6 l6 xl6 gif"  src="http://localhost:8080/src/site/assets/AtomSplit.gif">
-              <span class="col s12 m6 l6 xl6">Atoms may be converted into their equivalent atoms</span>
+              <span class="col s12 m6 l6 xl6">Atoms may be converted into a pair of two atoms with sum of equivalent value. A zero atom will split into the
+                 one and two atoms. A one atom will split into a pair of two atoms. The two atom will split into a pair of one atoms.</span>
               <span class="col s12 m6 l6 xl6"><b>To Initiate:</b> Select Atom Merge mode. Click on any atom.</span>
             </div>
           </li>
