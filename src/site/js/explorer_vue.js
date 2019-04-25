@@ -19,7 +19,7 @@ export const explorer_vue=new Vue({
   </div>
   `, data(){
     return {
-      display:false, problemsToDisplayCount: 1, problemsToDisplay: null, userStruct:null, logged:false,
+      display:false, problemsToDisplayCount: 10, problemsToDisplay: null, userStruct:null, logged:false,
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);

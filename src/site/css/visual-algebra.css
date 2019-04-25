@@ -30,3 +30,10 @@
 .our-page-footer {
     margin-top: 5rem !important;
 }
+
+.single-problem-display {
+    padding: 1rem;
+    margin-bottom: 3rem;
+    border: solid 0.5rem rgba(255,255,255,0.1);
+    border-radius: 1rem;
+}
