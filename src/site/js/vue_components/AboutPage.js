@@ -10,10 +10,10 @@ export default {
     
     <AboutProfile
       name="Toan Nguyen"
-      :links="[['https://www.google.com', 'Google']]"
-      :roles="['my-role']"
+      :links="[['https://github.com/neyugnnaot', 'Github']]"
+      :roles="['Algebraic Actions', 'Tutorial', 'AI']"
     >
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur autem beatae, blanditiis cum cupiditate esse harum itaque maiores placeat quam quia reiciendis rerum sunt ut? Eveniet nam obcaecati praesentium.
+      Toan is a student looking to graduate in Decemeber 2019. He is open to learn about new ideas and technologies when it comes to development.
     </AboutProfile>
     
     <AboutProfile
