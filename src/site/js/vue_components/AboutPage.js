@@ -17,9 +17,9 @@ export default {
   <AboutProfile
     name="Jacob Mitzel"
     :links="[['https://github.com/mitzeljw', 'Github']]"
-    :roles="['Server, Database, User Accounts']"
+    :roles="['Server', 'Database', 'User Accounts']"
   >
-    Jake enjoys working on back-end systems, using Python, Java, C++, and C.  He has experience working with SQL and NoSQL databases as well. However, he enjoys learning new systems and does so quickly.
+    Jake enjoys working on back-end systems, using Python, Java, C++, and C.  He also has experience working with SQL and NoSQL databases professionally. However, he enjoys learning new systems and does so quickly.
   </AboutProfile>
   
   <AboutProfile
