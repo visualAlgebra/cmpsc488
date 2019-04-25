@@ -10,6 +10,7 @@ import InvalidPage from "./vue_components/InvalidPage";
 import {addListenerForUser} from "./user_system";
 import PublishProblemModal from "./vue_components/PublishProblemModal";
 import CreatorWindow from "./vue_components/CreatorWindow";
+import {addHistoryEntry, clearHist} from "./history_nav";
 
 export const creator_vue = new Vue({
   name: "Root",
@@ -27,6 +28,9 @@ export const creator_vue = new Vue({
   <InvalidPage v-if="!display"></InvalidPage>
   <CreatorNavigationButtons
     v-if="display"
+    v-bind:dataFunc="getTreeData"
+    v-bind:cvMounted="mounted"
+    v-bind:setWorkTree="setWorkTree"
     :stage="stage"
     :clearTree="clearTree"
     :problemIsSavable="problemIsSavable()"
@@ -81,6 +85,7 @@ export const creator_vue = new Vue({
     pulse: false,
     insertionPoint: null,
     displayInsertionCreatorModal: false,
+    mounted: false
   }),
 
   created() {
@@ -152,11 +157,18 @@ export const creator_vue = new Vue({
       this.startTree = tree.clone(); // Save a copy as the start tree.
       this.workTree = tree;
       this.stage = "manip";
+      this.mounted=true;
+    }, setWorkTree(tree){
+      if(tree!==null) {
+        this.workTree = Deserialize(tree);
+      }
     },
 
     editStartTree() {
       this.workTree = this.startTree; // We can reuse startTree obj since workTree is overwritten.
       this.stage = "build";
+      this.mounted=false;
+      clearHist();
     },
 
     saveProblem() {
@@ -166,6 +178,8 @@ export const creator_vue = new Vue({
         const modal = document.getElementById('finishProblemModal');
         M.Modal.getInstance(modal).open();
       }, 0);
+    }, getTreeData(){
+      return [this.workTree.toString(), null];
     },
 
     insertionQuadrantSelected(insertionPoint) {

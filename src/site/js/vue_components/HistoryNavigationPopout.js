@@ -1,4 +1,3 @@
-
 import HistoryNavigationHistoryLine from "./HistoryNavigationHistoryLine";
 import {addHistoryEntry, getHistoryController, setGoalTree} from "../history_nav";
 
@@ -12,7 +11,7 @@ export default {
       <li v-if="display">
         <div class="tree">
           <ul>
-            <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine" v-bind:index="0" v-bind:setWorkTree="setWorkTree"></HistoryNavigationHistoryLine>
+            <HistoryNavigationHistoryLine v-if="display&&historyController" v-bind:historyLine="historyController.mainLine" v-bind:index="0" v-bind:setWorkTree="setWorkTree" v-bind:curLoc="curLoc"></HistoryNavigationHistoryLine>
           </ul>
         </div>
       </li>
@@ -26,9 +25,15 @@ export default {
     M.AutoInit();
     let data=this.dataFunc();
     addHistoryEntry(data[0], "Start");
-    setGoalTree(data[1]);
+    if(data[1]!==null){
+      setGoalTree(data[1]);
+    }
     this.historyController=getHistoryController();
     this.display=true;
+  }, computed:{
+    curLoc: function(){
+      return this.historyController.loc.line[this.historyController.loc.index].id;
+    }
   }, components:{
     HistoryNavigationHistoryLine,
   },

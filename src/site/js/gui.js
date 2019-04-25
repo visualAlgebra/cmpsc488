@@ -94,7 +94,9 @@ export class Mouse {
   redisplayExpressionTree(actionType) {
     const treeRoot = this.vueComponent.workTree;
     if (this.vueComponent.hasOwnProperty("resolveWin")) {
-      this.vueComponent.resolveWin(addHistoryEntry(treeRoot, actionType));//TODO can only be manipulator vueComponent
+      this.vueComponent.resolveWin(addHistoryEntry(treeRoot, actionType));
+    }else{
+      addHistoryEntry(treeRoot, actionType);
     }
   }
 
