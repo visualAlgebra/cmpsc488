@@ -3,7 +3,8 @@ import SingleExpressionDisplay from "./SingleExpressionDisplay";
 
 export default {
   name: "SingleProblemDisplay", props: ["problemID", "start", "goal", "deleteProblem"], template: `
-  <div class="container" style="border-style: solid;border-color: black;">Problem: {{problemID}}
+  <div class="container single-problem-display">
+    <h5 class="center-align">Problem: {{problemID}}</h5>
     <a :href="edit" class="secondary-content">
       <i class="material-icons">rotate_left</i>
     </a>
