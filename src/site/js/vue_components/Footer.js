@@ -8,7 +8,7 @@ export default {
       <div class="col l6 s12">
         <h5 class="white-text">VisualAlgebra</h5>
         <p class="grey-text text-lighten-4">
-          A graphical, interactive, algebraic playground.
+          Contact us at <a href="visualalgebra@gmail.com">VisualAlgebra@gmail.com</a>
         </p>
       </div>
       <div class="col l4 offset-l2 s12">
