@@ -10,8 +10,10 @@ export default {
   <div class="col">
     <div class="card">
       <div class="card-content black-text">
-        <span class="card-title">{{name}}</span>
-        <span v-for="role of roles" class="badge">{{role}}</span>
+        <span class="card-title">
+          {{name}}
+          <span v-for="role of roles" class="new badge">{{role}}</span>
+        </span>
         <p>
           <slot></slot>
         </p>
