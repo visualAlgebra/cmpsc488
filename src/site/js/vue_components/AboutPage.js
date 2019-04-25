@@ -16,10 +16,10 @@ export default {
   
   <AboutProfile
     name="Jacob Mitzel"
-    :links="[['https://www.google.com', 'Google']]"
-    :roles="['my-role']"
+    :links="[['https://github.com/mitzeljw', 'Github']]"
+    :roles="['Server, Database, User Accounts']"
   >
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate facilis iusto magnam magni, nulla omnis perspiciatis recusandae similique? Atque beatae deserunt dolore dolores dolorum eligendi pariatur placeat possimus quia veniam?
+    Jake enjoys working on back-end systems, using Python, Java, C++, and C.  He has experience working with SQL and NoSQL databases as well. However, he enjoys learning new systems and does so quickly.
   </AboutProfile>
   
   <AboutProfile
