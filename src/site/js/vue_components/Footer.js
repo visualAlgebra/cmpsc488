@@ -2,7 +2,7 @@ export default {
   name: "Footer",
 
   template: `
-<footer class="page-footer">
+<footer class="page-footer our-page-footer">
   <div class="container">
     <div class="row">
       <div class="col l6 s12">
