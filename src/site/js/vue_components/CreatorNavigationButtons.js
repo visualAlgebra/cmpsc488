@@ -1,15 +1,17 @@
 import {randomStartGenerator} from "../expression_tree";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
+import {clearHist, histAction} from "../history_nav";
+import HistoryNavigationPopout from "./HistoryNavigationPopout";
 
 export default {
-  name: "CreatorNavigationButtons", props: ["stage", "clearTree", "setWorkTree", "problemIsSavable", "editStartTree", "saveProblem", ], template: `
+  name: "CreatorNavigationButtons", props: ["dataFunc", "cvMounted", "stage", "clearTree", "setWorkTree", "problemIsSavable", "editStartTree", "saveProblem", ], template: `
   <div>
     <div class="row spaced-out-row">
       <a v-bind:href="url" class="tab waves-effect waves-light btn col">
           <i class="material-icons left">folder_open</i>
           <span class="truncate">Load</span>
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="clearTree()">
+      <a class="tab waves-effect waves-light btn col" v-on:click="clearTreeHist()">
           <i class="material-icons left">clear</i>
           <span class="truncate">Clear</span>
       </a>
@@ -42,7 +44,7 @@ export default {
           <span class="truncate">Save</span>
       </a>
     </div>
-    <HistoryNavigationPopout v-bind:dataFunc="TEMPORARY_DATA_FUNC" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
+    <HistoryNavigationPopout v-if="cvMounted" v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
   </div>  
   `,
@@ -61,21 +63,18 @@ export default {
       };
     },
   }, methods: {
-
-    TEMPORARY_DATA_FUNC(...args) {
-      console.log("Calling CreatorNavigationButtons.TEMPORARY_DATA_FUNC()");
-    },
-
     undo(){
-      console.log("hi3");
+      this.setWorkTree(histAction(false));
     }, redo(){
-      console.log("hi4");
+      this.setWorkTree(histAction(true));
     }, generate(){
       const numNodes = 15;
       const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
-      this.setWorkTree(res);
+    }, clearTreeHist(){
+      clearHist();
+      this.clearTree();
     }
   }, components:{
-    AlgebraicActionsModalPopup,
+    AlgebraicActionsModalPopup, HistoryNavigationPopout
   }
 };

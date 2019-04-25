@@ -103,7 +103,7 @@ class historyLine{
   }
 
   backward(){
-    if(this.index==0){
+    if(this.index===0){
       if(this.id!==0){
         return this.parent.parent.findID(this.id)//if going backward to previous line
       }else{
