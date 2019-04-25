@@ -24,10 +24,10 @@ export default {
   
   <AboutProfile
     name="Joshua Fisher"
-    :links="[['https://www.google.com', 'Google']]"
-    :roles="['my-role']"
+    :links="[['https://www.github.com/jfisher19335/', 'Github'], ['https://www.linkedin.com/in/joshua-fisher-57974a141/', 'LinkedIn']]"
+    :roles="['AI', 'Problem Generator', 'Algebraic Actions']"
   >
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos eum expedita magni quisquam! Aliquid amet deleniti, dicta eligendi et maxime. Adipisci assumenda cum id impedit omnis qui quisquam vero voluptates.
+    Joshua has strong interests in AI, Java, C++, and Scheme.
   </AboutProfile>
   
   <AboutProfile
