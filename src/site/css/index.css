@@ -31,11 +31,6 @@
   color: var(--our-teal);
 }
 
-a {
-  color: var(--our-pink);
-  font-style: italic;
-}
-
 .literal-row > * {
   display: flex;
   justify-content: space-around;
