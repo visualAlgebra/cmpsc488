@@ -801,7 +801,7 @@ export class IdentityMerge {
     if (sibling1.parent !== sibling2.parent)
       return false;
     if (sibling1.parent.orientation == Orientation.NS) {
-      if (quadrant1 != Quadrant.NW || quadrant1 != quadrant2)
+      if (quadrant1 !== Quadrant.NW || quadrant1 !== quadrant2)
         return false;
       if (sibling1 instanceof Literal) {
         if (sibling1.value == 1)
