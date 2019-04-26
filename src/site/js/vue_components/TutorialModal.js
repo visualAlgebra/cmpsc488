@@ -54,7 +54,7 @@ export default {
       $("#tutText").text(this.tutMessages[this.index]);
       $("#tutProbLink").text("Tutorial Problem " + this.tutNum);
       // $("#tutProbLink").attr("href", "https://visualalgebra.org/manipulator/problems/tp" + this.tutNum);
-      $("#tutProbLink").attr("href", "http://localhost:8080/manipulator/problems/tp" + this.tutNum);      
+      $("#tutProbLink").attr("href", "http://localhost:8080/algebra/problems/tp" + this.tutNum);      
     }, changeImg() {
 
       document.getElementById("tutImg").setAttribute("src", this.tutImgs[this.index]);

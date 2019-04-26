@@ -26,7 +26,7 @@ export default {
       <img
         class="materialboxed"
         width="600px"
-        src="http://localhost:8080/src/site/assets/Distribute.gif"
+        src="http://localhost:8080/src/site/assets/ProblemDemo.gif"
       >
     </div>
   </div>
