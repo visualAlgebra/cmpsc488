@@ -41,20 +41,23 @@ export default {
      We simplify algebra by basing our graphical system on ℤ3, an algebraic field with <strong>only three numbers.</strong> Rather than getting bogged down in arithmetic, we want you to focus on the algebraic laws common to all kinds of algebras.
   </p>
   
-  <section class="row literal-row" style="margin-top: 5rem; margin-bottom: 5rem;">
+  <section class="row literal-row">
     <div class="col s4">
       <div class="expr-tree-box hoverable">
         <ExpressionTree :tree="zero()" />
+        <h6 class="center-align">Zero</h6>
       </div>
     </div>
     <div class="col s4">
       <div class="expr-tree-box hoverable">
         <ExpressionTree :tree="one()" />
+        <h6 class="center-align">One</h6>
       </div>
     </div>
     <div class="col s4">
       <div class="expr-tree-box hoverable">
         <ExpressionTree :tree="two()" />
+        <h6 class="center-align">Two</h6>
       </div>
     </div>
   </section>
