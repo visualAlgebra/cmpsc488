@@ -7,7 +7,7 @@ export default {
       <li class="collection-header blue-grey darken-1 white-text">
         <h4 id="lessonsSavedAmountField">Lessons: {{lessons.length}}</h4>
       </li>
-      <ul class="collapsible" style="overflow:auto; height:280px;">
+      <ul class="collapsible">
         <SingleLessonDisplay v-for="(lesson, index) in lessons" v-bind:key="index" v-bind:lesson="lesson" v-bind:deleteLesson="deleteLesson"></SingleLessonDisplay>
       </ul>
     </ul>
