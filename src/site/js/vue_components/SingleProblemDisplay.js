@@ -6,7 +6,7 @@ export default {
   <div class="single-problem-display">
   
     <h5 class="center-align" style="font-weight: bolder;">
-      <a :href="url">{{problemID}}</a>
+      <a :href="url">{{problemIDDecoded}}</a>
     </h5>
     
     <div class="row">
@@ -43,17 +43,25 @@ export default {
       </div>
     </div>
   </div>  
-  `, data(){
+  `,
+  data(){
     return {
       url: "http://localhost:8080/manipulator/problems/"+this.problemID,
       edit: "http://localhost:8080/creator/"+this.problemID,
       targetID: "dataP"+this.problemID
     };
-  }, methods:{
+  },
+  methods:{
     deleteProb(){
       this.deleteProblem(this.problemID);
     }
-  }, components: {
+  },
+  computed: {
+    problemIDDecoded() {
+      return decodeURI(this.problemID);
+    },
+  },
+  components: {
     ExpressionTree, SingleExpressionDisplay,
   },
 };

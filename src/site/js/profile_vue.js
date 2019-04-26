@@ -28,11 +28,10 @@ export const profile_vue=new Vue({
       v-bind:userStruct="userStruct">
       </ProfilePageTop>
       <button v-if="userStruct&&userStruct.token&&display" class="modal-trigger btn waves-effect waves-light" data-target="lessonEditModal">
-        <i class="material-icons right">+</i>
+        <i class="material-icons right">add</i>
         Create new lesson
       </button>
       <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
-      <div class="divider"></div>
       <ProblemsHolder v-if="display&&problems&&amtConfirmed===0" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
       <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
     </div>
