@@ -8,6 +8,8 @@ import {addListenerForUser} from "./user_system";
 import ExplorerAIGenerationModal from "./vue_components/ExplorerAIGenerationModal";
 import Footer from "./vue_components/Footer";
 import InvalidPage from "./vue_components/InvalidPage";
+import {singleExpressionDecompression} from "./display_feature";
+import {Deserialize} from "./expression_tree";
 
 export const explorer_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -16,20 +18,30 @@ export const explorer_vue=new Vue({
     <InvalidPage v-if="!display"></InvalidPage>
     <div class="container">
       <ExplorerPageTop v-if="display"></ExplorerPageTop>
-      <ProblemsHolder v-if="display&&problemsToDisplay" v-bind:problems="problemsToDisplay" v-bind:type="'explorer'"></ProblemsHolder>
+      <ProblemsHolder v-if="display&&problemsToDisplay&&amtConfirmed===(problemsToDisplayCount*2)" v-bind:problems="problemsToDisplay" v-bind:type="'explorer'"></ProblemsHolder>
       <ExplorerAIGenerationModal v-bind:userStruct="userStruct"></ExplorerAIGenerationModal>
     </div>
     <Footer/>
   </div>
   `, data(){
     return {
-      display:false, problemsToDisplayCount: 10, problemsToDisplay: null, userStruct:null, logged:false,
+      display:false, problemsToDisplayCount: 10, problemsToDisplay: null, userStruct:null, logged:false, amtConfirmed:0
     };
   }, created(){
     addListenerForUser(this.oauth_user_getter);
   }, mounted(){
     get_problems_from_db(this.problemsToDisplayCount, res=>{
       this.problemsToDisplay=res;
+      for(let x=0; x<this.problemsToDisplay.length; x++){
+        singleExpressionDecompression(this.problemsToDisplay[x].expression_goal, res => {
+          this.problemsToDisplay[x].expression_goal = Deserialize(res);
+          this.amtConfirmed++;
+        });
+        singleExpressionDecompression(this.problemsToDisplay[x].expression_start, res => {
+          this.problemsToDisplay[x].expression_start = Deserialize(res);
+          this.amtConfirmed++;
+        });
+      }
       this.display=true;
     });
   },
