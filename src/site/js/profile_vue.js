@@ -22,21 +22,23 @@ export const profile_vue=new Vue({
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
     <InvalidPage v-if="!display"></InvalidPage>
-    <ProfilePageTop v-if="display"
-    v-bind:bio="bio"
-    v-bind:time="time"
-    v-bind:problemCount="problems.length"
-    v-bind:accountID="accountID"
-    v-bind:userStruct="userStruct">
-    </ProfilePageTop>
-    <button v-if="userStruct&&userStruct.token&&display" class="modal-trigger btn waves-effect waves-light" data-target="lessonEditModal">
-      <i class="material-icons right">+</i>
-      Create new lesson
-    </button>
-    <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
-    <div class="divider"></div>
-    <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
-    <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
+    <div class="container">
+      <ProfilePageTop v-if="display"
+      v-bind:bio="bio"
+      v-bind:time="time"
+      v-bind:problemCount="problems.length"
+      v-bind:accountID="accountID"
+      v-bind:userStruct="userStruct">
+      </ProfilePageTop>
+      <button v-if="userStruct&&userStruct.token&&display" class="modal-trigger btn waves-effect waves-light" data-target="lessonEditModal">
+        <i class="material-icons right">+</i>
+        Create new lesson
+      </button>
+      <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
+      <div class="divider"></div>
+      <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
+      <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
+    </div>
     <Footer/>
   </div>
   `, data(){
