@@ -270,7 +270,7 @@ class FirestoreDatabase extends Database {
       return server.respondWithError(response, 400, "Error 400: Query not supported");
     } else {
       let queryResponse = [];
-      let firebaseQuery = this.session.collection('problems').orderBy('timeCreated').limit(query.number);
+      let firebaseQuery = this.session.collection('problems').orderBy('timeCreated', "desc").limit(query.number);
       firebaseQuery.get()
         .then(snapshot => {
           if (!snapshot.empty) {
@@ -301,7 +301,7 @@ class FirestoreDatabase extends Database {
       return server.respondWithError(response, 400, "Error 400: Query not supported");
     } else {
       let queryResponse = [];
-      let firebaseQuery = this.session.collection('lessons').orderBy('timeCreated').limit(query.number);
+      let firebaseQuery = this.session.collection('lessons').orderBy('timeCreated', "desc").limit(query.number);
       firebaseQuery.get()
         .then(snapshot => {
           if (!snapshot.empty) {
