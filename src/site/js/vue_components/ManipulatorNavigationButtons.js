@@ -41,7 +41,7 @@ export default {
           <i class="material-icons left">info</i>
           <span class="truncate">Reference</span>
       </a>
-      <a class="tab waves-effect waves-light btn col sidenav-trigger" data-target="histNav">
+      <a class="tab waves-effect waves-light btn col modal-trigger" data-target="histNav">
           <i class="material-icons left">history</i>
           <span class="truncate">History</span>
       </a>

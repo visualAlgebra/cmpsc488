@@ -5,6 +5,7 @@ export function addHistoryEntry(tree, msg){
   if(histControl===null||histControl===undefined){
     histControl=new historyController();
     let temp=histControl.init(tree, msg);
+    //console.log(histControl);
     return temp;
   }else{
     return histControl.add(tree, msg);
@@ -104,13 +105,24 @@ class historyLine{
   backward(){
     if(this.index===0){
       if(this.id!==0){
-        return this.parent.parent.findID(this.id)//if going backward to previous line
+        this.parent.parent.setIndex(this.parent.id);
+        histControl.updateLoc(this.parent.parent);
+        return this.parent.data//if going backward to previous line
       }else{
         return null;
       }
     }else{
       this.index--;//if in middle of line
       return this.line[this.index].data;
+    }
+  }
+
+  setIndex(id){
+    for(let index in this.line){
+      if(this.line[index].id===id){
+        this.index=parseInt(index);
+        return;
+      }
     }
   }
 
