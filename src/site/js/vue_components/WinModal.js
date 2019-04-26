@@ -4,9 +4,9 @@ export default {
       <div class="modal-content center-align">
         <div class="row">
           <h1 class="black-text">Success!</h1>
-          <p class="black-text">
+          <h5 class="black-text">
             You were able to transform the starting tree into the goal tree. Nice job!
-          </p>
+          </h5>
         </div>
         <div class="row">
           <a
