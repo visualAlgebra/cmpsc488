@@ -2,7 +2,7 @@ import HistoryNavigationHistoryLine from "./HistoryNavigationHistoryLine";
 import {addHistoryEntry, getHistoryController, setGoalTree} from "../history_nav";
 
 export default {
-  name: "HistoryNavigationPopout", props:["dataFunc", "setWorkTree"], template: `
+  name: "HistoryNavigationPopout", props:["addHistory", "setWorkTree"], template: `
   <div>
     <ul id="histNav" class="sidenav">
       <li>
@@ -23,11 +23,7 @@ export default {
     }
   }, mounted() {
     M.AutoInit();
-    let data=this.dataFunc();
-    addHistoryEntry(data[0], "Start");
-    if(data[1]!==null){
-      setGoalTree(data[1]);
-    }
+    this.addHistory();
     this.historyController=getHistoryController();
     this.display=true;
   }, computed:{
