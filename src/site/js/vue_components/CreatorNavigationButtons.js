@@ -35,7 +35,7 @@ export default {
           <i class="material-icons left">lightbulb_outline</i>
           <span class="truncate">Generate</span>
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="editStartTree()" v-if="stage==='manip'">
+      <a class="tab waves-effect waves-light btn col" v-on:click="editStartTree()">
           <i class="material-icons left">navigate_before</i>
           <span class="truncate">Edit Start</span>
       </a>
