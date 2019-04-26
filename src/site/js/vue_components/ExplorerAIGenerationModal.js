@@ -72,8 +72,8 @@ export default {
           this.display = false;
           return;
         }
-        this.workTree = randomStartGenerator(this.basicAmts[this.val]);
-        this.goalTree = randomGoalGeneratorNoArr(this.workTree, this.basicActs[this.val]);
+        this.workTree = randomStartGenerator(this.basicAmts[this.val-1]);
+        this.goalTree = randomGoalGeneratorNoArr(this.workTree, this.basicActs[this.val-1]);
       } else {
         let num_nodes = parseInt(document.getElementById('num_nodes').value);
         let num_actions = parseInt(document.getElementById('num_actions').value);
