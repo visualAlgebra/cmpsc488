@@ -40,9 +40,9 @@ export default {
     <AboutProfile
       name="Gideon Buckwalter"
       :links="[['https://github.com/eignnx/', 'GitHub'], ['https://eignnx.github.io/', 'Website']]"
-      :roles="['Front-end', 'UI', 'Vue.js']"
+      :roles="['Creator Page', 'Algebra Page', 'UI/UX', 'Vue.js', 'Webpack']"
     >
-      Gideon is a computer science student who will be graduating in May, 2019. His interests include front-end web technologies, and compiler implementation.
+      Gideon is a computer science undergraduate graduating May, 2019. His interests include workplace ethics, front-end web technologies, and compiler implementation.
     </AboutProfile>
   </section>
 </section>
