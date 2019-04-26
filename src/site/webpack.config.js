@@ -10,6 +10,7 @@ module.exports = {
     profile: './js/profile.js',
     lesson_view: './js/lesson_view.js',
     about: './js/about.js',
+    promotional_website: './js/promotional_website.js',
   },
   resolve: {
     alias: {
