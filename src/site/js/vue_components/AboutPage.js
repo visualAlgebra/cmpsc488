@@ -36,7 +36,7 @@ export default {
       :links="[['https://github.com/Fractalyst', 'Github']]"
       :roles="['History', 'HTML', 'Vue-Componentizer', 'User Profile', 'Explorer', 'Navbar']"
     >
-     I like to make programs in my spare time and enjoy working with front end HTML frameworks like vue. Working on creating efficient algorithms for problems is also interesting to me.
+     Eric has been interested in creating all forms of programs in languages like C#, Java, JavaScript, and html while working and in his spare time for ~12 years.
     </AboutProfile>
     <AboutProfile
       name="Gideon Buckwalter"
