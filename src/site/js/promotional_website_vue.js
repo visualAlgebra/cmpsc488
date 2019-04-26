@@ -1,12 +1,7 @@
 import Vue from "vue";
 
 export const promotional_website_vue = new Vue({
-
-  name: "Root",
-
-  el: "#vue-app",
-
-  template: `
+  name: "Root", el: "#vue-app", template: `
   <div>
     <section>
       <h1>Main page</h1>
