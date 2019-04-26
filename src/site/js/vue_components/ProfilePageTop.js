@@ -8,7 +8,8 @@ export default {
       <div class="col s12 m12">
         <div class="card blue-grey darken-1">
           <div class="card-content white-text">
-            <span class="card-title" id="userAccountIdField">{{accountID}}
+            <span class="card-title" id="userAccountIdField">
+            <h1>{{accountID}}</h1>
             <button class="dropdown-trigger btn waves-effect waves-light right" data-target="dropdown">
               <i class="material-icons right">X</i>
               Delete Account
