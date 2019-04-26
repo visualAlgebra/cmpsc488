@@ -19,7 +19,6 @@ export default {
               <li><a v-on:click="deleteAccount">Yes</a></li>
             </ul>
             </span>
-            <p>Bio: {{bio}}</p>
             <p>Creation Date: {{new Date(time)}}</p>
             <p>Problems: {{problemCount}}</p>
           </div>
