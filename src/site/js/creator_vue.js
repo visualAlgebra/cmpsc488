@@ -31,6 +31,7 @@ export const creator_vue = new Vue({
     v-bind:dataFunc="getTreeData"
     v-bind:cvMounted="mounted"
     v-bind:setWorkTree="setWorkTree"
+    v-bind:setStartTree="setStartTree"
     :stage="stage"
     :clearTree="clearTree"
     :problemIsSavable="problemIsSavable()"
