@@ -1,7 +1,6 @@
-import {singleExpressionDecompression} from "../display_feature";
-import {Deserialize} from "../expression_tree";
 import ExpressionTree from "./ExpressionTree";
 import SvgPanZoom from "vue-svg-pan-zoom";
+import {ExpressionTree as JsExpressionTree} from '../expression_tree';
 
 export default {
   name: "SingleExpressionDisplay",
@@ -9,6 +8,7 @@ export default {
   props: {
     tree: {
       required: true,
+      type: JsExpressionTree,
     },
     height: {
       required: false,
@@ -47,29 +47,15 @@ export default {
           :height="worldHeight"
           :width="worldWidth"
         >
-          <ExpressionTree v-if="display" v-bind:tree="workingExpressionTree"></ExpressionTree>
+          <ExpressionTree v-bind:tree="tree"></ExpressionTree>
         </foreignObject>
       </svg>
     </SvgPanZoom>
   </div>
-  `, data() {
-    return {
-      workingExpressionTree: null, display: false,
-    };
-  }, methods: {
+  `, methods: {
     registerSvgPanZoom(svgpanzoom) {
       this.svgpanzoom = svgpanzoom;
     },
-  }, mounted() {
-    if(this.tree[0]===undefined){
-      this.workingExpressionTree=this.tree.clone();
-      this.display=true;
-    }else {
-      singleExpressionDecompression(this.tree, res => {
-        this.workingExpressionTree = Deserialize(res);
-        this.display = true;
-      });
-    }
   }, components: {
     ExpressionTree, SvgPanZoom,
   },

@@ -1,13 +1,8 @@
 import Vue from "vue";
 import NavigationBar from "./vue_components/NavigationBar";
 import ProfilePageTop from "./vue_components/ProfilePageTop";
-import {
-  delete_lesson_from_db,
-  delete_problem_from_db,
-  get_account_from_db, get_all_lessons_from_db,
-  get_all_problems_from_db
-} from "./database_management";
-import {LessonInfo, ProblemInfo} from "./expression_tree";
+import {delete_lesson_from_db, delete_problem_from_db, get_account_from_db} from "./database_management";
+import {Deserialize, LessonInfo, ProblemInfo} from "./expression_tree";
 import {account_to_load, fillPage} from "./profile";
 import ProblemsHolder from "./vue_components/ProblemsHolder";
 import InvalidPage from "./vue_components/InvalidPage";
@@ -15,6 +10,7 @@ import LessonsHolder from "./vue_components/LessonsHolder";
 import {addListenerForUser} from "./user_system";
 import LessonEditModal from "./vue_components/LessonEditModal";
 import Footer from "./vue_components/Footer";
+import {singleExpressionDecompression} from "./display_feature";
 
 
 export const profile_vue=new Vue({
@@ -35,13 +31,13 @@ export const profile_vue=new Vue({
     </button>
     <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
     <div class="divider"></div>
-    <ProblemsHolder v-if="display" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
+    <ProblemsHolder v-if="display&&problems&&amtConfirmed===0" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
     <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
     <Footer/>
   </div>
   `, data(){
     return {
-      display: false, accountID:null, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false, gotAccount:false,
+      display: false, accountID:null, lessons: null, problems: null, bio: null, time: 0, userStruct:null, logged:false, gotAccount:false, amtConfirmed:0
     };
   }, methods: {
     getAccountFromURL(){
@@ -65,8 +61,19 @@ export const profile_vue=new Vue({
         x=parseInt(x);
         let k=res.problems[x];
         prob[x]=new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
+        this.amtConfirmed+=2;
       }
       this.lessons=les;
+      for(let x=0; x<prob.length; x++){
+        singleExpressionDecompression(prob[x].expression_goal, res => {
+          prob[x].expression_goal = Deserialize(res);
+          this.amtConfirmed--;
+        });
+        singleExpressionDecompression(prob[x].expression_start, res => {
+          prob[x].expression_start = Deserialize(res);
+          this.amtConfirmed--;
+        });
+      }
       this.problems=prob;
       this.display=true;
     }, oauth_user_getter(user){

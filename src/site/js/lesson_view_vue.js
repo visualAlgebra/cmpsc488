@@ -5,9 +5,10 @@ import ProblemsHolder from "./vue_components/ProblemsHolder";
 import {get_lesson_from_db} from "./database_management";
 import LessonViewPageTop from "./vue_components/LessonViewPageTop";
 import InvalidPage from "./vue_components/InvalidPage";
-import {LessonInfo, ProblemInfo} from "./expression_tree";
+import {Deserialize, LessonInfo, ProblemInfo} from "./expression_tree";
 import {addListenerForUser} from "./user_system";
 import Footer from "./vue_components/Footer";
+import {singleExpressionDecompression} from "./display_feature";
 
 export const lesson_view_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
@@ -22,7 +23,7 @@ export const lesson_view_vue = new Vue({
     v-bind:problemsCount="problems.length"></LessonViewPageTop>
     <LessonsHolder v-if="display" v-bind:lessons="lessons"></LessonsHolder>
     <div class="divider"></div>
-    <ProblemsHolder v-if="display" v-bind:problems="problems"></ProblemsHolder>
+    <ProblemsHolder v-if="display&&amtConfirmed===0" v-bind:problems="problems"></ProblemsHolder>
     <Footer/>
   </div>
   `, data() {
@@ -36,6 +37,7 @@ export const lesson_view_vue = new Vue({
       lessonID: "",
       userStruct: null,
       logged: false,
+      amtConfirmed:0
     };
   }, methods: {
     getAccountFromURL() {
@@ -54,10 +56,21 @@ export const lesson_view_vue = new Vue({
         if (res.creations[creation].lessonID === undefined) {
           let prob = new ProblemInfo(k.problemID, k.startExpression, k.goalExpression, k.description, k.timeCreated);
           this.problems.push(prob);
+          this.amtConfirmed+=2;
         } else {
           let les = new LessonInfo(k.lessonID, k.creations, k.timeCreated, k.creatorAccountID, k.description);
           this.lessons.push(les);
         }
+      }
+      for(let x=0; x<this.problems.length; x++){
+        singleExpressionDecompression(this.problems[x].expression_goal, res => {
+          this.problems[x].expression_goal = Deserialize(res);
+          this.amtConfirmed--;
+        });
+        singleExpressionDecompression(this.problems[x].expression_start, res => {
+          this.problems[x].expression_start = Deserialize(res);
+          this.amtConfirmed--;
+        });
       }
       this.display = true;
     }, oauth_user_getter(user) {

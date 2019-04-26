@@ -98,8 +98,10 @@ export default {
       this.submitted=true;
       window.location.href = this.url;
     }, submitProblem(){
-      this.problemInformation=new ProblemInfo(this.getID());
-      compress_string_js(this.workTree.toString(), this.distributeStart);
+      if(this.workTree!==null){
+        this.problemInformation=new ProblemInfo(this.getID());
+        compress_string_js(this.workTree.toString(), this.distributeStart);
+      }
     }
   }, components:{
     SingleExpressionDisplay,
