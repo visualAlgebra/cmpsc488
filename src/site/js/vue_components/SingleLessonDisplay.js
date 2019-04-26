@@ -4,7 +4,7 @@ export default {
   <li>
     <div class="collapsible-header blue-grey darken-1 white-text">
       <i class="material-icons white-text left">folder</i>
-      {{lesson.lessonID}}
+      {{lessonIDDecoded}}
       <a :href="getLessonID(lesson.lessonID)" class="secondary-content">
         <i class="material-icons">send</i>
       </a>
@@ -40,7 +40,13 @@ export default {
     // , deleteLess(){
     //   this.deleteLesson(this.lesson.lessonID);
     // }
-  }, mounted(){
+  },
+  computed: {
+    lessonIDDecoded() {
+      return decodeURI(this.lesson.lessonID);
+    },
+  },
+  mounted(){
     M.AutoInit();
   }
 };
