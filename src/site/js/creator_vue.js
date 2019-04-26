@@ -24,8 +24,8 @@ export const creator_vue = new Vue({
     :oauth_user_getter="oauth_user_getter"
     :oauth_user_remover="oauth_user_remover"
     :logged="logged"
-  ></NavigationBar>
-  <InvalidPage v-if="!display"></InvalidPage>
+  />
+  <InvalidPage v-if="!display"/>
   <CreatorNavigationButtons
     v-if="display"
     v-bind:dataFunc="getTreeData"
@@ -37,35 +37,35 @@ export const creator_vue = new Vue({
     :problemIsSavable="problemIsSavable()"
     :editStartTree="editStartTree"
     :saveProblem="saveProblem"
-  ></CreatorNavigationButtons>
+  />
   <CreatorSpecificActionButtons
     v-if="display"
     :mouse="mouse"
     :enterPulseMode="() => { pulse = true; }"
     :exitPulseMode="() => { pulse = false; }"
-  ></CreatorSpecificActionButtons>
+  />
   <ManipulatorWindow
     v-if="display&&workTree"
     :tree="workTree"
     :mouse="mouse"
     :pulse="pulse"
-  ></ManipulatorWindow>
+  />
   <CreatorWindow
     v-if="stage === 'build'"
     :tree="workTree"
     :useCreatedTree="setStartTree"
-  ></CreatorWindow>
+    :closeModalCallback="gotoManipStage"
+  />
   <CreatorWindow
     v-if="displayInsertionCreatorModal"
-    :mouse="mouse"
     :useCreatedTree="useTreeToIdentityBalance"
-  ></CreatorWindow>
+  />
   <PublishProblemModal
     v-if="finish"
     :closeFinish="closeFinish"
     :createdProblem="createdProblem"
     :userStruct="userStruct"
-  ></PublishProblemModal>
+  />
 </div>
   `,
 
@@ -111,6 +111,10 @@ export const creator_vue = new Vue({
         this.display = true;
         this.stage = "manip";
       }
+    },
+
+    gotoManipStage() {
+      this.stage = "manip";
     },
 
     problemIsSavable() {
@@ -167,9 +171,10 @@ export const creator_vue = new Vue({
 
     editStartTree() {
       this.workTree = this.startTree; // We can reuse startTree obj since workTree is overwritten.
-      this.stage = "build";
-      this.mounted=false;
+      this.startTree = null;
+      this.mounted = false;
       clearHist();
+      this.stage = "build";
     },
 
     saveProblem() {
