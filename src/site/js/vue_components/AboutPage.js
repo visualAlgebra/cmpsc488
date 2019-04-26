@@ -1,5 +1,4 @@
 import AboutProfile from "./AboutProfile";
-import Deliverables from "./Deliverables";
 
 export default {
   name: "AboutPage",
@@ -29,7 +28,7 @@ export default {
       :links="[['https://www.github.com/jfisher19335/', 'Github'], ['https://www.linkedin.com/in/joshua-fisher-57974a141/', 'LinkedIn']]"
       :roles="['AI', 'Problem Generator', 'Algebraic Actions']"
     >
-      Joshua has strong interests in AI, Java, C++, and Scheme.
+      Joshua has strong interests in AI, Java, C++, and Scheme. He also has experience in SQL and JavaScript. He enjoys learning about all things related to technology.
     </AboutProfile>
     <AboutProfile
       name="Eric Koskovich"
@@ -46,15 +45,10 @@ export default {
       Gideon is a computer science student who will be graduating in May, 2019. His interests include front-end web technologies, and compiler implementation.
     </AboutProfile>
   </section>
-  <section>
-    <h1>Deliverables</h1>
-    <Deliverables/>
-  </section>
 </section>
   `,
 
   components: {
     AboutProfile,
-    Deliverables,
   },
 };
