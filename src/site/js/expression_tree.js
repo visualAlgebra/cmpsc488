@@ -165,8 +165,6 @@ export class Tag extends ExpressionTree {
       child.parent = null;
     if(child !== null && child !== undefined)
       this.updateParentTreeCount(-child.treeCount);
-    else
-      this.updateParentTreeCount(-1);
   }
 
   removeNorthWest(child) {
