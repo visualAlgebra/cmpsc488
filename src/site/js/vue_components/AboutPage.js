@@ -1,5 +1,4 @@
 import AboutProfile from "./AboutProfile";
-import Deliverables from "./Deliverables";
 
 export default {
   name: "AboutPage",
@@ -45,10 +44,6 @@ export default {
     >
       Gideon is a computer science student who will be graduating in May, 2019. His interests include front-end web technologies, and compiler implementation.
     </AboutProfile>
-  </section>
-  <section>
-    <h1>Deliverables</h1>
-    <Deliverables/>
   </section>
 </section>
   `,
