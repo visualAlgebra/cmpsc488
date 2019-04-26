@@ -128,7 +128,7 @@ export class Tag extends ExpressionTree {
     this.treeCount += count;
     if (this.treeCount < 0)
       return;
-    if (this.parent != null && !this.parent.is(this) && t) {
+    if (this.parent != null && !this.parent.is(this)) {
       this.parent.updateParentTreeCount(count);
     }
   }
