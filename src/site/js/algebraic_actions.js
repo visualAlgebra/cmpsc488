@@ -766,7 +766,7 @@ export class ZeroMerge {
 
   apply() {
     if (this.sibling1 instanceof Literal) {
-      if (this.sibling1.value = 0)
+      if (this.sibling1.value == 0)
         this.sibling1.parent.removeNorthWest(this.sibling2);
       else
         this.sibling2.parent.removeNorthWest(this.sibling1);

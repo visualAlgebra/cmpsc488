@@ -126,6 +126,8 @@ export class Tag extends ExpressionTree {
   // (including itself).
   updateParentTreeCount(count) {
     this.treeCount += count;
+    if (this.treeCount < 0)
+      return;
     if (this.parent != null && !this.parent.is(this)) {
       this.parent.updateParentTreeCount(count);
     }
@@ -165,8 +167,6 @@ export class Tag extends ExpressionTree {
       child.parent = null;
     if(child !== null && child !== undefined)
       this.updateParentTreeCount(-child.treeCount);
-    else
-      this.updateParentTreeCount(-1);
   }
 
   removeNorthWest(child) {
