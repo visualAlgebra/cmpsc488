@@ -12,8 +12,6 @@
     --tag-positive-color-secondary: #b6ccde;
     --tag-negative-color: #485061;
     --tag-negative-color-secondary: #5f6b81;
-    /*--tag-negative-color: #61454b;*/
-    /*--tag-negative-color-secondary: #815060;*/
     --tag-button-color: #485061;
     --tag-button-color-secondary: #5f6b81;
     /***********************************************/
@@ -57,10 +55,10 @@
 
 .east-west > * > * {
     display: flex;
-    align-content: center;
+    align-items: center;
 }
 
-.north-south > * > .north-west {
+.north-south > * > * {
     display: flex;
     flex-direction: column;
     align-items: center;
