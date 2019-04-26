@@ -2,7 +2,7 @@ import Vue from "vue";
 
 export const promotional_website_vue = new Vue({
   name: "Root", el: "#vue-app", template: `
-  <div>
+  <div class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
     <section>
       <h1>Main page</h1>
       <p>Overview of product:</p>
