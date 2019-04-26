@@ -3,6 +3,7 @@ import NavigationBar from "./vue_components/NavigationBar";
 import IndexPageViewVue from "./vue_components/IndexPageViewVue";
 import {addListenerForUser} from "./user_system";
 import Footer from "./vue_components/Footer";
+import InvalidPage from "./vue_components/InvalidPage";
 
 export const index_vue = new Vue({
   name: "Root",
@@ -16,19 +17,22 @@ export const index_vue = new Vue({
     :oauth_user_remover="oauth_user_remover"
     :logged="logged"
   ></NavigationBar>
-  <IndexPageViewVue/>
+  <InvalidPage v-if="!display"></InvalidPage>
+  <IndexPageViewVue v-if="display"/>
   <Footer/>
 </main>
   `,
 
   data() {
     return {
-      userStruct: null, logged: false,
+      display:false, userStruct: null, logged: false,
     };
   },
 
   created() {
     addListenerForUser(this.oauth_user_getter);
+  }, mounted(){
+    this.display=true;
   },
 
   methods: {
@@ -46,7 +50,7 @@ export const index_vue = new Vue({
   components: {
     NavigationBar,
     IndexPageViewVue,
-    Footer,
+    Footer, InvalidPage,
   },
 });
 

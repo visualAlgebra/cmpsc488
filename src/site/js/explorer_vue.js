@@ -7,12 +7,14 @@ import {get_problems_from_db} from "./database_management";
 import {addListenerForUser} from "./user_system";
 import ExplorerAIGenerationModal from "./vue_components/ExplorerAIGenerationModal";
 import Footer from "./vue_components/Footer";
+import InvalidPage from "./vue_components/InvalidPage";
 
 export const explorer_vue=new Vue({
   name: "Root", el: "#vue-app", template: `
   <div>
     <NavigationBar v-bind:user="userStruct" v-bind:oauth_user_getter="oauth_user_getter" v-bind:oauth_user_remover="oauth_user_remover" v-bind:logged="logged"></NavigationBar>
-    <ExplorerPageTop></ExplorerPageTop>
+    <InvalidPage v-if="!display"></InvalidPage>
+    <ExplorerPageTop v-if="display"></ExplorerPageTop>
     <ProblemsHolder v-if="display&&problemsToDisplay" v-bind:problems="problemsToDisplay" v-bind:type="'explorer'"></ProblemsHolder>
     <ExplorerAIGenerationModal v-bind:userStruct="userStruct"></ExplorerAIGenerationModal>
     <Footer/>
@@ -38,6 +40,6 @@ export const explorer_vue=new Vue({
       this.logged=false;
     },
   }, components: {
-    ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder, ExplorerAIGenerationModal, Footer,
+    ExpressionTree, NavigationBar, ExplorerPageTop, ProblemsHolder, ExplorerAIGenerationModal, Footer, InvalidPage,
   },
 });
