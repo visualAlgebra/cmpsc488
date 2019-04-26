@@ -807,13 +807,10 @@ export class IdentityMerge {
         if (sibling1.value == 1)
           return true;
         if (sibling2 instanceof Literal)
-          return sibling2.value == 1;
+          return (sibling2.value == 1);
       }
-      if (sibling2 instanceof Literal)
-        return sibling2.value == 1;
-
-      if (quadrant1 == Quadrant.NW && quadrant1 == quadrant2)
-        return true;
+      else if (sibling2 instanceof Literal)
+        return (sibling2.value == 1);
       return false;
     }
     if (sibling1 instanceof Literal) {
