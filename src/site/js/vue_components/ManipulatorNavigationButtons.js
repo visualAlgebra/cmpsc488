@@ -1,6 +1,5 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 import {histAction} from "../history_nav";
-import {testAll} from "../solver.test";
 import LessonNavigationModal from "./LessonNavigationModal";
 import {get_lesson_from_db} from "../database_management";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
