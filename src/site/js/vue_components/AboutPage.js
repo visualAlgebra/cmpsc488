@@ -28,7 +28,7 @@ export default {
       :links="[['https://www.github.com/jfisher19335/', 'Github'], ['https://www.linkedin.com/in/joshua-fisher-57974a141/', 'LinkedIn']]"
       :roles="['AI', 'Problem Generator', 'Algebraic Actions']"
     >
-      Joshua has strong interests in AI, Java, C++, and Scheme.
+      Joshua has strong interests in AI, Java, C++, and Scheme. He also has experience in SQL and JavaScript. He enjoys learning about all things related to technology.
     </AboutProfile>
     <AboutProfile
       name="Eric Koskovich"

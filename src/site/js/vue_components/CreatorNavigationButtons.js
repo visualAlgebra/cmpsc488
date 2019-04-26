@@ -35,7 +35,7 @@ export default {
           <i class="material-icons left">lightbulb_outline</i>
           <span class="truncate">Generate</span>
       </a>
-      <a class="tab waves-effect waves-light btn col" v-on:click="editStartTree()" v-if="stage==='manip'">
+      <a class="tab waves-effect waves-light btn col" v-on:click="editStartTree()">
           <i class="material-icons left">navigate_before</i>
           <span class="truncate">Edit Start</span>
       </a>
@@ -68,7 +68,7 @@ export default {
     }, redo(){
       this.setWorkTree(histAction(true));
     }, generate(){
-      const numNodes = 15;
+      const numNodes = (Math.floor(Math.random()*15))+10;
       const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
       this.clearTreeHist();
       this.setStartTree(res);

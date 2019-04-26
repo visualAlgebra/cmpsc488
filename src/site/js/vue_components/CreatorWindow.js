@@ -13,6 +13,10 @@ export default {
         type: JsExpressionTree,
         default: null,
       },
+      closeModalCallback: {
+        type: Function,
+        default: () => {},
+      },
   },
 
   template: `
@@ -104,9 +108,11 @@ export default {
 
   mounted() {
     const modal = document.getElementById('creator-window-modal');
-    const options = { dismissable: false };
-    M.Modal.init(modal, options);
-    this.instance = M.Modal.getInstance(modal);
+    const close = this.closeModalCallback;
+    this.instance = M.Modal.init(modal, {
+      dismissable: false,
+      onCloseEnd: close,
+    });
     setTimeout(() => { this.openModal(); }, 0);
   },
 

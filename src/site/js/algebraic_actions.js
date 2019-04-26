@@ -303,7 +303,7 @@ export class Distribute {
     //setting parent pointer
     const parent = this.value.parent;
 
-    if (parent.NW.length === 2) {
+    if (parent.NW.length === 2 && parent.SE.length === 0) {
       //Flipping orientation of the parent
       parent.orientation = Orientation.EW;
 
