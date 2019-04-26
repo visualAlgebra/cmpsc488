@@ -3,7 +3,7 @@ import SingleExpressionDisplay from "./SingleExpressionDisplay";
 
 export default {
   name: "SingleProblemDisplay", props: ["problemID", "start", "goal", "deleteProblem", "type"], template: `
-  <div class="container single-problem-display">
+  <div class="single-problem-display">
   
     <h5 class="center-align" style="font-weight: bolder;">
       <a :href="url">{{problemID}}</a>
