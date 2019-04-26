@@ -68,7 +68,7 @@ export default {
     }, redo(){
       this.setWorkTree(histAction(true));
     }, generate(){
-      const numNodes = 15;
+      const numNodes = (Math.floor(Math.random()*15))+10;
       const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
       this.clearTreeHist();
       this.setStartTree(res);
