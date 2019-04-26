@@ -4,7 +4,7 @@ import {clearHist, histAction} from "../history_nav";
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
 
 export default {
-  name: "CreatorNavigationButtons", props: ["dataFunc", "cvMounted", "stage", "clearTree", "setWorkTree", "problemIsSavable", "editStartTree", "saveProblem", ], template: `
+  name: "CreatorNavigationButtons", props: ["dataFunc", "cvMounted", "stage", "clearTree", "setWorkTree", "setStartTree", "problemIsSavable", "editStartTree", "saveProblem", ], template: `
   <div>
     <div class="row spaced-out-row">
       <a v-bind:href="url" class="tab waves-effect waves-light btn col">
@@ -70,6 +70,8 @@ export default {
     }, generate(){
       const numNodes = 15;
       const res = randomStartGenerator(numNodes); // Used to be random expression generator, random start removes any empty tags
+      this.clearTreeHist();
+      this.setStartTree(res);
     }, clearTreeHist(){
       clearHist();
       this.clearTree();
