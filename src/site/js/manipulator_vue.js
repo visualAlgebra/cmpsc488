@@ -9,7 +9,7 @@ import ExpressionTree from "./vue_components/ExpressionTree";
 import SingleExpressionDisplay from "./vue_components/SingleExpressionDisplay";
 import ManipulatorWindow from "./vue_components/ManipulatorWindow";
 import GoalExpression from "./vue_components/GoalExpression";
-import {addHistoryEntry, clearHist} from "./history_nav";
+import {addHistoryEntry, clearHist, setGoalTree} from "./history_nav";
 import {Mouse} from "./gui";
 import {addListenerForUser} from "./user_system";
 import WinModal from "./vue_components/WinModal";
@@ -26,6 +26,7 @@ export const manipulator_vue = new Vue({
     <InvalidPage v-if="!display"></InvalidPage>
     <ManipulatorNavigationButtons
       v-if="display && workTree && goalTreeStr"
+      v-bind:addHistory="addHistory"
       :dataFunc="getTreeData"
       :restart="restart"
       :setWorkTree="setWorkTree"
@@ -137,6 +138,7 @@ export const manipulator_vue = new Vue({
     }, restart(){
       this.workTree=Deserialize(this.workTreeData);
       clearHist();
+      this.addHistory();
     }, setNextProblemURL(url){
       this.nextProblemURL=url+this.lessonID;
     }, navigateNextProblem(){
@@ -149,15 +151,16 @@ export const manipulator_vue = new Vue({
     }, oauth_user_remover(){
       this.usersStruct=null;
       this.logged=false;
-    },
-
-    insertionQuadrantSelected(insertionPoint) {
+    }, addHistory(){
+      addHistoryEntry(this.workTree.toString(), "Start");
+      if(this.goalTreeStr.toString()!==null){
+        setGoalTree(this.goalTreeStr.toString());
+      }
+    }, insertionQuadrantSelected(insertionPoint) {
       this.displayCreatorMenu = true;
       this.setPulseMode(false);
       this.insertionPoint = insertionPoint;
-    },
-
-    insertCreatedTree(tree) {
+    }, insertCreatedTree(tree) {
       this.displayCreatorMenu = false;
       this.mouse.identityBalance(tree, this.insertionPoint);
     },

@@ -1,5 +1,5 @@
 import HistoryNavigationPopout from "./HistoryNavigationPopout";
-import {histAction} from "../history_nav";
+import {addHistoryEntry, histAction, setGoalTree} from "../history_nav";
 import LessonNavigationModal from "./LessonNavigationModal";
 import {get_lesson_from_db} from "../database_management";
 import AlgebraicActionsModalPopup from "./AlgebraicActionsModalPopup";
@@ -9,7 +9,7 @@ import ManipulatorShareModal from "./ManipulatorShareModal";
 
 export default {
   name: "ManipulatorNavigationButtons",
-  props: ["dataFunc", "restart", "setWorkTree", "setWorkTreeWithHistory", "lessonID", "problemID", "setNextProblemURL"],
+  props: ["addHistory", "dataFunc", "restart", "setWorkTree", "setWorkTreeWithHistory", "lessonID", "problemID", "setNextProblemURL"],
   template: `
   <div>
     <div class="row spaced-out-row">
@@ -51,7 +51,7 @@ export default {
       </a>  
     </div>
     <HelperAIModal v-if="displayHelper" v-bind:dataFunc="dataFunc" v-bind:closeHelper="closeHelper"></HelperAIModal>
-    <HistoryNavigationPopout v-bind:dataFunc="dataFunc" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
+    <HistoryNavigationPopout v-bind:addHistory="addHistory" v-bind:setWorkTree="setWorkTree"></HistoryNavigationPopout>
     <LessonNavigationModal v-if="lessonID&&lesson" v-bind:lesson="lesson" v-bind:problemID="problemID" v-bind:setNextProblemURL="setNextProblemURL"></LessonNavigationModal>
     <AlgebraicActionsModalPopup></AlgebraicActionsModalPopup>
     <ManipulatorShareModal></ManipulatorShareModal>
@@ -81,18 +81,7 @@ export default {
       if(tree!==null&&actionName!==null){
         this.setWorkTreeWithHistory(tree, actionName);
       }
-    }, DEBUG_INSTANCES() {
-
-      //
-      // ATTACH FUNCTIONALITY TO window.MY_GLOBAL_FUNCTION, and then call it
-      // from the console.
-      //
-
-      console.log('_DEBUG_TRIGGERED');
-      console.log(this.dataFunc());
-      testAll();
-      console.log('_DEBUG_FINISHED');
-    },
+    }
   },
   components: {
     HistoryNavigationPopout, LessonNavigationModal, AlgebraicActionsModalPopup, HelperAIModal, TutorialModal, ManipulatorShareModal
