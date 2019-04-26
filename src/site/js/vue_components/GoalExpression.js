@@ -20,7 +20,7 @@ export default {
             v-if="modalInstance && modalInstance.isOpen"
             :tree="tree"
             height="400px"
-            worldHeight="1000"
+            worldHeight="2000"
           ></SingleExpressionDisplay>
         </div>
         <div class="modal-footer">
