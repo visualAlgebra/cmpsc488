@@ -116,12 +116,17 @@ class historyLine{
 
   findID(id){
     for(let index in this.line){
+      if(this.line[index].id===id) {
+        this.index=parseInt(index);
+        return this.line[this.index].data;
+      }
       for(let r in this.line[index].refs){
         if(this.line[index].refs[r].id===id){
           this.index=parseInt(index);
           histControl.updateLoc(this);
-          return this.line[this.index].data;
+          return this.line[this.index].refs[r].data;
         }
+        return this.line[this.index].refs[r].findID(id);
       }
     }
   }
@@ -140,5 +145,9 @@ class lineBlock{
   addRef(line){
     this.refs.push(line);
     return this.refs[this.refs.length-1];
+  }
+
+  setLoc(){
+    return this.parent.findID(this.id);
   }
 }

@@ -32,7 +32,7 @@ export default {
     >
 
      <g>
-      <title>Layer 1</title>
+      <title>Unknown</title>
       <polygon
         id="svg_1"
         :fill="fill"
