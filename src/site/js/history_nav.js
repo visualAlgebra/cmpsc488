@@ -130,6 +130,7 @@ class historyLine{
     for(let index in this.line){
       if(this.line[index].id===id) {
         this.index=parseInt(index);
+        histControl.updateLoc(this);
         return this.line[this.index].data;
       }
       for(let r in this.line[index].refs){
@@ -138,7 +139,7 @@ class historyLine{
           histControl.updateLoc(this);
           return this.line[this.index].refs[r].data;
         }
-        return this.line[this.index].refs[r].findID(id);
+        //return this.line[this.index].refs[r].findID(id);
       }
     }
   }

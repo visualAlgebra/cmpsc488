@@ -2,7 +2,7 @@ import ExpressionTree from "./ExpressionTree";
 import SingleExpressionDisplay from "./SingleExpressionDisplay";
 
 export default {
-  name: "SingleProblemDisplay", props: ["problemID", "start", "goal", "deleteProblem", "type"], template: `
+  name: "SingleProblemDisplay", props: ["problemID", "start", "goal", "deleteProblem", "type", "userStruct", "accountID"], template: `
   <div class="single-problem-display">
   
     <h5 class="center-align" style="font-weight: bolder;">
@@ -27,15 +27,15 @@ export default {
         </a>
       </div>
       <div class="col">
-        <a v-if="type!=='explorer'" v-bind:href="edit" class="secondary-content btn">
+        <a v-if="type!=='explorer'&&userStruct&&userStruct.accountID===accountID" v-bind:href="edit" class="secondary-content btn">
           Edit <i class="material-icons right">edit</i>
         </a>
       </div>
       <div class="col">
-        <a v-if="type!=='explorer'" class="secondary-content btn dropdown-trigger" :data-target="targetID">
+        <a v-if="type!=='explorer'&&userStruct&&userStruct.accountID===accountID" class="secondary-content btn dropdown-trigger" :data-target="targetID">
           Delete <i class="material-icons right">delete_forever</i>
         </a>
-        <ul v-if="type!=='explorer'" v-bind:id="targetID" class='dropdown-content'>
+        <ul v-if="type!=='explorer'&&userStruct&&userStruct.accountID===accountID" v-bind:id="targetID" class='dropdown-content'>
           <li><a>Are you sure?</a></li>
           <li><a>No</a></li>
           <li><a v-on:click="deleteProb">Yes</a></li>

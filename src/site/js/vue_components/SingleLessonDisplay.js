@@ -1,16 +1,16 @@
 
 export default {
-  name: "SingleLessonDisplay", props: ["lesson", "deleteLesson"], template: `
+  name: "SingleLessonDisplay", props: ["lesson", "deleteLesson", "userStruct", "accountID"], template: `
   <li>
     <div class="collapsible-header blue-grey darken-1 white-text">
       <i class="material-icons white-text left">folder</i>
       <a :href="getLessonID(lesson.lessonID)">
         {{lessonIDDecoded}}
       </a>
-      <a class="secondary-content dropdown-trigger" :data-target="targetID">
+      <a v-if="userStruct&&userStruct.accountID===accountID" class="secondary-content dropdown-trigger" :data-target="targetID">
         <i class="material-icons right">delete_forever</i>
       </a>
-      <ul :id="targetID" class='dropdown-content'>
+      <ul v-if="userStruct&&userStruct.accountID===accountID" :id="targetID" class='dropdown-content'>
         <li><a>Are you sure?</a></li>
         <li><a>No</a></li>
         <li><a v-on:click="deleteLesson(lesson.lessonID)">Yes</a></li>
@@ -20,7 +20,7 @@ export default {
       <h5>
         Creator: {{lesson.creatorAccId}}
         <a :href="getURL(lesson.creatorAccId)" class="secondary-content btn">
-          Play
+          Go to lesson
           <i class="material-icons right">play_arrow</i>
         </a>
       </h5>
@@ -38,9 +38,6 @@ export default {
     }, getLessonID(id){
       return "http://localhost:8080/lesson-view/"+id.substr(id.indexOf('/')+1);
     }
-    // , deleteLess(){
-    //   this.deleteLesson(this.lesson.lessonID);
-    // }
   },
   computed: {
     lessonIDDecoded() {

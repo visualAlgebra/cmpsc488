@@ -27,12 +27,12 @@ export const profile_vue=new Vue({
       v-bind:accountID="accountID"
       v-bind:userStruct="userStruct">
       </ProfilePageTop>
-      <button v-if="userStruct&&userStruct.token&&display" class="modal-trigger btn waves-effect waves-light" data-target="lessonEditModal">
+      <button v-if="userStruct&&userStruct.accountID===accountID&&display" class="modal-trigger btn waves-effect waves-light" data-target="lessonEditModal">
         <i class="material-icons right">add</i>
         Create new lesson
       </button>
-      <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson"></LessonsHolder>
-      <ProblemsHolder v-if="display&&problems&&amtConfirmed===0" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem"></ProblemsHolder>
+      <LessonsHolder v-if="display" v-bind:lessons="lessons" v-bind:deleteLesson="deleteLesson" v-bind:userStruct="userStruct" v-bind:accountID="accountID"></LessonsHolder>
+      <ProblemsHolder v-if="display&&problems&&amtConfirmed===0" v-bind:problems="problems" v-bind:deleteProblem="deleteProblem" v-bind:userStruct="userStruct" v-bind:accountID="accountID"></ProblemsHolder>
       <LessonEditModal v-if="userStruct&&userStruct.token" v-bind:userStruct="userStruct"></LessonEditModal>
     </div>
     <Footer/>

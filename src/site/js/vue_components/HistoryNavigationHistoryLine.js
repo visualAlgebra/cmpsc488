@@ -15,8 +15,7 @@ export default {
     redisplay() {
       this.setWorkTree(this.historyLine.line[this.index].setLoc());
     }, currentClass(){
-      let temp=this.curLoc===this.historyLine.line[this.index].id?'currentHist':'';
-      return temp;
+      return this.curLoc === this.historyLine.line[this.index].id ? 'currentHist' : '';
     }
   }, mounted() {
     M.AutoInit();
