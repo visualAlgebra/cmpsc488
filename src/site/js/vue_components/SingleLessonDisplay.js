@@ -19,7 +19,7 @@ export default {
     <div class="collapsible-body">
       <h5>
         Creator: {{lesson.creatorAccId}}
-        <a :href="getURL(lesson.creatorAccId)" class="secondary-content btn">
+        <a :href="getLessonID(lesson.lessonID)" class="secondary-content btn">
           Go to lesson
           <i class="material-icons right">play_arrow</i>
         </a>
