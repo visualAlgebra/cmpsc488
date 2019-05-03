@@ -1,10 +1,11 @@
 import SingleExpressionDisplay from "./SingleExpressionDisplay";
+import {ExpressionTree as JsExpressionTree} from "../expression_tree";
 
 export default {
   name: "GoalExpression",
 
   props: {
-    tree: Array,
+    tree: JsExpressionTree,
   },
 
   template: `

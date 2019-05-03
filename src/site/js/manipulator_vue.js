@@ -119,6 +119,7 @@ export const manipulator_vue = new Vue({
         this.goalTree=res;
         singleExpressionDecompression(this.goalTree, res=>{
           this.goalTreeStr=res;
+          this.goalTree = Deserialize(res);
         });
       }
       if(++this.dbInfo===3){
